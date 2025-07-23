@@ -1,363 +1,377 @@
-/* 1. Tailwind's core layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 2. Third‐party imports */
-@import "tw-animate-css";
-
-/* 3. Your CSS variable definitions */
-:root {
-  --radius: 0.625rem;
-  /* SEI DLP Light Theme - Cyber Minimalist */
-  --background: 216 100% 4%;
-  --foreground: 180 100% 90%;
-  --card: 216 50% 8%;
-  --card-foreground: 180 100% 90%;
-  --primary: 180 100% 48%;
-  --primary-foreground: 216 100% 4%;
-  --secondary: 262 80% 60%;
-  --secondary-foreground: 216 100% 4%;
-  --accent: 326 100% 74%;
-  --accent-foreground: 216 100% 4%;
-  --muted: 216 30% 15%;
-  --muted-foreground: 180 20% 70%;
-  --border: 216 30% 18%;
-  --ring: 180 100% 48%;
-  --input: 216 30% 18%;
-  --destructive: 0 84% 60%;
-  --popover: 216 50% 8%;
-  --popover-foreground: 180 100% 90%;
-  
-  /* SEI DLP Cyber Theme Variables - Chain ID 713715 */
-  --primary-glow: 180 100% 70%;
-  --gradient-primary: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
-  --gradient-vault: linear-gradient(135deg, hsl(216 50% 8%), hsl(216 30% 15%), hsl(216 30% 18%));
-  --glow-primary: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1);
-}
-
-.dark {
-  /* SEI DLP Dark Theme - Full Cyber */
-  --background: 216 100% 4%;
-  --foreground: 180 100% 90%;
-  --card: 216 50% 8%;
-  --card-foreground: 180 100% 90%;
-  --primary: 180 100% 70%;
-  --primary-foreground: 216 100% 4%;
-  --secondary: 262 80% 60%;
-  --secondary-foreground: 216 100% 4%;
-  --accent: 326 100% 74%;
-  --accent-foreground: 216 100% 4%;
-  --muted: 216 30% 15%;
-  --muted-foreground: 180 20% 70%;
-  --border: 216 30% 18%;
-  --ring: 180 100% 70%;
-  
-  /* SEI DLP Dark Cyber Overrides */
-  --primary-glow: 180 100% 85%;
-  --gradient-primary: linear-gradient(135deg, hsl(180 100% 70%), hsl(262 80% 60%));
-  --gradient-vault: linear-gradient(135deg, hsl(216 50% 8%), hsl(216 30% 15%), hsl(216 30% 18%));
-  --glow-primary: 0 0 20px hsl(180 100% 70% / 0.4), 0 0 40px hsl(180 100% 70% / 0.2);
-}
-
-/* 4. New robust hero title gradient animation - Pure CSS approach */
-.hero-title-animated {
-  position: relative;
-  font-weight: 800;
-  display: inline-block;
-  color: transparent;
-  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
-  background-size: 400% 400%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-gradient-shift 3s ease-in-out infinite;
-  text-shadow: none;
-}
-
-/* Fallback for browsers that don't support background-clip: text */
-.hero-title-animated::before {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
-  background-size: 400% 400%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-gradient-shift 3s ease-in-out infinite;
-  opacity: 0;
-}
-
-@keyframes hero-gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Alternative approach: Animated text with color transitions */
-.hero-title-glow {
-  font-weight: 800;
-  display: inline-block;
-  animation: hero-color-cycle 4s ease-in-out infinite;
-  text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
-}
-
-@keyframes hero-color-cycle {
-  0% { color: #00f5d4; }
-  25% { color: #9b5de5; }
-  50% { color: #ff206e; }
-  75% { color: #fbae3c; }
-  100% { color: #00f5d4; }
-}
-
-/* 5. Base styles */
 @layer base {
+  :root {
+    --background: 220 13% 9%;
+    --foreground: 220 9% 95%;
+    --card: 220 13% 9%;
+    --card-foreground: 220 9% 95%;
+    --popover: 220 13% 9%;
+    --popover-foreground: 220 9% 95%;
+    --primary: 180 100% 48%;
+    --primary-foreground: 220 13% 9%;
+    --secondary: 220 13% 15%;
+    --secondary-foreground: 220 9% 95%;
+    --muted: 220 13% 15%;
+    --muted-foreground: 220 9% 60%;
+    --accent: 220 13% 15%;
+    --accent-foreground: 220 9% 95%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 220 9% 95%;
+    --border: 220 13% 15%;
+    --input: 220 13% 15%;
+    --ring: 180 100% 48%;
+    --radius: 0.5rem;
+    --primary-glow: 180 100% 48%;
+    --secondary-glow: 270 81% 56%;
+    --accent-glow: 330 81% 60%;
+  }
+
+  .dark {
+    --background: 220 13% 9%;
+    --foreground: 220 9% 95%;
+    --card: 220 13% 9%;
+    --card-foreground: 220 9% 95%;
+    --popover: 220 13% 9%;
+    --popover-foreground: 220 9% 95%;
+    --primary: 180 100% 48%;
+    --primary-foreground: 220 13% 9%;
+    --secondary: 220 13% 15%;
+    --secondary-foreground: 220 9% 95%;
+    --muted: 220 13% 15%;
+    --muted-foreground: 220 9% 60%;
+    --accent: 220 13% 15%;
+    --accent-foreground: 220 9% 95%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 220 9% 95%;
+    --border: 220 13% 15%;
+    --input: 220 13% 15%;
+    --ring: 180 100% 48%;
+  }
+
   * {
-    border-color: hsl(var(--border)) !important;
+    border-color: hsl(var(--border));
   }
   
   body {
-    background-color: hsl(var(--background)) !important;
-    color: hsl(var(--foreground)) !important;
+    color: hsl(var(--foreground));
+    background: hsl(var(--background));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* SEI DLP cyber gradient overlay */
+    background: radial-gradient(ellipse at center, #16213e 0%, #0a0e29 70%, #000000 100%);
+    min-height: 100vh;
     overflow-x: hidden;
-    background-image: 
-      radial-gradient(circle at 25% 25%, hsl(var(--primary) / 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, hsl(var(--secondary) / 0.1) 0%, transparent 50%) !important;
-    font-size: 16px;
-    line-height: 1.5;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    line-height: 1.2 !important;
+    font-weight: 700;
+    line-height: 1.2;
   }
-  
-  h1 {
-    font-size: 3.5rem !important;
-    font-weight: 800 !important;
+
+  html {
+    scroll-behavior: smooth;
   }
-  
-  h1 span {
-    color: unset !important;
+
+  /* SEI-optimized scrollbar for 400ms finality UX */
+  ::-webkit-scrollbar {
+    width: 8px;
   }
-  
-  @media (min-width: 1024px) {
-    h1 {
-      font-size: 4.5rem !important;
+
+  ::-webkit-scrollbar-track {
+    background: #0a0e29;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00f5d4, #9b5de5);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00d4b8, #8a4fd9);
+  }
+}
+
+@layer components {
+  /* SEI DLP Hero Title Animation */
+  .hero-title-animated {
+    background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: hero-gradient 4s ease-in-out infinite;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* AI-powered vault cards */
+  .glass-card {
+    background: rgba(16, 21, 46, 0.6) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(0, 245, 212, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0.75rem !important;
+    padding: 1.5rem !important;
+    gap: 1rem !important;
+  }
+
+  .glass-card:hover {
+    border-color: rgba(0, 245, 212, 0.4) !important;
+    box-shadow: 
+      0 8px 32px rgba(0, 245, 212, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-4px) !important;
+  }
+
+  /* Vault performance cards optimized for SEI finality */
+  .vault-card {
+    background: linear-gradient(135deg, rgba(16, 21, 46, 0.8), rgba(10, 14, 41, 0.9)) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 245, 212, 0.3) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 0.75rem !important;
+    padding: 1.5rem !important;
+    gap: 1rem !important;
+  }
+
+  .vault-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.1), transparent);
+    transition: left 0.6s;
+  }
+
+  .vault-card:hover::before {
+    left: 100%;
+  }
+
+  .vault-card:hover {
+    border-color: rgba(0, 245, 212, 0.6) !important;
+    box-shadow: 0 12px 48px rgba(0, 245, 212, 0.2) !important;
+    transform: translateY(-6px) scale(1.02) !important;
+  }
+
+  /* Text glow effects for AI emphasis */
+  .text-primary-glow {
+    color: hsl(var(--primary-glow)) !important;
+    text-shadow: 
+      0 0 10px rgba(0, 245, 212, 0.5),
+      0 0 20px rgba(0, 245, 212, 0.3),
+      0 0 30px rgba(0, 245, 212, 0.1);
+    font-weight: 700 !important;
+  }
+
+  .text-secondary-glow {
+    color: hsl(var(--secondary-glow)) !important;
+    text-shadow: 
+      0 0 10px rgba(155, 93, 229, 0.5),
+      0 0 20px rgba(155, 93, 229, 0.3),
+      0 0 30px rgba(155, 93, 229, 0.1);
+    font-weight: 700 !important;
+  }
+
+  .text-accent-glow {
+    color: hsl(var(--accent-glow)) !important;
+    text-shadow: 
+      0 0 10px rgba(255, 32, 110, 0.5),
+      0 0 20px rgba(255, 32, 110, 0.3),
+      0 0 30px rgba(255, 32, 110, 0.1);
+    font-weight: 700 !important;
+  }
+
+  /* Hard-coded alternatives for reliability */
+  .text-cyan-glow {
+    color: #00f5d4 !important;
+    text-shadow: 
+      0 0 10px rgba(0, 245, 212, 0.5),
+      0 0 20px rgba(0, 245, 212, 0.3);
+    font-weight: 700 !important;
+  }
+
+  .text-purple-glow {
+    color: #9b5de5 !important;
+    text-shadow: 
+      0 0 10px rgba(155, 93, 229, 0.5),
+      0 0 20px rgba(155, 93, 229, 0.3);
+    font-weight: 700 !important;
+  }
+
+  .text-pink-glow {
+    color: #ff206e !important;
+    text-shadow: 
+      0 0 10px rgba(255, 32, 110, 0.5),
+      0 0 20px rgba(255, 32, 110, 0.3);
+    font-weight: 700 !important;
+  }
+
+  .text-sei-glow {
+    color: #00f5d4 !important;
+    text-shadow: 
+      0 0 8px rgba(0, 245, 212, 0.6),
+      0 0 16px rgba(0, 245, 212, 0.4),
+      0 0 24px rgba(0, 245, 212, 0.2);
+    font-weight: 700 !important;
+  }
+
+  /* SEI-optimized button effects */
+  .btn-cyber {
+    position: relative;
+    background: linear-gradient(135deg, rgba(0, 245, 212, 0.1), rgba(155, 93, 229, 0.1));
+    border: 2px solid rgba(0, 245, 212, 0.4);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    display: flex !important;
+    flex-shrink: 0 !important;
+  }
+
+  .btn-cyber::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.2), transparent);
+    transition: left 0.6s;
+  }
+
+  .btn-cyber:hover::before {
+    left: 100%;
+  }
+
+  .btn-cyber:hover {
+    border-color: rgba(0, 245, 212, 0.8);
+    box-shadow: 
+      0 8px 32px rgba(0, 245, 212, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+@layer utilities {
+  /* SEI-specific animation utilities */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 3s infinite;
+  }
+
+  /* Neural grid pattern for AI-themed backgrounds */
+  .neural-grid {
+    background-image: 
+      linear-gradient(rgba(0, 245, 212, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 212, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* Data stream effects for vault cards */
+  .data-stream {
+    position: absolute;
+    width: 1px;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 245, 212, 0.8) 50%, transparent 100%);
+    animation: data-stream 3s linear infinite;
+  }
+
+  /* Holographic text effect for SEI DLP */
+  .holo-text {
+    background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: hero-gradient 4s ease-in-out infinite;
+    font-weight: 800;
+    filter: drop-shadow(0 0 10px rgba(0, 245, 212, 0.3));
+  }
+
+  /* Hero text container responsive grid */
+  .hero-text-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero-text-container {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
     }
   }
 }
 
-/* 6. Custom utilities */
-@layer utilities {
-  .text-sei-glow {
-    color: hsl(var(--primary-glow));
-    text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow));
-  }
-
-  .backdrop-blur-xl {
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-  }
-  
-  /* Additional glow text utilities */
-  .text-primary-glow {
-    color: hsl(var(--primary-glow)) !important;
-    text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow)) !important;
-    font-weight: 700 !important;
-  }
-  
-  .text-secondary-glow {
-    color: hsl(var(--secondary)) !important;
-    text-shadow: 0 0 8px hsl(var(--secondary)), 0 0 24px hsl(var(--secondary)) !important;
-    font-weight: 700 !important;
-  }
-  
-  .text-accent-glow {
-    color: hsl(var(--accent)) !important;
-    text-shadow: 0 0 8px hsl(var(--accent)), 0 0 24px hsl(var(--accent)) !important;
-    font-weight: 700 !important;
-  }
-  
-  .text-cyan-glow {
-    color: #00f5d4 !important;
-    text-shadow: 0 0 8px #00f5d4, 0 0 24px #00f5d4 !important;
-    font-weight: 700 !important;
-  }
-  
-  .text-purple-glow {
-    color: #9b5de5 !important;
-    text-shadow: 0 0 8px #9b5de5, 0 0 24px #9b5de5 !important;
-    font-weight: 700 !important;
-  }
-  
-  .text-pink-glow {
-    color: #ff206e !important;
-    text-shadow: 0 0 8px #ff206e, 0 0 24px #ff206e !important;
-    font-weight: 700 !important;
-  }
-}
-
-/* 7. Component overrides - Force SEI DLP styling */
-.glass-card {
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  background-color: hsl(var(--card) / 0.8) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--border) / 0.3) !important;
-}
-
-.vault-card {
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--muted)), hsl(var(--card))) !important;
-  border-radius: var(--radius) !important;
-  padding: 1.5rem !important;
-  transition: all 500ms ease-in-out !important;
-  box-shadow: 0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--border) / 0.3) !important;
-}
-
-.vault-card:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5) !important;
-}
-
-.btn-cyber {
-  position: relative !important;
-  overflow: hidden !important;
-  padding: 1rem 2rem !important;
-  border-radius: calc(var(--radius) - 2px) !important;
-  font-weight: 600 !important;
-  transition: all 300ms ease-in-out !important;
-  font-size: 1rem !important;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
-  color: hsl(var(--primary-foreground)) !important;
-  box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1) !important;
-  border: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 160px !important;
-  flex-shrink: 0 !important;
-}
-
-.btn-cyber:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2) !important;
-}
-
-.holo-text {
-  font-weight: 800 !important;
-  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary))) !important;
-  background-size: 300% 100% !important;
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-  color: transparent !important;
-  animation: color-shift 4s ease-in-out infinite !important;
-  filter: drop-shadow(0 0 12px hsl(var(--primary-glow))) !important;
-}
-
-.text-primary-glow {
-  color: hsl(var(--primary-glow)) !important;
-  text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow)) !important;
-  font-weight: 700 !important;
-}
-
-.neural-grid {
-  background-image: 
-    linear-gradient(hsl(var(--border) / 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(var(--border) / 0.1) 1px, transparent 1px) !important;
-  background-size: 50px 50px !important;
-}
-
-.data-stream {
-  position: absolute !important;
-  width: 1px !important;
-  background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary)) 50%, transparent 100%) !important;
-  height: 100px !important;
-  animation: stream-flow 2s linear infinite !important;
-}
-
-/* Hero layout fixes */
-.hero-section {
-  min-height: 100vh !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  overflow: hidden !important;
-  padding-top: 5rem !important;
-}
-
-.hero-grid {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 4rem !important;
-  align-items: center !important;
-  width: 100% !important;
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  padding: 0 1rem !important;
-}
-
-@media (max-width: 1024px) {
-  .hero-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-}
-
-.hero-3d-container {
-  order: 2 !important;
-  position: relative !important;
-}
-
-.hero-text-container {
-  order: 1 !important;
-  text-align: left !important;
-}
-
-@media (max-width: 1024px) {
-  .hero-3d-container {
-    order: 2 !important;
-  }
-  
-  .hero-text-container {
-    order: 1 !important;
-    text-align: center !important;
-  }
-}
-
-/* Define keyframes at root level */
-@keyframes color-shift {
-  0% { 
+/* Keyframe animations optimized for SEI's 400ms finality */
+@keyframes hero-gradient {
+  0%, 100% {
     background-position: 0% 50%;
   }
-  50% { 
+  25% {
     background-position: 100% 50%;
   }
-  100% { 
-    background-position: 0% 50%;
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
   }
 }
 
-@keyframes holo-glow {
-  0% { filter: hue-rotate(0deg) brightness(1); }
-  100% { filter: hue-rotate(360deg) brightness(1.2); }
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
-@keyframes stream-flow {
-  0% { transform: translateY(-100px); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(100px); opacity: 0; }
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 245, 212, 0.8);
+  }
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes data-stream {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
