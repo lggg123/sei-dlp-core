@@ -1,0 +1,259 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+// Rebalance request schema
+const RebalanceRequestSchema = z.object({
+  vaultAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid SEI address'),
+  strategy: z.enum(['immediate', 'scheduled', 'threshold_based']).default('threshold_based'),
+  parameters: z.object({
+    newLowerTick: z.number().int().optional(),
+    newUpperTick: z.number().int().optional(),
+    slippageTolerance: z.number().min(0).max(1).default(0.005), // 0.5% default
+    maxGasPrice: z.number().positive().optional(),
+    deadline: z.number().int().positive().optional() // Unix timestamp
+  }).optional(),
+  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)')
+})
+
+/**
+ * Trigger vault rebalancing operations
+ * POST /api/ai/rebalance - Execute or schedule rebalancing
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    
+    // Validate request
+    const validatedData = RebalanceRequestSchema.parse(body)
+    
+    // Check vault exists and get current state
+    const vaultState = await getVaultState(validatedData.vaultAddress)
+    if (!vaultState) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Vault not found',
+          vaultAddress: validatedData.vaultAddress
+        },
+        { status: 404 }
+      )
+    }
+
+    // Generate AI-powered rebalancing recommendation
+    const rebalanceRecommendation = await generateRebalanceRecommendation(
+      validatedData.vaultAddress,
+      vaultState,
+      validatedData.strategy
+    )
+
+    // Execute or schedule rebalancing based on strategy
+    const result = await executeRebalancing(validatedData, rebalanceRecommendation)
+    
+    return NextResponse.json({
+      success: true,
+      data: result,
+      timestamp: new Date().toISOString(),
+      chainId: 713715
+    })
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid rebalance request',
+          details: error.errors
+        },
+        { status: 400 }
+      )
+    }
+
+    console.error('Error executing rebalance:', error)
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to execute rebalance operation',
+        chainId: 713715
+      },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * Get current vault state from blockchain
+ */
+async function getVaultState(vaultAddress: string) {
+  // Mock vault state - replace with actual blockchain calls
+  return {
+    address: vaultAddress,
+    currentTick: 12500,
+    lowerTick: -887220,
+    upperTick: 887220,
+    liquidity: '1000000000000000000',
+    tokensOwed0: '50000000',
+    tokensOwed1: '125000000',
+    inRange: true,
+    utilizationRate: 0.78,
+    lastRebalance: '2024-01-23T14:22:00Z',
+    totalValueLocked: 1250000,
+    impermanentLoss: 0.012,
+    feeGrowth: {
+      global0: '340282366920938463463374607431768211456',
+      global1: '340282366920938463463374607431768211456'
+    }
+  }
+}
+
+/**
+ * Generate AI-powered rebalancing recommendation
+ */
+async function generateRebalanceRecommendation(
+  vaultAddress: string, 
+  vaultState: any, 
+  strategy: string
+) {
+  // Simulate AI processing
+  await new Promise(resolve => setTimeout(resolve, 300))
+
+  const currentTick = vaultState.currentTick
+  const tickRange = vaultState.upperTick - vaultState.lowerTick
+  const utilizationRate = vaultState.utilizationRate
+  
+  // Calculate optimal new range based on current market conditions
+  const volatility = 0.25 // Would be fetched from market data
+  const priceDirection = 'bullish' // Would be determined by AI model
+  
+  // SEI-specific optimizations
+  const seiTickSpacing = 60
+  const optimalRangeWidth = Math.floor(tickRange * (1 + volatility * 0.5))
+  
+  let newLowerTick: number
+  let newUpperTick: number
+  
+  if (priceDirection === 'bullish') {
+    // Shift range upward
+    newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.3) / seiTickSpacing) * seiTickSpacing
+    newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.7) / seiTickSpacing) * seiTickSpacing
+  } else if (priceDirection === 'bearish') {
+    // Shift range downward
+    newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.7) / seiTickSpacing) * seiTickSpacing
+    newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.3) / seiTickSpacing) * seiTickSpacing
+  } else {
+    // Center around current price
+    newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.5) / seiTickSpacing) * seiTickSpacing
+    newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.5) / seiTickSpacing) * seiTickSpacing
+  }
+
+  return {
+    vaultAddress,
+    recommendation: {
+      action: utilizationRate < 0.3 ? 'rebalance_required' : 
+              utilizationRate < 0.6 ? 'rebalance_suggested' : 'hold',
+      urgency: utilizationRate < 0.2 ? 'high' : 
+               utilizationRate < 0.4 ? 'medium' : 'low',
+      newRange: {
+        lowerTick: newLowerTick,
+        upperTick: newUpperTick,
+        lowerPrice: Math.pow(1.0001, newLowerTick),
+        upperPrice: Math.pow(1.0001, newUpperTick),
+        expectedUtilization: 0.75
+      },
+      costs: {
+        estimatedGasCost: 0.002, // SEI
+        slippageImpact: 0.001,
+        opportunityCost: utilizationRate < 0.3 ? 0.05 : 0.02
+      },
+      benefits: {
+        expectedAPRIncrease: utilizationRate < 0.3 ? 0.08 : 0.03,
+        riskReduction: 0.15,
+        capitalEfficiency: (0.75 / utilizationRate) - 1
+      },
+      timing: {
+        optimalWindow: getOptimalRebalanceWindow(),
+        marketConditions: 'favorable',
+        gasConditions: 'optimal'
+      }
+    },
+    aiInsights: {
+      modelConfidence: 0.87,
+      marketDirection: priceDirection,
+      volatilityForecast: volatility,
+      liquidityForecast: 'stable',
+      riskFactors: [
+        'medium_volatility',
+        'adequate_liquidity'
+      ]
+    }
+  }
+}
+
+/**
+ * Execute rebalancing operation
+ */
+async function executeRebalancing(request: any, recommendation: any) {
+  const { vaultAddress, strategy, parameters } = request
+  
+  if (strategy === 'immediate') {
+    // Execute immediate rebalancing
+    return {
+      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      status: 'pending',
+      vaultAddress,
+      rebalanceDetails: {
+        oldRange: {
+          lowerTick: -887220,
+          upperTick: 887220
+        },
+        newRange: recommendation.recommendation.newRange,
+        gasCost: recommendation.recommendation.costs.estimatedGasCost,
+        timestamp: new Date().toISOString()
+      },
+      estimatedCompletion: new Date(Date.now() + 30000).toISOString(), // 30 seconds
+      seiOptimizations: {
+        fastFinality: true,
+        gasOptimized: true,
+        parallelExecution: true
+      }
+    }
+  } else if (strategy === 'scheduled') {
+    // Schedule rebalancing for optimal time
+    return {
+      scheduleId: `schedule_${Math.random().toString(16).substr(2, 8)}`,
+      status: 'scheduled',
+      vaultAddress,
+      scheduledTime: recommendation.recommendation.timing.optimalWindow,
+      rebalanceDetails: recommendation.recommendation.newRange,
+      estimatedCosts: recommendation.recommendation.costs
+    }
+  } else {
+    // Threshold-based monitoring
+    return {
+      monitoringId: `monitor_${Math.random().toString(16).substr(2, 8)}`,
+      status: 'monitoring',
+      vaultAddress,
+      thresholds: {
+        minUtilization: 0.3,
+        maxVolatility: 0.5,
+        priceDeviation: 0.1
+      },
+      recommendation: recommendation.recommendation,
+      nextCheck: new Date(Date.now() + 3600000).toISOString() // 1 hour
+    }
+  }
+}
+
+function getOptimalRebalanceWindow(): string {
+  // Calculate optimal rebalancing time based on SEI network conditions
+  const now = new Date()
+  const optimal = new Date(now)
+  
+  // SEI has consistent 400ms finality, so any time is generally good
+  // However, we might want to consider:
+  // - Lower gas periods
+  // - Market volatility cycles
+  // - Liquidity depth patterns
+  
+  optimal.setMinutes(optimal.getMinutes() + 15) // 15 minutes from now
+  return optimal.toISOString()
+}

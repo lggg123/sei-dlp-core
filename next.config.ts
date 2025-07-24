@@ -3,6 +3,30 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@sei-js/core'],
+  
+  // Headers for API responses
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=30, stale-while-revalidate=60' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+    ]
+  },
+  
+  // Environment variables for API
+  env: {
+    SEI_CHAIN_ID: '713715',
+    SEI_RPC_URL: 'https://evm-rpc.sei-apis.com',
+    API_VERSION: '1.0.0',
+  },
+  
   webpack: (config) => {
     config.resolve.fallback = {
       fs: false,
@@ -17,6 +41,7 @@ const nextConfig: NextConfig = {
     }
     return config
   },
+  
   images: {
     domains: ['ipfs.io', 'seiprotocol.infura-ipfs.io'],
   },

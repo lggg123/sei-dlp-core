@@ -6,7 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "api:test": "curl -s http://localhost:3000/api/health | jq .",
+    "api:docs": "curl -s http://localhost:3000/api/docs | jq .title",
+    "api:vaults": "curl -s http://localhost:3000/api/vaults | jq '.data | length'",
+    "api:market": "curl -s 'http://localhost:3000/api/market/data?symbols=SEI-USDC' | jq .data[0].price"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -72,16 +79,21 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.11",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
+    "jest": "^30.0.5",
+    "jest-environment-node": "^30.0.5",
     "postcss": "^8.5.6",
     "postcss-nesting": "^13.0.2",
     "tailwindcss": "^4.1.11",
     "tailwindcss-filters": "^3.0.0",
+    "ts-jest": "^29.4.0",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
   }
