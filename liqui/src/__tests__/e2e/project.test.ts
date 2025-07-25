@@ -49,9 +49,9 @@ export class ProjectTestSuite implements TestSuite {
             throw new Error('Character name is missing');
           }
 
-          // Verify the character has the expected name
-          if (character.name !== 'Eliza') {
-            throw new Error(`Expected character name 'Eliza', got '${character.name}'`);
+          // Verify the character has the expected name for SEI DLP Liqui
+          if (character.name !== 'Liqui') {
+            throw new Error(`Expected character name 'Liqui', got '${character.name}'`);
           }
 
           // Verify character has required configuration

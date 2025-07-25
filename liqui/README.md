@@ -1,110 +1,146 @@
-# Project Starter
+# SEI DLP Liqui Agent
 
-This is the starter template for ElizaOS projects.
+AI-driven liquidity optimization agent for SEI Dynamic Liquidity Protocol (DLP) vaults.
 
 ## Features
 
-- Pre-configured project structure for ElizaOS development
-- Comprehensive testing setup with component and e2e tests
-- Default character configuration with plugin integration
-- Example service, action, and provider implementations
-- TypeScript configuration for optimal developer experience
-- Built-in documentation and examples
+- SEI EVM optimization with 400ms finality support (Chain ID: 713715)
+- AI-driven vault rebalancing following StrategyVault.sol patterns
+- Concentrated liquidity optimization using liquidity_ai.py models
+- Cross-protocol yield aggregation and impermanent loss hedging
+- Supabase integration for historical performance analytics
+- Real-time vault monitoring and optimization recommendations
+- Gas-efficient rebalancing (~$0.15 vs $50+ on other chains)
 
 ## Getting Started
 
 ```bash
-# Create a new project
-elizaos create -t project my-project
-# Dependencies are automatically installed and built
+# Install dependencies
+bun install
 
-# Navigate to the project directory
-cd my-project
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your Supabase and SEI network configuration
 
-# Start development immediately
+# Build the project
+bun run build
+
+# Start Liqui agent
+elizaos start --port 3000
+
+# Or start in development mode
 elizaos dev
 ```
 
-## Development
+### Environment Configuration
 
 ```bash
-# Start development with hot-reloading (recommended)
-elizaos dev
+# Supabase Configuration
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# OR start without hot-reloading
-elizaos start
-# Note: When using 'start', you need to rebuild after changes:
-# bun run build
+# SEI Network Configuration
+SEI_CHAIN_ID=713715
+SEI_RPC_URL=https://evm-rpc.sei-apis.com
 
-# Test the project
-elizaos test
+# AI Provider Keys
+ANTHROPIC_API_KEY=your_anthropic_key
+GOOGLE_GENERATIVE_AI_API_KEY=your_google_key
 ```
+
+## Usage
+
+### Vault Analysis
+
+```
+Hey Liqui, analyze my SEI-USDC vault at 0x123...
+```
+
+Liqui will provide:
+- Current position analysis with tick ranges
+- Fee capture efficiency metrics
+- Impermanent loss risk assessment
+- AI-driven optimization recommendations
+- Gas cost estimates for rebalancing
+
+### SEI Network Advantages
+
+- **400ms Finality**: Instant position adjustments vs 12s on Ethereum
+- **Low Gas Costs**: ~$0.15 per rebalance vs $50+ on other chains
+- **Parallel Execution**: SEI-optimized transaction processing
+- **Chain ID 713715**: Native SEI EVM support
 
 ## Testing
 
-ElizaOS provides a comprehensive testing structure for projects:
+```bash
+# Run all tests
+bun test
 
-### Test Structure
+# Run specific test suites
+bun test src/__tests__/env.test.ts
+bun test src/__tests__/e2e/
 
-- **Component Tests** (`__tests__/` directory):
-
-  - **Unit Tests**: Test individual functions and components in isolation
-  - **Integration Tests**: Test how components work together
-  - Run with: `elizaos test component`
-
-- **End-to-End Tests** (`e2e/` directory):
-
-  - Test the project within a full ElizaOS runtime
-  - Run with: `elizaos test e2e`
-
-- **Running All Tests**:
-  - `elizaos test` runs both component and e2e tests
-
-### Writing Tests
-
-Component tests use Vitest:
-
-```typescript
-// Unit test example (__tests__/config.test.ts)
-describe('Configuration', () => {
-  it('should load configuration correctly', () => {
-    expect(config.debug).toBeDefined();
-  });
-});
-
-// Integration test example (__tests__/integration.test.ts)
-describe('Integration: Plugin with Character', () => {
-  it('should initialize character with plugins', async () => {
-    // Test interactions between components
-  });
-});
+# Build and test
+bun run build
+elizaos test
 ```
 
-E2E tests use ElizaOS test interface:
+## Architecture
 
-```typescript
-// E2E test example (e2e/project.test.ts)
-export class ProjectTestSuite implements TestSuite {
-  name = 'project_test_suite';
-  tests = [
-    {
-      name: 'project_initialization',
-      fn: async (runtime) => {
-        // Test project in a real runtime
-      },
-    },
-  ];
-}
+Following the SEI DLP cross-component flow:
 
-export default new ProjectTestSuite();
+```mermaid
+graph TD
+    A[Liqui Agent] -->|Market Analysis| B[AI Engine]
+    B -->|Predictions| C[Supabase Analytics]
+    C -->|Vault Data| D[SEI Smart Contracts]
+    D -->|Event Logs| E[Performance Tracking]
+    E -->|Optimization| A
 ```
 
-The test utilities in `__tests__/utils/` provide helper functions to simplify writing tests.
+### Components
+
+- **Liqui Character**: AI agent optimized for SEI DLP vault management
+- **SEI DLP Plugin**: Custom actions for vault analysis and optimization
+- **Supabase Integration**: Historical performance and prediction storage
+- **StrategyVault.sol**: Smart contract integration following your patterns
+- **liquidity_ai.py**: ML models for range prediction and optimization
 
 ## Configuration
 
-Customize your project by modifying:
+Customize your SEI DLP Liqui agent by modifying:
 
-- `src/index.ts` - Main entry point
-- `src/character.ts` - Character definition
+- `src/index.ts` - Main entry point and project agent configuration
+- `src/character.ts` - Liqui character definition with SEI-specific knowledge
+- `src/plugin.ts` - SEI DLP plugin with vault optimization actions
+- `.env` - Environment variables for Supabase and SEI network access
+
+### SEI Network Integration
+
+The agent is optimized for SEI EVM with:
+- Chain ID validation (713715)
+- 400ms finality optimization
+- Gas-efficient transaction patterns
+- Parallel execution support
+
+### Vault Optimization Features
+
+- Real-time position analysis
+- AI-driven range predictions
+- Impermanent loss monitoring
+- Cross-protocol yield tracking
+- Historical performance analytics
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes following SEI DLP patterns
+4. Run tests: `bun test`
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.
 you 

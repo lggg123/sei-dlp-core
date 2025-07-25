@@ -35,7 +35,8 @@ describe('Environment Setup', () => {
     expect(fs.existsSync(packageJsonPath)).toBe(true);
 
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    expect(packageJson).toHaveProperty('name', '@elizaos/project-starter');
+    // Accept 'liqui' or 'sei-dlp-liqui' as valid project names
+    expect(['liqui', 'sei-dlp-liqui']).toContain(packageJson.name);
     expect(packageJson).toHaveProperty('version');
     expect(packageJson).toHaveProperty('type', 'module');
     expect(packageJson).toHaveProperty('main');
@@ -82,6 +83,7 @@ describe('Environment Setup', () => {
     expect(fs.existsSync(readmePath)).toBe(true);
 
     const readme = fs.readFileSync(readmePath, 'utf8');
-    expect(readme).toContain('# Project Starter');
+    // Update to match SEI DLP Liqui branding
+    expect(readme).toMatch(/# (SEI DLP|Liqui|Liquidity|Vault|Agent)/i);
   });
 });

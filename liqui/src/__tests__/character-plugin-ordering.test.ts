@@ -1,18 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { character } from '../character';
 
-describe('Project Starter Character Plugin Ordering', () => {
+describe('SEI DLP Liqui Character Plugin Ordering', () => {
   let originalEnv: Record<string, string | undefined>;
 
   beforeEach(() => {
-    // Save original environment
+    // Save original environment for SEI DLP testing
     originalEnv = {
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-      OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
-      OLLAMA_API_ENDPOINT: process.env.OLLAMA_API_ENDPOINT,
       GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
-      DISCORD_API_TOKEN: process.env.DISCORD_API_TOKEN,
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+      SEI_RPC_URL: process.env.SEI_RPC_URL,
       TWITTER_API_KEY: process.env.TWITTER_API_KEY,
       TWITTER_API_SECRET_KEY: process.env.TWITTER_API_SECRET_KEY,
       TWITTER_ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN,
@@ -322,7 +321,7 @@ describe('Project Starter Character Plugin Ordering', () => {
 
   describe('Character Properties Validation', () => {
     it('should have all required character properties', () => {
-      expect(character.name).toBe('Eliza');
+      expect(character.name).toBe('Liqui');
       expect(Array.isArray(character.plugins)).toBe(true);
       expect(typeof character.system).toBe('string');
       expect(Array.isArray(character.bio)).toBe(true);

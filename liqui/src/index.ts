@@ -3,14 +3,16 @@ import starterPlugin from './plugin.ts';
 import { character } from './character.ts';
 
 const initCharacter = ({ runtime }: { runtime: IAgentRuntime }) => {
-  logger.info('Initializing character');
+  logger.info('Initializing SEI DLP Liqui character');
   logger.info('Name: ', character.name);
+  logger.info('SEI Chain ID: 713715');
+  logger.info('Optimized for 400ms finality');
 };
 
 export const projectAgent: ProjectAgent = {
   character,
   init: async (runtime: IAgentRuntime) => await initCharacter({ runtime }),
-  // plugins: [starterPlugin], <-- Import custom plugins here
+  plugins: [starterPlugin], // SEI DLP plugin enabled
 };
 const project: Project = {
   agents: [projectAgent],
