@@ -1,6 +1,6 @@
 // filepath: /workspaces/sei-dlp-core/contracts/src/interfaces/ISEIVault.sol
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity ^0.8.20;
 
 /**
  * @title ISEIVault - SEI DLP Vault Interface

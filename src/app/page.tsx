@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Hero3D from '@/components/Hero3D';
 import VaultCard from '@/components/VaultCard';
 import AIWorkflow from '@/components/AIWorkflow';
+import Navigation from '@/components/Navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
