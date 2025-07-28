@@ -1,0 +1,152 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Yield Delta Brand Gradients -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0f1c;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a1f2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0f1c;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="yieldDeltaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00f5d4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#9b5de5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff206e;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="glowEffect" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#9b5de5;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#9b5de5;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- Filters -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Neural Grid Background -->
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#9b5de5" stroke-width="0.5" opacity="0.1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Glow Effects -->
+  <circle cx="200" cy="150" r="100" fill="url(#glowEffect)"/>
+  <circle cx="1000" cy="480" r="150" fill="url(#glowEffect)"/>
+  
+  <!-- Logo Section -->
+  <g transform="translate(100, 200)">
+    <!-- AI Core -->
+    <circle cx="60" cy="60" r="12" fill="#9b5de5" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Greek Delta -->
+    <path d="M60 20 L90 80 L30 80 Z" 
+          fill="none" 
+          stroke="url(#seiGradient)" 
+          stroke-width="3" 
+          stroke-linejoin="round"/>
+    
+    <!-- Growth Chart -->
+    <polyline points="20,100 35,90 50,75 65,65 80,55 95,40" 
+              fill="none" 
+              stroke="#00f5d4" 
+              stroke-width="2" 
+              stroke-linecap="round"/>
+    
+    <!-- Neural Dots -->
+    <circle cx="40" cy="40" r="2" fill="#00f5d4" opacity="0.8"/>
+    <circle cx="80" cy="40" r="2" fill="#ff206e" opacity="0.8"/>
+    <circle cx="35" cy="55" r="1.5" fill="#9b5de5" opacity="0.6"/>
+    <circle cx="85" cy="55" r="1.5" fill="#9b5de5" opacity="0.6"/>
+    
+    <!-- Connection Lines -->
+    <line x1="40" y1="40" x2="60" y2="60" stroke="#9b5de5" stroke-width="1" opacity="0.4"/>
+    <line x1="80" y1="40" x2="60" y2="60" stroke="#ff206e" stroke-width="1" opacity="0.4"/>
+  </g>
+  
+  <!-- Main Title -->
+  <text x="320" y="280" 
+        font-family="Arial, sans-serif" 
+        font-size="72" 
+        font-weight="bold" 
+        fill="url(#yieldDeltaGradient)" 
+        filter="url(#textGlow)">
+    Yield Delta
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="320" y="340" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        font-weight="600" 
+        fill="#00f5d4">
+    Dynamic Liquidity Vaults on SEI
+  </text>
+  
+  <!-- Description -->
+  <text x="320" y="390" 
+        font-family="Arial, sans-serif" 
+        font-size="24" 
+        fill="#ffffff" 
+        opacity="0.9">
+    AI-driven yield aggregation, concentrated liquidity &amp; impermanent loss hedging
+  </text>
+  
+  <!-- Key Features -->
+  <g transform="translate(320, 440)">
+    <text y="0" font-family="Arial, sans-serif" font-size="20" fill="#9b5de5" font-weight="600">
+      ⚡ 400ms Finality
+    </text>
+    <text y="35" font-family="Arial, sans-serif" font-size="20" fill="#00f5d4" font-weight="600">
+      🤖 AI-Powered Yield Optimization
+    </text>
+    <text y="70" font-family="Arial, sans-serif" font-size="20" fill="#ff206e" font-weight="600">
+      💎 Dynamic Liquidity Vaults
+    </text>
+  </g>
+  
+  <!-- SEI Chain Badge -->
+  <g transform="translate(950, 50)">
+    <rect x="0" y="0" width="200" height="60" rx="30" 
+          fill="none" 
+          stroke="url(#yieldDeltaGradient)" 
+          stroke-width="2"/>
+    <text x="100" y="40" 
+          text-anchor="middle" 
+          font-family="Arial, sans-serif" 
+          font-size="18" 
+          font-weight="bold" 
+          fill="url(#yieldDeltaGradient)">
+      Chain ID: 713715
+    </text>
+  </g>
+  
+  <!-- Animated Data Streams -->
+  <g opacity="0.3">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#00f5d4" stroke-width="1">
+      <animate attributeName="stroke-dasharray" values="0,50;50,0;0,50" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#9b5de5" stroke-width="1">
+      <animate attributeName="stroke-dasharray" values="0,50;50,0;0,50" dur="4s" repeatCount="indefinite"/>
+    </line>
+  </g>
+</svg>

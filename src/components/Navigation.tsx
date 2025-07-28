@@ -1,0 +1,84 @@
+import React from 'react';
+import Link from 'next/link';
+import Logo from './Logo';
+
+interface NavigationProps {
+  variant?: 'light' | 'dark' | 'transparent';
+  className?: string;
+}
+
+export function Navigation({ variant = 'transparent', className = '' }: NavigationProps) {
+  const baseClasses = "fixed top-0 left-0 right-0 z-50 transition-all duration-300";
+  
+  const variantClasses = {
+    light: "bg-white/95 backdrop-blur-md border-b border-gray-200",
+    dark: "bg-background/95 backdrop-blur-md border-b border-border",
+    transparent: "bg-transparent"
+  };
+
+  return (
+    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          
+          {/* Logo and Brand */}
+          <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <Logo variant="icon" size={32} className="flex-shrink-0" />
+              <div className="hidden sm:block">
+                <div className="font-bold text-lg text-foreground">SEI DLP</div>
+                <div className="text-xs text-muted-foreground -mt-1">Dynamic Liquidity Protocol</div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link 
+              href="/vaults" 
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Vaults
+            </Link>
+            <Link 
+              href="/analytics" 
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Analytics
+            </Link>
+            <Link 
+              href="/docs" 
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Docs
+            </Link>
+            <Link 
+              href="/logo-showcase" 
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Logo
+            </Link>
+          </div>
+
+          {/* Connect Wallet Button */}
+          <div className="flex items-center space-x-4">
+            <button className="btn-cyber px-6 py-2 text-sm font-medium">
+              Connect Wallet
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button className="text-foreground hover:text-primary">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default Navigation;
