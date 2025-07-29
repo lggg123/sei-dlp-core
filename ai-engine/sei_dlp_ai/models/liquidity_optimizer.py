@@ -263,17 +263,73 @@ class LiquidityOptimizer:
             # Run inference
             input_name = self.onnx_session.get_inputs()[0].name
             outputs = self.onnx_session.run(None, {input_name: features_scaled.astype(np.float32)})
+
+            output_arr = outputs[0]
             
+            # Convert ONNX output to numpy array with proper type handling
+            final_output: np.ndarray
+            
+            # Handle SparseTensor type if available
+            try:
+                from onnxruntime.capi.onnxruntime_pybind11_state import SparseTensor
+                
+                # Use hasattr to check for to_dense method instead of isinstance
+                if hasattr(output_arr, 'to_dense') and callable(getattr(output_arr, 'to_dense')):
+                    # Handle SparseTensor or any object with to_dense method
+                    try:
+                        dense_output = output_arr.to_dense()  # type: ignore
+                        final_output = np.array(dense_output)
+                    except Exception as dense_error:
+                        logger.warning(f"Failed to call to_dense(): {dense_error}")
+                        final_output = np.array(output_arr)
+                elif isinstance(output_arr, (list, tuple)):
+                    # Convert lists/tuples to numpy arrays
+                    final_output = np.array(output_arr)
+                elif isinstance(output_arr, np.ndarray):
+                    # Already a numpy array
+                    final_output = output_arr
+                else:
+                    # Fallback: try to convert to numpy array
+                    final_output = np.array(output_arr)
+            except ImportError:
+                # onnxruntime SparseTensor not available, handle other types
+                if isinstance(output_arr, (list, tuple)):
+                    final_output = np.array(output_arr)
+                elif isinstance(output_arr, np.ndarray):
+                    final_output = output_arr
+                else:
+                    final_output = np.array(output_arr)
+            except Exception as e:
+                logger.warning(f"Failed to process ONNX output type {type(output_arr)}: {e}")
+                # Fallback: try direct numpy conversion
+                final_output = np.array(output_arr)
+
+            # Ensure we have a valid numpy array with expected shape
+            if not isinstance(final_output, np.ndarray):
+                raise ValueError(f"Failed to convert ONNX output to numpy array, got {type(final_output)}")
+            
+            if final_output.size == 0:
+                raise ValueError("ONNX output is empty")
+
             # Parse outputs: [lower_bound, upper_bound, confidence]
-            lower_bound, upper_bound, confidence = outputs[0][0]
-            
+            if final_output.ndim == 1:
+                if len(final_output) < 3:
+                    raise ValueError(f"Expected at least 3 output values, got {len(final_output)}")
+                lower_bound, upper_bound, confidence = final_output[0], final_output[1], final_output[2]
+            elif final_output.ndim == 2:
+                if final_output.shape[1] < 3:
+                    raise ValueError(f"Expected at least 3 output values, got {final_output.shape[1]}")
+                lower_bound, upper_bound, confidence = final_output[0][0], final_output[0][1], final_output[0][2]
+            else:
+                raise ValueError(f"Unexpected ONNX output shape: {final_output.shape}")
+
             return {
                 "lower_price": Decimal(str(float(lower_bound))),
                 "upper_price": Decimal(str(float(upper_bound))),
                 "confidence": float(confidence),
                 "reasoning": f"ONNX model prediction with confidence {confidence:.2f}"
             }
-            
+
         except Exception as e:
             logger.error(f"ONNX prediction failed: {e}")
             raise

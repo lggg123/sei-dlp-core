@@ -68,6 +68,7 @@ def mock_position():
         entry_price=Decimal("0.40"),
         current_price=Decimal("0.45"),
         unrealized_pnl=Decimal("50"),
+        leverage=2.0,
         timestamp=datetime.now(timezone.utc)
     )
 
@@ -77,11 +78,17 @@ def mock_portfolio(mock_position):
     """Create valid Portfolio"""
     return Portfolio(
         strategy=StrategyType.BALANCED,
-        total_value_usd=Decimal("6500"),
+        total_value_usd=Decimal("6500"),  # Pass as Decimal, not float
         positions=[mock_position],
-        target_allocations={AssetSymbol.SEI: Decimal("0.6"), AssetSymbol.USDC: Decimal("0.4")},
-        current_allocations={AssetSymbol.SEI: Decimal("0.65"), AssetSymbol.USDC: Decimal("0.35")},
-        rebalance_threshold=Decimal("0.05"),
+        target_allocations={
+            AssetSymbol.SEI: float(Decimal("0.6")),
+            AssetSymbol.USDC: float(Decimal("0.4"))
+        },
+        current_allocations={
+            AssetSymbol.SEI: float(Decimal("0.65")),
+            AssetSymbol.USDC: float(Decimal("0.35"))
+        },
+        rebalance_threshold=float(Decimal("0.05")),
         last_rebalance=datetime.now(timezone.utc)
     )
 

@@ -118,6 +118,10 @@ class ElizaOSClient:
                     
     async def _websocket_listener(self) -> None:
         """Listen for incoming WebSocket messages"""
+        if not self.websocket:
+            logger.error("WebSocket is not connected")
+            return
+            
         try:
             async for message in self.websocket:
                 try:
