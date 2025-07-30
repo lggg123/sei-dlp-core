@@ -33,6 +33,7 @@
     "@elizaos/plugin-anthropic": "^1.0.4",
     "@elizaos/plugin-bootstrap": "latest",
     "@elizaos/plugin-google-genai": "^1.0.1",
+    "@elizaos/plugin-sei-yield-delta": "github:lggg123/yield-delta",
     "@tanstack/react-query": "^5.29.0",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
@@ -42,6 +43,7 @@
     "zod": "3.24.2"
   },
   "devDependencies": {
+    "@types/bun": "latest",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

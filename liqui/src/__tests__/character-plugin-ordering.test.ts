@@ -39,16 +39,20 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
   describe('Core Plugin Ordering', () => {
     it('should always include SQL plugin first', () => {
-      expect(character.plugins[0]).toBe('@elizaos/plugin-sql');
+      expect(character.plugins).toBeDefined();
+      expect(Array.isArray(character.plugins)).toBe(true);
+      expect(character.plugins![0]).toBe('@elizaos/plugin-sql');
     });
 
     it('should include bootstrap plugin by default (not ignored)', () => {
+      expect(character.plugins).toBeDefined();
       expect(character.plugins).toContain('@elizaos/plugin-bootstrap');
     });
 
     it('should exclude bootstrap plugin when IGNORE_BOOTSTRAP is set', () => {
       // Note: Since character is imported statically, we test the conditional logic structure
       // The actual dynamic behavior is tested in the CLI tests with getElizaCharacter()
+      expect(character.plugins).toBeDefined();
       expect(character.plugins).toContain('@elizaos/plugin-bootstrap');
       // In a dynamic context, bootstrap would be excluded when IGNORE_BOOTSTRAP is set
     });
@@ -56,7 +60,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
   describe('Plugin Structure and Ordering', () => {
     it('should structure embedding plugins after text-only plugins', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Find indices of key plugins
       const sqlIndex = plugins.indexOf('@elizaos/plugin-sql');
@@ -68,7 +73,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
   describe('Plugin Categories and Ordering', () => {
     it('should categorize plugins correctly', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Core plugins
       expect(plugins).toContain('@elizaos/plugin-sql');
@@ -111,7 +117,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
     });
 
     it('should maintain proper ordering between plugin categories', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Get indices of representative plugins from each category
       const sqlIndex = plugins.indexOf('@elizaos/plugin-sql');
@@ -132,7 +139,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
       // Test that the character structure includes conditional logic
       // Note: Since this is a static import, we test the structure rather than dynamic behavior
 
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Should always have core plugins
       expect(plugins).toContain('@elizaos/plugin-sql');
@@ -153,14 +161,16 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
     it('should include proper conditional checks for Twitter', () => {
       // Twitter requires all 4 environment variables
       // Test that the logic structure is sound
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Twitter should not be in default config (no env vars set)
       expect(plugins).not.toContain('@elizaos/plugin-twitter');
     });
 
     it('should structure platform plugins between AI plugins', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Platform plugins should be positioned correctly in the array structure
       const sqlIndex = plugins.indexOf('@elizaos/plugin-sql');
@@ -173,7 +183,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
   describe('Embedding Plugin Priority Verification', () => {
     it('should structure embedding plugins at the end', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Get the last few plugins
       const lastThreePlugins = plugins.slice(-3);
@@ -199,8 +210,9 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
     it('should maintain consistent plugin structure', () => {
       // Test multiple evaluations for consistency
-      const plugins1 = character.plugins;
-      const plugins2 = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins1 = character.plugins!;
+      const plugins2 = character.plugins!;
 
       expect(plugins1).toEqual(plugins2);
       expect(plugins1.length).toBe(plugins2.length);
@@ -209,7 +221,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
   describe('Plugin Logic Validation', () => {
     it('should follow the expected plugin ordering pattern', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Expected pattern: [SQL, Text-only AI, Platforms, Bootstrap, Embedding AI]
       // Verify the basic structure exists
@@ -239,7 +252,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
     });
 
     it('should have valid plugin names', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       plugins.forEach((plugin) => {
         expect(typeof plugin).toBe('string');
@@ -248,7 +262,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
     });
 
     it('should not have duplicate plugins', () => {
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
       const uniquePlugins = [...new Set(plugins)];
 
       expect(plugins.length).toBe(uniquePlugins.length);
@@ -268,7 +283,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
       // In a complete setup, at least one AI provider should be present
       // Test the logical structure based on current environment
-      const hasOtherAiProviders = character.plugins.some((plugin) =>
+      expect(character.plugins).toBeDefined();
+      const hasOtherAiProviders = character.plugins!.some((plugin) =>
         allAiProviders.includes(plugin)
       );
 
@@ -295,7 +311,8 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
     it('should structure conditional logic properly', () => {
       // Test that the character has the right structure for conditional loading
-      const plugins = character.plugins;
+      expect(character.plugins).toBeDefined();
+      const plugins = character.plugins!;
 
       // Should have core plugins
       expect(plugins).toContain('@elizaos/plugin-sql');
@@ -332,9 +349,12 @@ describe('SEI DLP Liqui Character Plugin Ordering', () => {
 
     it('should have consistent character configuration', () => {
       // Verify character is properly configured
-      expect(character.plugins.length).toBeGreaterThan(0);
-      expect(character.bio.length).toBeGreaterThan(0);
-      expect(character.system.length).toBeGreaterThan(0);
+      expect(character.plugins).toBeDefined();
+      expect(character.plugins!.length).toBeGreaterThan(0);
+      expect(character.bio).toBeDefined();
+      expect(character.bio!.length).toBeGreaterThan(0);
+      expect(character.system).toBeDefined();
+      expect(character.system!.length).toBeGreaterThan(0);
     });
   });
 });

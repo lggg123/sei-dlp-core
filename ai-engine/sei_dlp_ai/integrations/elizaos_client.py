@@ -53,7 +53,7 @@ class ElizaOSClient:
     def __init__(self, config: ElizaOSConfig):
         self.config = config
         self.session: Optional[aiohttp.ClientSession] = None
-        self.websocket: Optional[websockets.WebSocketServerProtocol] = None
+        self.websocket: Optional[Any] = None
         self.message_handlers: Dict[str, Callable] = {}
         self.is_connected = False
         self._reconnect_task: Optional[asyncio.Task] = None

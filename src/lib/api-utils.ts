@@ -34,7 +34,10 @@ export const API_CONFIG = {
  * Rate limiting middleware
  */
 export function checkRateLimit(request: NextRequest): boolean {
-  const ip = request.ip || 'unknown'
+  const ip = request.headers.get('x-forwarded-for') ||
+             request.headers.get('x-real-ip') ||
+             request.headers.get('cf-connecting-ip') ||
+             'unknown'
   const now = Date.now()
   const windowMs = API_CONFIG.RATE_LIMIT.windowMs
   

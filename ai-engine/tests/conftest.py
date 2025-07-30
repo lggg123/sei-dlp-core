@@ -68,6 +68,8 @@ def mock_portfolio() -> Portfolio:
             entry_price=Decimal("0.42"),
             current_price=Decimal("0.45"),
             unrealized_pnl=Decimal("300"),
+            leverage=2.5,  # Conservative leverage for volatile asset
+            liquidation_price=Decimal("0.25"),
             timestamp=datetime.now(timezone.utc)
         ),
         Position(
@@ -76,6 +78,8 @@ def mock_portfolio() -> Portfolio:
             entry_price=Decimal("1.0"),
             current_price=Decimal("1.0"),
             unrealized_pnl=Decimal("0"),
+            leverage=1.5,  # Low leverage for stable asset
+            liquidation_price=Decimal("0.80"),
             timestamp=datetime.now(timezone.utc)
         )
     ]

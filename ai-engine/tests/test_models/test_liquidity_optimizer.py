@@ -263,6 +263,8 @@ class TestLiquidityOptimizer:
             entry_price=Decimal("2.20"),  # Close to current pool price (~2.22)
             current_price=Decimal("2.22"),
             unrealized_pnl=Decimal("10"),
+            leverage=1.5,  # Conservative leverage since no rebalance needed
+            liquidation_price=Decimal("1.70"),
             timestamp=datetime.now(timezone.utc)
         )
         
@@ -283,6 +285,8 @@ class TestLiquidityOptimizer:
             entry_price=Decimal("0.35"),  # Significant price change
             current_price=Decimal("0.45"),
             unrealized_pnl=Decimal("100"),
+            leverage=2.0,  # Moderate leverage for rebalancing flexibility
+            liquidation_price=Decimal("0.20"),  # Conservative liquidation threshold
             timestamp=datetime.now(timezone.utc)
         )
         
@@ -791,7 +795,7 @@ class TestLiquidityOptimizerMLModelPaths:
         mock_scaler.transform.return_value = np.array([[0.1, 0.2, 0.3, 0.4, 0.5]])
         optimizer.scaler = mock_scaler
         
-        features = [1.0, 2.0, 3.0, 4.0, 5.0]
+        features = np.array([[1.0, 2.0, 3.0, 4.0, 5.0]])
         
         result = await optimizer._predict_with_onnx(features)
         
@@ -816,7 +820,7 @@ class TestLiquidityOptimizerMLModelPaths:
         mock_scaler.transform.return_value = np.array([[1, 2, 3, 4, 5]])
         optimizer.scaler = mock_scaler
         
-        features = [1.0, 2.0, 3.0, 4.0, 5.0]
+        features = np.array([[1.0, 2.0, 3.0, 4.0, 5.0]])
         
         result = await optimizer._predict_with_sklearn(features)
         

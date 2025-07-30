@@ -72,6 +72,8 @@ class TestPosition:
             entry_price=Decimal("0.40"),
             current_price=Decimal("0.45"),
             unrealized_pnl=Decimal("50"),
+            leverage=1.8,  # Moderate leverage for SEI position
+            liquidation_price=Decimal("0.30"),  # Conservative liquidation threshold
             timestamp=datetime.now(timezone.utc)
         )
         
@@ -131,7 +133,8 @@ class TestPortfolio:
                 current_allocations={
                     AssetSymbol.SEI: 0.5,
                     AssetSymbol.USDC: 0.5,
-                }
+                },
+                rebalance_threshold=0.05  # 5% rebalance threshold
             )
         
         assert "sum to 1.0" in str(exc_info.value)

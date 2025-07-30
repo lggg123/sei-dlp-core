@@ -36,8 +36,8 @@ def mock_liquidity_pool():
     """Create mock liquidity pool for testing"""
     return LiquidityPool(
         address="0x123abc",
-        token0="ETH",
-        token1="USDC",
+        token0=AssetSymbol.ETH,
+        token1=AssetSymbol.USDC,
         fee_tier=0.003,
         reserve0=Decimal("1000"),
         reserve1=Decimal("2000000"),
@@ -52,11 +52,13 @@ def mock_liquidity_pool():
 def mock_position():
     """Create mock position for testing"""
     return Position(
-        asset="ETH",
+        asset=AssetSymbol.ETH,
         size=Decimal("10.0"),
         entry_price=Decimal("2000.0"),
         current_price=Decimal("2100.0"),
         unrealized_pnl=Decimal("1000.0"),
+        leverage=2.0,  # Moderate leverage for ETH position
+        liquidation_price=Decimal("1600.0"),  # Conservative liquidation threshold
         timestamp=datetime.now(timezone.utc)
     )
 
@@ -128,8 +130,8 @@ class TestLiquidityOptimizerCoverage:
         # Create a pool with very low reserves to potentially get negative lower bound
         low_reserve_pool = LiquidityPool(
             address="0x123abc",
-            token0="ETH",
-            token1="USDC", 
+            token0=AssetSymbol.ETH,
+            token1=AssetSymbol.USDC,
             fee_tier=0.003,
             reserve0=Decimal("0.01"),  # Very low reserve
             reserve1=Decimal("0.01"),  # Very low reserve
@@ -171,7 +173,7 @@ class TestLiquidityOptimizerCoverage:
         # Mock the validate_sei_chain to return False to trigger line 460
         with patch.object(optimizer, 'validate_sei_chain', return_value=False):
             with pytest.raises(ValueError, match="Invalid chain ID"):
-                await optimizer.generate_rebalance_signal(mock_position, mock_liquidity_pool, [mock_market_data])
+                await optimizer.generate_rebalance_signal(mock_position, mock_liquidity_pool, [mock_market_data], threshold=0.1)
 
     def test_onnx_loading_exception(self):
         """Test ONNX model loading exception handling (line 488)"""

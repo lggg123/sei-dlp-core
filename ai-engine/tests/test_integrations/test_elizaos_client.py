@@ -124,6 +124,7 @@ class TestElizaOSClient:
         await elizaos_client._handle_message(message_data)
         
         assert handler_called
+        assert received_message is not None
         assert received_message.id == "test_id"
         assert received_message.message_type == "TEST_TYPE"
         

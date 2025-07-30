@@ -1,41 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount, useContractRead, useContractWrite } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
+import { Address, Abi } from 'viem';
 
-const CustomerVaultDashboard = ({ vaultAddress, vaultABI }) => {
+interface CustomerVaultDashboardProps {
+  vaultAddress: Address;
+  vaultABI: Abi;
+}
+
+const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAddress, vaultABI }) => {
   const { address } = useAccount();
   const [depositAmount0, setDepositAmount0] = useState('');
   const [depositAmount1, setDepositAmount1] = useState('');
   const [withdrawShares, setWithdrawShares] = useState('');
 
   // Read customer statistics
-  const { data: customerStats } = useContractRead({
+  const { data: customerStats } = useReadContract({
     address: vaultAddress,
     abi: vaultABI,
     functionName: 'getCustomerStats',
     args: [address],
-    enabled: !!address,
-  });
+    query: {
+      enabled: !!address,
+    },
+  }) as { data: readonly [bigint, bigint, bigint, bigint, bigint, bigint] | undefined };
 
   // Read vault information
-  const { data: vaultInfo } = useContractRead({
+  const { data: vaultInfo } = useReadContract({
     address: vaultAddress,
     abi: vaultABI,
     functionName: 'getVaultInfo',
-  });
+  }) as { data: {
+    token0?: string;
+    token1?: string;
+    strategy?: string;
+    totalValueLocked?: bigint;
+    poolFee?: number;
+    isActive?: boolean;
+  } | undefined };
 
   // Contract write functions
-  const { write: deposit, isLoading: isDepositing } = useContractWrite({
-    address: vaultAddress,
-    abi: vaultABI,
-    functionName: 'deposit',
-  });
-
-  const { write: withdraw, isLoading: isWithdrawing } = useContractWrite({
-    address: vaultAddress,
-    abi: vaultABI,
-    functionName: 'withdraw',
-  });
+  const { writeContract: deposit, isPending: isDepositing } = useWriteContract();
+  const { writeContract: withdraw, isPending: isWithdrawing } = useWriteContract();
 
   // Parse customer stats if available
   const [shares, shareValue, totalDeposited, totalWithdrawn, depositTime, lockTimeRemaining] = customerStats || [];
@@ -47,11 +53,14 @@ const CustomerVaultDashboard = ({ vaultAddress, vaultABI }) => {
 
   const canWithdraw = lockTimeRemaining ? Number(lockTimeRemaining) === 0 : false;
 
-  const handleDeposit = async () => {
+  const handleDeposit = async (): Promise<void> => {
     if (!depositAmount0 || !depositAmount1) return;
     
     try {
-      await deposit({
+      deposit({
+        address: vaultAddress,
+        abi: vaultABI,
+        functionName: 'deposit',
         args: [
           parseUnits(depositAmount0, 18),
           parseUnits(depositAmount1, 18),
@@ -63,11 +72,14 @@ const CustomerVaultDashboard = ({ vaultAddress, vaultABI }) => {
     }
   };
 
-  const handleWithdraw = async () => {
+  const handleWithdraw = async (): Promise<void> => {
     if (!withdrawShares) return;
     
     try {
-      await withdraw({
+      withdraw({
+        address: vaultAddress,
+        abi: vaultABI,
+        functionName: 'withdraw',
         args: [
           parseUnits(withdrawShares, 18),
           address
@@ -78,11 +90,12 @@ const CustomerVaultDashboard = ({ vaultAddress, vaultABI }) => {
     }
   };
 
-  const formatTimeRemaining = (seconds) => {
-    if (!seconds || seconds <= 0) return 'Available';
+  const formatTimeRemaining = (seconds: number | bigint | undefined): string => {
+    if (!seconds || Number(seconds) <= 0) return 'Available';
     
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
+    const secondsNum = Number(seconds);
+    const hours = Math.floor(secondsNum / 3600);
+    const minutes = Math.floor((secondsNum % 3600) / 60);
     
     if (hours > 0) {
       return `${hours}h ${minutes}m remaining`;
@@ -136,7 +149,7 @@ const CustomerVaultDashboard = ({ vaultAddress, vaultABI }) => {
           <div>
             <h4 className="font-semibold text-yellow-800">Withdrawal Status</h4>
             <p className="text-yellow-700">
-              {canWithdraw ? 'You can withdraw your funds' : `Lock period: ${formatTimeRemaining(lockTimeRemaining)}`}
+              {canWithdraw ? 'You can withdraw your funds' : `Lock period: ${formatTimeRemaining(Number(lockTimeRemaining))}`}
             </p>
           </div>
           <div className={`w-4 h-4 rounded-full ${canWithdraw ? 'bg-green-500' : 'bg-yellow-500'}`}></div>

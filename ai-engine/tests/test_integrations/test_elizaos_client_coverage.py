@@ -203,8 +203,6 @@ class TestElizaOSClientCoverage:
             target_price=Decimal("0.50"),
             stop_loss=Decimal("0.40"),
             reasoning="Test trading signal based on volume analysis",  # Required field
-            position_size=Decimal("1000"),
-            strategy="test_strategy",
             model_version="v1.0",
             timestamp=datetime.now(timezone.utc)
         )
@@ -234,7 +232,6 @@ class TestElizaOSClientCoverage:
             counterparty_risk=0.1,
             overall_risk_score=0.35,  # Required field
             recommended_max_position_size=Decimal("5000"),  # Required field
-            position_size=Decimal("5000"),
             timestamp=datetime.now(timezone.utc)
         )
         
@@ -261,8 +258,6 @@ class TestElizaOSClientCoverage:
             target_price=Decimal("0.50"),
             stop_loss=Decimal("0.40"),
             reasoning="Test signal for websocket error handling",  # Required field
-            position_size=Decimal("1000"),
-            strategy="test_strategy",
             model_version="v1.0",
             timestamp=datetime.now(timezone.utc)
         )
