@@ -168,6 +168,33 @@ class RiskMetrics(BaseModel):
     timestamp: datetime
 
 
+class LiquidityRange(BaseModel):
+    """Optimal liquidity range prediction"""
+    lower_price: Decimal = Field(..., gt=0)
+    upper_price: Decimal = Field(..., gt=0)
+    confidence: float = Field(..., ge=0, le=1)
+    expected_fees: Decimal = Field(..., ge=0)
+    impermanent_loss_risk: float = Field(..., ge=0, le=1)
+    capital_efficiency: float = Field(..., ge=0, le=1)
+    reasoning: str = Field(..., description="Reasoning for the range prediction")
+
+    @field_validator('upper_price')
+    @classmethod
+    def validate_upper_price(cls, v, info):
+        if 'lower_price' in info.data and v <= info.data['lower_price']:
+            raise ValueError('upper_price must be greater than lower_price')
+        return v
+
+
+class VolatilityFeatures(BaseModel):
+    """Volatility-based features for ML model"""
+    price_volatility_1h: float = Field(..., ge=0)
+    price_volatility_24h: float = Field(..., ge=0)
+    volume_volatility_24h: float = Field(..., ge=0)
+    funding_rate_volatility: float = Field(..., ge=0)
+    cross_correlation: float = Field(..., ge=-1, le=1)
+
+
 class ElizaOSMessage(BaseModel):
     """Message format for ElizaOS communication"""
     id: str = Field(..., description="Deterministic UUID")

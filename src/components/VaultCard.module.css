@@ -1,8 +1,8 @@
 /* VaultCard Component Styles - Override global .vault-card styles */
 .vaultCard {
   /* Card dimensions and layout */
-  width: 300px;
-  min-height: 350px;
+  width: 280px;
+  min-height: 280px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -67,7 +67,7 @@
 .cardHeader {
   position: relative;
   z-index: 10;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   flex-shrink: 0;
 }
 

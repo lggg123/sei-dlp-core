@@ -1,5 +1,5 @@
 
-# SEI DLP Core - Claude Development Guide
+    `# SEI DLP Core - Claude Development Guide
 
 ## Project Overview
 SEI DLP (Decentralized Liquidity Protocol) is an AI-powered DeFi platform built on the SEI blockchain that provides autonomous liquidity provisioning with machine learning-driven optimization.

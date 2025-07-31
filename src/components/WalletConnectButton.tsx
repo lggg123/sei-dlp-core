@@ -31,17 +31,10 @@ export function WalletConnectButton() {
               authenticationStatus === 'authenticated')
 
           return (
-            <div
-              {...(!ready && {
-                'aria-hidden': true,
-                'style': {
-                  opacity: 0,
-                  pointerEvents: 'none',
-                  userSelect: 'none',
-                },
-              })}
-            >
-              {(() => {
+            <>
+              {ready && (
+                <div className="flex items-center">
+                  {(() => {
                 if (!connected) {
                   return (
                     <Button 
@@ -124,8 +117,10 @@ export function WalletConnectButton() {
                     </Button>
                   </div>
                 )
-              })()}
-            </div>
+                  })()}
+                </div>
+              )}
+            </>
           )
         }}
       </ConnectButton.Custom>

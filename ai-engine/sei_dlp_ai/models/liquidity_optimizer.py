@@ -1,254 +1,516 @@
-"""Liquidity Optimizer module for SEI DLP"""
+"""Liquidity Optimizer ML model for SEI DLP"""
 
+import asyncio
+import logging
 import numpy as np
-from typing import Dict, Any, Tuple, List
-from datetime import datetime
-import math
+import pandas as pd
+from typing import Dict, Any, List, Optional, Union
+from numpy.typing import NDArray
+from datetime import datetime, timezone
+from decimal import Decimal
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+import onnxruntime as ort
+
+from sei_dlp_ai.types import (
+    ChainId, AssetSymbol, MarketData, Position, LiquidityPool,
+    TradingSignal, LiquidityRange, VolatilityFeatures
+)
+
+logger = logging.getLogger(__name__)
+
 
 class LiquidityOptimizer:
     """ML-driven liquidity range optimization for SEI DLP vaults"""
     
-    def __init__(self):
-        self.sei_tick_spacing = 60  # SEI standard tick spacing
-        self.model_confidence_threshold = 0.7
+    def __init__(self) -> None:
+        """Initialize the liquidity optimizer"""
+        # SEI-specific parameters
+        self.sei_chain_id = ChainId.SEI_MAINNET
+        self.sei_finality_ms = 400
+        self.min_tick_spacing = 60
+        self.gas_optimization_factor = 0.95
         
-        # SEI-specific optimization parameters
-        self.sei_params = {
-            'finality_ms': 400,  # 400ms finality advantage
-            'gas_cost_sei': 0.15,  # ~$0.15 gas cost
-            'chain_id': 713715,
-            'optimal_utilization': 0.75
-        }
-    
-    def optimize_range(self, market_data: Dict[str, Any], vault_state: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Optimize liquidity range using ML-driven approach
-        """
+        # ML model components
+        self.is_trained = False
+        self.ml_model: Optional[RandomForestRegressor] = None
+        self.scaler: Optional[StandardScaler] = None
+        self.feature_columns: List[str] = []
+        
+        # ONNX session for production inference
+        self.onnx_session: Optional[ort.InferenceSession] = None
         try:
-            current_price = market_data.get('current_price', 0)
-            volatility = market_data.get('volatility', 0.3)
-            volume_24h = market_data.get('volume_24h', 0)
-            liquidity = market_data.get('liquidity', 0)
-            
-            # Current vault position
-            current_tick = vault_state.get('current_tick', 0)
-            utilization_rate = vault_state.get('utilization_rate', 0.5)
-            
-            # ML-based range prediction
-            optimal_range = self._predict_optimal_range(
-                current_price, volatility, volume_24h, liquidity
-            )
-            
-            # SEI-specific optimizations
-            sei_optimized_range = self._apply_sei_optimizations(optimal_range, current_tick)
-            
-            # Calculate expected performance metrics
-            performance_metrics = self._calculate_performance_metrics(
-                sei_optimized_range, market_data, vault_state
-            )
-            
-            return {
-                'recommended_range': {
-                    'lower_tick': sei_optimized_range['lower_tick'],
-                    'upper_tick': sei_optimized_range['upper_tick'],
-                    'lower_price': sei_optimized_range['lower_price'],
-                    'upper_price': sei_optimized_range['upper_price'],
-                },
-                'performance_forecast': performance_metrics,
-                'confidence_score': sei_optimized_range['confidence'],
-                'optimization_factors': {
-                    'volatility_adjustment': sei_optimized_range['volatility_factor'],
-                    'volume_weighting': sei_optimized_range['volume_factor'],
-                    'liquidity_consideration': sei_optimized_range['liquidity_factor'],
-                    'sei_finality_advantage': True
-                },
-                'execution_plan': self._generate_execution_plan(sei_optimized_range),
-                'timestamp': datetime.utcnow().isoformat()
-            }
-            
+            # Try to initialize ONNX session if model exists
+            self.onnx_session = None  # Will be loaded explicitly
         except Exception as e:
-            return {
-                'error': f'Range optimization failed: {str(e)}',
-                'recommended_range': self._fallback_range(market_data),
-                'confidence_score': 0.3
-            }
+            logger.warning(f"ONNX session initialization failed: {e}")
+            self.onnx_session = None
     
-    def _predict_optimal_range(self, price: float, volatility: float, volume: float, liquidity: float) -> Dict[str, Any]:
-        """
-        Core ML prediction logic for optimal range
-        """
-        # Volatility-based range calculation
-        volatility_factor = min(volatility, 1.0)
-        base_range_width = price * volatility_factor * 0.2  # 20% of price * volatility
+    def validate_sei_chain(self) -> bool:
+        """Validate that we're operating on a valid SEI chain"""
+        try:
+            return self.sei_chain_id in [ChainId.SEI_MAINNET, ChainId.SEI_TESTNET, ChainId.SEI_DEVNET]
+        except Exception:
+            return False
+    
+    def _extract_market_features(self, market_data: List[MarketData]) -> List[float]:
+        """Extract market features for ML model"""
+        features = [0.0] * 15  # Fixed length feature vector
         
-        # Volume adjustment - higher volume = tighter ranges for more fees
-        volume_factor = min(volume / 1000000, 2.0)  # Normalize to millions
-        volume_adjusted_width = base_range_width * (1 + volume_factor * 0.1)
+        if not market_data:
+            return features
         
-        # Liquidity consideration - lower liquidity = wider ranges for safety
-        liquidity_factor = max(0.5, min(liquidity / 10000000, 2.0))  # Normalize to 10M
-        final_range_width = volume_adjusted_width * liquidity_factor
+        # Extract features from market data
+        sei_data = None
+        usdc_data = None
+        eth_data = None
         
-        # Calculate price bounds
-        lower_price = price - (final_range_width * 0.5)
-        upper_price = price + (final_range_width * 0.5)
+        for data in market_data:
+            if data.symbol == AssetSymbol.SEI:
+                sei_data = data
+            elif data.symbol == AssetSymbol.USDC:
+                usdc_data = data
+            elif data.symbol == AssetSymbol.ETH:
+                eth_data = data
         
-        # Convert to ticks (simplified conversion)
-        price_to_tick_multiplier = 10000  # Simplified conversion factor
-        lower_tick = int((lower_price * price_to_tick_multiplier) / self.sei_tick_spacing) * self.sei_tick_spacing
-        upper_tick = int((upper_price * price_to_tick_multiplier) / self.sei_tick_spacing) * self.sei_tick_spacing
+        if sei_data:
+            features[0] = float(sei_data.price)
+            features[1] = float(sei_data.volume_24h)
+            features[2] = float(sei_data.price_change_24h)
+            features[3] = sei_data.confidence_score
+            features[4] = float(sei_data.funding_rate) if sei_data.funding_rate else 0.0
         
-        # Confidence based on data quality and market conditions
-        confidence = self._calculate_prediction_confidence(volatility, volume, liquidity)
+        if usdc_data:
+            features[5] = float(usdc_data.price)
+            features[6] = float(usdc_data.volume_24h)
+        
+        if eth_data:
+            features[7] = float(eth_data.price)
+            features[8] = float(eth_data.volume_24h)
+        
+        # Additional derived features
+        if sei_data and usdc_data:
+            features[9] = float(sei_data.price) / float(usdc_data.price)  # SEI/USDC ratio
+        
+        # Fill remaining features with market-derived metrics
+        features[10] = float(len(market_data))  # Number of data points
+        features[11] = float(sum(data.confidence_score for data in market_data) / len(market_data)) if market_data else 0.0
+        features[12] = float(sum(float(data.volume_24h) for data in market_data) / len(market_data)) if market_data else 0.0
+        features[13] = float(sum(float(data.price_change_24h) for data in market_data) / len(market_data)) if market_data else 0.0
+        features[14] = float(sum(1 for data in market_data if data.funding_rate and data.funding_rate > 0) / len(market_data)) if market_data else 0.0
+        
+        return features
+    
+    def _calculate_volatility_features(self, historical_data: pd.DataFrame) -> Dict[str, float]:
+        """Calculate volatility-based features"""
+        features = {
+            "price_volatility_1h": 0.0,
+            "price_volatility_24h": 0.0,
+            "volume_volatility_24h": 0.0,
+            "funding_rate_volatility": 0.0,
+            "cross_correlation": 0.0
+        }
+        
+        if historical_data.empty or 'price' not in historical_data.columns:
+            return features
+        
+        try:
+            # Calculate price volatility
+            if len(historical_data) > 1:
+                returns = historical_data['price'].pct_change().dropna()
+                if len(returns) > 0:
+                    features["price_volatility_24h"] = float(returns.std())
+                    
+                    # 1-hour volatility (approximate from available data)
+                    if len(returns) > 12:  # At least 1 hour of 5-min data
+                        features["price_volatility_1h"] = float(returns.tail(12).std())
+            
+            # Volume volatility
+            if 'volume' in historical_data.columns and len(historical_data) > 1:
+                volume_changes = historical_data['volume'].pct_change().dropna()
+                if len(volume_changes) > 0:
+                    features["volume_volatility_24h"] = float(volume_changes.std())
+            
+            # Funding rate volatility
+            if 'funding_rate' in historical_data.columns and len(historical_data) > 1:
+                funding_changes = historical_data['funding_rate'].diff().dropna()
+                if len(funding_changes) > 0:
+                    features["funding_rate_volatility"] = float(funding_changes.std())
+            
+            # Cross-correlation between price and volume
+            if 'volume' in historical_data.columns and len(historical_data) > 2:
+                price_returns = historical_data['price'].pct_change().dropna()
+                volume_changes = historical_data['volume'].pct_change().dropna()
+                if len(price_returns) > 0 and len(volume_changes) > 0:
+                    min_len = min(len(price_returns), len(volume_changes))
+                    if min_len > 1:
+                        # Convert to numpy arrays to ensure compatibility with corrcoef
+                        price_array = np.asarray(price_returns.values[-min_len:], dtype=np.float64)
+                        volume_array = np.asarray(volume_changes.values[-min_len:], dtype=np.float64)
+                        correlation = np.corrcoef(price_array, volume_array)[0, 1]
+                        features["cross_correlation"] = float(correlation) if not np.isnan(correlation) else 0.0
+        except Exception as e:
+            logger.warning(f"Error calculating volatility features: {e}")
+        
+        return features
+    
+    def _extract_sei_features(self, pool: LiquidityPool, market_data: List[MarketData]) -> List[float]:
+        """Extract SEI-specific features"""
+        features = [0.0] * 4
+        
+        # SEI finality advantage factor
+        features[0] = 1.0 - (self.sei_finality_ms / 12000.0)  # Compared to 12s average
+        
+        # Gas efficiency factor
+        features[1] = self.gas_optimization_factor
+        
+        # Pool liquidity utilization
+        try:
+            if hasattr(pool, 'liquidity') and pool.liquidity and float(pool.liquidity) > 0:
+                total_reserves = float(getattr(pool, 'reserve0', 0)) + float(getattr(pool, 'reserve1', 0))
+                features[2] = float(total_reserves / float(pool.liquidity))
+            else:
+                features[2] = 0.0
+        except (AttributeError, TypeError, ValueError):
+            features[2] = 0.0
+        
+        # Market depth indicator
+        if market_data:
+            avg_volume = sum(float(data.volume_24h) for data in market_data) / len(market_data)
+            features[3] = min(1.0, avg_volume / 10000000.0)  # Normalize to 10M
+        
+        return features
+    
+    def _align_to_tick_spacing(self, price: Decimal, pool: LiquidityPool) -> Decimal:
+        """Align price to SEI tick spacing"""
+        try:
+            tick_spacing = getattr(pool, 'tick_spacing', self.min_tick_spacing)
+            price_float = float(price)
+            
+            # Simple tick alignment
+            tick_value = price_float * 10000  # Convert to tick representation
+            aligned_tick = round(tick_value / tick_spacing) * tick_spacing
+            aligned_price = Decimal(str(aligned_tick / 10000))
+            
+            return max(aligned_price, Decimal('0.001'))  # Minimum price
+        except Exception:
+            return price
+    
+    async def _extract_features(
+        self, 
+        pool: LiquidityPool, 
+        market_data: List[MarketData], 
+        historical_data: pd.DataFrame, 
+        position_size: Decimal
+    ) -> NDArray[np.float64]:
+        """Extract complete feature set for ML model"""
+        # Market features
+        market_features = self._extract_market_features(market_data)
+        
+        # Volatility features
+        volatility_dict = self._calculate_volatility_features(historical_data)
+        volatility_features = list(volatility_dict.values())
+        
+        # SEI-specific features
+        sei_features = self._extract_sei_features(pool, market_data)
+        
+        # Position size feature
+        position_features = [float(position_size)]
+        
+        # Pool features
+        pool_features = [
+            float(getattr(pool, 'reserve0', 0)),
+            float(getattr(pool, 'reserve1', 0)),
+            float(getattr(pool, 'fee_tier', 0.003)),
+            float(getattr(pool, 'liquidity', 0))
+        ]
+        
+        # Combine all features
+        all_features = (
+            market_features + 
+            volatility_features + 
+            sei_features + 
+            position_features + 
+            pool_features
+        )
+        
+        return np.array([all_features])
+    
+    async def _predict_statistical(
+        self,
+        pool: LiquidityPool,
+        market_data: List[MarketData],
+        historical_data: pd.DataFrame,
+        risk_tolerance: float
+    ) -> Dict[str, Any]:
+        """Statistical fallback prediction method"""
+        # Get current price from pool or market data
+        current_price = float(pool.price_token0_in_token1) if hasattr(pool, 'price_token0_in_token1') else 1.0
+        
+        if not current_price and market_data:
+            sei_data = next((data for data in market_data if data.symbol == AssetSymbol.SEI), None)
+            if sei_data:
+                current_price = float(sei_data.price)
+        
+        if not current_price:
+            current_price = 1.0
+        
+        # Calculate volatility from historical data
+        volatility = 0.3  # Default
+        if not historical_data.empty and 'price' in historical_data.columns:
+            returns = historical_data['price'].pct_change().dropna()
+            if len(returns) > 0:
+                volatility = float(returns.std())
+        
+        # Risk-adjusted range calculation
+        range_multiplier = 1.0 + (risk_tolerance * volatility)
+        lower_price = Decimal(str(current_price * (1 - range_multiplier * 0.1)))
+        upper_price = Decimal(str(current_price * (1 + range_multiplier * 0.1)))
+        
+        confidence = 0.6 if historical_data.empty else min(0.8, 0.4 + len(historical_data) / 1000)
         
         return {
-            'lower_tick': lower_tick,
-            'upper_tick': upper_tick,
-            'lower_price': lower_tick / price_to_tick_multiplier,
-            'upper_price': upper_tick / price_to_tick_multiplier,
-            'confidence': confidence,
-            'volatility_factor': volatility_factor,
-            'volume_factor': volume_factor,
-            'liquidity_factor': liquidity_factor
+            "lower_price": lower_price,
+            "upper_price": upper_price,
+            "confidence": confidence,
+            "reasoning": "Statistical volatility-based range calculation using historical price data"
         }
     
-    def _apply_sei_optimizations(self, base_range: Dict[str, Any], current_tick: int) -> Dict[str, Any]:
-        """
-        Apply SEI-specific optimizations leveraging 400ms finality
-        """
-        # SEI allows for more frequent rebalancing due to fast finality
-        # This means we can use slightly tighter ranges with confidence
-        sei_tightening_factor = 0.95  # 5% tighter than other chains
+    def _optimize_for_sei(self, range_prediction: Dict[str, Any], pool: LiquidityPool) -> Dict[str, Any]:
+        """Apply SEI-specific optimizations"""
+        original_lower = range_prediction["lower_price"]
+        original_upper = range_prediction["upper_price"]
+        original_range = original_upper - original_lower
         
-        range_width = base_range['upper_tick'] - base_range['lower_tick']
-        optimized_width = int(range_width * sei_tightening_factor)
+        # Apply gas optimization (slightly tighter range)
+        optimized_range = original_range * Decimal(str(self.gas_optimization_factor))
         
-        # Ensure minimum viable range
-        min_range_width = self.sei_tick_spacing * 10  # Minimum 10 tick spacings
-        optimized_width = max(optimized_width, min_range_width)
-        
-        # Center around current price/tick with slight bias based on trend
-        center_tick = current_tick  # Could add trend bias here
-        
-        optimized_lower = center_tick - (optimized_width // 2)
-        optimized_upper = center_tick + (optimized_width // 2)
+        # Center the optimized range
+        center_price = (original_lower + original_upper) / 2
+        optimized_lower = center_price - (optimized_range / 2)
+        optimized_upper = center_price + (optimized_range / 2)
         
         # Align to tick spacing
-        optimized_lower = (optimized_lower // self.sei_tick_spacing) * self.sei_tick_spacing
-        optimized_upper = (optimized_upper // self.sei_tick_spacing) * self.sei_tick_spacing
+        optimized_lower = self._align_to_tick_spacing(optimized_lower, pool)
+        optimized_upper = self._align_to_tick_spacing(optimized_upper, pool)
         
         return {
-            **base_range,
-            'lower_tick': optimized_lower,
-            'upper_tick': optimized_upper,
-            'lower_price': optimized_lower / 10000,  # Convert back
-            'upper_price': optimized_upper / 10000,
-            'sei_optimized': True
+            **range_prediction,
+            "lower_price": optimized_lower,
+            "upper_price": optimized_upper,
+            "reasoning": f"{range_prediction.get('reasoning', '')} Enhanced with SEI gas optimization and tick alignment."
         }
     
-    def _calculate_performance_metrics(self, range_data: Dict[str, Any], market_data: Dict[str, Any], vault_state: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Calculate expected performance metrics for the optimized range
-        """
-        # Fee APR estimation based on range width and volume
-        range_width = range_data['upper_price'] - range_data['lower_price']
-        price = market_data.get('current_price', range_data['lower_price'] + range_width/2)
-        volume_24h = market_data.get('volume_24h', 0)
-        
-        # Capital efficiency - narrower ranges = higher efficiency
-        capital_efficiency = min(2.0, price / range_width) if range_width > 0 else 1.0
-        
-        # Fee capture rate - estimated based on range vs price volatility
-        volatility = market_data.get('volatility', 0.3)
-        fee_capture_rate = min(0.9, (range_width / price) / volatility) if volatility > 0 else 0.5
-        
-        # APR estimation (simplified)
-        base_fee_rate = 0.003  # 0.3% fee tier
-        volume_factor = min(volume_24h / 10000000, 1.0)  # Normalize volume
-        estimated_apr = base_fee_rate * volume_factor * fee_capture_rate * capital_efficiency * 365
-        
-        # Impermanent loss risk
-        il_risk = self._estimate_il_risk(range_width, price, volatility)
-        
-        # Net APR (APR - IL risk)
-        net_apr = max(0, estimated_apr - il_risk)
-        
-        return {
-            'estimated_apr': estimated_apr,
-            'capital_efficiency': capital_efficiency,
-            'fee_capture_rate': fee_capture_rate,
-            'impermanent_loss_risk': il_risk,
-            'net_apr': net_apr,
-            'rebalance_frequency_estimate': self._estimate_rebalance_frequency(volatility),
-            'sei_gas_cost_annual': self._estimate_annual_gas_costs(volatility)
-        }
+    async def _calculate_performance_metrics(
+        self,
+        range_prediction: Dict[str, Any],
+        pool: LiquidityPool,
+        market_data: List[MarketData],
+        position_size: Decimal
+    ) -> Dict[str, float]:
+        """Calculate expected performance metrics"""
+        try:
+            lower_price = range_prediction["lower_price"]
+            upper_price = range_prediction["upper_price"]
+            range_width = float(upper_price - lower_price)
+            
+            # Expected fees (simplified calculation)
+            volume_24h = sum(float(data.volume_24h) for data in market_data) / len(market_data) if market_data else 0
+            fee_rate = pool.fee_tier
+            expected_fees = float(Decimal(str(volume_24h * fee_rate * 0.01)))  # Rough estimate
+            
+            # Impermanent loss risk
+            center_price = float((lower_price + upper_price) / 2)
+            il_risk = min(0.5, range_width / center_price * 0.2) if center_price > 0 else 0.1
+            
+            # Capital efficiency
+            capital_efficiency = min(1.0, center_price / range_width) if range_width > 0 else 0.5
+            
+            return {
+                "expected_fees": expected_fees,
+                "il_risk": il_risk,
+                "capital_efficiency": capital_efficiency
+            }
+        except Exception as e:
+            logger.warning(f"Error calculating performance metrics: {e}")
+            return {
+                "expected_fees": 0.0,
+                "il_risk": 0.1,
+                "capital_efficiency": 0.5
+            }
     
-    def _calculate_prediction_confidence(self, volatility: float, volume: float, liquidity: float) -> float:
-        """Calculate confidence score for the prediction"""
-        # Higher confidence with:
-        # - Moderate volatility (not too high/low)
-        # - Good volume data
-        # - Sufficient liquidity
+    async def predict_optimal_range(
+        self,
+        pool: LiquidityPool,
+        market_data: List[MarketData],
+        historical_data: pd.DataFrame,
+        position_size: Decimal,
+        risk_tolerance: float = 0.5
+    ) -> LiquidityRange:
+        """Predict optimal liquidity range"""
+        if not self.validate_sei_chain():
+            raise ValueError("Invalid chain ID for SEI operations")
         
-        vol_score = 1.0 - abs(volatility - 0.3) / 0.7  # Optimal around 30% volatility
-        volume_score = min(volume / 1000000, 1.0)  # Good volume = higher confidence
-        liq_score = min(liquidity / 5000000, 1.0)  # Sufficient liquidity
+        try:
+            # Try ONNX first, then sklearn, then statistical fallback
+            if self.onnx_session is not None:
+                features = await self._extract_features(pool, market_data, historical_data, position_size)
+                prediction = await self._predict_with_onnx(features)
+            elif self.ml_model is not None and self.is_trained:
+                features = await self._extract_features(pool, market_data, historical_data, position_size)
+                prediction = await self._predict_with_sklearn(features)
+            else:
+                prediction = await self._predict_statistical(pool, market_data, historical_data, risk_tolerance)
+            
+            # Apply SEI optimizations
+            optimized_prediction = self._optimize_for_sei(prediction, pool)
+            
+            # Calculate performance metrics
+            metrics = await self._calculate_performance_metrics(
+                optimized_prediction, pool, market_data, position_size
+            )
+            
+            return LiquidityRange(
+                lower_price=optimized_prediction["lower_price"],
+                upper_price=optimized_prediction["upper_price"],
+                confidence=optimized_prediction["confidence"],
+                expected_fees=Decimal(str(metrics["expected_fees"])),
+                impermanent_loss_risk=metrics["il_risk"],
+                capital_efficiency=metrics["capital_efficiency"],
+                reasoning=optimized_prediction["reasoning"]
+            )
         
-        confidence = (vol_score * 0.4 + volume_score * 0.3 + liq_score * 0.3)
-        return max(0.1, min(0.95, confidence))
+        except Exception as e:
+            logger.error(f"Error in predict_optimal_range: {e}")
+            raise
     
-    def _estimate_il_risk(self, range_width: float, price: float, volatility: float) -> float:
-        """Estimate impermanent loss risk for the range"""
-        if price == 0:
-            return 0.05  # Default 5% IL risk
+    async def generate_rebalance_signal(
+        self,
+        position: Position,
+        pool: LiquidityPool,
+        market_data: List[MarketData],
+        threshold: float = 0.1
+    ) -> Optional[TradingSignal]:
+        """Generate rebalance signal if needed"""
+        try:
+            # Calculate price deviation from entry
+            current_price = float(position.current_price)
+            entry_price = float(position.entry_price)
+            price_change = abs(current_price - entry_price) / entry_price
+            
+            # Check if rebalance is needed
+            if price_change < threshold:
+                return None
+            
+            # Generate rebalance signal
+            confidence = min(0.9, price_change / threshold)
+            
+            return TradingSignal(
+                asset=position.asset,
+                action="REBALANCE",
+                confidence=confidence,
+                target_price=position.current_price,
+                reasoning=f"Position moved {price_change:.1%} from entry. SEI 400ms finality enables efficient rebalancing.",
+                model_version="v1.0.0",
+                timestamp=datetime.now(timezone.utc)
+            )
         
-        range_ratio = range_width / price
-        # Wider ranges = lower IL risk, higher volatility = higher IL risk
-        il_risk = (volatility * 0.1) / (range_ratio + 0.1)
-        return min(0.2, il_risk)  # Cap at 20% IL risk
+        except Exception as e:
+            logger.warning(f"Error generating rebalance signal: {e}")
+            return None
     
-    def _estimate_rebalance_frequency(self, volatility: float) -> str:
-        """Estimate how often rebalancing will be needed"""
-        if volatility < 0.2:
-            return "weekly"
-        elif volatility < 0.5:
-            return "every_few_days"
-        else:
-            return "daily"
+    def train_model(self, training_data: pd.DataFrame) -> None:
+        """Train the ML model"""
+        try:
+            # Identify feature columns (exclude target columns)
+            target_columns = ['lower_bound', 'upper_bound', 'confidence']
+            feature_columns = [col for col in training_data.columns if col not in target_columns]
+            
+            if len(feature_columns) == 0:
+                raise ValueError("No feature columns found in training data")
+            
+            # Extract features and targets
+            X = np.asarray(training_data[feature_columns].values, dtype=np.float64)
+            y = np.asarray(training_data[target_columns].values, dtype=np.float64)
+            
+            # Initialize components
+            self.scaler = StandardScaler()
+            self.ml_model = RandomForestRegressor(n_estimators=100, random_state=42)
+            
+            # Scale features
+            X_scaled = self.scaler.fit_transform(X)
+            
+            # Train model
+            self.ml_model.fit(X_scaled, y)
+            
+            # Store feature columns and mark as trained
+            self.feature_columns = feature_columns
+            self.is_trained = True
+            
+        except Exception as e:
+            logger.error(f"Error training model: {e}")
+            raise
     
-    def _estimate_annual_gas_costs(self, volatility: float) -> float:
-        """Estimate annual gas costs for rebalancing on SEI"""
-        if volatility < 0.2:
-            rebalances_per_year = 52  # Weekly
-        elif volatility < 0.5:
-            rebalances_per_year = 120  # Every few days
-        else:
-            rebalances_per_year = 365  # Daily
+    async def _predict_with_sklearn(self, features: NDArray[np.float64]) -> Dict[str, Any]:
+        """Predict using trained sklearn model"""
+        if self.ml_model is None or not self.is_trained:
+            raise ValueError("ML model not initialized or not trained")
         
-        return rebalances_per_year * self.sei_params['gas_cost_sei']
+        try:
+            # Scale features
+            if self.scaler is None:
+                raise ValueError("Scaler not initialized")
+            features_scaled = self.scaler.transform(features)
+            
+            # Make prediction
+            prediction = self.ml_model.predict(features_scaled)
+            pred = prediction[0]  # First (and only) prediction
+            
+            return {
+                "lower_price": Decimal(str(max(0.01, pred[0]))),
+                "upper_price": Decimal(str(max(pred[0] + 0.01, pred[1]))),
+                "confidence": max(0.1, min(0.9, pred[2])),
+                "reasoning": "ML model prediction using trained Random Forest"
+            }
+        
+        except Exception as e:
+            logger.error(f"Error in sklearn prediction: {e}")
+            raise
     
-    def _generate_execution_plan(self, range_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Generate execution plan for the optimization"""
-        return {
-            'immediate_action_required': range_data['confidence'] > 0.8,
-            'optimal_execution_time': 'immediate' if range_data['confidence'] > 0.8 else 'next_hour',
-            'gas_estimate_sei': self.sei_params['gas_cost_sei'],
-            'estimated_execution_time': '400ms',  # SEI finality
-            'slippage_tolerance_recommended': 0.005,  # 0.5%
-            'sei_advantages': [
-                '400ms finality for rapid execution',
-                'Low gas costs (~$0.15)',
-                'High frequency rebalancing feasible'
-            ]
-        }
+    def load_onnx_model(self, model_path: str) -> None:
+        """Load ONNX model for inference"""
+        try:
+            self.onnx_session = ort.InferenceSession(model_path)
+        except Exception as e:
+            logger.error(f"Error loading ONNX model: {e}")
+            raise
     
-    def _fallback_range(self, market_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Fallback range calculation if main optimization fails"""
-        price = market_data.get('current_price', 100)
-        # Conservative 10% range around current price
-        return {
-            'lower_tick': int((price * 0.9) * 10000),
-            'upper_tick': int((price * 1.1) * 10000),
-            'lower_price': price * 0.9,
-            'upper_price': price * 1.1,
-        }
+    async def _predict_with_onnx(self, features: NDArray[np.float64]) -> Dict[str, Any]:
+        """Predict using ONNX model"""
+        if self.onnx_session is None:
+            raise ValueError("ONNX session not initialized")
+        
+        try:
+            # Scale features if scaler is available
+            if self.scaler is not None:
+                features_scaled = self.scaler.transform(features)
+            else:
+                features_scaled = features
+            
+            # Get input name
+            input_name = self.onnx_session.get_inputs()[0].name
+            
+            # Run inference
+            result = self.onnx_session.run(None, {input_name: features_scaled.astype(np.float32)})
+            pred = result[0][0]  # First output, first prediction
+            
+            return {
+                "lower_price": Decimal(str(max(0.01, pred[0]))),
+                "upper_price": Decimal(str(max(pred[0] + 0.01, pred[1]))),
+                "confidence": max(0.1, min(0.9, pred[2])),
+                "reasoning": "ONNX model prediction with optimized inference"
+            }
+        
+        except Exception as e:
+            logger.error(f"Error in ONNX prediction: {e}")
+            raise

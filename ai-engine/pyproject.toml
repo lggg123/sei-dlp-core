@@ -52,5 +52,5 @@ strict = true
 testpaths = ["tests"]
 python_files = "test_*.py"
 python_functions = "test_*"
-addopts = "--cov=sei_dlp_ai --cov-report=term-missing --cov-report=html"
+addopts = "-v"
 asyncio_mode = "auto"

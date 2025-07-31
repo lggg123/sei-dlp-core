@@ -61,7 +61,7 @@ export function Navigation({ variant = 'transparent', className = '' }: Navigati
             </Link>
           </div>
 
-          {/* Launch App & Connect Wallet Buttons */}
+          {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
           <div className="flex items-center space-x-4">
             <Link
               href="/vaults"
@@ -70,11 +70,9 @@ export function Navigation({ variant = 'transparent', className = '' }: Navigati
               Launch App
             </Link>
             <WalletConnectButton />
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button className="text-foreground hover:text-primary">
+            
+            {/* Mobile Menu Button */}
+            <button className="md:hidden text-foreground hover:text-primary ml-2">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
