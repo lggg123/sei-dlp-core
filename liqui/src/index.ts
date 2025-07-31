@@ -5,6 +5,17 @@ import { character } from './character.ts';
 import { pluginOverrides, shouldUseAPIIntegration } from './plugin-overrides.ts';
 import { shouldUseSupabase, pluginSupabaseConfig } from './supabase-integration.ts';
 
+// Import Supabase adapter with conditional loading
+let supabaseAdapter: any = null;
+try {
+  // Try to import Supabase adapter
+  const supabaseModule = require('@elizaos/adapter-supabase');
+  supabaseAdapter = supabaseModule.default || supabaseModule;
+  logger.info('✅ Supabase adapter loaded successfully');
+} catch (error) {
+  logger.warn('⚠️ Supabase adapter not available, continuing without it');
+}
+
 const initCharacter = ({ runtime }: { runtime: IAgentRuntime }) => {
   logger.info('Initializing SEI DLP Liqui character');
   logger.info('Name: ', character.name);
@@ -34,7 +45,11 @@ const initCharacter = ({ runtime }: { runtime: IAgentRuntime }) => {
 export const projectAgent: ProjectAgent = {
   character,
   init: async (runtime: IAgentRuntime) => await initCharacter({ runtime }),
-  plugins: [starterPlugin, seiYieldDeltaPlugin], // SEI DLP plugin enabled
+  plugins: [
+    starterPlugin,
+    seiYieldDeltaPlugin,
+    ...(supabaseAdapter && shouldUseSupabase() ? [supabaseAdapter] : [])
+  ].filter(Boolean), // SEI DLP plugin + conditional Supabase adapter
 };
 const project: Project = {
   agents: [projectAgent],

@@ -11,9 +11,6 @@ export const character: Character = {
   
   // SEI DLP-specific plugins following your cross-component flow
   plugins: [
-    // Supabase adapter for SEI DLP vault data (unified database)
-    '@elizaos/adapter-supabase',
-    
     // AI providers based on your environment
     ...(process.env.ANTHROPIC_API_KEY?.trim() ? ['@elizaos/plugin-anthropic'] : []),
     ...(process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ? ['@elizaos/plugin-google-genai'] : []),
