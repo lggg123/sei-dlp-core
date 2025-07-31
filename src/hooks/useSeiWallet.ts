@@ -21,8 +21,13 @@ interface SeiWalletState {
 }
 
 export function useSeiWallet() {
+  const [mounted, setMounted] = useState(false)
   const { isConnected: isEvmConnected } = useAccount()
   const chainId = useChainId()
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   
   const [seiWalletState, setSeiWalletState] = useState<SeiWalletState>({
     isConnected: false,
@@ -95,11 +100,11 @@ export function useSeiWallet() {
   }
 
   // Check if we have both EVM and Cosmos wallet connections
-  const isFullyConnected = isEvmConnected && seiWalletState.isConnected
+  const isFullyConnected = mounted && isEvmConnected && seiWalletState.isConnected
 
   return {
     // EVM wallet state
-    isEvmConnected,
+    isEvmConnected: mounted ? isEvmConnected : false,
     
     // Sei Cosmos wallet state
     isSeiConnected: seiWalletState.isConnected,
@@ -109,6 +114,7 @@ export function useSeiWallet() {
     
     // Combined state
     isFullyConnected,
+    mounted,
     
     // Actions
     connectSeiWallet,

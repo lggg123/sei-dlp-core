@@ -8,7 +8,15 @@ import { useSeiWallet } from '@/hooks/useSeiWallet'
 
 export function WalletConnectButton() {
   const [showSeiModal, setShowSeiModal] = useState(false)
-  const { isSeiConnected, isFullyConnected } = useSeiWallet()
+  const { isSeiConnected, isFullyConnected, mounted } = useSeiWallet()
+
+  if (!mounted) {
+    return (
+      <Button className="btn-cyber text-sm" disabled>
+        Loading...
+      </Button>
+    )
+  }
 
   return (
     <>

@@ -1,7 +1,17 @@
+'use client'
+
 import React from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Logo from './Logo';
-import { WalletConnectButton } from './WalletConnectButton';
+
+const WalletConnectButton = dynamic(
+  () => import('./WalletConnectButton').then(mod => ({ default: mod.WalletConnectButton })),
+  { 
+    ssr: false,
+    loading: () => <div className="w-24 h-8 bg-secondary/20 animate-pulse rounded" />
+  }
+);
 
 interface NavigationProps {
   variant?: 'light' | 'dark' | 'transparent';

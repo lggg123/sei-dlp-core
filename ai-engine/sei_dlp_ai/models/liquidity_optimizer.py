@@ -147,7 +147,8 @@ class LiquidityOptimizer:
                         # Convert to numpy arrays to ensure compatibility with corrcoef
                         price_array = np.asarray(price_returns.values[-min_len:], dtype=np.float64)
                         volume_array = np.asarray(volume_changes.values[-min_len:], dtype=np.float64)
-                        correlation = np.corrcoef(price_array, volume_array)[0, 1]
+                        corr_matrix = np.corrcoef(price_array, volume_array)
+                        correlation = corr_matrix[0, 1]
                         features["cross_correlation"] = float(correlation) if not np.isnan(correlation) else 0.0
         except Exception as e:
             logger.warning(f"Error calculating volatility features: {e}")
@@ -502,7 +503,8 @@ class LiquidityOptimizer:
             
             # Run inference
             result = self.onnx_session.run(None, {input_name: features_scaled.astype(np.float32)})
-            pred = result[0][0]  # First output, first prediction
+            output_tensor = np.asarray(result[0])
+            pred = output_tensor[0]  # First prediction
             
             return {
                 "lower_price": Decimal(str(max(0.01, pred[0]))),

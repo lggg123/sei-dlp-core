@@ -1,0 +1,49 @@
+import PerformanceCard from '@/components/PerformanceCard';
+
+export default function PerformanceMetrics() {
+    return (
+        <section className="py-20 relative">
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-bold mb-4 holo-text">
+                        Real-Time Performance
+                    </h2>
+                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                        Track your vault performance with AI-powered analytics and real-time metrics.
+                    </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                    <PerformanceCard
+                        metric="24.5%"
+                        description="Average APY"
+                        comparison="+12.3% from last month"
+                        color="#00f5d4"
+                        positive={true}
+                    />
+                    <PerformanceCard
+                        metric="$8.3M"
+                        description="Total Value Locked"
+                        comparison="+18% this week"
+                        color="#9b5de5"
+                        positive={true}
+                    />
+                    <PerformanceCard
+                        metric="0.012%"
+                        description="Impermanent Loss"
+                        comparison="-62% vs traditional AMMs"
+                        color="#ff206e"
+                        positive={true}
+                    />
+                    <PerformanceCard
+                        metric="99.8%"
+                        description="Uptime"
+                        comparison="AI optimization active"
+                        color="#fee75c"
+                        positive={true}
+                    />
+                </div>
+            </div>
+        </section>
+    );
+}

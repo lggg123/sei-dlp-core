@@ -32,11 +32,14 @@ export const seiTestnet = defineChain({
 
 export const config = getDefaultConfig({
   appName: 'SEI DLP',
-  projectId: process.env.NEXT_PUBLIC_WC_ID!,
+  projectId: process.env.NEXT_PUBLIC_WC_ID || 'dummy-project-id',
   chains: [seiMainnet, seiTestnet],
   transports: {
     [seiMainnet.id]: http(),
     [seiTestnet.id]: http()
   },
-  ssr: true
+  ssr: false,
+  batch: {
+    multicall: false,
+  },
 })
