@@ -60,92 +60,45 @@
   --glow-primary: 0 0 20px hsl(180 100% 70% / 0.4), 0 0 40px hsl(180 100% 70% / 0.2);
 }
 
-/* 4. New robust hero title gradient animation - Pure CSS approach */
-.hero-title-animated {
-  position: relative;
-  font-weight: 800;
-  display: inline-block;
-  color: transparent;
-  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
-  background-size: 400% 400%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-gradient-shift 3s ease-in-out infinite;
-  text-shadow: none;
-}
-
-/* Fallback for browsers that don't support background-clip: text */
-.hero-title-animated::before {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
-  background-size: 400% 400%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: hero-gradient-shift 3s ease-in-out infinite;
-  opacity: 0;
-}
-
-@keyframes hero-gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Alternative approach: Animated text with color transitions */
-.hero-title-glow {
-  font-weight: 800;
-  display: inline-block;
-  animation: hero-color-cycle 4s ease-in-out infinite;
-  text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
-}
-
-@keyframes hero-color-cycle {
-  0% { color: #00f5d4; }
-  25% { color: #9b5de5; }
-  50% { color: #ff206e; }
-  75% { color: #fbae3c; }
-  100% { color: #00f5d4; }
-}
-
-/* 5. Base styles */
+/* 4. Base styles */
 @layer base {
-  * {
-    border-color: hsl(var(--border)) !important;
+  /* Apply styled borders to UI components only, not layout elements */
+  .ui-component,
+  button,
+  input,
+  textarea,
+  select {
+    border-color: hsl(var(--border));
   }
   
   body {
-    background-color: hsl(var(--background)) !important;
-    color: hsl(var(--foreground)) !important;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     overflow-x: hidden;
     background-image: 
       radial-gradient(circle at 25% 25%, hsl(var(--primary) / 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, hsl(var(--secondary) / 0.1) 0%, transparent 50%) !important;
+      radial-gradient(circle at 75% 75%, hsl(var(--secondary) / 0.1) 0%, transparent 50%);
     font-size: 16px;
     line-height: 1.5;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    line-height: 1.2 !important;
+    line-height: 1.2;
   }
   
-  h1 {
-    font-size: 3.5rem !important;
-    font-weight: 800 !important;
+  /* Hero section h1 styles - scoped to hero section only */
+  .hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
   }
   
-  h1 span {
-    color: unset !important;
+  .hero-section h1 span {
+    color: unset;
   }
   
   @media (min-width: 1024px) {
-    h1 {
-      font-size: 4.5rem !important;
+    .hero-section h1 {
+      font-size: 4.5rem;
     }
   }
 }
@@ -164,200 +117,39 @@
   
   /* Additional glow text utilities */
   .text-primary-glow {
-    color: hsl(var(--primary-glow)) !important;
-    text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow)) !important;
-    font-weight: 700 !important;
+    color: hsl(var(--primary-glow));
+    text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow));
+    font-weight: 700;
   }
   
   .text-secondary-glow {
-    color: hsl(var(--secondary)) !important;
-    text-shadow: 0 0 8px hsl(var(--secondary)), 0 0 24px hsl(var(--secondary)) !important;
-    font-weight: 700 !important;
+    color: hsl(var(--secondary));
+    text-shadow: 0 0 8px hsl(var(--secondary)), 0 0 24px hsl(var(--secondary));
+    font-weight: 700;
   }
   
   .text-accent-glow {
-    color: hsl(var(--accent)) !important;
-    text-shadow: 0 0 8px hsl(var(--accent)), 0 0 24px hsl(var(--accent)) !important;
-    font-weight: 700 !important;
+    color: hsl(var(--accent));
+    text-shadow: 0 0 8px hsl(var(--accent)), 0 0 24px hsl(var(--accent));
+    font-weight: 700;
   }
   
   .text-cyan-glow {
-    color: #00f5d4 !important;
-    text-shadow: 0 0 8px #00f5d4, 0 0 24px #00f5d4 !important;
-    font-weight: 700 !important;
+    color: #00f5d4;
+    text-shadow: 0 0 8px #00f5d4, 0 0 24px #00f5d4;
+    font-weight: 700;
   }
   
   .text-purple-glow {
-    color: #9b5de5 !important;
-    text-shadow: 0 0 8px #9b5de5, 0 0 24px #9b5de5 !important;
-    font-weight: 700 !important;
+    color: #9b5de5;
+    text-shadow: 0 0 8px #9b5de5, 0 0 24px #9b5de5;
+    font-weight: 700;
   }
   
   .text-pink-glow {
-    color: #ff206e !important;
-    text-shadow: 0 0 8px #ff206e, 0 0 24px #ff206e !important;
-    font-weight: 700 !important;
+    color: #ff206e;
+    text-shadow: 0 0 8px #ff206e, 0 0 24px #ff206e;
+    font-weight: 700;
   }
 }
 
-/* 7. Component overrides - Force SEI DLP styling */
-.glass-card {
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  background-color: hsl(var(--card) / 0.8) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--border) / 0.3) !important;
-}
-
-.vault-card {
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--muted)), hsl(var(--card))) !important;
-  border-radius: var(--radius) !important;
-  padding: 1.5rem !important;
-  transition: all 500ms ease-in-out !important;
-  box-shadow: 0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--border) / 0.3) !important;
-}
-
-.vault-card:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5) !important;
-}
-
-.btn-cyber {
-  position: relative !important;
-  overflow: hidden !important;
-  padding: 1rem 2rem !important;
-  border-radius: calc(var(--radius) - 2px) !important;
-  font-weight: 600 !important;
-  transition: all 300ms ease-in-out !important;
-  font-size: 1rem !important;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
-  color: hsl(var(--primary-foreground)) !important;
-  box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1) !important;
-  border: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 160px !important;
-  flex-shrink: 0 !important;
-}
-
-.btn-cyber:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2) !important;
-}
-
-.holo-text {
-  font-weight: 800 !important;
-  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary))) !important;
-  background-size: 300% 100% !important;
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-  color: transparent !important;
-  animation: color-shift 4s ease-in-out infinite !important;
-  filter: drop-shadow(0 0 12px hsl(var(--primary-glow))) !important;
-}
-
-.text-primary-glow {
-  color: hsl(var(--primary-glow)) !important;
-  text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow)) !important;
-  font-weight: 700 !important;
-}
-
-.neural-grid {
-  background-image: 
-    linear-gradient(hsl(var(--border) / 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(var(--border) / 0.1) 1px, transparent 1px) !important;
-  background-size: 50px 50px !important;
-}
-
-.data-stream {
-  position: absolute !important;
-  width: 1px !important;
-  background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary)) 50%, transparent 100%) !important;
-  height: 100px !important;
-  animation: stream-flow 2s linear infinite !important;
-}
-
-/* Hero layout fixes */
-.hero-section {
-  min-height: 100vh !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  overflow: hidden !important;
-  padding-top: 5rem !important;
-}
-
-.hero-grid {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 4rem !important;
-  align-items: center !important;
-  width: 100% !important;
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  padding: 0 1rem !important;
-}
-
-@media (max-width: 1024px) {
-  .hero-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-}
-
-.hero-3d-container {
-  order: 2 !important;
-  position: relative !important;
-}
-
-.hero-text-container {
-  order: 1 !important;
-  text-align: left !important;
-}
-
-@media (max-width: 1024px) {
-  .hero-3d-container {
-    order: 2 !important;
-  }
-  
-  .hero-text-container {
-    order: 1 !important;
-    text-align: center !important;
-  }
-}
-
-/* Define keyframes at root level */
-@keyframes color-shift {
-  0% { 
-    background-position: 0% 50%;
-  }
-  50% { 
-    background-position: 100% 50%;
-  }
-  100% { 
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes holo-glow {
-  0% { filter: hue-rotate(0deg) brightness(1); }
-  100% { filter: hue-rotate(360deg) brightness(1.2); }
-}
-
-@keyframes stream-flow {
-  0% { transform: translateY(-100px); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(100px); opacity: 0; }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}

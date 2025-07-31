@@ -106,84 +106,142 @@ async function getVaultState(vaultAddress: string) {
 }
 
 /**
- * Generate AI-powered rebalancing recommendation
+ * Generate AI-powered rebalancing recommendation using Python AI engine
  */
 async function generateRebalanceRecommendation(
-  vaultAddress: string, 
-  vaultState: any, 
+  vaultAddress: string,
+  vaultState: any,
   strategy: string
 ) {
-  // Simulate AI processing
-  await new Promise(resolve => setTimeout(resolve, 300))
+  const AI_ENGINE_URL = process.env.AI_ENGINE_URL || 'http://localhost:8000'
+  
+  try {
+    // Call Python AI engine for rebalance analysis
+    const response = await fetch(`${AI_ENGINE_URL}/analyze/rebalance`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        vault_address: vaultAddress,
+        current_tick: vaultState.currentTick,
+        lower_tick: vaultState.lowerTick,
+        upper_tick: vaultState.upperTick,
+        utilization_rate: vaultState.utilizationRate,
+        market_conditions: {
+          tvl: vaultState.totalValueLocked,
+          impermanent_loss: vaultState.impermanentLoss,
+          last_rebalance: vaultState.lastRebalance
+        }
+      })
+    })
 
-  const currentTick = vaultState.currentTick
-  const tickRange = vaultState.upperTick - vaultState.lowerTick
-  const utilizationRate = vaultState.utilizationRate
-  
-  // Calculate optimal new range based on current market conditions
-  const volatility = 0.25 // Would be fetched from market data
-  const priceDirection = 'bullish' // Would be determined by AI model
-  
-  // SEI-specific optimizations
-  const seiTickSpacing = 60
-  const optimalRangeWidth = Math.floor(tickRange * (1 + volatility * 0.5))
-  
-  let newLowerTick: number
-  let newUpperTick: number
-  
-  if (priceDirection === 'bullish') {
-    // Shift range upward
-    newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.3) / seiTickSpacing) * seiTickSpacing
-    newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.7) / seiTickSpacing) * seiTickSpacing
-  } else if (priceDirection === 'bearish') {
-    // Shift range downward
-    newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.7) / seiTickSpacing) * seiTickSpacing
-    newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.3) / seiTickSpacing) * seiTickSpacing
-  } else {
-    // Center around current price
-    newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.5) / seiTickSpacing) * seiTickSpacing
-    newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.5) / seiTickSpacing) * seiTickSpacing
-  }
+    if (!response.ok) {
+      throw new Error(`AI Engine rebalance analysis failed: ${response.statusText}`)
+    }
 
-  return {
-    vaultAddress,
-    recommendation: {
-      action: utilizationRate < 0.3 ? 'rebalance_required' : 
-              utilizationRate < 0.6 ? 'rebalance_suggested' : 'hold',
-      urgency: utilizationRate < 0.2 ? 'high' : 
-               utilizationRate < 0.4 ? 'medium' : 'low',
-      newRange: {
-        lowerTick: newLowerTick,
-        upperTick: newUpperTick,
-        lowerPrice: Math.pow(1.0001, newLowerTick),
-        upperPrice: Math.pow(1.0001, newUpperTick),
-        expectedUtilization: 0.75
+    const aiResult = await response.json()
+    
+    return {
+      vaultAddress,
+      recommendation: {
+        action: aiResult.action,
+        urgency: aiResult.urgency,
+        newRange: {
+          lowerTick: aiResult.new_lower_tick,
+          upperTick: aiResult.new_upper_tick,
+          lowerPrice: Math.pow(1.0001, aiResult.new_lower_tick),
+          upperPrice: Math.pow(1.0001, aiResult.new_upper_tick),
+          expectedUtilization: 0.75
+        },
+        costs: {
+          estimatedGasCost: aiResult.gas_cost_estimate,
+          slippageImpact: 0.001,
+          opportunityCost: vaultState.utilizationRate < 0.3 ? 0.05 : 0.02
+        },
+        benefits: {
+          expectedAPRIncrease: aiResult.expected_improvement / 100,
+          riskReduction: 0.15,
+          capitalEfficiency: aiResult.expected_improvement / 100
+        },
+        timing: {
+          optimalWindow: getOptimalRebalanceWindow(),
+          marketConditions: 'favorable',
+          gasConditions: 'optimal'
+        }
       },
-      costs: {
-        estimatedGasCost: 0.002, // SEI
-        slippageImpact: 0.001,
-        opportunityCost: utilizationRate < 0.3 ? 0.05 : 0.02
-      },
-      benefits: {
-        expectedAPRIncrease: utilizationRate < 0.3 ? 0.08 : 0.03,
-        riskReduction: 0.15,
-        capitalEfficiency: (0.75 / utilizationRate) - 1
-      },
-      timing: {
-        optimalWindow: getOptimalRebalanceWindow(),
-        marketConditions: 'favorable',
-        gasConditions: 'optimal'
+      aiInsights: {
+        modelConfidence: 0.87,
+        marketDirection: aiResult.urgency === 'high' ? 'volatile' : 'stable',
+        volatilityForecast: aiResult.urgency === 'high' ? 0.4 : 0.2,
+        liquidityForecast: 'stable',
+        riskFactors: [aiResult.risk_assessment],
+        aiEngineUsed: true,
+        reasoning: aiResult.risk_assessment
       }
-    },
-    aiInsights: {
-      modelConfidence: 0.87,
-      marketDirection: priceDirection,
-      volatilityForecast: volatility,
-      liquidityForecast: 'stable',
-      riskFactors: [
-        'medium_volatility',
-        'adequate_liquidity'
-      ]
+    }
+  } catch (error) {
+    console.error('AI Engine rebalance analysis failed, using fallback logic:', error)
+    
+    // Fallback logic if AI engine is unavailable
+    const currentTick = vaultState.currentTick
+    const tickRange = vaultState.upperTick - vaultState.lowerTick
+    const utilizationRate = vaultState.utilizationRate
+    
+    // Calculate optimal new range based on current market conditions
+    const volatility = 0.25 // Conservative fallback
+    const priceDirection = 'neutral' // Conservative fallback
+    
+    // SEI-specific optimizations
+    const seiTickSpacing = 60
+    const optimalRangeWidth = Math.floor(tickRange * (1 + volatility * 0.5))
+    
+    // Center around current price for conservative fallback
+    const newLowerTick = Math.floor((currentTick - optimalRangeWidth * 0.5) / seiTickSpacing) * seiTickSpacing
+    const newUpperTick = Math.floor((currentTick + optimalRangeWidth * 0.5) / seiTickSpacing) * seiTickSpacing
+
+    return {
+      vaultAddress,
+      recommendation: {
+        action: utilizationRate < 0.3 ? 'rebalance_required' :
+                utilizationRate < 0.6 ? 'rebalance_suggested' : 'hold',
+        urgency: utilizationRate < 0.2 ? 'high' :
+                 utilizationRate < 0.4 ? 'medium' : 'low',
+        newRange: {
+          lowerTick: newLowerTick,
+          upperTick: newUpperTick,
+          lowerPrice: Math.pow(1.0001, newLowerTick),
+          upperPrice: Math.pow(1.0001, newUpperTick),
+          expectedUtilization: 0.75
+        },
+        costs: {
+          estimatedGasCost: 0.15, // SEI fallback estimate
+          slippageImpact: 0.001,
+          opportunityCost: utilizationRate < 0.3 ? 0.05 : 0.02
+        },
+        benefits: {
+          expectedAPRIncrease: utilizationRate < 0.3 ? 0.08 : 0.03,
+          riskReduction: 0.15,
+          capitalEfficiency: (0.75 / utilizationRate) - 1
+        },
+        timing: {
+          optimalWindow: getOptimalRebalanceWindow(),
+          marketConditions: 'uncertain',
+          gasConditions: 'optimal'
+        }
+      },
+      aiInsights: {
+        modelConfidence: 0.65, // Lower confidence for fallback
+        marketDirection: priceDirection,
+        volatilityForecast: volatility,
+        liquidityForecast: 'stable',
+        riskFactors: [
+          'ai_engine_unavailable',
+          'using_fallback_logic'
+        ],
+        aiEngineUsed: false,
+        fallbackReason: error instanceof Error ? error.message : 'Unknown error'
+      }
     }
   }
 }

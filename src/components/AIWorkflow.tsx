@@ -113,13 +113,16 @@ export default function AIWorkflow() {
 
         {/* Workflow Steps */}
         <div className="relative">
-          <div className="flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 lg:space-x-4">
+          <div className="flex flex-row items-center justify-between space-x-4 overflow-x-auto pb-4">
             {workflowSteps.map((step, index) => (
               <div key={step.id} className="flex flex-col items-center relative">
                 {/* Step Card */}
                 <Card
                   ref={el => { stepsRef.current[index] = el; }}
-                  className="glass-card p-6 w-64 text-center group hover:scale-105 transition-all duration-300"
+                  className="backdrop-blur-xl border-2 border-primary/20 bg-card/80 rounded-lg shadow-lg hover:shadow-xl hover:border-primary/40 p-6 w-64 text-center group hover:scale-105 transition-all duration-300"
+                  style={{
+                    boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)'
+                  }}
                 >
                   <div 
                     className="text-4xl mb-4 filter drop-shadow-lg"
@@ -143,7 +146,7 @@ export default function AIWorkflow() {
 
                 {/* Connector Arrow (hidden on last item) */}
                 {index < workflowSteps.length - 1 && (
-                  <div className="hidden lg:block absolute -right-8 top-1/2 transform -translate-y-1/2">
+                  <div className="absolute -right-8 top-1/2 transform -translate-y-1/2">
                     <div
                       ref={el => { connectorsRef.current[index] = el; }}
                       className="w-8 h-px bg-gradient-to-r from-primary to-secondary origin-left"
@@ -157,8 +160,8 @@ export default function AIWorkflow() {
             ))}
           </div>
 
-          {/* Central AI Character */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden lg:block">
+          {/* Central AI Character - positioned below on horizontal layout */}
+          <div className="mt-8 flex justify-center">
             <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-xl border border-primary/30 flex items-center justify-center animate-float">
               <div className="text-4xl animate-pulse">🤖</div>
               <div className="absolute inset-0 rounded-full border-2 border-primary/50 animate-spin" style={{ animationDuration: '3s' }} />
@@ -173,7 +176,10 @@ export default function AIWorkflow() {
             { metric: '400ms', label: 'SEI Block Time', color: '#9b5de5' },
             { metric: '24/7', label: 'AI Monitoring', color: '#ff206e' }
           ].map((item, index) => (
-            <Card key={index} className="glass-card p-6 text-center">
+            <Card key={index} className="backdrop-blur-xl border-2 border-primary/20 bg-card/80 rounded-lg shadow-lg hover:shadow-xl hover:border-primary/40 p-6 text-center transition-all duration-300"
+              style={{
+                boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)'
+              }}>
               <div 
                 className="text-3xl font-bold mb-2"
                 style={{ color: item.color }}

@@ -1,0 +1,188 @@
+/* Hero Layout Styles - Component Module */
+.section {
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding-top: 5rem !important;
+}
+
+.grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 4rem !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 1rem !important;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+.container3d {
+  order: 2 !important;
+  position: relative !important;
+}
+
+.textContainer {
+  order: 1 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 1024px) {
+  .container3d {
+    order: 2 !important;
+  }
+  
+  .textContainer {
+    order: 1 !important;
+    text-align: center !important;
+  }
+}
+
+/* Background Effects */
+.neuralGrid {
+  background-image: 
+    linear-gradient(hsl(var(--border) / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--border) / 0.1) 1px, transparent 1px) !important;
+  background-size: 50px 50px !important;
+}
+
+.dataStream {
+  position: absolute !important;
+  width: 1px !important;
+  background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary)) 50%, transparent 100%) !important;
+  height: 100px !important;
+  animation: streamFlow 2s linear infinite !important;
+}
+
+@keyframes streamFlow {
+  0% { transform: translateY(-100px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(100px); opacity: 0; }
+}
+
+/* Hero Title Animation Styles */
+.heroTitleAnimated {
+  position: relative;
+  font-weight: 800;
+  display: inline-block;
+  color: transparent;
+  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroGradientShift 3s ease-in-out infinite;
+  text-shadow: none;
+}
+
+/* Fallback for browsers that don't support background-clip: text */
+.heroTitleAnimated::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroGradientShift 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes heroGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Alternative approach: Animated text with color transitions */
+.heroTitleGlow {
+  font-weight: 800;
+  display: inline-block;
+  animation: heroColorCycle 4s ease-in-out infinite;
+  text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+}
+
+@keyframes heroColorCycle {
+  0% { color: #00f5d4; }
+  25% { color: #9b5de5; }
+  50% { color: #ff206e; }
+  75% { color: #fbae3c; }
+  100% { color: #00f5d4; }
+}
+
+/* Hero Grid and Layout Styles */
+.heroGrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 4rem !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 1rem !important;
+}
+
+@media (max-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+.hero3dContainer {
+  order: 2 !important;
+  position: relative !important;
+}
+
+.heroTextContainer {
+  order: 1 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 1024px) {
+  .hero3dContainer {
+    order: 2 !important;
+  }
+  
+  .heroTextContainer {
+    order: 1 !important;
+    text-align: center !important;
+  }
+}
+
+/* Additional Hero-Specific Keyframes */
+@keyframes colorShift {
+  0% { 
+    background-position: 0% 50%;
+  }
+  50% { 
+    background-position: 100% 50%;
+  }
+  100% { 
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes holoGlow {
+  0% { filter: hue-rotate(0deg) brightness(1); }
+  100% { filter: hue-rotate(360deg) brightness(1.2); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

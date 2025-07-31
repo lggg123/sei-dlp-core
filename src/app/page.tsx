@@ -7,6 +7,8 @@ import Hero3D from '@/components/Hero3D';
 import VaultCard from '@/components/VaultCard';
 import AIWorkflow from '@/components/AIWorkflow';
 import Navigation from '@/components/Navigation';
+import glassCardStyles from '@/components/GlassCard.module.css';
+import heroStyles from '@/components/Hero.module.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -73,17 +75,20 @@ export default function DLPLanding() {
 
     return (
         <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <Navigation variant="transparent" />
+            
             {/* Hero Section */}
-            <section className="hero-section">
+            <section className={`${heroStyles.section} hero-section`}>
                 {/* Background Grid */}
-                <div className="absolute inset-0 neural-grid opacity-30" />
+                <div className={`absolute inset-0 ${heroStyles.neuralGrid} opacity-30`} />
 
                 {/* Floating Data Streams */}
                 <div className="absolute inset-0">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <div
                             key={i}
-                            className="data-stream"
+                            className={heroStyles.dataStream}
                             style={{
                                 left: `${10 + i * 12}%`,
                                 animationDelay: `${i * 0.5}s`,
@@ -93,21 +98,21 @@ export default function DLPLanding() {
                     ))}
                 </div>
 
-                <div className="hero-grid relative z-10">
+                <div className={`${heroStyles.grid} relative z-10`}>
                     {/* 3D Hero Visual */}
-                    <div className="hero-3d-container">
+                    <div className={heroStyles.container3d}>
                         <Hero3D />
                         <div
                             ref={statsRef}
                             className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-full"
                         >
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
                                 {[
                                     { value: '$8.3M', label: 'Total TVL' },
                                     { value: '400ms', label: 'Block Time' },
                                     { value: '18.5%', label: 'Avg APY' },
                                 ].map((stat, i) => (
-                                    <Card key={i} className="glass-card p-4 text-center">
+                                    <Card key={i} className={`${glassCardStyles.glassCard} p-4 text-center`}>
                                         <div className="text-lg font-bold text-primary-glow">
                                             {stat.value}
                                         </div>
@@ -121,13 +126,13 @@ export default function DLPLanding() {
                     </div>
 
                     {/* Hero Text */}
-                    <div ref={heroTextRef} className="hero-text-container">
+                    <div ref={heroTextRef} className={heroStyles.textContainer}>
                         <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
-                          <span className="hero-title-animated">
+                          <span className={heroStyles.heroTitleAnimated}>
                             Your Liquidity,
                           </span>
                           <br />
-                          <span className="hero-title-animated">
+                          <span className={heroStyles.heroTitleAnimated}>
                             Evolved
                           </span>
                         </h1>
@@ -143,8 +148,9 @@ export default function DLPLanding() {
                             className="flex flex-row gap-8 mb-16 justify-start"
                             style={{ marginTop: '2rem' }}
                         >
-                            <Button 
+                            <Button
                                 className="text-2xl px-24 py-12 font-bold"
+                                onClick={() => window.location.href = '/vaults'}
                                 style={{
                                     background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
                                     color: 'hsl(216 100% 4%)',
@@ -226,7 +232,7 @@ export default function DLPLanding() {
                         </p>
                     </div>
 
-                    <div className="grid lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 items-start" style={{ display: 'grid' }}>
                         {vaultData.map((vault, index) => (
                             <VaultCard key={vault.name} vault={vault} index={index} />
                         ))}
@@ -250,7 +256,7 @@ export default function DLPLanding() {
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto px-4">
                             {[
                                 {
                                     metric: '62%',
@@ -279,7 +285,7 @@ export default function DLPLanding() {
                             ].map((item, index) => (
                                 <Card
                                     key={index}
-                                    className="glass-card p-6 text-center group hover:scale-105 transition-all duration-300"
+                                    className={`${glassCardStyles.glassCard} ${glassCardStyles.glassCardHover} p-6 text-center group`}
                                 >
                                     <div className="text-3xl font-bold mb-2 text-primary group-hover:text-primary-glow transition-colors">
                                         {item.metric}

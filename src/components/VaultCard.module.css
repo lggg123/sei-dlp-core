@@ -1,0 +1,220 @@
+/* VaultCard Component Styles - Override global .vault-card styles */
+.vaultCard {
+  /* Card dimensions and layout */
+  width: 100%;
+  max-width: 400px;
+  min-height: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  
+  /* Ensure proper grid item behavior */
+  grid-column: span 1;
+  justify-self: center;
+  align-self: start;
+  
+  /* Visual styling */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid hsl(var(--border));
+  background: linear-gradient(135deg, hsl(var(--card) / 0.8), hsl(var(--muted) / 0.6), hsl(var(--card) / 0.8));
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all 500ms ease-in-out;
+  box-shadow: 0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--border) / 0.3);
+  
+  /* Reset transforms */
+  transform: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.vaultCard:hover {
+  box-shadow: 0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5);
+  /* Allow GSAP to handle hover transforms, not global CSS */
+}
+
+.backgroundGradient {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  transition: opacity 500ms ease-in-out;
+}
+
+.vaultCard:hover .backgroundGradient {
+  opacity: 0.2;
+}
+
+.dataStream {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary)) 50%, transparent 100%);
+  animation: streamFlow 2s linear infinite;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+.vaultCard:hover .dataStream {
+  opacity: 1;
+}
+
+.dataStreamLeft {
+  left: 25%;
+}
+
+.dataStreamRight {
+  right: 25%;
+  animation-delay: 0.5s;
+}
+
+.cardHeader {
+  position: relative;
+  z-index: 10;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vaultTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.riskBadge {
+  border: 1px solid;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.riskLow {
+  background-color: hsl(142 76% 36% / 0.2);
+  color: hsl(142 76% 36%);
+  border-color: hsl(142 76% 36% / 0.3);
+}
+
+.riskMedium {
+  background-color: hsl(45 93% 47% / 0.2);
+  color: hsl(45 93% 47%);
+  border-color: hsl(45 93% 47% / 0.3);
+}
+
+.riskHigh {
+  background-color: hsl(0 84% 60% / 0.2);
+  color: hsl(0 84% 60%);
+  border-color: hsl(0 84% 60% / 0.3);
+}
+
+.cardContent {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.contentSpace {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.metricRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metricLabel {
+  color: hsl(var(--muted-foreground));
+}
+
+.apyValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-weight: 800;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary)));
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: apyColorShift 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px hsl(var(--primary-glow)));
+}
+
+.tvlValue {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.description {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusIndicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.statusText {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+@keyframes streamFlow {
+  0% { 
+    transform: translateY(-100px); 
+    opacity: 0; 
+  }
+  50% { 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translateY(100px); 
+    opacity: 0; 
+  }
+}
+
+@keyframes apyColorShift {
+  0% { 
+    background-position: 0% 50%;
+  }
+  50% { 
+    background-position: 100% 50%;
+  }
+  100% { 
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}

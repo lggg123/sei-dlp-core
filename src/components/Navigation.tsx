@@ -60,9 +60,15 @@ export function Navigation({ variant = 'transparent', className = '' }: Navigati
             </Link>
           </div>
 
-          {/* Connect Wallet Button */}
+          {/* Launch App & Connect Wallet Buttons */}
           <div className="flex items-center space-x-4">
-            <button className="btn-cyber px-6 py-2 text-sm font-medium">
+            <Link
+              href="/vaults"
+              className="hidden sm:block px-6 py-2 text-sm font-medium rounded-lg border-2 border-primary/50 text-primary hover:border-primary hover:bg-primary/10 transition-all duration-300 hover:scale-105"
+            >
+              Launch App
+            </Link>
+            <button className="btn-cyber text-sm">
               Connect Wallet
             </button>
           </div>

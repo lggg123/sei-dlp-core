@@ -1,0 +1,96 @@
+/* Holographic Text Styles - Component Module */
+.holo {
+  font-weight: 800 !important;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary))) !important;
+  background-size: 300% 100% !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+  animation: colorShift 4s ease-in-out infinite !important;
+  filter: drop-shadow(0 0 12px hsl(var(--primary-glow))) !important;
+}
+
+.primaryGlow {
+  color: hsl(var(--primary-glow)) !important;
+  text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow)) !important;
+  font-weight: 700 !important;
+}
+
+.secondaryGlow {
+  color: hsl(var(--secondary)) !important;
+  text-shadow: 0 0 8px hsl(var(--secondary)), 0 0 24px hsl(var(--secondary)) !important;
+  font-weight: 700 !important;
+}
+
+.accentGlow {
+  color: hsl(var(--accent)) !important;
+  text-shadow: 0 0 8px hsl(var(--accent)), 0 0 24px hsl(var(--accent)) !important;
+  font-weight: 700 !important;
+}
+
+.cyanGlow {
+  color: #00f5d4 !important;
+  text-shadow: 0 0 8px #00f5d4, 0 0 24px #00f5d4 !important;
+  font-weight: 700 !important;
+}
+
+.purpleGlow {
+  color: #9b5de5 !important;
+  text-shadow: 0 0 8px #9b5de5, 0 0 24px #9b5de5 !important;
+  font-weight: 700 !important;
+}
+
+.pinkGlow {
+  color: #ff206e !important;
+  text-shadow: 0 0 8px #ff206e, 0 0 24px #ff206e !important;
+  font-weight: 700 !important;
+}
+
+/* Hero title variants */
+.heroAnimated {
+  position: relative;
+  font-weight: 800;
+  display: inline-block;
+  color: transparent;
+  background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroGradientShift 3s ease-in-out infinite;
+  text-shadow: none;
+}
+
+.heroGlow {
+  font-weight: 800;
+  display: inline-block;
+  animation: heroColorCycle 4s ease-in-out infinite;
+  text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+}
+
+/* Keyframes */
+@keyframes colorShift {
+  0% { 
+    background-position: 0% 50%;
+  }
+  50% { 
+    background-position: 100% 50%;
+  }
+  100% { 
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes heroGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes heroColorCycle {
+  0% { color: #00f5d4; }
+  25% { color: #9b5de5; }
+  50% { color: #ff206e; }
+  75% { color: #fbae3c; }
+  100% { color: #00f5d4; }
+}
