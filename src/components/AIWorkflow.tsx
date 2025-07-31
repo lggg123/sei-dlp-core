@@ -113,27 +113,73 @@ export default function AIWorkflow() {
 
         {/* Workflow Steps */}
         <div className="relative">
-          <div className="flex flex-row items-center justify-between space-x-4 overflow-x-auto pb-4">
+          <div className="flex flex-row items-center justify-center gap-6 overflow-x-auto pb-4 max-w-full">
             {workflowSteps.map((step, index) => (
               <div key={step.id} className="flex flex-col items-center relative">
                 {/* Step Card */}
                 <Card
                   ref={el => { stepsRef.current[index] = el; }}
-                  className="backdrop-blur-xl border-2 border-primary/20 bg-card/80 rounded-lg shadow-lg hover:shadow-xl hover:border-primary/40 p-6 w-64 text-center group hover:scale-105 transition-all duration-300"
+                  className="cursor-pointer group relative overflow-hidden transition-all duration-300"
                   style={{
-                    boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)'
+                    width: '260px',
+                    minHeight: '240px',
+                    flexShrink: 0,
+                    backdropFilter: 'blur(24px)',
+                    WebkitBackdropFilter: 'blur(24px)',
+                    border: '2px solid hsl(var(--primary) / 0.2)',
+                    background: 'hsl(var(--card) / 0.8)',
+                    borderRadius: '12px',
+                    padding: '1.5rem',
+                    boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)',
+                    textAlign: 'center'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
+                    e.currentTarget.style.boxShadow = '0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5)';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.2)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)';
+                    e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
+                  {/* Animated Background Effects */}
+                  <div className="absolute inset-0 opacity-10 transition-opacity duration-300 group-hover:opacity-20">
+                    <div 
+                      className="absolute inset-0"
+                      style={{
+                        background: `linear-gradient(45deg, ${step.color}20, transparent)`
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Data Streams */}
                   <div 
-                    className="text-4xl mb-4 filter drop-shadow-lg"
+                    className="absolute top-0 left-1/4 w-px h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: `linear-gradient(to bottom, transparent 0%, ${step.color} 50%, transparent 100%)`,
+                      animation: 'streamFlow 2s linear infinite'
+                    }}
+                  />
+                  <div 
+                    className="absolute top-0 right-1/4 w-px h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: `linear-gradient(to bottom, transparent 0%, ${step.color} 50%, transparent 100%)`,
+                      animation: 'streamFlow 2s linear infinite 0.5s'
+                    }}
+                  />
+                  
+                  <div 
+                    className="text-4xl mb-4 filter drop-shadow-lg relative z-10"
                     style={{ filter: `drop-shadow(0 0 10px ${step.color})` }}
                   >
                     {step.icon}
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-foreground">
+                  <h3 className="text-lg font-bold mb-2 text-foreground relative z-10">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground relative z-10">
                     {step.description}
                   </p>
                   
@@ -144,16 +190,26 @@ export default function AIWorkflow() {
                   />
                 </Card>
 
-                {/* Connector Arrow (hidden on last item) */}
+                {/* Enhanced Connector Arrow (hidden on last item) */}
                 {index < workflowSteps.length - 1 && (
-                  <div className="absolute -right-8 top-1/2 transform -translate-y-1/2">
+                  <div className="absolute -right-10 top-1/2 transform -translate-y-1/2 z-20">
                     <div
                       ref={el => { connectorsRef.current[index] = el; }}
-                      className="w-8 h-px bg-gradient-to-r from-primary to-secondary origin-left"
+                      className="w-12 h-0.5 bg-gradient-to-r from-primary via-secondary to-primary origin-left opacity-70 shadow-lg"
+                      style={{
+                        boxShadow: '0 0 8px hsl(var(--primary) / 0.4), 0 0 16px hsl(var(--secondary) / 0.2)'
+                      }}
                     />
                     <div className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1">
-                      <div className="w-0 h-0 border-l-4 border-l-primary border-t-2 border-b-2 border-t-transparent border-b-transparent" />
+                      <div 
+                        className="w-0 h-0 border-l-4 border-l-primary border-t-2 border-b-2 border-t-transparent border-b-transparent opacity-70"
+                        style={{
+                          filter: 'drop-shadow(0 0 4px hsl(var(--primary) / 0.6))'
+                        }}
+                      />
                     </div>
+                    {/* Animated Flow Indicator */}
+                    <div className="absolute top-1/2 left-0 w-2 h-2 bg-primary rounded-full transform -translate-y-1/2 animate-ping opacity-60" />
                   </div>
                 )}
               </div>
@@ -176,17 +232,58 @@ export default function AIWorkflow() {
             { metric: '400ms', label: 'SEI Block Time', color: '#9b5de5' },
             { metric: '24/7', label: 'AI Monitoring', color: '#ff206e' }
           ].map((item, index) => (
-            <Card key={index} className="backdrop-blur-xl border-2 border-primary/20 bg-card/80 rounded-lg shadow-lg hover:shadow-xl hover:border-primary/40 p-6 text-center transition-all duration-300"
+            <Card 
+              key={index} 
+              className="cursor-pointer group relative overflow-hidden hover:scale-105 transition-all duration-300"
               style={{
-                boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)'
-              }}>
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '2px solid hsl(var(--primary) / 0.2)',
+                background: 'hsl(var(--card) / 0.8)',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)',
+                textAlign: 'center',
+                minHeight: '120px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
+                e.currentTarget.style.boxShadow = '0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.2)';
+                e.currentTarget.style.boxShadow = '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)';
+              }}
+            >
+              {/* Background gradient effect */}
               <div 
-                className="text-3xl font-bold mb-2"
-                style={{ color: item.color }}
+                className="absolute inset-0 opacity-10 transition-opacity duration-500 group-hover:opacity-20"
+                style={{
+                  background: `linear-gradient(45deg, ${item.color}20, transparent)`
+                }}
+              />
+              
+              <div 
+                className="text-3xl font-bold mb-2 relative z-10"
+                style={{ 
+                  color: item.color,
+                  filter: `drop-shadow(0 0 8px ${item.color})`,
+                  fontWeight: '800'
+                }}
               >
                 {item.metric}
               </div>
-              <div className="text-muted-foreground">{item.label}</div>
+              <div className="text-muted-foreground relative z-10">{item.label}</div>
+              
+              {/* Pulsing indicator */}
+              <div 
+                className="absolute -top-2 -right-2 w-3 h-3 rounded-full animate-pulse-glow"
+                style={{ backgroundColor: item.color }}
+              />
             </Card>
           ))}
         </div>

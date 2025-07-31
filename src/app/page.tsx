@@ -149,7 +149,7 @@ export default function DLPLanding() {
                             style={{ marginTop: '2rem' }}
                         >
                             <Button
-                                className="text-2xl px-24 py-12 font-bold"
+                                className="text-2xl px-16 py-8 font-bold"
                                 onClick={() => window.location.href = '/vaults'}
                                 style={{
                                     background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
@@ -158,9 +158,9 @@ export default function DLPLanding() {
                                     border: 'none',
                                     borderRadius: '16px',
                                     transition: 'all 300ms ease-in-out',
-                                    minWidth: '320px',
-                                    minHeight: '80px',
-                                    fontSize: '1.5rem'
+                                    minWidth: '240px',
+                                    minHeight: '60px',
+                                    fontSize: '1.25rem'
                                 }}
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.transform = 'scale(1.05)';
@@ -175,16 +175,16 @@ export default function DLPLanding() {
                             </Button>
                             <Button
                                 variant="outline"
-                                className="text-2xl px-24 py-12 font-bold"
+                                className="text-2xl px-16 py-8 font-bold"
                                 style={{
                                     borderColor: 'hsl(180 100% 48%)',
                                     color: 'hsl(180 100% 48%)',
                                     background: 'transparent',
                                     borderRadius: '16px',
                                     transition: 'all 300ms ease-in-out',
-                                    minWidth: '320px',
-                                    minHeight: '80px',
-                                    fontSize: '1.5rem',
+                                    minWidth: '240px',
+                                    minHeight: '60px',
+                                    fontSize: '1.25rem',
                                     borderWidth: '3px'
                                 }}
                                 onMouseEnter={(e) => {
@@ -232,7 +232,7 @@ export default function DLPLanding() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 items-start" style={{ display: 'grid' }}>
+                    <div className="flex flex-row justify-center items-stretch gap-8 overflow-x-auto pb-4 max-w-7xl mx-auto px-4">
                         {vaultData.map((vault, index) => (
                             <VaultCard key={vault.name} vault={vault} index={index} />
                         ))}
@@ -256,49 +256,120 @@ export default function DLPLanding() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto px-4">
+                        <div className="flex flex-wrap justify-center items-stretch gap-8 max-w-7xl mx-auto px-4">
                             {[
                                 {
                                     metric: '62%',
                                     description: 'Reduced Impermanent Loss',
                                     comparison: 'vs Traditional LPs',
                                     positive: true,
+                                    color: '#00f5d4'
                                 },
                                 {
                                     metric: '3.2x',
                                     description: 'Higher Capital Efficiency',
                                     comparison: 'vs Manual Strategies',
                                     positive: true,
+                                    color: '#9b5de5'
                                 },
                                 {
                                     metric: '24/7',
                                     description: 'Automated Monitoring',
                                     comparison: 'Zero Downtime',
                                     positive: true,
+                                    color: '#ff206e'
                                 },
                                 {
                                     metric: '400ms',
                                     description: 'SEI Block Time',
                                     comparison: 'Lightning Fast',
                                     positive: true,
+                                    color: '#00f5d4'
                                 },
                             ].map((item, index) => (
                                 <Card
                                     key={index}
-                                    className={`${glassCardStyles.glassCard} ${glassCardStyles.glassCardHover} p-6 text-center group`}
+                                    className="cursor-pointer group relative overflow-hidden hover:scale-105 transition-all duration-300"
+                                    style={{
+                                        width: '300px',
+                                        minHeight: '220px',
+                                        backdropFilter: 'blur(24px)',
+                                        WebkitBackdropFilter: 'blur(24px)',
+                                        border: '2px solid hsl(var(--primary) / 0.2)',
+                                        background: 'hsl(var(--card) / 0.8)',
+                                        borderRadius: '12px',
+                                        padding: '1.5rem',
+                                        boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        textAlign: 'center'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
+                                        e.currentTarget.style.boxShadow = '0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.2)';
+                                        e.currentTarget.style.boxShadow = '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)';
+                                    }}
                                 >
-                                    <div className="text-3xl font-bold mb-2 text-primary group-hover:text-primary-glow transition-colors">
+                                    {/* Background gradient effect */}
+                                    <div 
+                                        className="absolute inset-0 opacity-10 transition-opacity duration-500 group-hover:opacity-20"
+                                        style={{
+                                            background: `linear-gradient(45deg, ${item.color}20, transparent)`
+                                        }}
+                                    />
+                                    
+                                    {/* Data Streams */}
+                                    <div 
+                                        className="absolute top-0 left-1/4 w-px h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        style={{
+                                            background: `linear-gradient(to bottom, transparent 0%, ${item.color} 50%, transparent 100%)`,
+                                            animation: 'streamFlow 2s linear infinite'
+                                        }}
+                                    />
+                                    <div 
+                                        className="absolute top-0 right-1/4 w-px h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        style={{
+                                            background: `linear-gradient(to bottom, transparent 0%, ${item.color} 50%, transparent 100%)`,
+                                            animation: 'streamFlow 2s linear infinite 0.5s'
+                                        }}
+                                    />
+                                    
+                                    <div 
+                                        className="text-4xl font-bold mb-4 relative z-10 transition-all duration-300"
+                                        style={{ 
+                                            color: item.color,
+                                            filter: `drop-shadow(0 0 12px ${item.color})`,
+                                            fontWeight: '800'
+                                        }}
+                                    >
                                         {item.metric}
                                     </div>
-                                    <div className="text-foreground font-semibold mb-1">
+                                    <div className="text-lg font-semibold mb-2 relative z-10" style={{ color: 'hsl(var(--foreground))' }}>
                                         {item.description}
                                     </div>
-                                    <div className="text-sm text-muted-foreground">
+                                    <div className="text-sm text-muted-foreground relative z-10 mb-4">
                                         {item.comparison}
                                     </div>
-                                    <div className="mt-4 w-full h-1 rounded-full overflow-hidden" style={{ background: 'hsl(var(--primary) / 0.2)' }}>
-                                        <div className="h-full bg-gradient-to-r from-primary to-primary-glow animate-pulse" />
+                                    
+                                    {/* Status indicator */}
+                                    <div className="flex items-center gap-2 relative z-10">
+                                        <div 
+                                            className="w-2 h-2 rounded-full animate-pulse-glow"
+                                            style={{ backgroundColor: item.color }}
+                                        />
+                                        <span className="text-xs text-muted-foreground">Active & Optimizing</span>
                                     </div>
+                                    
+                                    {/* Pulsing indicator */}
+                                    <div 
+                                        className="absolute -top-2 -right-2 w-4 h-4 rounded-full animate-pulse-glow"
+                                        style={{ backgroundColor: item.color }}
+                                    />
                                 </Card>
                             ))}
                         </div>
@@ -324,12 +395,52 @@ export default function DLPLanding() {
                             SEI
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button className="btn-cyber text-lg px-12 py-4">
+                            <Button 
+                                className="text-lg px-8 py-3 font-bold"
+                                style={{
+                                    background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
+                                    color: 'hsl(216 100% 4%)',
+                                    boxShadow: '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)',
+                                    border: 'none',
+                                    borderRadius: '12px',
+                                    transition: 'all 300ms ease-in-out',
+                                    minWidth: '160px',
+                                    minHeight: '44px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)';
+                                    e.currentTarget.style.boxShadow = '0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                    e.currentTarget.style.boxShadow = '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)';
+                                }}
+                            >
                                 Start Earning Now
                             </Button>
                             <Button
                                 variant="outline"
-                                className="text-lg px-12 py-4 border-primary hover:border-primary"
+                                className="text-lg px-8 py-3 font-bold"
+                                style={{
+                                    borderColor: 'hsl(180 100% 48%)',
+                                    color: 'hsl(180 100% 48%)',
+                                    background: 'transparent',
+                                    borderRadius: '12px',
+                                    transition: 'all 300ms ease-in-out',
+                                    minWidth: '160px',
+                                    minHeight: '44px',
+                                    borderWidth: '2px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'hsl(180 100% 48% / 0.1)';
+                                    e.currentTarget.style.borderColor = 'hsl(180 100% 48%)';
+                                    e.currentTarget.style.transform = 'scale(1.05)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'transparent';
+                                    e.currentTarget.style.borderColor = 'hsl(180 100% 48%)';
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                }}
                             >
                                 Read Whitepaper
                             </Button>

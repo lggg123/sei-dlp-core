@@ -145,6 +145,12 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
           </div>
         </div>
       </CardContent>
+      
+      {/* Pulsing Indicator */}
+      <div 
+        className="absolute -top-2 -right-2 w-4 h-4 rounded-full animate-pulse-glow"
+        style={{ backgroundColor: vault.color }}
+      />
     </Card>
   );
 }

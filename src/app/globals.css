@@ -151,5 +151,63 @@
     text-shadow: 0 0 8px #ff206e, 0 0 24px #ff206e;
     font-weight: 700;
   }
+  
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% { 
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+    }
+    50% { 
+      opacity: 0.7;
+      transform: scale(1.1);
+      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+    }
+  }
+  
+  @keyframes streamFlow {
+    0% { 
+      transform: translateY(-100px); 
+      opacity: 0; 
+    }
+    50% { 
+      opacity: 1; 
+    }
+    100% { 
+      transform: translateY(100px); 
+      opacity: 0; 
+    }
+  }
+  
+  /* Cyber Button - Connect Wallet Button Style */
+  .btn-cyber {
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem 1.5rem;
+    border-radius: calc(var(--radius) - 2px);
+    font-weight: 600;
+    transition: all 300ms ease-in-out;
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    flex-shrink: 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .btn-cyber:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2);
+  }
 }
 

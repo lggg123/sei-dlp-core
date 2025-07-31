@@ -9,12 +9,12 @@ export interface SeiChainConfig {
   readonly DECIMALS: 18
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string
-  details?: any
-  metadata?: any
+  details?: Record<string, unknown>
+  metadata?: Record<string, unknown>
   timestamp: string
   chainId: 713715
 }
@@ -37,7 +37,7 @@ export interface PaginationMetadata {
 // Vault Types
 export interface VaultStrategy {
   type: 'concentrated_liquidity' | 'yield_farming' | 'arbitrage' | 'hedge'
-  parameters: Record<string, any>
+  parameters: Record<string, unknown>
 }
 
 export interface VaultPosition {
@@ -276,7 +276,7 @@ export interface RebalanceResult {
   monitoringId?: string
   status: 'pending' | 'scheduled' | 'monitoring'
   vaultAddress: string
-  rebalanceDetails: any
+  rebalanceDetails: Record<string, unknown>
   estimatedCompletion?: string
   seiOptimizations?: SeiOptimizations
 }

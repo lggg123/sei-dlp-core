@@ -1,10 +1,8 @@
 import { GET } from '../health/route'
-import { NextRequest } from 'next/server'
 
 describe('/api/health', () => {
   describe('GET', () => {
     it('should return healthy status', async () => {
-      const request = new NextRequest('http://localhost:3000/api/health')
       const response = await GET()
       const data = await response.json()
 
@@ -23,7 +21,6 @@ describe('/api/health', () => {
     })
 
     it('should have valid timestamp format', async () => {
-      const request = new NextRequest('http://localhost:3000/api/health')
       const response = await GET()
       const data = await response.json()
 
@@ -32,7 +29,6 @@ describe('/api/health', () => {
     })
 
     it('should include correct SEI chain configuration', async () => {
-      const request = new NextRequest('http://localhost:3000/api/health')
       const response = await GET()
       const data = await response.json()
 

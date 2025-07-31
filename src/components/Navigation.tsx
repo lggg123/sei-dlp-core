@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Logo from './Logo';
+import { WalletConnectButton } from './WalletConnectButton';
 
 interface NavigationProps {
   variant?: 'light' | 'dark' | 'transparent';
@@ -68,9 +69,7 @@ export function Navigation({ variant = 'transparent', className = '' }: Navigati
             >
               Launch App
             </Link>
-            <button className="btn-cyber text-sm">
-              Connect Wallet
-            </button>
+            <WalletConnectButton />
           </div>
 
           {/* Mobile Menu Button */}
