@@ -115,7 +115,7 @@ export default function AIWorkflow() {
 
         {/* Workflow Steps */}
         <div className="relative py-12">
-          <div className="flex flex-row items-center justify-center gap-12 overflow-x-auto pb-8 max-w-full px-8">
+          <div className="flex flex-row items-center justify-center gap-8 overflow-x-auto pb-8 max-w-full px-8">
             {workflowSteps.map((step, index) => (
               <div key={step.id} className="flex flex-col items-center relative">
                 {/* Step Card */}
@@ -123,10 +123,10 @@ export default function AIWorkflow() {
                   ref={el => { stepsRef.current[index] = el; }}
                   className="cursor-pointer group relative overflow-hidden transition-all duration-300"
                   style={{
-                    width: '180px !important',
-                    maxWidth: '180px !important',
-                    minHeight: '160px !important',
-                    maxHeight: '160px !important',
+                    width: '140px !important',
+                    maxWidth: '140px !important',
+                    minHeight: '140px !important',
+                    maxHeight: '140px !important',
                     flexShrink: 0,
                     backdropFilter: 'blur(24px)',
                     WebkitBackdropFilter: 'blur(24px)',
@@ -196,10 +196,10 @@ export default function AIWorkflow() {
 
                 {/* Enhanced Connector Arrow (hidden on last item) */}
                 {index < workflowSteps.length - 1 && (
-                  <div className="absolute -right-12 top-1/2 transform -translate-y-1/2 z-20">
+                  <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20">
                     <div
                       ref={el => { connectorsRef.current[index] = el; }}
-                      className="w-16 h-0.5 bg-gradient-to-r from-primary via-secondary to-primary origin-left opacity-70 shadow-lg"
+                      className="w-12 h-0.5 bg-gradient-to-r from-primary via-secondary to-primary origin-left opacity-80 shadow-lg"
                       style={{
                         boxShadow: '0 0 8px hsl(var(--primary) / 0.4), 0 0 16px hsl(var(--secondary) / 0.2)'
                       }}

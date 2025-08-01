@@ -5,99 +5,73 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Navigation from '@/components/Navigation';
 import AIChat from '@/components/AIChat';
-import { MessageCircle, X } from 'lucide-react';
+import { MessageCircle, X, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
+import { useVaults, useDepositToVault } from '@/hooks/useVaults';
+import { useSeiMarketData } from '@/hooks/useMarketData';
+import { useVaultStore } from '@/stores/vaultStore';
+import { useAppStore } from '@/stores/appStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface VaultData {
-  id: string;
-  name: string;
-  apy: number;
-  tvl: string;
-  risk: 'Low' | 'Medium' | 'High';
-  color: string;
-  description: string;
-  totalDeposits: string;
-  activeStrategies: number;
-  lastRebalance: string;
-  aiConfidence: number;
-  dailyVolume: string;
-  impermanentLoss: number;
+// Utility functions
+const formatCurrency = (amount: number) => {
+  if (amount >= 1000000) {
+    return `$${(amount / 1000000).toFixed(1)}M`
+  }
+  if (amount >= 1000) {
+    return `$${(amount / 1000).toFixed(0)}K`
+  }
+  return `$${amount.toFixed(0)}`
 }
 
-const vaultsData: VaultData[] = [
-  {
-    id: 'stable-max',
-    name: 'StableMax Vault',
-    apy: 12.8,
-    tvl: '$2.4M',
-    risk: 'Low',
-    color: '#00f5d4',
-    description: 'AI-optimized stable farming with cross-protocol yield aggregation and minimal IL exposure.',
-    totalDeposits: '$2,437,892',
-    activeStrategies: 3,
-    lastRebalance: '2 hours ago',
-    aiConfidence: 94,
-    dailyVolume: '$847,293',
-    impermanentLoss: -0.12,
-  },
-  {
-    id: 'sei-hypergrowth',
-    name: 'SEI Hypergrowth',
-    apy: 24.5,
-    tvl: '$1.8M',
-    risk: 'Medium',
-    color: '#9b5de5',
-    description: 'Native SEI ecosystem exposure with 400ms rebalancing and concentrated liquidity management.',
-    totalDeposits: '$1,847,203',
-    activeStrategies: 5,
-    lastRebalance: '23 minutes ago',
-    aiConfidence: 87,
-    dailyVolume: '$1,294,847',
-    impermanentLoss: -2.31,
-  },
-  {
-    id: 'bluechip-vault',
-    name: 'BlueChip Vault',
-    apy: 18.2,
-    tvl: '$3.1M',
-    risk: 'Low',
-    color: '#ff206e',
-    description: 'Diversified blue-chip DeFi exposure with advanced risk mitigation and yield optimization.',
-    totalDeposits: '$3,127,485',
-    activeStrategies: 4,
-    lastRebalance: '1 hour ago',
-    aiConfidence: 91,
-    dailyVolume: '$674,529',
-    impermanentLoss: -0.87,
-  },
-  {
-    id: 'meta-arbitrage',
-    name: 'Meta Arbitrage',
-    apy: 31.7,
-    tvl: '$956K',
-    risk: 'High',
-    color: '#ffa500',
-    description: 'Cross-exchange MEV extraction with advanced arbitrage strategies across SEI ecosystem.',
-    totalDeposits: '$956,247',
-    activeStrategies: 7,
-    lastRebalance: '12 minutes ago',
-    aiConfidence: 79,
-    dailyVolume: '$2,847,193',
-    impermanentLoss: -4.23,
-  },
-];
+const getRiskLevel = (apy: number): 'Low' | 'Medium' | 'High' => {
+  if (apy < 15) return 'Low'
+  if (apy < 25) return 'Medium'
+  return 'High'
+}
+
+const getVaultColor = (strategy: string) => {
+  const colors = {
+    concentrated_liquidity: '#00f5d4',
+    yield_farming: '#9b5de5',
+    arbitrage: '#ff206e',
+    hedge: '#ffa500',
+  }
+  return colors[strategy as keyof typeof colors] || '#00f5d4'
+}
 
 export default function VaultsPage() {
   const mountRef = useRef<HTMLDivElement>(null);
   const vaultCardsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
-  const [selectedVault, setSelectedVault] = useState<VaultData | null>(null);
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [showChat, setShowChat] = useState(false);
+
+  // State management
+  const {
+    selectedVault,
+    setSelectedVault,
+    getFilteredVaults,
+    getTotalTVL,
+    isLoading: vaultLoading,
+    isError: vaultError,
+  } = useVaultStore()
+  
+  // API hooks
+  const { data: vaultsData, isLoading: queryLoading, error: queryError } = useVaults()
+  const { data: marketData } = useSeiMarketData()
+  const depositMutation = useDepositToVault()
+  
+  // Combine loading states
+  const isLoading = vaultLoading || queryLoading
+  const error = vaultError || queryError
+  
+  // Get filtered vaults from store
+  const filteredVaults = getFilteredVaults()
+  const totalTVL = getTotalTVL()
 
   // Three.js Setup
   useEffect(() => {
@@ -257,9 +231,6 @@ export default function VaultsPage() {
     }
   }, []);
 
-  const handleVaultSelect = (vault: VaultData) => {
-    setSelectedVault(vault);
-  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -273,7 +244,7 @@ export default function VaultsPage() {
       />
 
       {/* Navigation */}
-      <Navigation variant="dark" />
+      <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
 
       {/* Main Content */}
       <div className="relative z-10 pt-20">
@@ -291,9 +262,21 @@ export default function VaultsPage() {
               {/* Live Stats */}
               <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
                 {[
-                  { label: 'Total TVL', value: '$8.3M', change: '+12.4%' },
-                  { label: 'Active Vaults', value: '4', change: '+1' },
-                  { label: 'Avg APY', value: '21.8%', change: '+3.2%' },
+                  { 
+                    label: 'Total TVL', 
+                    value: isLoading ? '...' : formatCurrency(totalTVL), 
+                    change: '+12.4%' 
+                  },
+                  { 
+                    label: 'Active Vaults', 
+                    value: isLoading ? '...' : filteredVaults.length.toString(), 
+                    change: '+1' 
+                  },
+                  { 
+                    label: 'Avg APY', 
+                    value: isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`, 
+                    change: '+3.2%' 
+                  },
                   { label: 'AI Uptime', value: '99.97%', change: '+0.02%' },
                 ].map((stat, index) => (
                   <Card key={index} className="glass-card border-primary/20 hover:border-primary/50 transition-all duration-300 h-20 flex items-center justify-center">
@@ -312,21 +295,40 @@ export default function VaultsPage() {
         {/* Vaults Grid */}
         <section className="py-12 px-4">
           <div className="container mx-auto">
-            <div ref={vaultCardsRef} className="grid lg:grid-cols-2 gap-8">
-              {vaultsData.map((vault, index) => (
+            {isLoading && (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <span className="ml-2 text-lg">Loading vaults...</span>
+              </div>
+            )}
+            
+            {error && (
+              <div className="text-center py-20">
+                <div className="text-red-400 text-lg mb-4">Failed to load vaults</div>
+                <div className="text-muted-foreground">{error.message}</div>
+              </div>
+            )}
+            
+            {!isLoading && !error && (
+              <div ref={vaultCardsRef} className="grid lg:grid-cols-2 gap-8">
+                {filteredVaults.map((vault, index) => {
+                  const vaultColor = getVaultColor(vault.strategy)
+                  const riskLevel = getRiskLevel(vault.apy)
+                  
+                  return (
                 <Card 
-                  key={vault.id}
+                  key={vault.address}
                   className="glass-card border-2 border-primary/20 hover:border-primary/60 transition-all duration-500 cursor-pointer group relative overflow-hidden"
-                  onClick={() => handleVaultSelect(vault)}
+                  onClick={() => setSelectedVault(vault)}
                   style={{
-                    boxShadow: `0 0 30px ${vault.color}20`,
+                    boxShadow: `0 0 30px ${vaultColor}20`,
                   }}
                 >
                   {/* Animated border */}
                   <div 
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
-                      background: `linear-gradient(45deg, ${vault.color}30, transparent, ${vault.color}30)`,
+                      background: `linear-gradient(45deg, ${vaultColor}30, transparent, ${vaultColor}30)`,
                       backgroundSize: '200% 200%',
                       animation: 'borderGlow 3s ease-in-out infinite',
                     }}
@@ -335,62 +337,64 @@ export default function VaultsPage() {
                   <CardHeader className="relative z-10 pb-3">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <CardTitle className="text-xl font-bold mb-1" style={{ color: vault.color }}>
+                        <CardTitle className="text-xl font-bold mb-1" style={{ color: vaultColor }}>
                           {vault.name}
                         </CardTitle>
                         <div className="flex items-center space-x-3">
                           <div className="text-2xl font-bold text-primary-glow">
-                            {vault.apy}% APY
+                            {(vault.apy * 100).toFixed(1)}% APY
                           </div>
                           <div className={`px-2 py-1 rounded-full text-xs font-bold ${
-                            vault.risk === 'Low' ? 'bg-green-500/20 text-green-400' :
-                            vault.risk === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                            riskLevel === 'Low' ? 'bg-green-500/20 text-green-400' :
+                            riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
                             'bg-red-500/20 text-red-400'
                           }`}>
-                            {vault.risk} Risk
+                            {riskLevel} Risk
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-bold text-foreground">{vault.tvl}</div>
+                        <div className="text-lg font-bold text-foreground">{formatCurrency(vault.tvl)}</div>
                         <div className="text-sm text-muted-foreground">TVL</div>
                       </div>
                     </div>
                   </CardHeader>
 
                   <CardContent className="relative z-10 pt-0">
-                    <p className="text-muted-foreground mb-4 text-sm">{vault.description}</p>
+                    <p className="text-muted-foreground mb-4 text-sm">
+                      {vault.strategy.replace('_', ' ').toUpperCase()} strategy with {vault.tokenA}-{vault.tokenB} pair
+                    </p>
                     
                     {/* Advanced Metrics */}
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">AI Confidence</span>
-                          <span className="text-xs font-bold text-primary">{vault.aiConfidence}%</span>
+                          <span className="text-xs text-muted-foreground">Performance</span>
+                          <span className="text-xs font-bold text-primary">{(vault.performance.totalReturn * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Active Strategies</span>
-                          <span className="text-xs font-bold text-secondary">{vault.activeStrategies}</span>
+                          <span className="text-xs text-muted-foreground">Sharpe Ratio</span>
+                          <span className="text-xs font-bold text-secondary">{vault.performance.sharpeRatio.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Daily Volume</span>
-                          <span className="text-xs font-bold text-accent">{vault.dailyVolume}</span>
+                          <span className="text-xs text-muted-foreground">Win Rate</span>
+                          <span className="text-xs font-bold text-accent">{(vault.performance.winRate * 100).toFixed(0)}%</span>
                         </div>
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Last Rebalance</span>
-                          <span className="text-xs font-bold text-green-400">{vault.lastRebalance}</span>
+                          <span className="text-xs text-muted-foreground">Fee Tier</span>
+                          <span className="text-xs font-bold text-green-400">{(vault.fee * 100).toFixed(2)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">IL Impact</span>
-                          <span className={`text-xs font-bold ${vault.impermanentLoss < -2 ? 'text-red-400' : 'text-green-400'}`}>
-                            {vault.impermanentLoss}%
+                          <span className="text-xs text-muted-foreground">Max Drawdown</span>
+                          <span className={`text-xs font-bold ${vault.performance.maxDrawdown > 0.05 ? 'text-red-400' : 'text-green-400'}`}>
+                            {(vault.performance.maxDrawdown * 100).toFixed(1)}%
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Total Deposits</span>
-                          <span className="text-xs font-bold text-primary-glow">{vault.totalDeposits}</span>
+                          <span className="text-xs text-muted-foreground">Chain ID</span>
+                          <span className="text-xs font-bold text-primary-glow">{vault.chainId}</span>
                         </div>
                       </div>
                     </div>
@@ -400,12 +404,18 @@ export default function VaultsPage() {
                       <Button 
                         className="flex-1 font-semibold text-sm h-9 transition-all duration-300 hover:scale-105"
                         style={{
-                          background: `linear-gradient(135deg, ${vault.color}, ${vault.color}80)`,
+                          background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}80)`,
                           color: '#000',
-                          boxShadow: `0 0 15px ${vault.color}30`,
+                          boxShadow: `0 0 15px ${vaultColor}30`,
                         }}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          // For now, just show notification - would open deposit modal
+                          alert(`Deposit to ${vault.name} - Integration with wallet coming soon!`)
+                        }}
+                        disabled={depositMutation.isPending}
                       >
-                        Deposit
+                        {depositMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Deposit'}
                       </Button>
                       <Button 
                         variant="outline" 
@@ -416,8 +426,10 @@ export default function VaultsPage() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </section>
       </div>
@@ -428,10 +440,12 @@ export default function VaultsPage() {
           <div className="pointer-events-auto w-full max-w-md h-[600px] mr-4 mb-20">
             <AIChat
               className="h-full"
-              vaultAddress={selectedVault?.id}
+              vaultAddress={selectedVault?.address}
               context={{
                 currentPage: 'vaults',
-                vaultData: vaultsData,
+                vaultData: filteredVaults,
+                selectedVault,
+                marketData,
                 userPreferences: {
                   preferredTimeframe: '1d',
                   riskTolerance: 'medium',

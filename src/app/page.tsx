@@ -9,7 +9,7 @@ export default function DLPLanding() {
 
     return (
         <div className="min-h-screen bg-background">
-            <Navigation variant="transparent" showWallet={false} />
+            <Navigation variant="transparent" showWallet={false} showLaunchApp={true} />
             <HeroSection />
             <VaultShowcase />
             <AIWorkflow />

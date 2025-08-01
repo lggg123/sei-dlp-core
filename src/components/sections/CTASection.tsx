@@ -21,10 +21,10 @@ export default function CTASection() {
                         Join the future of liquidity provision with AI-powered optimization on
                         SEI
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <div className="flex flex-row gap-12 justify-center items-center">
                         <Link href="/vaults">
                             <Button 
-                                className="text-lg px-8 py-3 font-bold w-full sm:w-auto"
+                                className="text-lg px-10 py-3 font-bold"
                                 style={{
                                     background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
                                     color: 'hsl(216 100% 4%)',
@@ -32,8 +32,8 @@ export default function CTASection() {
                                     border: 'none',
                                     borderRadius: '12px',
                                     transition: 'all 300ms ease-in-out',
-                                    minWidth: '160px',
-                                    minHeight: '44px'
+                                    minWidth: '180px',
+                                    minHeight: '48px'
                                 }}
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.transform = 'scale(1.05)';
@@ -50,15 +50,15 @@ export default function CTASection() {
                         <Link href="/docs">
                             <Button
                                 variant="outline"
-                                className="text-lg px-8 py-3 font-bold w-full sm:w-auto"
+                                className="text-lg px-10 py-3 font-bold"
                                 style={{
                                     borderColor: 'hsl(180 100% 48%)',
                                     color: 'hsl(180 100% 48%)',
                                     background: 'transparent',
                                     borderRadius: '12px',
                                     transition: 'all 300ms ease-in-out',
-                                    minWidth: '160px',
-                                    minHeight: '44px',
+                                    minWidth: '180px',
+                                    minHeight: '48px',
                                     borderWidth: '2px'
                                 }}
                                 onMouseEnter={(e) => {
