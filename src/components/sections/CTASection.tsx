@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function CTASection() {
     return (
@@ -21,55 +22,59 @@ export default function CTASection() {
                         SEI
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button 
-                            className="text-lg px-8 py-3 font-bold"
-                            style={{
-                                background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
-                                color: 'hsl(216 100% 4%)',
-                                boxShadow: '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)',
-                                border: 'none',
-                                borderRadius: '12px',
-                                transition: 'all 300ms ease-in-out',
-                                minWidth: '160px',
-                                minHeight: '44px'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'scale(1.05)';
-                                e.currentTarget.style.boxShadow = '0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'scale(1)';
-                                e.currentTarget.style.boxShadow = '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)';
-                            }}
-                        >
-                            Start Earning Now
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className="text-lg px-8 py-3 font-bold"
-                            style={{
-                                borderColor: 'hsl(180 100% 48%)',
-                                color: 'hsl(180 100% 48%)',
-                                background: 'transparent',
-                                borderRadius: '12px',
-                                transition: 'all 300ms ease-in-out',
-                                minWidth: '160px',
-                                minHeight: '44px',
-                                borderWidth: '2px'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'hsl(180 100% 48% / 0.1)';
-                                e.currentTarget.style.borderColor = 'hsl(180 100% 48%)';
-                                e.currentTarget.style.transform = 'scale(1.05)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'transparent';
-                                e.currentTarget.style.borderColor = 'hsl(180 100% 48%)';
-                                e.currentTarget.style.transform = 'scale(1)';
-                            }}
-                        >
-                            Read Whitepaper
-                        </Button>
+                        <Link href="/vaults">
+                            <Button 
+                                className="text-lg px-8 py-3 font-bold w-full sm:w-auto"
+                                style={{
+                                    background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
+                                    color: 'hsl(216 100% 4%)',
+                                    boxShadow: '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)',
+                                    border: 'none',
+                                    borderRadius: '12px',
+                                    transition: 'all 300ms ease-in-out',
+                                    minWidth: '160px',
+                                    minHeight: '44px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)';
+                                    e.currentTarget.style.boxShadow = '0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                    e.currentTarget.style.boxShadow = '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)';
+                                }}
+                            >
+                                Launch App
+                            </Button>
+                        </Link>
+                        <Link href="/docs">
+                            <Button
+                                variant="outline"
+                                className="text-lg px-8 py-3 font-bold w-full sm:w-auto"
+                                style={{
+                                    borderColor: 'hsl(180 100% 48%)',
+                                    color: 'hsl(180 100% 48%)',
+                                    background: 'transparent',
+                                    borderRadius: '12px',
+                                    transition: 'all 300ms ease-in-out',
+                                    minWidth: '160px',
+                                    minHeight: '44px',
+                                    borderWidth: '2px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'hsl(180 100% 48% / 0.1)';
+                                    e.currentTarget.style.borderColor = 'hsl(180 100% 48%)';
+                                    e.currentTarget.style.transform = 'scale(1.05)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'transparent';
+                                    e.currentTarget.style.borderColor = 'hsl(180 100% 48%)';
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                }}
+                            >
+                                Learn More
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -38,7 +38,7 @@ export const config = getDefaultConfig({
     [seiMainnet.id]: http(),
     [seiTestnet.id]: http()
   },
-  ssr: false,
+  ssr: true,
   batch: {
     multicall: false,
   },

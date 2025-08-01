@@ -58,18 +58,18 @@ export default function VaultPage({ params, searchParams }: PageProps) {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="glass-card p-6">
-            <div className="text-2xl font-bold text-primary-glow mb-2">400ms</div>
-            <div className="text-muted-foreground">Finality</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="glass-card p-4 h-20 flex flex-col items-center justify-center text-center">
+            <div className="text-xl font-bold text-primary-glow leading-tight">400ms</div>
+            <div className="text-sm text-muted-foreground">Finality</div>
           </div>
-          <div className="glass-card p-6">
-            <div className="text-2xl font-bold text-cyan-glow mb-2">~$0.15</div>
-            <div className="text-muted-foreground">Gas Cost</div>
+          <div className="glass-card p-4 h-20 flex flex-col items-center justify-center text-center">
+            <div className="text-xl font-bold text-cyan-glow leading-tight">~$0.15</div>
+            <div className="text-sm text-muted-foreground">Gas Cost</div>
           </div>
-          <div className="glass-card p-6">
-            <div className="text-2xl font-bold text-purple-glow mb-2">713715</div>
-            <div className="text-muted-foreground">Chain ID</div>
+          <div className="glass-card p-4 h-20 flex flex-col items-center justify-center text-center">
+            <div className="text-xl font-bold text-purple-glow leading-tight">713715</div>
+            <div className="text-sm text-muted-foreground">Chain ID</div>
           </div>
         </div>
         

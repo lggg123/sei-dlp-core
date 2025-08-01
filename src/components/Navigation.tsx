@@ -16,9 +16,10 @@ const WalletConnectButton = dynamic(
 interface NavigationProps {
   variant?: 'light' | 'dark' | 'transparent';
   className?: string;
+  showWallet?: boolean;
 }
 
-export function Navigation({ variant = 'transparent', className = '' }: NavigationProps) {
+export function Navigation({ variant = 'transparent', className = '', showWallet = true }: NavigationProps) {
   const baseClasses = "fixed top-0 left-0 right-0 z-50 transition-all duration-300";
   
   const variantClasses = {
@@ -75,11 +76,18 @@ export function Navigation({ variant = 'transparent', className = '' }: Navigati
           <div className="flex items-center space-x-4">
             <Link
               href="/vaults"
-              className="hidden sm:block px-6 py-2 text-sm font-medium rounded-lg border-2 border-primary/50 text-primary hover:border-primary hover:bg-primary/10 transition-all duration-300 hover:scale-105"
+              className="hidden sm:flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-primary to-secondary text-black hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))',
+                boxShadow: '0 4px 20px hsl(var(--primary) / 0.3), inset 0 1px 0 rgba(255,255,255,0.2)'
+              }}
             >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
               Launch App
             </Link>
-            <WalletConnectButton />
+            {showWallet && <WalletConnectButton />}
             
             {/* Mobile Menu Button */}
             <button className="md:hidden text-foreground hover:text-primary ml-2">

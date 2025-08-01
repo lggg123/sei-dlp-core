@@ -289,17 +289,17 @@ export default function VaultsPage() {
               </p>
               
               {/* Live Stats */}
-              <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
                 {[
                   { label: 'Total TVL', value: '$8.3M', change: '+12.4%' },
                   { label: 'Active Vaults', value: '4', change: '+1' },
                   { label: 'Avg APY', value: '21.8%', change: '+3.2%' },
                   { label: 'AI Uptime', value: '99.97%', change: '+0.02%' },
                 ].map((stat, index) => (
-                  <Card key={index} className="glass-card border-primary/20 hover:border-primary/50 transition-all duration-300">
-                    <CardContent className="p-4 text-center">
-                      <div className="text-2xl font-bold text-primary-glow">{stat.value}</div>
-                      <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <Card key={index} className="glass-card border-primary/20 hover:border-primary/50 transition-all duration-300 h-20 flex items-center justify-center">
+                    <CardContent className="p-3 text-center flex flex-col justify-center h-full">
+                      <div className="text-lg font-bold text-primary-glow leading-tight">{stat.value}</div>
+                      <div className="text-xs text-muted-foreground">{stat.label}</div>
                       <div className="text-xs text-green-400">{stat.change}</div>
                     </CardContent>
                   </Card>
@@ -332,17 +332,17 @@ export default function VaultsPage() {
                     }}
                   />
                   
-                  <CardHeader className="relative z-10">
-                    <div className="flex justify-between items-start mb-4">
+                  <CardHeader className="relative z-10 pb-3">
+                    <div className="flex justify-between items-start mb-2">
                       <div>
-                        <CardTitle className="text-2xl font-bold mb-2" style={{ color: vault.color }}>
+                        <CardTitle className="text-xl font-bold mb-1" style={{ color: vault.color }}>
                           {vault.name}
                         </CardTitle>
-                        <div className="flex items-center space-x-4">
-                          <div className="text-3xl font-bold text-primary-glow">
+                        <div className="flex items-center space-x-3">
+                          <div className="text-2xl font-bold text-primary-glow">
                             {vault.apy}% APY
                           </div>
-                          <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          <div className={`px-2 py-1 rounded-full text-xs font-bold ${
                             vault.risk === 'Low' ? 'bg-green-500/20 text-green-400' :
                             vault.risk === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
                             'bg-red-500/20 text-red-400'
@@ -358,58 +358,58 @@ export default function VaultsPage() {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="relative z-10">
-                    <p className="text-muted-foreground mb-6">{vault.description}</p>
+                  <CardContent className="relative z-10 pt-0">
+                    <p className="text-muted-foreground mb-4 text-sm">{vault.description}</p>
                     
                     {/* Advanced Metrics */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">AI Confidence</span>
-                          <span className="text-sm font-bold text-primary">{vault.aiConfidence}%</span>
+                          <span className="text-xs text-muted-foreground">AI Confidence</span>
+                          <span className="text-xs font-bold text-primary">{vault.aiConfidence}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Active Strategies</span>
-                          <span className="text-sm font-bold text-secondary">{vault.activeStrategies}</span>
+                          <span className="text-xs text-muted-foreground">Active Strategies</span>
+                          <span className="text-xs font-bold text-secondary">{vault.activeStrategies}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Daily Volume</span>
-                          <span className="text-sm font-bold text-accent">{vault.dailyVolume}</span>
+                          <span className="text-xs text-muted-foreground">Daily Volume</span>
+                          <span className="text-xs font-bold text-accent">{vault.dailyVolume}</span>
                         </div>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Last Rebalance</span>
-                          <span className="text-sm font-bold text-green-400">{vault.lastRebalance}</span>
+                          <span className="text-xs text-muted-foreground">Last Rebalance</span>
+                          <span className="text-xs font-bold text-green-400">{vault.lastRebalance}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">IL Impact</span>
-                          <span className={`text-sm font-bold ${vault.impermanentLoss < -2 ? 'text-red-400' : 'text-green-400'}`}>
+                          <span className="text-xs text-muted-foreground">IL Impact</span>
+                          <span className={`text-xs font-bold ${vault.impermanentLoss < -2 ? 'text-red-400' : 'text-green-400'}`}>
                             {vault.impermanentLoss}%
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Total Deposits</span>
-                          <span className="text-sm font-bold text-primary-glow">{vault.totalDeposits}</span>
+                          <span className="text-xs text-muted-foreground">Total Deposits</span>
+                          <span className="text-xs font-bold text-primary-glow">{vault.totalDeposits}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex space-x-3">
+                    <div className="flex gap-2">
                       <Button 
-                        className="flex-1 font-bold transition-all duration-300 hover:scale-105"
+                        className="flex-1 font-semibold text-sm h-9 transition-all duration-300 hover:scale-105"
                         style={{
                           background: `linear-gradient(135deg, ${vault.color}, ${vault.color}80)`,
                           color: '#000',
-                          boxShadow: `0 0 20px ${vault.color}40`,
+                          boxShadow: `0 0 15px ${vault.color}30`,
                         }}
                       >
                         Deposit
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="flex-1 font-bold border-primary/50 hover:border-primary transition-all duration-300"
+                        className="flex-1 font-semibold text-sm h-9 border-primary/50 hover:border-primary transition-all duration-300"
                       >
                         Analytics
                       </Button>

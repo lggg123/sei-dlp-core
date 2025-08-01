@@ -1,8 +1,9 @@
-"use client";``
+"use client";
 
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import gsap from 'gsap';
 import styles from './VaultCard.module.css';
 
@@ -144,6 +145,25 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
               style={{ backgroundColor: vault.color }}
             />
             <span className={styles.statusText}>Active & Optimizing</span>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className={styles.buttonRow}>
+            <Button 
+              className={styles.depositButton}
+              style={{
+                background: `linear-gradient(135deg, ${vault.color}, ${vault.color}80)`,
+                color: '#000',
+              }}
+            >
+              Deposit
+            </Button>
+            <Button 
+              variant="outline" 
+              className={styles.analyticsButton}
+            >
+              View
+            </Button>
           </div>
         </div>
       </CardContent>

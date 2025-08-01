@@ -20,6 +20,10 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     setMounted(true)
   }, [])
 
+  if (!mounted) {
+    return <div suppressHydrationWarning>{children}</div>
+  }
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
@@ -27,7 +31,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
           initialChain={1329}
           showRecentTransactions={false}
         >
-          {mounted ? children : <div suppressHydrationWarning>{children}</div>}
+          {children}
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

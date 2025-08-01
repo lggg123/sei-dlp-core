@@ -69,7 +69,7 @@ export function WalletConnectButton() {
                 }
 
                 return (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 ml-auto">
                     <Button
                       onClick={openChainModal}
                       className="text-sm px-3 py-2 bg-secondary/50 hover:bg-secondary/70 border border-primary/30"
