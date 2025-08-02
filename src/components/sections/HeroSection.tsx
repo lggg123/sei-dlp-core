@@ -84,7 +84,7 @@ export default function HeroSection() {
                 </div>
 
                 <div ref={heroTextRef} className={heroStyles.textContainer}>
-                    <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
+                    <h1 className="text-6xl lg:text-8xl font-bold mb-12 leading-tight">
                         <span className={heroStyles.heroTitleAnimated}>
                             Your Liquidity,
                         </span>
@@ -94,7 +94,7 @@ export default function HeroSection() {
                         </span>
                     </h1>
 
-                    <p className="text-xl lg:text-2xl text-primary-glow mb-20 max-w-2xl">
+                    <p className="text-2xl lg:text-3xl text-primary-glow mb-24 max-w-3xl">
                         Harness the power of AI-driven liquidity optimization on SEI.
                         Maximize yields, minimize risk, and let ElizaOS handle the
                         complexity.
@@ -102,8 +102,8 @@ export default function HeroSection() {
 
                     <div
                         ref={ctaRef}
-                        className="flex flex-row mb-16 justify-start"
-                        style={{ marginTop: '2rem', gap: '2rem' }}
+                        className="flex flex-row mb-20 justify-start"
+                        style={{ marginTop: '3rem', gap: '3rem' }}
                     >
                         <Button
                             className="text-2xl px-16 py-8 font-bold"
@@ -157,7 +157,7 @@ export default function HeroSection() {
                         </Button>
                     </div>
 
-                    <div className="space-y-4" style={{ marginTop: '4rem' }}>
+                    <div className="space-y-6" style={{ marginTop: '6rem' }}>
                         {[
                             { icon: '⚡', text: 'Real-time AI optimization' },
                             { icon: '🛡️', text: '62% reduced impermanent loss' },
@@ -165,10 +165,10 @@ export default function HeroSection() {
                         ].map((feature, i) => (
                             <div
                                 key={i}
-                                className="flex items-center space-x-3 text-primary-glow"
+                                className="flex items-center space-x-4 text-primary-glow"
                             >
-                                <span className="text-xl">{feature.icon}</span>
-                                <span>{feature.text}</span>
+                                <span className="text-2xl">{feature.icon}</span>
+                                <span className="text-lg">{feature.text}</span>
                             </div>
                         ))}
                     </div>

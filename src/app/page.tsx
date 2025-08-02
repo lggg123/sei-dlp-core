@@ -1,6 +1,7 @@
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/sections/HeroSection';
 import VaultShowcase from '@/components/sections/VaultShowcase';
+import FeatureHighlight from '@/components/sections/FeatureHighlight';
 import AIWorkflow from '@/components/AIWorkflow';
 import PerformanceMetrics from '@/components/sections/PerformanceMetrics';
 import CTASection from '@/components/sections/CTASection';
@@ -12,6 +13,7 @@ export default function DLPLanding() {
             <Navigation variant="transparent" showWallet={false} showLaunchApp={true} />
             <HeroSection />
             <VaultShowcase />
+            <FeatureHighlight />
             <AIWorkflow />
             <PerformanceMetrics />
             <CTASection />

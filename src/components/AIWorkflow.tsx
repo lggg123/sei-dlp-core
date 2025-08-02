@@ -102,13 +102,13 @@ export default function AIWorkflow() {
   }, []);
 
   return (
-    <div ref={containerRef} className="py-20 neural-grid">
+    <div ref={containerRef} className="py-32 neural-grid">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 holo-text">
+        <div className="text-center mb-20">
+          <h2 className="text-5xl lg:text-6xl font-bold mb-6 holo-text">
             AI-Powered Liquidity Engine
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-2xl text-muted-foreground max-w-4xl mx-auto">
             Watch how ElizaOS optimizes your capital in real-time across SEI's DeFi ecosystem
           </p>
         </div>

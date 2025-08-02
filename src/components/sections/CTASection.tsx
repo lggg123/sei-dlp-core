@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function CTASection() {
     return (
-        <section className="py-32 relative overflow-hidden">
+        <section className="py-48 relative overflow-hidden">
             <div
                 className="absolute inset-0"
                 style={{
@@ -14,26 +14,24 @@ export default function CTASection() {
             />
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center max-w-4xl mx-auto">
-                    <h2 className="text-4xl lg:text-5xl font-bold mb-8 holo-text">
+                    <h2 className="text-5xl lg:text-6xl font-bold mb-12 holo-text">
                         Ready to Evolve Your DeFi Strategy?
                     </h2>
-                    <p className="text-xl text-muted-foreground mb-12">
+                    <p className="text-2xl text-muted-foreground mb-16">
                         Join the future of liquidity provision with AI-powered optimization on
                         SEI
                     </p>
-                    <div className="flex flex-row justify-center items-center" style={{ gap: '3rem' }}>
+                    <div className="flex flex-row justify-center items-center" style={{ gap: '4rem' }}>
                         <Link href="/vaults">
                             <Button 
-                                className="text-lg px-10 py-3 font-bold"
+                                className="text-xl px-12 py-4 font-bold"
                                 style={{
                                     background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
                                     color: 'hsl(216 100% 4%)',
                                     boxShadow: '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)',
                                     border: 'none',
-                                    borderRadius: '12px',
-                                    transition: 'all 300ms ease-in-out',
-                                    minWidth: '180px',
-                                    minHeight: '48px'
+                                    borderRadius: '16px',
+                                    transition: 'all 300ms ease-in-out'
                                 }}
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.transform = 'scale(1.05)';
@@ -50,15 +48,13 @@ export default function CTASection() {
                         <Link href="/docs">
                             <Button
                                 variant="outline"
-                                className="text-lg px-10 py-3 font-bold"
+                                className="text-xl px-12 py-4 font-bold"
                                 style={{
                                     borderColor: 'hsl(180 100% 48%)',
                                     color: 'hsl(180 100% 48%)',
                                     background: 'transparent',
-                                    borderRadius: '12px',
+                                    borderRadius: '16px',
                                     transition: 'all 300ms ease-in-out',
-                                    minWidth: '180px',
-                                    minHeight: '48px',
                                     borderWidth: '2px'
                                 }}
                                 onMouseEnter={(e) => {

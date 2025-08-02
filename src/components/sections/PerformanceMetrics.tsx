@@ -2,13 +2,13 @@ import PerformanceCard from '@/components/PerformanceCard';
 
 export default function PerformanceMetrics() {
     return (
-        <section className="py-20 relative">
+        <section className="py-32 relative">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold mb-4 holo-text">
+                <div className="text-center mb-20">
+                    <h2 className="text-5xl lg:text-6xl font-bold mb-6 holo-text">
                         Real-Time Performance
                     </h2>
-                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    <p className="text-2xl text-muted-foreground max-w-4xl mx-auto">
                         Track your vault performance with AI-powered analytics and real-time metrics.
                     </p>
                 </div>

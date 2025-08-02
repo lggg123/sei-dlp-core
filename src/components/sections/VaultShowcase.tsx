@@ -31,19 +31,19 @@ const vaultData = [
 
 export default function VaultShowcase() {
     return (
-        <section className="py-20 relative">
+        <section className="py-32 relative">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold mb-4 holo-text">
+                <div className="text-center mb-20">
+                    <h2 className="text-5xl lg:text-6xl font-bold mb-6 holo-text">
                         Intelligent Vault Ecosystem
                     </h2>
-                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    <p className="text-2xl text-muted-foreground max-w-4xl mx-auto">
                         Choose from our curated selection of AI-optimized vaults,
                         each designed for different risk profiles and market conditions.
                     </p>
                 </div>
 
-                <div className="flex flex-row justify-center items-stretch gap-8 overflow-x-auto pb-4 max-w-5xl mx-auto px-6 scrollbar-hide" style={{ minHeight: '260px' }}>
+                <div className="flex flex-row justify-center items-stretch gap-10 overflow-x-auto pb-6 max-w-6xl mx-auto px-8 scrollbar-hide" style={{ minHeight: '280px' }}>
                     {vaultData.map((vault, index) => (
                         <VaultCard key={vault.name} vault={vault} index={index} />
                     ))}
