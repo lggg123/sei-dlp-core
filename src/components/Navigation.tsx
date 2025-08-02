@@ -74,15 +74,34 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
           </div>
 
           {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
-          <div className="flex items-center space-x-4">
+          <div 
+            className="flex items-center space-x-4"
+            style={{ 
+              marginLeft: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              justifyContent: 'flex-end'
+            }}
+          >
             {showLaunchApp && (
               <Link
                 href="/vaults"
                 className="flex items-center gap-2 px-6 py-2.5 text-sm font-semibold bg-gradient-to-r from-primary to-secondary text-black hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
                 style={{
-                  background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))',
-                  boxShadow: '0 4px 20px hsl(var(--primary) / 0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
-                  borderRadius: '12px'
+                  background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important',
+                  color: 'hsl(216 100% 4%) !important',
+                  borderRadius: '12px !important',
+                  boxShadow: '0 4px 20px hsl(180 100% 48% / 0.3), inset 0 1px 0 rgba(255,255,255,0.2) !important',
+                  border: 'none !important',
+                  textDecoration: 'none !important',
+                  display: 'flex !important',
+                  alignItems: 'center !important',
+                  gap: '0.5rem !important',
+                  padding: '0.625rem 1.5rem !important',
+                  fontSize: '0.875rem !important',
+                  fontWeight: '600 !important',
+                  transition: 'all 300ms ease-in-out !important'
                 }}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

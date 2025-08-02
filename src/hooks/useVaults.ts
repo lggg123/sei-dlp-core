@@ -7,6 +7,7 @@ interface VaultResponse {
   data: VaultData[]
   count: number
   chainId: number
+  error?: string
 }
 
 interface CreateVaultRequest {

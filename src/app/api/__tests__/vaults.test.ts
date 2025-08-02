@@ -22,7 +22,7 @@ describe('/api/vaults', () => {
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(data.data.every((vault: any) => vault.strategy === 'concentrated_liquidity')).toBe(true)
+      expect(data.data.every((vault: { strategy: string }) => vault.strategy === 'concentrated_liquidity')).toBe(true)
     })
 
     it('should filter vaults by active status', async () => {
@@ -32,7 +32,7 @@ describe('/api/vaults', () => {
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(data.data.every((vault: any) => vault.active === true)).toBe(true)
+      expect(data.data.every((vault: { active: boolean }) => vault.active === true)).toBe(true)
     })
 
     it('should return vault with correct structure', async () => {

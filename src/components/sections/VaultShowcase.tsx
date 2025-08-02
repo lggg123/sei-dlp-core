@@ -43,7 +43,7 @@ export default function VaultShowcase() {
                     </p>
                 </div>
 
-                <div className="flex flex-row justify-center items-stretch gap-6 overflow-x-auto pb-4 max-w-5xl mx-auto px-6 scrollbar-hide" style={{ minHeight: '260px' }}>
+                <div className="flex flex-row justify-center items-stretch gap-8 overflow-x-auto pb-4 max-w-5xl mx-auto px-6 scrollbar-hide" style={{ minHeight: '260px' }}>
                     {vaultData.map((vault, index) => (
                         <VaultCard key={vault.name} vault={vault} index={index} />
                     ))}

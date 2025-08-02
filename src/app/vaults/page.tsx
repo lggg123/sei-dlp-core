@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Navigation from '@/components/Navigation';
@@ -44,6 +45,7 @@ const getVaultColor = (strategy: string) => {
 }
 
 export default function VaultsPage() {
+  const router = useRouter();
   const mountRef = useRef<HTMLDivElement>(null);
   const vaultCardsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -242,6 +244,9 @@ export default function VaultsPage() {
           background: 'radial-gradient(ellipse at center, rgba(155, 93, 229, 0.15) 0%, rgba(0, 245, 212, 0.05) 50%, transparent 100%)'
         }}
       />
+      
+      {/* Background overlay to reduce 3D visual interference */}
+      <div className="fixed inset-0 z-5 bg-gradient-to-b from-background/10 via-background/5 to-background/20 pointer-events-none" />
 
       {/* Navigation */}
       <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
@@ -305,28 +310,41 @@ export default function VaultsPage() {
             {error && (
               <div className="text-center py-20">
                 <div className="text-red-400 text-lg mb-4">Failed to load vaults</div>
-                <div className="text-muted-foreground">{error.message}</div>
+                <div className="text-muted-foreground">
+                  {typeof error === 'object' && error.message ? error.message : 'An error occurred'}
+                </div>
               </div>
             )}
             
             {!isLoading && !error && (
               <div ref={vaultCardsRef} className="grid lg:grid-cols-2 gap-8">
-                {filteredVaults.map((vault, index) => {
+                {filteredVaults.map((vault) => {
                   const vaultColor = getVaultColor(vault.strategy)
                   const riskLevel = getRiskLevel(vault.apy)
                   
                   return (
                 <Card 
                   key={vault.address}
-                  className="glass-card border-2 border-primary/20 hover:border-primary/60 transition-all duration-500 cursor-pointer group relative overflow-hidden"
-                  onClick={() => setSelectedVault(vault)}
+                  className="vault-card-enhanced border-2 hover:border-primary/70 transition-all duration-500 cursor-pointer group relative overflow-hidden"
+                  onClick={() => {
+                    setSelectedVault(vault)
+                    router.push(`/vault?address=${vault.address}`)
+                  }}
                   style={{
-                    boxShadow: `0 0 30px ${vaultColor}20`,
+                    background: 'hsl(var(--card) / 0.95) !important',
+                    backdropFilter: 'blur(24px) !important',
+                    border: `2px solid ${vaultColor}50 !important`,
+                    boxShadow: `0 8px 32px hsl(var(--primary) / 0.15), 0 0 30px ${vaultColor}30 !important`,
+                    borderRadius: '16px !important',
+                    minHeight: '280px !important'
                   }}
                 >
+                  {/* Dark overlay for better text readability */}
+                  <div className="absolute inset-0 bg-black/20 z-0" />
+                  
                   {/* Animated border */}
                   <div 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-1"
                     style={{
                       background: `linear-gradient(45deg, ${vaultColor}30, transparent, ${vaultColor}30)`,
                       backgroundSize: '200% 200%',
@@ -334,7 +352,7 @@ export default function VaultsPage() {
                     }}
                   />
                   
-                  <CardHeader className="relative z-10 pb-3">
+                  <CardHeader className="relative z-20 pb-3">
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <CardTitle className="text-xl font-bold mb-1" style={{ color: vaultColor }}>
@@ -360,7 +378,7 @@ export default function VaultsPage() {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="relative z-10 pt-0">
+                  <CardContent className="relative z-20 pt-0">
                     <p className="text-muted-foreground mb-4 text-sm">
                       {vault.strategy.replace('_', ' ').toUpperCase()} strategy with {vault.tokenA}-{vault.tokenB} pair
                     </p>
@@ -410,8 +428,8 @@ export default function VaultsPage() {
                         }}
                         onClick={(e) => {
                           e.stopPropagation()
-                          // For now, just show notification - would open deposit modal
-                          alert(`Deposit to ${vault.name} - Integration with wallet coming soon!`)
+                          // Navigate to individual vault page
+                          router.push(`/vault?address=${vault.address}`)
                         }}
                         disabled={depositMutation.isPending}
                       >
@@ -420,6 +438,11 @@ export default function VaultsPage() {
                       <Button 
                         variant="outline" 
                         className="flex-1 font-semibold text-sm h-9 border-primary/50 hover:border-primary transition-all duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          // Navigate to vault analytics page
+                          router.push(`/vault?address=${vault.address}&tab=analytics`)
+                        }}
                       >
                         Analytics
                       </Button>
@@ -444,12 +467,12 @@ export default function VaultsPage() {
               context={{
                 currentPage: 'vaults',
                 vaultData: filteredVaults,
-                selectedVault,
-                marketData,
                 userPreferences: {
                   preferredTimeframe: '1d',
                   riskTolerance: 'medium',
-                  autoRebalance: true
+                  autoRebalance: true,
+                  selectedVault: selectedVault,
+                  marketData: marketData
                 }
               }}
               initialMessage="🎯 Welcome to SEI DLP Vaults! I'm Liqui, your AI assistant. I can help you analyze vault performance, predict optimal ranges, and recommend rebalancing strategies. What vault would you like to optimize today?"
@@ -485,14 +508,31 @@ export default function VaultsPage() {
         }
         
         .glass-card {
-          backdrop-filter: blur(10px);
-          background: rgba(0, 0, 0, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(16px);
+          background: rgba(8, 10, 23, 0.95);
+          border: 2px solid rgba(0, 245, 212, 0.3);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
         
         .glass-card:hover {
-          backdrop-filter: blur(15px);
-          background: rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(20px);
+          background: rgba(8, 10, 23, 0.98);
+          border-color: rgba(0, 245, 212, 0.5);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .vault-card-enhanced {
+          backdrop-filter: blur(24px);
+          background: rgba(8, 10, 23, 0.96);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          border: 2px solid rgba(155, 93, 229, 0.3);
+        }
+        
+        .vault-card-enhanced:hover {
+          backdrop-filter: blur(28px);
+          background: rgba(8, 10, 23, 0.98);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          border-color: rgba(155, 93, 229, 0.5);
         }
       `}</style>
     </div>

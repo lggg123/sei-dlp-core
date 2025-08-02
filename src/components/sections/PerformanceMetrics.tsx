@@ -13,35 +13,43 @@ export default function PerformanceMetrics() {
                     </p>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto place-items-center">
-                    <PerformanceCard
-                        metric="24.5%"
-                        description="Average APY"
-                        comparison="+12.3% from last month"
-                        color="#00f5d4"
-                        positive={true}
-                    />
-                    <PerformanceCard
-                        metric="$8.3M"
-                        description="Total Value Locked"
-                        comparison="+18% this week"
-                        color="#9b5de5"
-                        positive={true}
-                    />
-                    <PerformanceCard
-                        metric="0.012%"
-                        description="Impermanent Loss"
-                        comparison="-62% vs traditional AMMs"
-                        color="#ff206e"
-                        positive={true}
-                    />
-                    <PerformanceCard
-                        metric="99.8%"
-                        description="Uptime"
-                        comparison="AI optimization active"
-                        color="#fee75c"
-                        positive={true}
-                    />
+                <div className="flex flex-wrap justify-center max-w-7xl mx-auto" style={{ gap: '2rem' }}>
+                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                        <PerformanceCard
+                            metric="24.5%"
+                            description="Average APY"
+                            comparison="+12.3% from last month"
+                            color="#00f5d4"
+                            positive={true}
+                        />
+                    </div>
+                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                        <PerformanceCard
+                            metric="$8.3M"
+                            description="Total Value Locked"
+                            comparison="+18% this week"
+                            color="#9b5de5"
+                            positive={true}
+                        />
+                    </div>
+                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                        <PerformanceCard
+                            metric="0.012%"
+                            description="Impermanent Loss"
+                            comparison="-62% vs traditional AMMs"
+                            color="#ff206e"
+                            positive={true}
+                        />
+                    </div>
+                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                        <PerformanceCard
+                            metric="99.8%"
+                            description="Uptime"
+                            comparison="AI optimization active"
+                            color="#fee75c"
+                            positive={true}
+                        />
+                    </div>
                 </div>
             </div>
         </section>

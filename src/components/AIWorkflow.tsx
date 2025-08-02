@@ -115,9 +115,9 @@ export default function AIWorkflow() {
 
         {/* Workflow Steps */}
         <div className="relative py-12">
-          <div className="flex flex-row items-center justify-center gap-8 overflow-x-auto pb-8 max-w-full px-8">
+          <div className="flex flex-row items-center justify-center overflow-x-auto pb-8 max-w-full px-8" style={{ gap: '2rem' }}>
             {workflowSteps.map((step, index) => (
-              <div key={step.id} className="flex flex-col items-center relative">
+              <div key={step.id} className="flex flex-col items-center relative" style={{ margin: '0 1rem' }}>
                 {/* Step Card */}
                 <Card
                   ref={el => { stepsRef.current[index] = el; }}
@@ -196,10 +196,10 @@ export default function AIWorkflow() {
 
                 {/* Enhanced Connector Arrow (hidden on last item) */}
                 {index < workflowSteps.length - 1 && (
-                  <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20">
+                  <div className="absolute top-1/2 transform -translate-y-1/2 z-20" style={{ right: '-1.5rem' }}>
                     <div
                       ref={el => { connectorsRef.current[index] = el; }}
-                      className="w-12 h-0.5 bg-gradient-to-r from-primary via-secondary to-primary origin-left opacity-80 shadow-lg"
+                      className="w-8 md:w-10 h-0.5 bg-gradient-to-r from-primary via-secondary to-primary origin-left opacity-80 shadow-lg"
                       style={{
                         boxShadow: '0 0 8px hsl(var(--primary) / 0.4), 0 0 16px hsl(var(--secondary) / 0.2)'
                       }}
@@ -221,7 +221,7 @@ export default function AIWorkflow() {
           </div>
 
           {/* Central AI Character - Enhanced 3D Look */}
-          <div className="mt-16 flex flex-col items-center">
+          <div className="mt-24 flex flex-col items-center" style={{ marginTop: '6rem' }}>
             <div className="relative">
               <div className="w-40 h-40 rounded-full bg-gradient-to-br from-primary/30 via-secondary/20 to-accent/30 backdrop-blur-xl border-2 border-primary/40 flex items-center justify-center animate-float shadow-2xl">
                 {/* Inner glow effect */}
@@ -257,7 +257,7 @@ export default function AIWorkflow() {
         </div>
 
         {/* Section Divider */}
-        <div className="mt-32 mb-16 flex items-center justify-center">
+        <div className="mt-32 mb-24 flex items-center justify-center" style={{ marginBottom: '6rem' }}>
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs"></div>
           <div className="mx-4 px-4 py-2 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-full">
             <span className="text-sm text-primary font-medium">Performance Metrics</span>
@@ -267,7 +267,7 @@ export default function AIWorkflow() {
 
         {/* Performance Metrics */}
         <div className="max-w-5xl mx-auto px-6">
-          <div className="flex justify-center items-stretch gap-12">
+          <div className="flex justify-center items-stretch" style={{ gap: '3rem' }}>
           {[
             { metric: '62%', label: 'Less Impermanent Loss', color: '#00f5d4' },
             { metric: '400ms', label: 'SEI Block Time', color: '#9b5de5' },
@@ -277,8 +277,8 @@ export default function AIWorkflow() {
               key={index} 
               className="cursor-pointer group relative overflow-hidden hover:scale-105 transition-all duration-300"
               style={{
-                width: '280px',
-                flex: '0 0 280px',
+                width: '220px',
+                flex: '0 0 220px',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
                 border: '2px solid hsl(var(--primary) / 0.2)',
@@ -287,7 +287,7 @@ export default function AIWorkflow() {
                 padding: '1.5rem',
                 boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)',
                 textAlign: 'center',
-                minHeight: '140px',
+                minHeight: '120px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -309,6 +309,43 @@ export default function AIWorkflow() {
                   background: `linear-gradient(45deg, ${item.color}20, transparent)`
                 }}
               />
+              
+              {/* Animated 3D Icon */}
+              <div className="mb-3 relative z-10 transform-gpu transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <div 
+                  className="animate-pulse"
+                  style={{
+                    filter: `drop-shadow(0 4px 8px ${item.color}40)`,
+                    transform: 'perspective(100px) rotateX(10deg)'
+                  }}
+                >
+                  {index === 0 && (
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                         className="animate-bounce">
+                      <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" 
+                            stroke={item.color} strokeWidth="2.5" fill={`${item.color}20`}/>
+                      <path d="M9 12L11 14L15 10" stroke={item.color} strokeWidth="2.5" fill="none"
+                            className="animate-pulse"/>
+                    </svg>
+                  )}
+                  {index === 1 && (
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                         className="animate-spin" style={{ animationDuration: '3s' }}>
+                      <circle cx="12" cy="12" r="10" stroke={item.color} strokeWidth="2.5" fill={`${item.color}15`}/>
+                      <polyline points="12,6 12,12 16,14" stroke={item.color} strokeWidth="3" 
+                               className="animate-pulse"/>
+                    </svg>
+                  )}
+                  {index === 2 && (
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" 
+                            stroke={item.color} strokeWidth="2.5" fill={`${item.color}10`}/>
+                      <circle cx="12" cy="12" r="3" stroke={item.color} strokeWidth="2.5" 
+                             fill={item.color} className="animate-ping"/>
+                    </svg>
+                  )}
+                </div>
+              </div>
               
               <div 
                 className="text-2xl font-bold mb-1 relative z-10"

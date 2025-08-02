@@ -102,8 +102,8 @@ export default function HeroSection() {
 
                     <div
                         ref={ctaRef}
-                        className="flex flex-row gap-8 mb-16 justify-start"
-                        style={{ marginTop: '2rem' }}
+                        className="flex flex-row mb-16 justify-start"
+                        style={{ marginTop: '2rem', gap: '2rem' }}
                     >
                         <Button
                             className="text-2xl px-16 py-8 font-bold"

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function CTASection() {
     return (
-        <section className="py-20 relative overflow-hidden">
+        <section className="py-32 relative overflow-hidden">
             <div
                 className="absolute inset-0"
                 style={{
@@ -14,14 +14,14 @@ export default function CTASection() {
             />
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center max-w-4xl mx-auto">
-                    <h2 className="text-4xl lg:text-5xl font-bold mb-6 holo-text">
+                    <h2 className="text-4xl lg:text-5xl font-bold mb-8 holo-text">
                         Ready to Evolve Your DeFi Strategy?
                     </h2>
-                    <p className="text-xl text-muted-foreground mb-8">
+                    <p className="text-xl text-muted-foreground mb-12">
                         Join the future of liquidity provision with AI-powered optimization on
                         SEI
                     </p>
-                    <div className="flex flex-row gap-12 justify-center items-center">
+                    <div className="flex flex-row justify-center items-center" style={{ gap: '3rem' }}>
                         <Link href="/vaults">
                             <Button 
                                 className="text-lg px-10 py-3 font-bold"
