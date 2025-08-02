@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Navigation from '@/components/Navigation';
 import AIChat from '@/components/AIChat';
+import DepositModal from '@/components/DepositModal';
 import { MessageCircle, X, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -51,6 +52,8 @@ export default function VaultsPage() {
   const statsRef = useRef<HTMLDivElement>(null);
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [showChat, setShowChat] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [depositVault, setDepositVault] = useState<any>(null);
 
   // State management
   const {
@@ -79,11 +82,17 @@ export default function VaultsPage() {
   const handleDeposit = async (vault: any) => {
     try {
       setSelectedVault(vault)
-      // For now, navigate to vault page with deposit modal
-      router.push(`/vault?address=${vault.address}&action=deposit`)
+      setDepositVault(vault)
+      setShowDepositModal(true)
     } catch (error) {
       console.error('Deposit error:', error)
     }
+  }
+
+  const handleDepositSuccess = (txHash: string) => {
+    // Optional: Show success notification or redirect to transaction
+    console.log('Deposit successful:', txHash)
+    // Could add toast notification here
   }
   
   const handleViewAnalytics = (vault: any) => {
@@ -487,6 +496,17 @@ export default function VaultsPage() {
           </div>
         </div>
       )}
+
+      {/* Deposit Modal */}
+      <DepositModal
+        vault={depositVault}
+        isOpen={showDepositModal}
+        onClose={() => {
+          setShowDepositModal(false)
+          setDepositVault(null)
+        }}
+        onSuccess={handleDepositSuccess}
+      />
 
       {/* Floating AI Chat Button */}
       <div className="fixed bottom-8 right-8 z-20">

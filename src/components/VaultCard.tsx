@@ -19,9 +19,10 @@ interface VaultData {
 interface VaultCardProps {
   vault: VaultData;
   index: number;
+  onDeposit?: () => void;
 }
 
-export default function VaultCard({ vault, index }: VaultCardProps) {
+export default function VaultCard({ vault, index, onDeposit }: VaultCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const apyRef = useRef<HTMLSpanElement>(null);
   const [displayApy, setDisplayApy] = useState(0);
@@ -156,22 +157,16 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
             <span className={styles.statusText}>Active & Optimizing</span>
           </div>
           
-          {/* Action Buttons */}
+          {/* Action Button (Landing Page) */}
           <div className={styles.buttonRow}>
-            <Button 
-              className={styles.depositButton}
-              style={{
-                background: `linear-gradient(135deg, ${vault.color}, ${vault.color}80)`,
-                color: '#000',
-              }}
-            >
-              Deposit
-            </Button>
             <Button 
               variant="outline" 
               className={styles.analyticsButton}
+              style={{ position: 'relative', overflow: 'hidden' }}
             >
-              View
+              <span className="animate-pulse text-primary font-semibold tracking-wide" style={{ display: 'inline-block' }}>
+                View
+              </span>
             </Button>
           </div>
         </div>
