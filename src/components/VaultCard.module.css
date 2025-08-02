@@ -1,15 +1,15 @@
 /* VaultCard Component Styles - Override global .vault-card styles */
 .vaultCard {
-  /* Card dimensions and layout */
-  width: 100%;
-  min-width: 320px;
-  max-width: 420px;
-  min-height: 280px;
-  flex-shrink: 0;
-  flex-grow: 0;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto; /* Center card in grid cell */
+  /* Card dimensions and layout - Force consistent sizing */
+  width: 100% !important;
+  min-width: 280px !important;
+  max-width: 320px !important;
+  min-height: 280px !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 auto !important; /* Center card in grid cell */
   
   /* Visual styling - match AIWorkflow card style */
   backdrop-filter: blur(24px);
@@ -259,5 +259,27 @@
   50% { 
     opacity: 0.7;
     transform: scale(1.1);
+  }
+}
+
+/* Responsive overrides to ensure cards don't span full width */
+@media (max-width: 640px) {
+  .vaultCard {
+    min-width: 260px !important;
+    max-width: 300px !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .vaultCard {
+    min-width: 280px !important;
+    max-width: 320px !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .vaultCard {
+    min-width: 280px !important;
+    max-width: 320px !important;
   }
 }

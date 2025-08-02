@@ -66,7 +66,7 @@ export default function VaultDetailPage() {
   useEffect(() => {
     if (vaultAddress && !vault && vaultsData) {
       // Find vault in data and set it
-      const foundVault = vaultsData.find((v: any) => v.address === vaultAddress);
+      const foundVault = vaultsData.find((v) => v.address === vaultAddress);
       if (foundVault) {
         setSelectedVault(foundVault);
       }
@@ -143,10 +143,10 @@ export default function VaultDetailPage() {
               Back to Vaults
             </Button>
             
-            <div ref={cardRef} className="glass-card p-8 relative z-10">
+            <div ref={cardRef} className="vault-solid-card relative z-10">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                 <div>
-                  <h1 className="text-4xl font-bold mb-2" style={{ color: vaultColor }}>
+                  <h1 className="text-4xl font-bold mb-2 text-enhanced-glow" style={{ color: vaultColor }}>
                     {vault.name}
                   </h1>
                   <p className="text-muted-foreground text-lg">
@@ -163,12 +163,11 @@ export default function VaultDetailPage() {
                   </Badge>
                   <Button 
                     size="lg"
-                    className="h-14 px-8 text-lg font-bold hover:scale-105 active:scale-95 transition-all duration-300"
+                    className="btn-vault-primary h-14 px-8 text-lg"
                     onClick={() => setShowDepositModal(true)}
                     style={{
                       background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
                       color: '#000',
-                      boxShadow: `0 8px 25px rgba(0,0,0,0.3), 0 0 35px ${vaultColor}40`,
                     }}
                   >
                     Deposit Funds
@@ -179,46 +178,28 @@ export default function VaultDetailPage() {
               {/* Key Metrics */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white" style={{ 
-                    textShadow: `0 0 20px ${vaultColor}, 0 4px 8px rgba(0,0,0,0.8)`,
-                    filter: `drop-shadow(0 0 8px ${vaultColor})`
-                  }}>
+                  <div className="text-3xl font-bold text-enhanced-glow" style={{ color: vaultColor }}>
                     {(vault.apy * 100).toFixed(1)}%
                   </div>
-                  <div className="text-sm text-gray-200 font-medium" style={{
-                    textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                  }}>APY</div>
+                  <div className="text-sm text-muted-foreground font-medium">APY</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white" style={{
-                    textShadow: '0 0 15px hsl(var(--primary)), 0 4px 8px rgba(0,0,0,0.8)'
-                  }}>
+                  <div className="text-3xl font-bold text-vault-primary">
                     {formatCurrency(vault.tvl)}
                   </div>
-                  <div className="text-sm text-gray-200 font-medium" style={{
-                    textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                  }}>TVL</div>
+                  <div className="text-sm text-muted-foreground font-medium">TVL</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white" style={{
-                    textShadow: '0 0 15px #10b981, 0 4px 8px rgba(0,0,0,0.8)',
-                    color: '#ffffff'
-                  }}>
+                  <div className="text-3xl font-bold text-green-400 text-enhanced-glow">
                     {(vault.performance.totalReturn * 100).toFixed(1)}%
                   </div>
-                  <div className="text-sm text-gray-200 font-medium" style={{
-                    textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                  }}>Total Return</div>
+                  <div className="text-sm text-muted-foreground font-medium">Total Return</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white" style={{
-                    textShadow: '0 0 15px hsl(var(--secondary)), 0 4px 8px rgba(0,0,0,0.8)'
-                  }}>
+                  <div className="text-3xl font-bold text-secondary text-enhanced-glow">
                     {vault.performance.sharpeRatio.toFixed(2)}
                   </div>
-                  <div className="text-sm text-gray-200 font-medium" style={{
-                    textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                  }}>Sharpe Ratio</div>
+                  <div className="text-sm text-muted-foreground font-medium">Sharpe Ratio</div>
                 </div>
               </div>
             </div>
@@ -239,59 +220,37 @@ export default function VaultDetailPage() {
             <TabsContent value="overview">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
                 {/* Performance Metrics */}
-                <Card className="glass-card relative z-10">
+                <Card className="vault-solid-card relative z-10">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white" style={{
-                      textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-                    }}>
-                      <TrendingUp className="w-5 h-5" style={{
-                        filter: 'drop-shadow(0 0 8px hsl(var(--primary)))'
-                      }} />
+                    <CardTitle className="flex items-center gap-2 text-vault-primary">
+                      <TrendingUp className="w-5 h-5" />
                       Performance Metrics
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between">
-                      <span className="text-gray-200" style={{
-                        textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                      }}>Win Rate</span>
-                      <span className="font-bold text-green-300" style={{
-                        textShadow: '0 0 8px #10b981, 0 2px 4px rgba(0,0,0,0.8)'
-                      }}>
+                      <span className="text-muted-foreground">Win Rate</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow">
                         {(vault.performance.winRate * 100).toFixed(0)}%
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-200" style={{
-                        textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                      }}>Max Drawdown</span>
-                      <span className={`font-bold ${
-                        vault.performance.maxDrawdown > 0.05 ? 'text-red-300' : 'text-green-300'
-                      }`} style={{
-                        textShadow: vault.performance.maxDrawdown > 0.05 
-                          ? '0 0 8px #ef4444, 0 2px 4px rgba(0,0,0,0.8)'
-                          : '0 0 8px #10b981, 0 2px 4px rgba(0,0,0,0.8)'
-                      }}>
+                      <span className="text-muted-foreground">Max Drawdown</span>
+                      <span className={`font-bold text-enhanced-glow ${
+                        vault.performance.maxDrawdown > 0.05 ? 'text-red-400' : 'text-green-400'
+                      }`}>
                         {(vault.performance.maxDrawdown * 100).toFixed(1)}%
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-200" style={{
-                        textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                      }}>Fee Tier</span>
-                      <span className="font-bold text-blue-300" style={{
-                        textShadow: '0 0 8px #3b82f6, 0 2px 4px rgba(0,0,0,0.8)'
-                      }}>
+                      <span className="text-muted-foreground">Fee Tier</span>
+                      <span className="font-bold text-blue-400 text-enhanced-glow">
                         {(vault.fee * 100).toFixed(2)}%
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-200" style={{
-                        textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                      }}>Chain ID</span>
-                      <span className="font-bold text-cyan-300" style={{
-                        textShadow: '0 0 8px #06b6d4, 0 2px 4px rgba(0,0,0,0.8)'
-                      }}>
+                      <span className="text-muted-foreground">Chain ID</span>
+                      <span className="font-bold text-cyan-400 text-enhanced-glow">
                         {vault.chainId}
                       </span>
                     </div>
@@ -299,21 +258,17 @@ export default function VaultDetailPage() {
                 </Card>
 
                 {/* Risk Analysis */}
-                <Card className="glass-card relative z-10">
+                <Card className="vault-solid-card relative z-10">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white" style={{
-                      textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-                    }}>
-                      <Shield className="w-5 h-5" style={{
-                        filter: 'drop-shadow(0 0 8px hsl(var(--primary)))'
-                      }} />
+                    <CardTitle className="flex items-center gap-2 text-vault-primary">
+                      <Shield className="w-5 h-5" />
                       Risk Analysis
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Risk Level</span>
+                        <span className="text-muted-foreground">Risk Level</span>
                         <Badge className={
                           riskLevel === 'Low' ? 'bg-green-500/20 text-green-400' :
                           riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
@@ -328,12 +283,12 @@ export default function VaultDetailPage() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Volatility</span>
-                        <span className="font-bold">12.3%</span>
+                        <span className="text-muted-foreground">Volatility</span>
+                        <span className="font-bold text-enhanced-glow text-orange-400">12.3%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Beta</span>
-                        <span className="font-bold">0.87</span>
+                        <span className="text-muted-foreground">Beta</span>
+                        <span className="font-bold text-enhanced-glow text-purple-400">0.87</span>
                       </div>
                     </div>
                   </CardContent>
@@ -344,14 +299,10 @@ export default function VaultDetailPage() {
             <TabsContent value="analytics">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
                 {/* Chart Placeholder */}
-                <Card className="glass-card lg:col-span-2 relative z-10">
+                <Card className="vault-solid-card lg:col-span-2 relative z-10">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white" style={{
-                      textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-                    }}>
-                      <BarChart3 className="w-5 h-5" style={{
-                        filter: 'drop-shadow(0 0 8px hsl(var(--primary)))'
-                      }} />
+                    <CardTitle className="flex items-center gap-2 text-vault-primary">
+                      <BarChart3 className="w-5 h-5" />
                       Performance Chart
                     </CardTitle>
                   </CardHeader>
@@ -366,28 +317,26 @@ export default function VaultDetailPage() {
                 </Card>
 
                 {/* Historical Data */}
-                <Card className="glass-card relative z-10">
+                <Card className="vault-solid-card relative z-10">
                   <CardHeader>
-                    <CardTitle className="text-white" style={{
-                      textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-                    }}>Historical Performance</CardTitle>
+                    <CardTitle className="text-vault-primary">Historical Performance</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between">
-                      <span>1D Return</span>
-                      <span className="font-bold text-green-400">+2.34%</span>
+                      <span className="text-muted-foreground">1D Return</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow">+2.34%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>7D Return</span>
-                      <span className="font-bold text-green-400">+12.67%</span>
+                      <span className="text-muted-foreground">7D Return</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow">+12.67%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>30D Return</span>
-                      <span className="font-bold text-green-400">+45.23%</span>
+                      <span className="text-muted-foreground">30D Return</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow">+45.23%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>All Time</span>
-                      <span className="font-bold text-green-400">
+                      <span className="text-muted-foreground">All Time</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow">
                         {(vault.performance.totalReturn * 100).toFixed(1)}%
                       </span>
                     </div>
@@ -395,28 +344,26 @@ export default function VaultDetailPage() {
                 </Card>
 
                 {/* Trading Stats */}
-                <Card className="glass-card relative z-10">
+                <Card className="vault-solid-card relative z-10">
                   <CardHeader>
-                    <CardTitle className="text-white" style={{
-                      textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-                    }}>Trading Statistics</CardTitle>
+                    <CardTitle className="text-vault-primary">Trading Statistics</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between">
-                      <span>Total Trades</span>
-                      <span className="font-bold">1,247</span>
+                      <span className="text-muted-foreground">Total Trades</span>
+                      <span className="font-bold text-enhanced-glow text-blue-400">1,247</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Avg Trade Size</span>
-                      <span className="font-bold">$12.5K</span>
+                      <span className="text-muted-foreground">Avg Trade Size</span>
+                      <span className="font-bold text-enhanced-glow text-cyan-400">$12.5K</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Best Trade</span>
-                      <span className="font-bold text-green-400">+8.9%</span>
+                      <span className="text-muted-foreground">Best Trade</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow">+8.9%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Worst Trade</span>
-                      <span className="font-bold text-red-400">-1.2%</span>
+                      <span className="text-muted-foreground">Worst Trade</span>
+                      <span className="font-bold text-red-400 text-enhanced-glow">-1.2%</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -424,14 +371,10 @@ export default function VaultDetailPage() {
             </TabsContent>
 
             <TabsContent value="strategy">
-              <Card className="glass-card relative z-10">
+              <Card className="vault-solid-card relative z-10">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white" style={{
-                    textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-                  }}>
-                    <Target className="w-5 h-5" style={{
-                      filter: 'drop-shadow(0 0 8px hsl(var(--primary)))'
-                    }} />
+                  <CardTitle className="flex items-center gap-2 text-vault-primary">
+                    <Target className="w-5 h-5" />
                     Strategy Details
                   </CardTitle>
                 </CardHeader>
@@ -486,22 +429,16 @@ export default function VaultDetailPage() {
       {/* Deposit Modal */}
       {showDepositModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <Card className="w-full max-w-md glass-card relative z-10">
+          <Card className="w-full max-w-md vault-solid-card relative z-10">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white" style={{
-                textShadow: '0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.8)'
-              }}>
-                <DollarSign className="w-5 h-5" style={{
-                  filter: 'drop-shadow(0 0 8px hsl(var(--primary)))'
-                }} />
+              <CardTitle className="flex items-center gap-2 text-vault-primary">
+                <DollarSign className="w-5 h-5" />
                 Deposit to {vault.name}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="deposit-amount" className="text-gray-200 font-medium" style={{
-                  textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                }}>Amount (USD)</Label>
+                <Label htmlFor="deposit-amount" className="text-muted-foreground font-medium">Amount (USD)</Label>
                 <Input
                   id="deposit-amount"
                   type="number"
@@ -511,24 +448,14 @@ export default function VaultDetailPage() {
                 />
               </div>
               
-              <div className="text-sm text-gray-200 space-y-1" style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-              }}>
+              <div className="text-sm text-muted-foreground space-y-1">
                 <div className="flex justify-between">
-                  <span style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                  }}>Current APY:</span>
-                  <span className="font-bold text-green-300" style={{
-                    textShadow: '0 0 8px #10b981, 0 2px 4px rgba(0,0,0,0.8)'
-                  }}>{(vault.apy * 100).toFixed(1)}%</span>
+                  <span>Current APY:</span>
+                  <span className="font-bold text-green-400 text-enhanced-glow">{(vault.apy * 100).toFixed(1)}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                  }}>Fee Tier:</span>
-                  <span className="font-bold text-blue-300" style={{
-                    textShadow: '0 0 8px #3b82f6, 0 2px 4px rgba(0,0,0,0.8)'
-                  }}>{(vault.fee * 100).toFixed(2)}%</span>
+                  <span>Fee Tier:</span>
+                  <span className="font-bold text-blue-400 text-enhanced-glow">{(vault.fee * 100).toFixed(2)}%</span>
                 </div>
               </div>
               
@@ -536,18 +463,17 @@ export default function VaultDetailPage() {
                 <Button 
                   variant="outline" 
                   onClick={() => setShowDepositModal(false)}
-                  className="flex-1 h-12 text-base font-semibold hover:scale-105 transition-all duration-300"
+                  className="btn-vault-secondary flex-1 h-12 text-base"
                 >
                   Cancel
                 </Button>
                 <Button 
                   onClick={handleDeposit}
                   disabled={!depositAmount || parseFloat(depositAmount) <= 0 || depositMutation.isPending}
-                  className="flex-1 h-12 text-base font-bold hover:scale-105 active:scale-95 transition-all duration-300"
+                  className="btn-vault-primary flex-1 h-12 text-base"
                   style={{
                     background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
                     color: '#000',
-                    boxShadow: `0 6px 20px rgba(0,0,0,0.3), 0 0 30px ${vaultColor}40`,
                   }}
                 >
                   {depositMutation.isPending ? (
@@ -562,87 +488,6 @@ export default function VaultDetailPage() {
         </div>
       )}
 
-      {/* Enhanced Custom Styles */}
-      <style jsx>{`
-        .glass-card {
-          backdrop-filter: blur(32px) saturate(180%);
-          -webkit-backdrop-filter: blur(32px) saturate(180%);
-          background: linear-gradient(135deg, 
-            rgba(8, 10, 23, 0.92) 0%,
-            rgba(16, 20, 40, 0.88) 50%,
-            rgba(8, 10, 23, 0.92) 100%
-          );
-          border: 2px solid transparent;
-          background-clip: padding-box;
-          position: relative;
-          overflow: hidden;
-          border-radius: 24px;
-          box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.8),
-            0 8px 32px rgba(0, 245, 212, 0.15),
-            inset 0 2px 0 rgba(255, 255, 255, 0.2),
-            inset 0 -2px 0 rgba(0, 245, 212, 0.1);
-        }
-        
-        .glass-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          padding: 2px;
-          background: linear-gradient(135deg, 
-            rgba(0, 245, 212, 0.6) 0%,
-            rgba(155, 93, 229, 0.4) 25%,
-            rgba(255, 32, 110, 0.4) 50%,
-            rgba(251, 174, 60, 0.4) 75%,
-            rgba(0, 245, 212, 0.6) 100%
-          );
-          border-radius: 24px;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          animation: borderFlow 3s linear infinite;
-        }
-        
-        .glass-card:hover {
-          backdrop-filter: blur(40px) saturate(200%);
-          -webkit-backdrop-filter: blur(40px) saturate(200%);
-          background: linear-gradient(135deg, 
-            rgba(8, 10, 23, 0.95) 0%,
-            rgba(16, 20, 40, 0.92) 50%,
-            rgba(8, 10, 23, 0.95) 100%
-          );
-          box-shadow: 
-            0 30px 80px rgba(0, 0, 0, 0.9),
-            0 12px 48px rgba(0, 245, 212, 0.25),
-            inset 0 2px 0 rgba(255, 255, 255, 0.3),
-            inset 0 -2px 0 rgba(0, 245, 212, 0.2);
-          transform: translateY(-4px);
-        }
-        
-        .glass-card::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 50% 0%, 
-            rgba(0, 245, 212, 0.1) 0%, 
-            transparent 70%
-          );
-          border-radius: 24px;
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-        
-        .glass-card:hover::after {
-          opacity: 1;
-        }
-        
-        @keyframes borderFlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-      `}</style>
     </div>
   );
 }

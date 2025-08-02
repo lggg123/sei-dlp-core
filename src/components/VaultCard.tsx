@@ -93,6 +93,15 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
       className={`${styles.vaultCard} cursor-pointer group relative overflow-hidden`}
       onMouseEnter={handleHover}
       onMouseLeave={handleLeave}
+      style={{
+        width: '100%',
+        minWidth: '280px',
+        maxWidth: '320px',
+        minHeight: '280px',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
     >
       {/* Animated Background Gradient */}
       <div 

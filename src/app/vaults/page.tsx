@@ -340,7 +340,15 @@ export default function VaultsPage() {
             )}
             
             {!isLoading && !error && (
-              <div ref={vaultCardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
+              <div 
+                ref={vaultCardsRef} 
+                className="grid gap-6 max-w-7xl mx-auto"
+                style={{ 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 340px))',
+                  justifyContent: 'center',
+                  gridAutoRows: '1fr'
+                }}
+              >
                 {filteredVaults.map((vault) => {
                   const vaultColor = getVaultColor(vault.strategy)
                   const riskLevel = getRiskLevel(vault.apy)
@@ -348,88 +356,40 @@ export default function VaultsPage() {
                   return (
                 <Card 
                   key={vault.address}
-                  className="vault-card-enhanced transition-all duration-500 cursor-pointer group relative overflow-hidden w-full max-w-sm mx-auto"
+                  className="vault-solid-card transition-all duration-500 cursor-pointer group relative overflow-hidden"
                   onClick={() => {
                     setSelectedVault(vault)
                     router.push(`/vault?address=${vault.address}`)
                   }}
-                  style={{
-                    '--vault-color': vaultColor,
-                    '--vault-color-dark': `${vaultColor}DD`,
-                    '--vault-color-glow': `${vaultColor}40`,
-                    '--vault-color-border': `${vaultColor}80`,
-                    '--vault-color-bg': `${vaultColor}20`
-                  } as React.CSSProperties}
                 >
-                  {/* Enhanced gradient overlay for premium readability */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-transparent z-0" />
-                  
-                  {/* Enhanced inner glow with better contrast */}
-                  <div 
-                    className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-700 z-1 pointer-events-none"
-                    style={{
-                      background: `radial-gradient(circle at 30% 20%, ${vaultColor}30 0%, transparent 60%), radial-gradient(circle at 80% 80%, ${vaultColor}20 0%, transparent 50%)`,
-                      filter: 'blur(20px)',
-                    }}
-                  />
-                  
-                  {/* Accent lines for modern touch */}
-                  <div 
-                    className="absolute top-0 left-0 w-full h-1 opacity-60 group-hover:opacity-100 transition-opacity duration-500 z-2"
-                    style={{
-                      background: `linear-gradient(90deg, transparent, ${vaultColor}, transparent)`,
-                    }}
-                  />
-                  <div 
-                    className="absolute bottom-0 right-0 w-1 h-full opacity-40 group-hover:opacity-80 transition-opacity duration-500 z-2"
-                    style={{
-                      background: `linear-gradient(180deg, transparent, ${vaultColor}60, transparent)`,
-                    }}
-                  />
-                  
-                  <CardHeader className="relative z-20 pb-3">
+                  <CardHeader className="pb-3">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <CardTitle className="text-2xl font-black mb-1 text-white drop-shadow-lg" style={{ 
-                          textShadow: `0 0 20px ${vaultColor}, 0 4px 8px rgba(0,0,0,0.8), 0 2px 4px ${vaultColor}80` 
-                        }}>
+                        <CardTitle className="text-2xl font-black mb-1 text-vault-primary">
                           {vault.name}
                         </CardTitle>
                         <div className="flex items-center space-x-3">
-                          <div className="text-3xl font-black text-white drop-shadow-xl" style={{ 
-                            textShadow: `0 0 25px ${vaultColor}, 0 4px 8px rgba(0,0,0,0.9), 0 2px 6px ${vaultColor}AA`,
-                            color: '#ffffff',
-                            filter: `drop-shadow(0 0 8px ${vaultColor})`
-                          }}>
+                          <div className="text-3xl font-black text-enhanced-glow" style={{ color: vaultColor }}>
                             {(vault.apy * 100).toFixed(1)}% APY
                           </div>
                           <div className={`px-3 py-1 rounded-full text-xs font-bold border drop-shadow-sm ${
                             riskLevel === 'Low' ? 'bg-green-500/30 text-green-300 border-green-500/50' :
                             riskLevel === 'Medium' ? 'bg-yellow-500/30 text-yellow-300 border-yellow-500/50' :
                             'bg-red-500/30 text-red-300 border-red-500/50'
-                          }`} style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>
+                          }`}>
                             {riskLevel} Risk
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xl font-black text-white drop-shadow-lg" style={{
-                          textShadow: `0 0 15px ${vaultColor}60, 0 4px 8px rgba(0,0,0,0.9)`,
-                          color: '#ffffff'
-                        }}>{formatCurrency(vault.tvl)}</div>
-                        <div className="text-sm font-bold text-gray-100 drop-shadow-md" style={{
-                          textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                        }}>TVL</div>
+                        <div className="text-xl font-black text-vault-primary">{formatCurrency(vault.tvl)}</div>
+                        <div className="text-sm font-bold text-muted-foreground">TVL</div>
                       </div>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="relative z-20 pt-0">
-                    <p className="text-gray-100 mb-4 text-sm font-medium drop-shadow-md" style={{
-                      textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                    }}>
+                  <CardContent className="pt-0">
+                    <p className="text-muted-foreground mb-4 text-sm font-medium">
                       {vault.strategy.replace('_', ' ').toUpperCase()} strategy with {vault.tokenA}-{vault.tokenB} pair
                     </p>
                     
@@ -437,68 +397,42 @@ export default function VaultsPage() {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-xs text-gray-200 font-medium" style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>Performance</span>
-                          <span className="text-xs font-bold text-green-300 drop-shadow-md" style={{
-                            textShadow: '0 0 8px #10b981, 0 2px 4px rgba(0,0,0,0.8)'
-                          }}>{(vault.performance.totalReturn * 100).toFixed(1)}%</span>
+                          <span className="text-xs text-muted-foreground font-medium">Performance</span>
+                          <span className="text-xs font-bold text-green-400 text-enhanced-glow">{(vault.performance.totalReturn * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-gray-200 font-medium" style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>Sharpe Ratio</span>
-                          <span className="text-xs font-bold text-blue-300 drop-shadow-md" style={{
-                            textShadow: '0 0 8px #3b82f6, 0 2px 4px rgba(0,0,0,0.8)'
-                          }}>{vault.performance.sharpeRatio.toFixed(2)}</span>
+                          <span className="text-xs text-muted-foreground font-medium">Sharpe Ratio</span>
+                          <span className="text-xs font-bold text-blue-400 text-enhanced-glow">{vault.performance.sharpeRatio.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-gray-200 font-medium" style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>Win Rate</span>
-                          <span className="text-xs font-bold text-purple-300 drop-shadow-md" style={{
-                            textShadow: '0 0 8px #a855f7, 0 2px 4px rgba(0,0,0,0.8)'
-                          }}>{(vault.performance.winRate * 100).toFixed(0)}%</span>
+                          <span className="text-xs text-muted-foreground font-medium">Win Rate</span>
+                          <span className="text-xs font-bold text-purple-400 text-enhanced-glow">{(vault.performance.winRate * 100).toFixed(0)}%</span>
                         </div>
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-xs text-gray-200 font-medium" style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>Fee Tier</span>
-                          <span className="text-xs font-bold text-emerald-300 drop-shadow-md" style={{
-                            textShadow: '0 0 8px #10b981, 0 2px 4px rgba(0,0,0,0.8)'
-                          }}>{(vault.fee * 100).toFixed(2)}%</span>
+                          <span className="text-xs text-muted-foreground font-medium">Fee Tier</span>
+                          <span className="text-xs font-bold text-emerald-400 text-enhanced-glow">{(vault.fee * 100).toFixed(2)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-gray-200 font-medium" style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>Max Drawdown</span>
-                          <span className={`text-xs font-bold drop-shadow-md ${
-                            vault.performance.maxDrawdown > 0.05 ? 'text-red-300' : 'text-green-300'
-                          }`} style={{
-                            textShadow: vault.performance.maxDrawdown > 0.05 
-                              ? '0 0 8px #ef4444, 0 2px 4px rgba(0,0,0,0.8)'
-                              : '0 0 8px #10b981, 0 2px 4px rgba(0,0,0,0.8)'
-                          }}>
+                          <span className="text-xs text-muted-foreground font-medium">Max Drawdown</span>
+                          <span className={`text-xs font-bold text-enhanced-glow ${
+                            vault.performance.maxDrawdown > 0.05 ? 'text-red-400' : 'text-green-400'
+                          }`}>
                             {(vault.performance.maxDrawdown * 100).toFixed(1)}%
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-gray-200 font-medium" style={{
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                          }}>Chain ID</span>
-                          <span className="text-xs font-bold text-cyan-300 drop-shadow-md" style={{
-                            textShadow: '0 0 8px #06b6d4, 0 2px 4px rgba(0,0,0,0.8)'
-                          }}>{vault.chainId}</span>
+                          <span className="text-xs text-muted-foreground font-medium">Chain ID</span>
+                          <span className="text-xs font-bold text-cyan-400 text-enhanced-glow">{vault.chainId}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3 mt-4">
+                    <div className="flex gap-3 mt-6">
                       <Button 
-                        className="flex-1 font-bold text-base h-12 px-6 btn-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95"
+                        className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95"
                         onClick={(e) => {
                           e.stopPropagation()
                           // Handle deposit functionality
@@ -506,11 +440,11 @@ export default function VaultsPage() {
                         }}
                         disabled={depositMutation.isPending}
                       >
-                        {depositMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Deposit'}
+                        {depositMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Deposit'}
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="flex-1 font-bold text-base h-12 px-6 btn-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95"
+                        className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95"
                         onClick={(e) => {
                           e.stopPropagation()
                           // Navigate to vault analytics page
@@ -573,217 +507,6 @@ export default function VaultsPage() {
         </div>
       </div>
 
-      {/* Enhanced Custom Styles - Premium DeFi Interface */}
-      <style jsx>{`
-        @keyframes borderGlow {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        @keyframes borderFlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes pulseGlow {
-          0%, 100% { 
-            box-shadow: 0 0 20px rgba(0, 245, 212, 0.3), 0 0 40px rgba(0, 245, 212, 0.1);
-          }
-          50% { 
-            box-shadow: 0 0 30px rgba(0, 245, 212, 0.5), 0 0 60px rgba(0, 245, 212, 0.2);
-          }
-        }
-        
-        .glass-card {
-          backdrop-filter: blur(32px) saturate(180%);
-          -webkit-backdrop-filter: blur(32px) saturate(180%);
-          background: linear-gradient(135deg, 
-            rgba(8, 10, 23, 0.92) 0%,
-            rgba(16, 20, 40, 0.88) 50%,
-            rgba(8, 10, 23, 0.92) 100%
-          );
-          border: 2px solid transparent;
-          background-clip: padding-box;
-          position: relative;
-          overflow: hidden;
-          border-radius: 20px;
-          box-shadow: 
-            0 16px 40px rgba(0, 0, 0, 0.8),
-            0 8px 32px rgba(0, 245, 212, 0.12),
-            inset 0 2px 0 rgba(255, 255, 255, 0.15),
-            inset 0 -1px 0 rgba(0, 245, 212, 0.08);
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .glass-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          padding: 2px;
-          background: linear-gradient(135deg, 
-            rgba(0, 245, 212, 0.5) 0%,
-            rgba(155, 93, 229, 0.3) 50%,
-            rgba(0, 245, 212, 0.5) 100%
-          );
-          border-radius: 20px;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          animation: borderFlow 2s linear infinite;
-        }
-        
-        .glass-card:hover {
-          backdrop-filter: blur(40px) saturate(200%);
-          -webkit-backdrop-filter: blur(40px) saturate(200%);
-          background: linear-gradient(135deg, 
-            rgba(8, 10, 23, 0.95) 0%,
-            rgba(16, 20, 40, 0.92) 50%,
-            rgba(8, 10, 23, 0.95) 100%
-          );
-          box-shadow: 
-            0 24px 60px rgba(0, 0, 0, 0.9),
-            0 12px 48px rgba(0, 245, 212, 0.2),
-            inset 0 2px 0 rgba(255, 255, 255, 0.25),
-            inset 0 -1px 0 rgba(0, 245, 212, 0.15);
-          transform: translateY(-6px);
-        }
-        
-        .vault-card-enhanced {
-          backdrop-filter: blur(36px) saturate(200%);
-          -webkit-backdrop-filter: blur(36px) saturate(200%);
-          background: linear-gradient(135deg, 
-            rgba(8, 10, 23, 0.94) 0%,
-            rgba(16, 20, 40, 0.90) 30%,
-            rgba(24, 30, 60, 0.88) 70%,
-            rgba(8, 10, 23, 0.94) 100%
-          );
-          border: 3px solid transparent;
-          background-clip: padding-box;
-          position: relative;
-          overflow: hidden;
-          border-radius: 24px;
-          min-height: 420px;
-          width: 100%;
-          max-width: 420px;
-          box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.85),
-            0 10px 40px rgba(155, 93, 229, 0.15),
-            inset 0 3px 0 rgba(255, 255, 255, 0.2),
-            inset 0 -2px 0 rgba(155, 93, 229, 0.1);
-          transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-          cursor: pointer;
-        }
-        
-        .vault-card-enhanced::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          padding: 3px;
-          background: linear-gradient(135deg, 
-            rgba(0, 245, 212, 0.7) 0%,
-            rgba(155, 93, 229, 0.5) 20%,
-            rgba(255, 32, 110, 0.5) 40%,
-            rgba(251, 174, 60, 0.5) 60%,
-            rgba(155, 93, 229, 0.5) 80%,
-            rgba(0, 245, 212, 0.7) 100%
-          );
-          background-size: 300% 300%;
-          border-radius: 24px;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          animation: borderFlow 4s ease-in-out infinite;
-        }
-        
-        .vault-card-enhanced::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 50% 0%, 
-            rgba(155, 93, 229, 0.15) 0%, 
-            transparent 80%
-          );
-          border-radius: 24px;
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-        
-        .vault-card-enhanced:hover {
-          backdrop-filter: blur(44px) saturate(220%);
-          -webkit-backdrop-filter: blur(44px) saturate(220%);
-          background: linear-gradient(135deg, 
-            rgba(8, 10, 23, 0.97) 0%,
-            rgba(16, 20, 40, 0.94) 30%,
-            rgba(24, 30, 60, 0.92) 70%,
-            rgba(8, 10, 23, 0.97) 100%
-          );
-          box-shadow: 
-            0 32px 80px rgba(0, 0, 0, 0.95),
-            0 16px 60px rgba(155, 93, 229, 0.25),
-            inset 0 3px 0 rgba(255, 255, 255, 0.3),
-            inset 0 -2px 0 rgba(155, 93, 229, 0.2);
-          transform: translateY(-6px) scale(1.03);
-        }
-        
-        .vault-card-enhanced:hover::after {
-          opacity: 1;
-        }
-        
-        /* Enhanced button styles */
-        .vault-card-enhanced .btn-primary {
-          background: linear-gradient(135deg, var(--vault-color), var(--vault-color-dark));
-          border: 2px solid transparent;
-          border-radius: 16px;
-          color: #000;
-          font-weight: 700;
-          font-size: 1rem;
-          min-height: 48px;
-          padding: 12px 24px;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-          box-shadow: 
-            0 8px 25px rgba(0,0,0,0.3),
-            0 0 35px var(--vault-color-glow),
-            inset 0 1px 0 rgba(255,255,255,0.2);
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .vault-card-enhanced .btn-primary:hover {
-          transform: translateY(-3px) scale(1.05);
-          box-shadow: 
-            0 12px 35px rgba(0,0,0,0.4),
-            0 0 50px var(--vault-color-glow),
-            inset 0 1px 0 rgba(255,255,255,0.3);
-        }
-        
-        .vault-card-enhanced .btn-secondary {
-          background: rgba(0,0,0,0.6);
-          border: 2px solid var(--vault-color-border);
-          border-radius: 16px;
-          color: var(--vault-color);
-          font-weight: 600;
-          font-size: 1rem;
-          min-height: 48px;
-          padding: 12px 24px;
-          text-shadow: 0 0 10px var(--vault-color-glow);
-          backdrop-filter: blur(10px);
-          box-shadow: 
-            0 6px 20px rgba(0,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.1);
-          transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .vault-card-enhanced .btn-secondary:hover {
-          background: var(--vault-color-bg);
-          border-color: var(--vault-color);
-          transform: translateY(-3px) scale(1.05);
-          box-shadow: 
-            0 10px 30px rgba(0,0,0,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-      `}</style>
     </div>
   );
 }

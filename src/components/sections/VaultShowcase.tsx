@@ -43,9 +43,56 @@ export default function VaultShowcase() {
                     </p>
                 </div>
 
-                <div className="flex flex-row justify-center items-stretch gap-10 overflow-x-auto pb-6 max-w-6xl mx-auto px-8 scrollbar-hide" style={{ minHeight: '280px' }}>
+                <div 
+                    className="vault-container-override"
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        alignItems: 'stretch',
+                        gap: '1.5rem',
+                        maxWidth: '1200px',
+                        margin: '0 auto',
+                        padding: '0 1rem'
+                    }}
+                >
+                    <style jsx>{`
+                        .vault-container-override {
+                            display: flex !important;
+                            flex-direction: row !important;
+                            flex-wrap: wrap !important;
+                            justify-content: center !important;
+                            align-items: stretch !important;
+                            gap: 1.5rem !important;
+                            max-width: 1200px !important;
+                            margin: 0 auto !important;
+                            padding: 0 1rem !important;
+                        }
+                        .vault-card-wrapper {
+                            flex: 0 0 auto !important;
+                            width: 320px !important;
+                            max-width: 320px !important;
+                            min-width: 280px !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
+                    `}</style>
                     {vaultData.map((vault, index) => (
-                        <VaultCard key={vault.name} vault={vault} index={index} />
+                        <div 
+                            key={vault.name}
+                            className="vault-card-wrapper"
+                            style={{
+                                flex: '0 0 auto',
+                                width: '320px',
+                                maxWidth: '320px',
+                                minWidth: '280px',
+                                margin: '0',
+                                padding: '0'
+                            }}
+                        >
+                            <VaultCard vault={vault} index={index} />
+                        </div>
                     ))}
                 </div>
             </div>
