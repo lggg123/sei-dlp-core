@@ -74,6 +74,23 @@ export default function VaultsPage() {
   // Get filtered vaults from store
   const filteredVaults = getFilteredVaults()
   const totalTVL = getTotalTVL()
+  
+  // Handler functions for vault actions
+  const handleDeposit = async (vault: any) => {
+    try {
+      setSelectedVault(vault)
+      // For now, navigate to vault page with deposit modal
+      router.push(`/vault?address=${vault.address}&action=deposit`)
+    } catch (error) {
+      console.error('Deposit error:', error)
+    }
+  }
+  
+  const handleViewAnalytics = (vault: any) => {
+    setSelectedVault(vault)
+    // Navigate to vault analytics page
+    router.push(`/vault?address=${vault.address}&tab=analytics`)
+  }
 
   // Three.js Setup
   useEffect(() => {
@@ -331,55 +348,74 @@ export default function VaultsPage() {
                     router.push(`/vault?address=${vault.address}`)
                   }}
                   style={{
-                    background: 'hsl(var(--card) / 0.95) !important',
-                    backdropFilter: 'blur(24px) !important',
-                    border: `2px solid ${vaultColor}50 !important`,
-                    boxShadow: `0 8px 32px hsl(var(--primary) / 0.15), 0 0 30px ${vaultColor}30 !important`,
-                    borderRadius: '16px !important',
-                    minHeight: '280px !important'
+                    background: 'hsl(var(--card) / 0.98) !important',
+                    backdropFilter: 'blur(28px) !important',
+                    border: `3px solid ${vaultColor}80 !important`,
+                    boxShadow: `0 12px 40px hsl(var(--primary) / 0.25), 0 0 40px ${vaultColor}40, inset 0 2px 0 rgba(255, 255, 255, 0.1) !important`,
+                    borderRadius: '20px !important',
+                    minHeight: '320px !important'
                   }}
                 >
-                  {/* Dark overlay for better text readability */}
-                  <div className="absolute inset-0 bg-black/20 z-0" />
+                  {/* Enhanced overlay for better text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/15 to-transparent z-0" />
                   
-                  {/* Animated border */}
+                  {/* Enhanced animated border with better visibility */}
                   <div 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-1"
+                    className="absolute inset-0 opacity-50 group-hover:opacity-80 transition-opacity duration-500 z-1"
                     style={{
-                      background: `linear-gradient(45deg, ${vaultColor}30, transparent, ${vaultColor}30)`,
+                      background: `linear-gradient(45deg, ${vaultColor}40, transparent, ${vaultColor}40)`,
                       backgroundSize: '200% 200%',
                       animation: 'borderGlow 3s ease-in-out infinite',
+                    }}
+                  />
+                  
+                  {/* Additional glow effect for better visibility */}
+                  <div 
+                    className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-500 z-1 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(circle at center, ${vaultColor}60 0%, transparent 70%)`,
+                      filter: 'blur(10px)',
                     }}
                   />
                   
                   <CardHeader className="relative z-20 pb-3">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <CardTitle className="text-xl font-bold mb-1" style={{ color: vaultColor }}>
+                        <CardTitle className="text-2xl font-black mb-1 text-white drop-shadow-md" style={{ 
+                          textShadow: `0 0 15px ${vaultColor}, 0 2px 4px rgba(0,0,0,0.5)` 
+                        }}>
                           {vault.name}
                         </CardTitle>
                         <div className="flex items-center space-x-3">
-                          <div className="text-2xl font-bold text-primary-glow">
+                          <div className="text-3xl font-black text-white drop-shadow-lg" style={{ 
+                          textShadow: `0 0 20px ${vaultColor}, 0 2px 4px rgba(0,0,0,0.5)` 
+                        }}>
                             {(vault.apy * 100).toFixed(1)}% APY
                           </div>
-                          <div className={`px-2 py-1 rounded-full text-xs font-bold ${
-                            riskLevel === 'Low' ? 'bg-green-500/20 text-green-400' :
-                            riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                            'bg-red-500/20 text-red-400'
-                          }`}>
+                          <div className={`px-3 py-1 rounded-full text-xs font-bold border drop-shadow-sm ${
+                            riskLevel === 'Low' ? 'bg-green-500/30 text-green-300 border-green-500/50' :
+                            riskLevel === 'Medium' ? 'bg-yellow-500/30 text-yellow-300 border-yellow-500/50' :
+                            'bg-red-500/30 text-red-300 border-red-500/50'
+                          }`} style={{
+                            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                          }}>
                             {riskLevel} Risk
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-lg font-bold text-foreground">{formatCurrency(vault.tvl)}</div>
-                        <div className="text-sm text-muted-foreground">TVL</div>
+                        <div className="text-xl font-black text-white drop-shadow-md" style={{
+                          textShadow: '0 2px 4px rgba(0,0,0,0.8)'
+                        }}>{formatCurrency(vault.tvl)}</div>
+                        <div className="text-sm font-bold text-gray-200 drop-shadow-sm">TVL</div>
                       </div>
                     </div>
                   </CardHeader>
 
                   <CardContent className="relative z-20 pt-0">
-                    <p className="text-muted-foreground mb-4 text-sm">
+                    <p className="text-gray-200 mb-4 text-sm font-medium drop-shadow-sm" style={{
+                      textShadow: '0 1px 2px rgba(0,0,0,0.7)'
+                    }}>
                       {vault.strategy.replace('_', ' ').toUpperCase()} strategy with {vault.tokenA}-{vault.tokenB} pair
                     </p>
                     
@@ -387,32 +423,32 @@ export default function VaultsPage() {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Performance</span>
-                          <span className="text-xs font-bold text-primary">{(vault.performance.totalReturn * 100).toFixed(1)}%</span>
+                          <span className="text-xs text-gray-300 font-medium">Performance</span>
+                          <span className="text-xs font-bold text-green-400 drop-shadow-sm">{(vault.performance.totalReturn * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Sharpe Ratio</span>
-                          <span className="text-xs font-bold text-secondary">{vault.performance.sharpeRatio.toFixed(2)}</span>
+                          <span className="text-xs text-gray-300 font-medium">Sharpe Ratio</span>
+                          <span className="text-xs font-bold text-blue-400 drop-shadow-sm">{vault.performance.sharpeRatio.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Win Rate</span>
-                          <span className="text-xs font-bold text-accent">{(vault.performance.winRate * 100).toFixed(0)}%</span>
+                          <span className="text-xs text-gray-300 font-medium">Win Rate</span>
+                          <span className="text-xs font-bold text-purple-400 drop-shadow-sm">{(vault.performance.winRate * 100).toFixed(0)}%</span>
                         </div>
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Fee Tier</span>
-                          <span className="text-xs font-bold text-green-400">{(vault.fee * 100).toFixed(2)}%</span>
+                          <span className="text-xs text-gray-300 font-medium">Fee Tier</span>
+                          <span className="text-xs font-bold text-green-400 drop-shadow-sm">{(vault.fee * 100).toFixed(2)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Max Drawdown</span>
-                          <span className={`text-xs font-bold ${vault.performance.maxDrawdown > 0.05 ? 'text-red-400' : 'text-green-400'}`}>
+                          <span className="text-xs text-gray-300 font-medium">Max Drawdown</span>
+                          <span className={`text-xs font-bold drop-shadow-sm ${vault.performance.maxDrawdown > 0.05 ? 'text-red-400' : 'text-green-400'}`}>
                             {(vault.performance.maxDrawdown * 100).toFixed(1)}%
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Chain ID</span>
-                          <span className="text-xs font-bold text-primary-glow">{vault.chainId}</span>
+                          <span className="text-xs text-gray-300 font-medium">Chain ID</span>
+                          <span className="text-xs font-bold text-cyan-400 drop-shadow-sm">{vault.chainId}</span>
                         </div>
                       </div>
                     </div>
@@ -420,16 +456,17 @@ export default function VaultsPage() {
                     {/* Action Buttons */}
                     <div className="flex gap-2">
                       <Button 
-                        className="flex-1 font-semibold text-sm h-9 transition-all duration-300 hover:scale-105"
+                        className="flex-1 font-bold text-sm h-10 transition-all duration-300 hover:scale-105 hover:shadow-lg border-2 border-transparent"
                         style={{
-                          background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}80)`,
+                          background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
                           color: '#000',
-                          boxShadow: `0 0 15px ${vaultColor}30`,
+                          boxShadow: `0 4px 20px ${vaultColor}40, 0 0 30px ${vaultColor}20`,
+                          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                         }}
                         onClick={(e) => {
                           e.stopPropagation()
-                          // Navigate to individual vault page
-                          router.push(`/vault?address=${vault.address}`)
+                          // Handle deposit functionality
+                          handleDeposit(vault)
                         }}
                         disabled={depositMutation.isPending}
                       >
@@ -437,11 +474,27 @@ export default function VaultsPage() {
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="flex-1 font-semibold text-sm h-9 border-primary/50 hover:border-primary transition-all duration-300"
+                        className="flex-1 font-bold text-sm h-10 transition-all duration-300 hover:scale-105 border-2"
+                        style={{
+                          borderColor: `${vaultColor}80`,
+                          color: vaultColor,
+                          background: 'rgba(0,0,0,0.4)',
+                          backdropFilter: 'blur(8px)',
+                          boxShadow: `0 2px 10px rgba(0,0,0,0.3)`,
+                          textShadow: `0 0 8px ${vaultColor}80`,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = `${vaultColor}20`;
+                          e.currentTarget.style.borderColor = vaultColor;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(0,0,0,0.4)';
+                          e.currentTarget.style.borderColor = `${vaultColor}80`;
+                        }}
                         onClick={(e) => {
                           e.stopPropagation()
                           // Navigate to vault analytics page
-                          router.push(`/vault?address=${vault.address}&tab=analytics`)
+                          handleViewAnalytics(vault)
                         }}
                       >
                         Analytics

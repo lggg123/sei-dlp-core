@@ -72,6 +72,82 @@ export async function GET(request: NextRequest) {
           maxDrawdown: 0.034,
           winRate: 0.72
         }
+      },
+      {
+        address: '0x3456789012345678901234567890123456789012',
+        name: 'ETH-USDT Arbitrage Bot',
+        strategy: 'arbitrage',
+        tokenA: 'ETH',
+        tokenB: 'USDT',
+        fee: 0.005,
+        tickSpacing: 10,
+        tvl: 2100000,
+        apy: 0.267,
+        chainId: 713715,
+        active: true,
+        performance: {
+          totalReturn: 0.156,
+          sharpeRatio: 2.1,
+          maxDrawdown: 0.018,
+          winRate: 0.81
+        }
+      },
+      {
+        address: '0x4567890123456789012345678901234567890123',
+        name: 'BTC-SEI Hedge Strategy',
+        strategy: 'hedge',
+        tokenA: 'BTC',
+        tokenB: 'SEI',
+        fee: 0.01,
+        tickSpacing: 200,
+        tvl: 3400000,
+        apy: 0.089,
+        chainId: 713715,
+        active: true,
+        performance: {
+          totalReturn: 0.045,
+          sharpeRatio: 0.98,
+          maxDrawdown: 0.012,
+          winRate: 0.58
+        }
+      },
+      {
+        address: '0x5678901234567890123456789012345678901234',
+        name: 'OSMO-ATOM Concentrated Range',
+        strategy: 'concentrated_liquidity',
+        tokenA: 'OSMO',
+        tokenB: 'ATOM',
+        fee: 0.003,
+        tickSpacing: 60,
+        tvl: 650000,
+        apy: 0.234,
+        chainId: 713715,
+        active: true,
+        performance: {
+          totalReturn: 0.198,
+          sharpeRatio: 1.67,
+          maxDrawdown: 0.041,
+          winRate: 0.74
+        }
+      },
+      {
+        address: '0x6789012345678901234567890123456789012345',
+        name: 'USDC-USDT Stable Yield',
+        strategy: 'yield_farming',
+        tokenA: 'USDC',
+        tokenB: 'USDT',
+        fee: 0.001,
+        tickSpacing: 1,
+        tvl: 5200000,
+        apy: 0.067,
+        chainId: 713715,
+        active: true,
+        performance: {
+          totalReturn: 0.034,
+          sharpeRatio: 1.89,
+          maxDrawdown: 0.008,
+          winRate: 0.89
+        }
       }
     ]
 

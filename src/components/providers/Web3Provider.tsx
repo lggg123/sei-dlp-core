@@ -7,7 +7,17 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { config } from '@/lib/web3'
 import { ReactNode, useEffect, useState } from 'react'
 
-const queryClient = new QueryClient()
+// Create QueryClient outside component to prevent recreation on re-renders
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes
+      retry: 3,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 interface Web3ProviderProps {
   children: ReactNode

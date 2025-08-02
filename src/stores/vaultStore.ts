@@ -91,6 +91,7 @@ interface VaultState {
   
   // Computed values
   getFilteredVaults: () => VaultData[]
+  getVaultByAddress: (address: string) => VaultData | undefined
   getTotalTVL: () => number
   getUserTotalValue: () => number
   getUserTotalPnL: () => number
@@ -218,6 +219,10 @@ export const useVaultStore = create<VaultState>()(
       
       getUserTotalPnL: () => {
         return get().userPositions.reduce((total, position) => total + position.pnl, 0)
+      },
+      
+      getVaultByAddress: (address) => {
+        return get().vaults.find((vault) => vault.address === address)
       },
     })),
     {

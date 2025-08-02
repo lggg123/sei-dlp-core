@@ -11,6 +11,13 @@ SEI DLP (Decentralized Liquidity Protocol) is an AI-powered DeFi platform built 
 - **Smart Contracts**: Solidity contracts using Foundry
 - **Infrastructure**: Web3 integration with wagmi, RainbowKit, and SEI chain
 
+## 🎯 Mission
+Transform a single-version Next.js app into a **regulatory-compliant dual-version architecture** with:
+- **US Version**: Coinbase Sandbox integration (CFTC-regulated SEF)
+- **Global Version**: Drift Protocol on Sei Devnet (chain ID 13289)
+- **Zero code bleed-through** between versions
+- **DFPI Directive #25-08 compliance** (July 2025)
+
 ## Critical UI Issues to Address
 
 ### Landing Page
@@ -34,6 +41,31 @@ SEI DLP (Decentralized Liquidity Protocol) is an AI-powered DeFi platform built 
 - Accessibility problems (contrast ratios, focus states)
 - Tailwind CSS conflicts with custom CSS
 - 3D animation performance affecting UI responsiveness
+
+
+### 2. US Version Requirements (CFTC-Compliant)
+- ✅ **Coinbase Advanced Trade Sandbox ONLY** (`https://advanced-trade-sandbox.coinbase.com`)
+- ✅ **Manual confirmation pattern**: No auto-execution
+- ✅ **Clear disclaimer**: "Futures execution occurs via Coinbase (CFTC-regulated SEF)"
+- ✅ **Zero Drift/Pyth imports** in `/us/` directory
+- ✅ **Chain ID 13289 verification** in all protocol calls
+
+### 3. Global Version Requirements (Sei-Optimized)
+- ✅ **Drift Protocol on Sei Devnet** (chain ID 13289)
+- ✅ **Real-time rebalancing** leveraging Sei's 400ms finality
+- ✅ **AI Engine**: Reinforcement learning for LP strategies
+- ✅ **Three.js 3D vault visualization**
+- ✅ **Zero Coinbase imports** in `/global/` directory
+
+### 4. Compliance Safeguards (DFPI #25-08)
+- ❌ **NO personal device usage** for deployment
+- ✅ **Solvang Library Computer #7** for final deployment
+- ✅ **Cloudflare Pages** for geo-routed versions:
+  - `us.sei-dlp.pages.dev` → US edges (iad1)
+  - `global.sei-dlp.pages.dev` → Singapore edges (sin1)
+- ✅ **Header simulation** for local testing:
+  ```bash
+  curl -H "cf-ipcountry: US" http://localhost:3000/global # Should return 403t
 
 ## Subagent Usage
 
