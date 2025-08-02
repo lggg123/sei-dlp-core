@@ -39,17 +39,26 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
   return useQuery({
     queryKey: VAULT_QUERY_KEYS.list(filters || {}),
     queryFn: async (): Promise<VaultData[]> => {
-      setLoading(true)
+      // Only set loading in store if it's the client
+      if (typeof window !== 'undefined') {
+        setLoading(true)
+      }
       
       try {
         const params = new URLSearchParams()
         if (filters?.strategy) params.append('strategy', filters.strategy)
         if (filters?.active !== undefined) params.append('active', filters.active.toString())
         
-        const response = await fetch(`/api/vaults?${params.toString()}`)
+        const response = await fetch(`/api/vaults?${params.toString()}`, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
         
         if (!response.ok) {
-          throw new Error(`Failed to fetch vaults: ${response.statusText}`)
+          const errorText = await response.text()
+          throw new Error(`Failed to fetch vaults: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`)
         }
         
         const result: VaultResponse = await response.json()
@@ -58,27 +67,44 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
           throw new Error(result.error || 'Failed to fetch vaults')
         }
         
-        // Update store with fetched data
-        setVaults(result.data)
-        setError(null)
+        // Update store with fetched data (only on client)
+        if (typeof window !== 'undefined') {
+          setVaults(result.data)
+          setError(null)
+        }
         
         return result.data
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
-        setError(errorMessage)
-        addNotification({
-          type: 'error',
-          title: 'Failed to fetch vaults',
-          message: errorMessage,
-        })
+        
+        // Only update store and show notifications on client
+        if (typeof window !== 'undefined') {
+          setError(errorMessage)
+          addNotification({
+            type: 'error',
+            title: 'Failed to fetch vaults',
+            message: errorMessage,
+          })
+        }
+        
         throw error
       } finally {
-        setLoading(false)
+        // Only set loading in store if it's the client
+        if (typeof window !== 'undefined') {
+          setLoading(false)
+        }
       }
     },
     staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 60 * 1000, // 1 minute
-    retry: 3,
+    refetchInterval: typeof window !== 'undefined' ? 60 * 1000 : false, // Only refetch on client
+    retry: (failureCount, error) => {
+      // Don't retry on 4xx errors or if offline
+      if (error instanceof Error && (error.message.includes('4') || !navigator.onLine)) {
+        return false
+      }
+      return failureCount < 3
+    },
+    enabled: typeof window !== 'undefined', // Only run on client
   })
 }
 
@@ -87,10 +113,16 @@ export const useVault = (address: string) => {
   return useQuery({
     queryKey: VAULT_QUERY_KEYS.detail(address),
     queryFn: async (): Promise<VaultData> => {
-      const response = await fetch(`/api/vaults/${address}`)
+      const response = await fetch(`/api/vaults/${address}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch vault: ${response.statusText}`)
+        const errorText = await response.text()
+        throw new Error(`Failed to fetch vault: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`)
       }
       
       const result = await response.json()
@@ -101,9 +133,16 @@ export const useVault = (address: string) => {
       
       return result.data
     },
-    enabled: !!address,
+    enabled: !!address && typeof window !== 'undefined',
     staleTime: 15 * 1000, // 15 seconds
-    refetchInterval: 30 * 1000, // 30 seconds
+    refetchInterval: typeof window !== 'undefined' ? 30 * 1000 : false, // 30 seconds
+    retry: (failureCount, error) => {
+      // Don't retry on 4xx errors
+      if (error instanceof Error && error.message.includes('4')) {
+        return false
+      }
+      return failureCount < 3
+    },
   })
 }
 
