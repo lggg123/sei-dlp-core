@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 1250000,
         apy: 0.125,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.087,
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 850000,
         apy: 0.189,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.112,
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 10,
         tvl: 2100000,
         apy: 0.267,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.156,
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 200,
         tvl: 3400000,
         apy: 0.089,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.045,
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 1,
         tvl: 8500000,
         apy: 0.045,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.022,
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 200,
         tvl: 1800000,
         apy: 0.420,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.324,
@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 4200000,
         apy: 0.156,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.098,
@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 3100000,
         apy: 0.155,
-        chainId: 713715,
+        chainId: 13289,
         active: true,
         performance: {
           totalReturn: 0.098,
@@ -233,11 +233,11 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateVaultSchema.parse(body)
     
     // SEI-specific validation
-    if (validatedData.chainId !== 713715) {
+    if (validatedData.chainId !== 13289) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Invalid chain ID - must be SEI (713715)' 
+          error: 'Invalid chain ID - must be SEI devnet (13289)' 
         },
         { status: 400 }
       )
