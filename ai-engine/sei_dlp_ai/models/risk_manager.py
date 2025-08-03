@@ -54,7 +54,7 @@ class RiskManager:
                     'concentration_risk': concentration_risk
                 },
                 'recommendations': self._generate_risk_recommendations(overall_risk, risk_level),
-                'timestamp': datetime.utcnow().isoformat()
+                'timestamp': datetime.now().isoformat()
             }
             
         except Exception as e:

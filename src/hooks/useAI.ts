@@ -190,14 +190,12 @@ export const useExecuteAIRebalance = () => {
     }: { 
       vaultAddress: string
       newPosition: { lowerTick: number; upperTick: number }
-    }) => {
+    }): Promise<{ gasUsed?: number }> => {
       // This would integrate with smart contracts to execute the rebalance
       // For now, simulating the transaction
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({ 
-            success: true, 
-            txHash: '0x' + Math.random().toString(16).substr(2, 64),
             gasUsed: Math.floor(Math.random() * 200000) + 100000,
           })
         }, 3000) // Simulate transaction time
@@ -210,7 +208,7 @@ export const useExecuteAIRebalance = () => {
         message: `Executing AI-recommended rebalance for vault ${vaultAddress.slice(0, 8)}...`,
       })
     },
-    onSuccess: (data: any, variables) => {
+    onSuccess: (data: { gasUsed?: number }, variables) => {
       // Invalidate all related queries
       queryClient.invalidateQueries({ queryKey: AI_QUERY_KEYS.prediction(variables.vaultAddress, '1d') })
       queryClient.invalidateQueries({ queryKey: ['vaults', 'detail', variables.vaultAddress] })

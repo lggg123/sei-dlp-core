@@ -23,7 +23,7 @@ interface CreateVaultRequest {
 export const VAULT_QUERY_KEYS = {
   all: ['vaults'] as const,
   lists: () => [...VAULT_QUERY_KEYS.all, 'list'] as const,
-  list: (filters: Record<string, any>) => [...VAULT_QUERY_KEYS.lists(), filters] as const,
+  list: (filters: Record<string, unknown>) => [...VAULT_QUERY_KEYS.lists(), filters] as const,
   details: () => [...VAULT_QUERY_KEYS.all, 'detail'] as const,
   detail: (address: string) => [...VAULT_QUERY_KEYS.details(), address] as const,
   positions: (walletAddress: string) => [...VAULT_QUERY_KEYS.all, 'positions', walletAddress] as const,

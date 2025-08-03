@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const symbols = searchParams.get('symbols')?.split(',') || ['SEI-USDC']
     const timeframe = searchParams.get('timeframe') || '1h'
+    console.log('[Market Data] Fetching data for timeframe:', timeframe);
     
     // Validate symbols
     if (!symbols.length) {

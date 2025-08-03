@@ -394,6 +394,10 @@ class LiquidityOptimizer:
     ) -> Optional[TradingSignal]:
         """Generate rebalance signal if needed"""
         try:
+            # Validate chain
+            if not self.validate_sei_chain():
+                raise ValueError("Invalid chain ID")
+            
             # Calculate price deviation from entry
             current_price = float(position.current_price)
             entry_price = float(position.entry_price)
@@ -416,6 +420,10 @@ class LiquidityOptimizer:
                 timestamp=datetime.now(timezone.utc)
             )
         
+        except ValueError as e:
+            # Re-raise ValueError for chain validation errors
+            logger.error(f"Validation error generating rebalance signal: {e}")
+            raise
         except Exception as e:
             logger.warning(f"Error generating rebalance signal: {e}")
             return None
@@ -431,8 +439,24 @@ class LiquidityOptimizer:
                 raise ValueError("No feature columns found in training data")
             
             # Extract features and targets
-            X = np.asarray(training_data[feature_columns].values, dtype=np.float64)
-            y = np.asarray(training_data[target_columns].values, dtype=np.float64)
+            X = training_data[feature_columns].values
+            y = training_data[target_columns].values
+            
+            # Ensure X is 2D
+            if X.ndim == 1:
+                X = X.reshape(-1, 1)
+            
+            # Convert to proper numpy arrays
+            X = np.asarray(X, dtype=np.float64)
+            y = np.asarray(y, dtype=np.float64)
+            
+            # Validate data shapes
+            if X.shape[0] == 0:
+                raise ValueError("Training data cannot be empty")
+            if y.shape[0] == 0:
+                raise ValueError("Target data cannot be empty")
+            if X.shape[0] != y.shape[0]:
+                raise ValueError("Features and targets must have the same number of samples")
             
             # Initialize components
             self.scaler = StandardScaler()

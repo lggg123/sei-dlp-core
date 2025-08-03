@@ -70,4 +70,9 @@ describe('Python AI Engine Integration', () => {
     expect(Array.isArray(data.support_levels)).toBe(true);
     expect(Array.isArray(data.resistance_levels)).toBe(true);
   });
+
+  afterAll(() => {
+    // Cleanup any test data or connections if needed
+    console.log('AI Engine tests completed');
+  });
 });

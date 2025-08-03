@@ -44,36 +44,61 @@ export function useSeiWallet() {
         throw new Error('Window is not available')
       }
 
-      const wallet = (window as any)[walletType]
+      const wallet = (window as unknown as Record<string, unknown>)[walletType] as {
+        enable?: (chainId: string) => Promise<void>
+        getOfflineSigner?: (chainId: string) => { getAccounts: () => Promise<Array<{ address: string }>> }
+      }
       if (!wallet) {
         throw new Error(`${walletType} wallet not found. Please install the ${walletType} extension.`)
       }
 
+      // Determine the cosmos chain ID based on EVM chain ID
+      let cosmosChainId: string
+      if (chainId === 1329) {
+        cosmosChainId = 'pacific-1' // mainnet
+      } else if (chainId === 713715) {
+        cosmosChainId = 'devnet-1' // devnet (for DeFi compliance)
+      } else {
+        cosmosChainId = 'arctic-1' // testnet fallback
+      }
+      
+      console.log('[useSeiWallet] Using chain ID:', chainId, 'mapping to cosmos:', cosmosChainId);
+
       // For Keplr and other Cosmos wallets, we need to enable the chain first
       if (walletType === 'keplr') {
-        const chainId = chainId === 1329 ? 'pacific-1' : 'arctic-1'
-        await wallet.enable(chainId)
+        if (!wallet.enable) {
+          throw new Error('Wallet enable method not available')
+        }
+        await wallet.enable(cosmosChainId)
         
-        const offlineSigner = wallet.getOfflineSigner(chainId)
+        if (!wallet.getOfflineSigner) {
+          throw new Error('Wallet getOfflineSigner method not available')
+        }
+        const offlineSigner = wallet.getOfflineSigner(cosmosChainId)
         const accounts = await offlineSigner.getAccounts()
         
         setSeiWalletState({
           isConnected: true,
-          accounts: accounts.map((acc: any) => acc.address),
+          accounts: accounts.map((acc: { address: string }) => acc.address),
           selectedWallet: walletType,
           error: null
         })
       } else {
         // For other wallets, we might need different connection logic
-        const chainId = chainId === 1329 ? 'pacific-1' : 'arctic-1'
-        await wallet.enable(chainId)
+        if (!wallet.enable) {
+          throw new Error('Wallet enable method not available')
+        }
+        await wallet.enable(cosmosChainId)
         
-        const offlineSigner = wallet.getOfflineSigner(chainId)
+        if (!wallet.getOfflineSigner) {
+          throw new Error('Wallet getOfflineSigner method not available')
+        }
+        const offlineSigner = wallet.getOfflineSigner(cosmosChainId)
         const accounts = await offlineSigner.getAccounts()
         
         setSeiWalletState({
           isConnected: true,
-          accounts: accounts.map((acc: any) => acc.address),
+          accounts: accounts.map((acc: { address: string }) => acc.address),
           selectedWallet: walletType,
           error: null
         })

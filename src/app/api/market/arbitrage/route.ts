@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import type { ArbitrageOpportunity } from '../../../../types/api'
 import { z } from 'zod'
 
 // Arbitrage scan request schema
@@ -114,6 +115,7 @@ async function scanArbitrageOpportunities(
   exchanges?: string[]
 ) {
   // Mock DEX price data - replace with actual DEX API calls
+  console.log('[Arbitrage] Scanning opportunities for exchanges:', exchanges || 'all supported');
   const dexPrices = {
     'DragonSwap': {
       'SEI-USDC': 0.485,
@@ -141,7 +143,7 @@ async function scanArbitrageOpportunities(
     }
   }
 
-  const opportunities: any[] = []
+  const opportunities: ArbitrageOpportunity[] = []
   
   // Generate all possible token pairs
   const pairs = generateTokenPairs(tokens)
@@ -186,7 +188,7 @@ async function scanArbitrageOpportunities(
       
       if (estimatedSlippage <= maxSlippage) {
         opportunities.push({
-          id: `arb_${Date.now()}_${Math.random().toString(16).substr(2, 8)}`,
+          id: `arb_${Date.now()}_${Math.random().toString(16).substring(2, 10)}`,
           pair: pairSymbol,
           tokenA,
           tokenB,
@@ -238,7 +240,7 @@ async function scanArbitrageOpportunities(
 /**
  * AI-enhanced opportunity ranking
  */
-async function rankOpportunitiesWithAI(opportunities: any[]) {
+async function rankOpportunitiesWithAI(opportunities: ArbitrageOpportunity[]) {
   // Simulate AI processing
   await new Promise(resolve => setTimeout(resolve, 200))
   

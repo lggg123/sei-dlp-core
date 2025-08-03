@@ -10,7 +10,7 @@ const ChatRequestSchema = z.object({
     vaultData: z.any().optional(),
     userPreferences: z.any().optional()
   }).optional(),
-  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)').default(13289)
+  chainId: z.number().refine(id => id === 713715, 'Must be SEI devnet (713715)').default(713715)
 })
 
 /**

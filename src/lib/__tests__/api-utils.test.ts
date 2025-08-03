@@ -37,7 +37,7 @@ describe('API Utilities', () => {
       ]
 
       invalidAddresses.forEach(address => {
-        expect(validateSeiAddress(address as any)).toBe(false)
+        expect(validateSeiAddress(address as string)).toBe(false)
       })
     })
   })

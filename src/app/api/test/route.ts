@@ -8,6 +8,7 @@ import { createSuccessResponse, createErrorResponse } from '@/lib/api-utils'
  */
 export async function GET() {
   try {
+    console.log('[Test API] GET endpoint called - NextResponse available:', !!NextResponse);
     return createSuccessResponse({
       message: 'SEI DLP Core API is running successfully!',
       timestamp: new Date().toISOString(),
@@ -27,6 +28,7 @@ export async function GET() {
       }
     })
   } catch (error) {
+    console.error('[Test API] GET error:', error);
     return createErrorResponse('Test endpoint failed', 500)
   }
 }
@@ -46,6 +48,7 @@ export async function POST(request: NextRequest) {
       }
     })
   } catch (error) {
+    console.error('[Test API] POST error:', error);
     return createErrorResponse('Failed to parse request body', 400)
   }
 }

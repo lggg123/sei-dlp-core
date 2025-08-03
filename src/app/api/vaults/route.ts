@@ -10,7 +10,7 @@ const VaultSchema = z.object({
   tokenB: z.string(),
   fee: z.number().min(0),
   tickSpacing: z.number().min(1),
-  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)')
+  chainId: z.number().refine(id => id === 713715, 'Must be SEI devnet (713715)')
 })
 
 const CreateVaultSchema = VaultSchema.omit({ address: true })
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 1250000,
         apy: 0.125,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.087,
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 850000,
         apy: 0.189,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.112,
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 10,
         tvl: 2100000,
         apy: 0.267,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.156,
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 200,
         tvl: 3400000,
         apy: 0.089,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.045,
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 1,
         tvl: 8500000,
         apy: 0.045,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.022,
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 200,
         tvl: 1800000,
         apy: 0.420,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.324,
@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 4200000,
         apy: 0.156,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.098,
@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 3100000,
         apy: 0.155,
-        chainId: 13289,
+        chainId: 713715,
         active: true,
         performance: {
           totalReturn: 0.098,
@@ -243,7 +243,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Mock vault creation - replace with actual smart contract deployment
+    // Mock vault creation - replace with actual smart contr
+    // act deployment
     const newVault = {
       ...validatedData,
       address: `0x${Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')}`,

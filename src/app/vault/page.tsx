@@ -428,8 +428,8 @@ export default function VaultDetailPage() {
 
       {/* Deposit Modal */}
       {showDepositModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <Card className="w-full max-w-md vault-solid-card relative z-10">
+        <div className="fixed inset-0 z-[45] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+          <Card className="w-full max-w-md vault-solid-card relative z-[50]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-vault-primary">
                 <DollarSign className="w-5 h-5" />

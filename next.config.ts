@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
   // Environment variables for API
   env: {
     SEI_CHAIN_ID: '713715',
-    SEI_RPC_URL: 'https://evm-rpc.sei-apis.com',
+    SEI_RPC_URL: 'https://evm-rpc-devnet.sei-apis.com',
     API_VERSION: '1.0.0',
   },
   

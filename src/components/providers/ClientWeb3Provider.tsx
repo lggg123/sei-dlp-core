@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { ReactNode } from "react";
+import { SeiGlobalWalletProvider } from "./SeiGlobalWalletProvider";
 
 const Web3Provider = dynamic(
   () => import("./Web3Provider").then(mod => ({ default: mod.Web3Provider })),
@@ -16,5 +17,9 @@ interface ClientWeb3ProviderProps {
 }
 
 export function ClientWeb3Provider({ children }: ClientWeb3ProviderProps) {
-  return <Web3Provider>{children}</Web3Provider>;
+  return (
+    <SeiGlobalWalletProvider>
+      <Web3Provider>{children}</Web3Provider>
+    </SeiGlobalWalletProvider>
+  );
 }

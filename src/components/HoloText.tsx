@@ -1,14 +1,16 @@
-import { forwardRef } from 'react';
+import React from 'react';
 import styles from './Text.module.css';
 
-interface HoloTextProps extends React.HTMLAttributes<HTMLElement> {
+interface HoloTextProps {
   variant?: 'holo' | 'primary-glow' | 'secondary-glow' | 'accent-glow' | 'cyan-glow' | 'purple-glow' | 'pink-glow' | 'hero-animated' | 'hero-glow';
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType;
   children: React.ReactNode;
+  className?: string;
+  [key: string]: unknown;
 }
 
-const HoloText = forwardRef<HTMLElement, HoloTextProps>(
-  ({ variant = 'holo', as: Component = 'span', className = '', children, ...props }, ref) => {
+const HoloText = ({ variant = 'holo', as = 'span', className = '', children, ...props }: HoloTextProps) => {
+    const Component = as as React.ElementType;
     const getVariantClass = () => {
       switch (variant) {
         case 'primary-glow': return styles.primaryGlow;
@@ -23,18 +25,14 @@ const HoloText = forwardRef<HTMLElement, HoloTextProps>(
       }
     };
 
-    return (
-      <Component
-        ref={ref}
-        className={`${getVariantClass()} ${className}`}
-        {...props}
-      >
-        {children}
-      </Component>
+    return React.createElement(
+      Component,
+      {
+        className: `${getVariantClass()} ${className}`,
+        ...props
+      },
+      children
     );
-  }
-);
-
-HoloText.displayName = 'HoloText';
+};
 
 export default HoloText;

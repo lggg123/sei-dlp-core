@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://yielddelta.com'),
+  metadataBase: new URL('https://yielddelta.xyz'),
   title: "Yield Delta - Dynamic Liquidity Vaults on SEI",
   description: "Yield Delta: AI-driven yield aggregation, concentrated liquidity optimization, and impermanent loss hedging on SEI EVM.",
   keywords: ["Yield Delta", "SEI", "DeFi", "Liquidity Vaults", "AI", "Yield Aggregation", "Concentrated Liquidity", "Impermanent Loss", "Blockchain"],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Yield Delta - Dynamic Liquidity Vaults on SEI',
     description: 'Yield Delta: AI-driven yield aggregation, concentrated liquidity optimization, and impermanent loss hedging on SEI EVM.',
-    url: 'https://yielddelta.com',
+    url: 'https://yielddelta.xyz',
     siteName: 'Yield Delta',
     locale: 'en_US',
     type: 'website',

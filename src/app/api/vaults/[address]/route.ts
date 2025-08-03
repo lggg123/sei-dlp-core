@@ -17,10 +17,10 @@ const UpdateVaultSchema = z.object({
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { address: string } }
+  { params }: { params: Promise<{ address: string }> }
 ) {
   try {
-    const { address } = params
+    const { address } = await params
 
     // Validate SEI address format
     if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
@@ -110,10 +110,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { address: string } }
+  { params }: { params: Promise<{ address: string }> }
 ) {
   try {
-    const { address } = params
+    const { address } = await params
     const body = await request.json()
 
     // Validate address
@@ -171,10 +171,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { address: string } }
+  { params }: { params: Promise<{ address: string }> }
 ) {
   try {
-    const { address } = params
+    const { address } = await params
 
     // Validate address
     if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {

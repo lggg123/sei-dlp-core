@@ -1,5 +1,6 @@
 import { GET, POST } from '../vaults/route'
 import { NextRequest } from 'next/server'
+import type { Vault } from '../../../types/api'
 
 describe('/api/vaults', () => {
   describe('GET', () => {
@@ -14,7 +15,7 @@ describe('/api/vaults', () => {
       expect(data.chainId).toBe(713715)
 
       // Verify delta neutral vault exists
-      const deltaNeutralVault = data.data.find((vault: any) => vault.strategy === 'delta_neutral')
+      const deltaNeutralVault = data.data.find((vault: Vault) => vault.strategy === 'delta_neutral')
       expect(deltaNeutralVault).toBeDefined()
       expect(deltaNeutralVault.name).toBe('Delta Neutral LP Vault')
       expect(deltaNeutralVault.active).toBe(true)
@@ -56,7 +57,7 @@ describe('/api/vaults', () => {
       const response = await GET(request)
       const data = await response.json()
 
-      const strategies = data.data.map((vault: any) => vault.strategy)
+      const strategies = data.data.map((vault: Vault) => vault.strategy)
       const expectedStrategies = [
         'concentrated_liquidity',
         'yield_farming', 

@@ -19,10 +19,12 @@ export async function GET() {
       }
     })
   } catch (error) {
+    console.error('[Health] Health check error:', error);
     return NextResponse.json(
       { 
         status: 'error', 
         message: 'Health check failed',
+        error: error instanceof Error ? error.message : 'Unknown error',
         timestamp: new Date().toISOString()
       },
       { status: 500 }

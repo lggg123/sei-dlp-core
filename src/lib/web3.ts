@@ -16,23 +16,9 @@ export const seiMainnet = defineChain({
   testnet: false
 })
 
-// SEI Testnet (Arctic-1)
-export const seiTestnet = defineChain({
-  id: 713715,
-  name: 'SEI Arctic',
-  nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
-  rpcUrls: {
-    default: { http: ['https://evm-rpc-arctic-1.sei-apis.com'] }
-  },
-  blockExplorers: {
-    default: { name: 'SeiTrace Arctic', url: 'https://seitrace.com/?chain=arctic-1' }
-  },
-  testnet: true
-})
-
-// SEI Devnet
+// SEI Devnet 
 export const seiDevnet = defineChain({
-  id: 13289,
+  id: 713715,
   name: 'SEI Devnet',
   nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
   rpcUrls: {
@@ -40,6 +26,20 @@ export const seiDevnet = defineChain({
   },
   blockExplorers: {
     default: { name: 'SeiTrace Devnet', url: 'https://seitrace.com/?chain=devnet' }
+  },
+  testnet: true
+})
+
+// SEI Testnet (Arctic-1) - avoid for DeFi compliance
+export const seiTestnet = defineChain({
+  id: 13289,
+  name: 'SEI Arctic',
+  nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://evm-rpc-arctic-1.sei-apis.com'] }
+  },
+  blockExplorers: {
+    default: { name: 'SeiTrace Arctic', url: 'https://seitrace.com/?chain=arctic-1' }
   },
   testnet: true
 })

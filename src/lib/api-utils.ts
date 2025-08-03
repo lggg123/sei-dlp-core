@@ -74,7 +74,7 @@ export function getCorsHeaders() {
 export function createErrorResponse(
   error: string, 
   status: number = 500, 
-  details?: any
+  details?: Record<string, unknown>
 ): NextResponse {
   return NextResponse.json(
     {
@@ -95,8 +95,8 @@ export function createErrorResponse(
  * Standard API success response
  */
 export function createSuccessResponse(
-  data: any, 
-  metadata?: any,
+  data: unknown, 
+  metadata?: Record<string, unknown>,
   status: number = 200
 ): NextResponse {
   return NextResponse.json(
@@ -147,7 +147,7 @@ export function parsePagination(searchParams: URLSearchParams) {
 /**
  * Cache key generator
  */
-export function generateCacheKey(prefix: string, params: Record<string, any>): string {
+export function generateCacheKey(prefix: string, params: Record<string, unknown>): string {
   const sortedParams = Object.keys(params)
     .sort()
     .map(key => `${key}=${params[key]}`)

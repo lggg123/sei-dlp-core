@@ -1,12 +1,10 @@
 "use client"
 
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, DollarSign, TrendingUp, Shield, AlertTriangle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useDepositToVault } from '@/hooks/useVaults';
 
 interface VaultData {
@@ -30,7 +28,7 @@ interface DepositModalProps {
   vault: VaultData | null;
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: (txHash: string) => void;
+  onSuccess: (txHash: string) => void;
 }
 
 const formatCurrency = (amount: number) => {
@@ -63,7 +61,20 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const [depositAmount, setDepositAmount] = useState('');
   const depositMutation = useDepositToVault();
 
-  if (!vault) return null;
+  // Add effect to track when the modal should be opening - must be before early return
+  React.useEffect(() => {
+    if (isOpen && vault) {
+      console.log('[DepositModal] Modal should be opening now for vault:', vault.name);
+    }
+  }, [isOpen, vault]);
+
+  // Don't render if vault is null
+  if (!vault) {
+    console.log('[DepositModal] Vault is null, not rendering');
+    return null;
+  }
+
+  console.log('[DepositModal] Rendering with:', { vault: vault.name, isOpen });
 
   const vaultColor = getVaultColor(vault.strategy);
   const riskLevel = getRiskLevel(vault.apy);
@@ -73,6 +84,8 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
     if (!isValidAmount) return;
     
     try {
+      console.log('[DepositModal] Starting deposit:', { amount: depositAmount, vault: vault.address });
+      
       const result = await depositMutation.mutateAsync({
         vaultAddress: vault.address,
         amount: depositAmount
@@ -81,8 +94,8 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       setDepositAmount('');
       onClose();
       
-      if (onSuccess && result?.txHash) {
-        onSuccess(result.txHash);
+      if (onSuccess && (result as { txHash?: string })?.txHash) {
+        onSuccess((result as { txHash: string }).txHash);
       }
     } catch (error) {
       console.error('Deposit error:', error);
@@ -94,145 +107,70 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
     onClose();
   };
 
+  // Simple test modal first
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md glass-card border-primary/20">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center mb-2">
-            Deposit to {vault.name}
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-6">
-          {/* Vault Summary */}
-          <div className="rounded-lg border border-primary/20 p-4 space-y-3"
-               style={{ 
-                 background: `linear-gradient(135deg, ${vaultColor}15, ${vaultColor}05)`,
-                 borderColor: `${vaultColor}40`
-               }}>
-            <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <div className="text-2xl font-bold" style={{ color: vaultColor }}>
+    <>
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              handleClose();
+            }
+          }}
+        >
+          <div className="w-full max-w-md p-6 bg-card border border-primary/20 rounded-lg shadow-2xl">
+            <h2 className="text-2xl font-bold text-center mb-4">Deposit to {vault.name}</h2>
+            
+            <div className="space-y-4">
+              <div className="text-center">
+                <div className="text-lg font-bold" style={{ color: vaultColor }}>
                   {(vault.apy * 100).toFixed(1)}% APY
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {vault.strategy.replace('_', ' ').toUpperCase()}
+                  {vault.strategy.replace('_', ' ').toUpperCase()} • {formatCurrency(vault.tvl)} TVL • {riskLevel} Risk
                 </div>
               </div>
-              <div className="text-right space-y-1">
-                <div className="text-lg font-bold">{formatCurrency(vault.tvl)}</div>
-                <div className="text-sm text-muted-foreground">TVL</div>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Badge className={`${
-                riskLevel === 'Low' ? 'bg-green-500/20 text-green-300 border-green-500/50' :
-                riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50' :
-                'bg-red-500/20 text-red-300 border-red-500/50'
-              }`}>
-                <Shield className="w-3 h-3 mr-1" />
-                {riskLevel} Risk
-              </Badge>
-              <div className="text-sm text-muted-foreground">
-                {vault.tokenA}-{vault.tokenB} pair
-              </div>
-            </div>
-          </div>
 
-          {/* Amount Input */}
-          <div className="space-y-3">
-            <Label htmlFor="deposit-amount" className="text-base font-medium flex items-center">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Deposit Amount (USD)
-            </Label>
-            <Input
-              id="deposit-amount"
-              type="number"
-              placeholder="0.00"
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(e.target.value)}
-              className="text-lg h-12 glass-input"
-              min="0"
-              step="0.01"
-            />
-            
-            {/* Quick Amount Buttons */}
-            <div className="flex gap-2">
-              {['100', '500', '1000', '5000'].map((amount) => (
+              <div className="space-y-2">
+                <Label htmlFor="deposit-amount">Amount (USD)</Label>
+                <Input
+                  id="deposit-amount"
+                  type="number"
+                  placeholder="Enter amount..."
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                />
+              </div>
+
+              <div className="flex gap-3">
                 <Button
-                  key={amount}
                   variant="outline"
-                  size="sm"
-                  className="flex-1 text-xs"
-                  onClick={() => setDepositAmount(amount)}
+                  onClick={handleClose}
+                  className="flex-1"
+                  disabled={depositMutation.isPending}
                 >
-                  ${amount}
+                  Cancel
                 </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Estimated Returns */}
-          {isValidAmount && (
-            <div className="rounded-lg bg-muted/50 p-4 space-y-2">
-              <div className="flex items-center text-sm font-medium">
-                <TrendingUp className="w-4 h-4 mr-2 text-green-400" />
-                Estimated Annual Return
-              </div>
-              <div className="text-2xl font-bold text-green-400">
-                ${(parseFloat(depositAmount) * vault.apy).toFixed(2)}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Based on current {(vault.apy * 100).toFixed(1)}% APY
+                <Button
+                  onClick={handleDeposit}
+                  disabled={!isValidAmount || depositMutation.isPending}
+                  className="flex-1"
+                >
+                  {depositMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Processing...
+                    </>
+                  ) : (
+                    'Confirm Deposit'
+                  )}
+                </Button>
               </div>
             </div>
-          )}
-
-          {/* Risk Warning */}
-          <div className="flex items-start space-x-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-            <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
-            <div className="text-xs text-yellow-300">
-              <div className="font-medium mb-1">Risk Disclaimer</div>
-              <div>
-                DeFi investments carry inherent risks including impermanent loss, smart contract vulnerabilities, and market volatility. Only invest what you can afford to lose.
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={handleClose}
-              className="flex-1 h-12"
-              disabled={depositMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleDeposit}
-              disabled={!isValidAmount || depositMutation.isPending}
-              className="flex-1 h-12 font-bold"
-              style={{
-                background: isValidAmount 
-                  ? `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)` 
-                  : undefined,
-                color: isValidAmount ? '#000' : undefined,
-              }}
-            >
-              {depositMutation.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Processing...
-                </>
-              ) : (
-                'Confirm Deposit'
-              )}
-            </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      )}
+    </>
   );
 }

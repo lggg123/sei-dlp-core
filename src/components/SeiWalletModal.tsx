@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { useSeiWallet } from '@/hooks/useSeiWallet'
+import { useSeiWallet, SUPPORTED_SEI_WALLETS } from '@/hooks/useSeiWallet'
 import { useAccount } from 'wagmi'
 
 interface SeiWalletModalProps {
@@ -26,7 +26,7 @@ export function SeiWalletModal({ isOpen, onClose }: SeiWalletModalProps) {
 
   const [isConnecting, setIsConnecting] = useState<string | null>(null)
 
-  const handleSeiWalletConnect = async (walletType: any) => {
+  const handleSeiWalletConnect = async (walletType: typeof SUPPORTED_SEI_WALLETS[number]['windowKey']) => {
     setIsConnecting(walletType)
     try {
       await connectSeiWallet(walletType)

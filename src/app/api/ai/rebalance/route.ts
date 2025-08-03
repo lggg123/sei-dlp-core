@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import type { VaultState } from '../../../../types/api'
 
 // Rebalance request schema
 const RebalanceRequestSchema = z.object({
@@ -12,7 +13,7 @@ const RebalanceRequestSchema = z.object({
     maxGasPrice: z.number().positive().optional(),
     deadline: z.number().int().positive().optional() // Unix timestamp
   }).optional(),
-  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)')
+  chainId: z.number().refine(id => id === 713715, 'Must be SEI devnet (713715)')
 })
 
 /**
@@ -110,7 +111,7 @@ async function getVaultState(vaultAddress: string) {
  */
 async function generateRebalanceRecommendation(
   vaultAddress: string,
-  vaultState: any,
+  vaultState: VaultState,
   strategy: string
 ) {
   const AI_ENGINE_URL = process.env.AI_ENGINE_URL || 'http://localhost:8000'
@@ -128,6 +129,7 @@ async function generateRebalanceRecommendation(
         lower_tick: vaultState.lowerTick,
         upper_tick: vaultState.upperTick,
         utilization_rate: vaultState.utilizationRate,
+        strategy: strategy,
         market_conditions: {
           tvl: vaultState.totalValueLocked,
           impermanent_loss: vaultState.impermanentLoss,
@@ -140,7 +142,7 @@ async function generateRebalanceRecommendation(
       throw new Error(`AI Engine rebalance analysis failed: ${response.statusText}`)
     }
 
-    const aiResult = await response.json()
+    const aiResult: AIEngineResponse = await response.json()
     
     return {
       vaultAddress,
@@ -175,9 +177,9 @@ async function generateRebalanceRecommendation(
         marketDirection: aiResult.urgency === 'high' ? 'volatile' : 'stable',
         volatilityForecast: aiResult.urgency === 'high' ? 0.4 : 0.2,
         liquidityForecast: 'stable',
-        riskFactors: [aiResult.risk_assessment],
+        riskFactors: [aiResult.risk_assessment || 'No specific risk factors identified'],
         aiEngineUsed: true,
-        reasoning: aiResult.risk_assessment
+        reasoning: aiResult.risk_assessment || 'AI analysis completed successfully'
       }
     }
   } catch (error) {
@@ -240,22 +242,77 @@ async function generateRebalanceRecommendation(
           'using_fallback_logic'
         ],
         aiEngineUsed: false,
-        fallbackReason: error instanceof Error ? error.message : 'Unknown error'
+        reasoning: error instanceof Error ? error.message : 'Unknown error'
       }
     }
+  }
+}
+
+interface RebalanceRequest {
+  vaultAddress: string
+  strategy: string
+  parameters?: Record<string, unknown>
+}
+
+interface AIEngineResponse {
+  action: string
+  urgency: string
+  new_lower_tick: number
+  new_upper_tick: number
+  gas_cost_estimate: number
+  expected_improvement: number
+  risk_assessment?: string
+}
+
+interface RebalanceRecommendation {
+  vaultAddress: string
+  recommendation: {
+    action: string
+    urgency: string
+    newRange: {
+      lowerTick: number
+      upperTick: number
+      lowerPrice: number
+      upperPrice: number
+      expectedUtilization: number
+    }
+    costs: {
+      estimatedGasCost: number
+      slippageImpact: number
+      opportunityCost: number
+    }
+    benefits: {
+      expectedAPRIncrease: number
+      riskReduction: number
+      capitalEfficiency: number
+    }
+    timing: {
+      optimalWindow: string
+      marketConditions: string
+      gasConditions: string
+    }
+  }
+  aiInsights: {
+    modelConfidence: number
+    marketDirection: string
+    volatilityForecast: number
+    liquidityForecast: string
+    riskFactors: string[]
+    aiEngineUsed: boolean
+    reasoning: string
   }
 }
 
 /**
  * Execute rebalancing operation
  */
-async function executeRebalancing(request: any, recommendation: any) {
-  const { vaultAddress, strategy, parameters } = request
+async function executeRebalancing(request: RebalanceRequest, recommendation: RebalanceRecommendation) {
+  const { vaultAddress, strategy } = request
   
   if (strategy === 'immediate') {
     // Execute immediate rebalancing
     return {
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      transactionHash: `0x${Math.random().toString(16).substring(2, 66)}`,
       status: 'pending',
       vaultAddress,
       rebalanceDetails: {
@@ -277,7 +334,7 @@ async function executeRebalancing(request: any, recommendation: any) {
   } else if (strategy === 'scheduled') {
     // Schedule rebalancing for optimal time
     return {
-      scheduleId: `schedule_${Math.random().toString(16).substr(2, 8)}`,
+      scheduleId: `schedule_${Math.random().toString(16).substring(2, 10)}`,
       status: 'scheduled',
       vaultAddress,
       scheduledTime: recommendation.recommendation.timing.optimalWindow,
@@ -287,7 +344,7 @@ async function executeRebalancing(request: any, recommendation: any) {
   } else {
     // Threshold-based monitoring
     return {
-      monitoringId: `monitor_${Math.random().toString(16).substr(2, 8)}`,
+      monitoringId: `monitor_${Math.random().toString(16).substring(2, 10)}`,
       status: 'monitoring',
       vaultAddress,
       thresholds: {

@@ -11,7 +11,7 @@ interface Message {
   confidence?: number
   actions?: string[]
   suggestions?: string[]
-  metadata?: any
+  metadata?: Record<string, unknown>
 }
 
 interface AIChatProps {
@@ -20,8 +20,8 @@ interface AIChatProps {
   initialMessage?: string
   context?: {
     currentPage?: string
-    vaultData?: any
-    userPreferences?: any
+    vaultData?: Record<string, unknown> | unknown[]
+    userPreferences?: Record<string, unknown>
   }
 }
 
@@ -65,6 +65,7 @@ export default function AIChat({
       const data = await response.json()
       setAgentStatus(data.agentStatus || 'offline')
     } catch (error) {
+      console.log('[AIChat] Agent status check failed:', error);
       setAgentStatus('offline')
     }
   }
@@ -236,7 +237,7 @@ export default function AIChat({
                       <span>{Math.round(message.confidence * 100)}% confident</span>
                     </div>
                   )}
-                  {message.metadata?.aiEngineUsed && (
+                  {(message.metadata?.aiEngineUsed as boolean) && (
                     <div className="mt-1 text-xs text-green-400">
                       ⚡ Powered by SEI DLP AI Engine
                     </div>

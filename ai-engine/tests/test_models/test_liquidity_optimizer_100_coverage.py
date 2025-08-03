@@ -68,7 +68,7 @@ class TestLiquidityOptimizerCoverage:
 
     @pytest.mark.asyncio
     async def test_sklearn_prediction_exception_handling(self):
-        """Test sklearn prediction exception handling (lines 304-306)"""
+        """Test sklearn prediction exception handling (lines 493-495)"""
         optimizer = LiquidityOptimizer()
         
         # Mock the sklearn model to raise an exception
@@ -78,11 +78,12 @@ class TestLiquidityOptimizerCoverage:
         optimizer.ml_model = mock_model
         optimizer.scaler = MagicMock()
         optimizer.scaler.transform.return_value = np.array([[1.0, 2.0]])
+        optimizer.is_trained = True
         
         # Mock the data preparation
         features = np.array([[1.0, 2.0]])
         
-        # This should trigger the exception handling in _predict_with_sklearn (lines 304-306)
+        # This should trigger the exception handling in _predict_with_sklearn (lines 493-495)
         # The exception should be caught, logged, and re-raised
         with pytest.raises(Exception, match="Sklearn prediction failed"):
             await optimizer._predict_with_sklearn(features)
@@ -192,50 +193,37 @@ class TestLiquidityOptimizerCoverage:
         """Test successful model training (lines 502-519)"""
         optimizer = LiquidityOptimizer()
         
-        # Mock all the components completely
-        mock_model = MagicMock()
-        mock_scaler = MagicMock()
+        # Create realistic training data
+        import pandas as pd
+        training_data = pd.DataFrame({
+            'feature_price': [1.0, 2.0, 3.0, 4.0, 5.0],
+            'feature_volume': [0.1, 0.2, 0.3, 0.4, 0.5],
+            'lower_bound': [0.45, 0.47, 0.49, 0.51, 0.50],
+            'upper_bound': [0.55, 0.57, 0.59, 0.61, 0.60],
+            'confidence': [0.8, 0.85, 0.9, 0.75, 0.8]
+        })
         
-        with patch('sei_dlp_ai.models.liquidity_optimizer.RandomForestRegressor', return_value=mock_model):
-            with patch.object(optimizer, 'scaler', mock_scaler):
-                # Create a mock DataFrame that properly mimics feature columns
-                mock_df = MagicMock()
-                mock_df.columns = ['feature_price', 'feature_volume', 'lower_bound', 'upper_bound', 'confidence']
-                
-                # Mock the column access operations that happen on lines 500-501
-                feature_data = MagicMock()
-                feature_data.values = np.array([[1.0, 0.1], [2.0, 0.2], [3.0, 0.3]])
-                
-                target_data = MagicMock()
-                target_data.values = np.array([[0.9, 1.1, 0.8], [0.8, 1.2, 0.9], [0.7, 1.3, 0.7]])
-                
-                # Mock the getitem calls to return our mock data
-                mock_df.__getitem__.side_effect = [feature_data, target_data]
-                
-                # Mock scaler operations
-                mock_scaler.fit_transform.return_value = np.array([[1.0, 0.1], [2.0, 0.2], [3.0, 0.3]])
-                
-                # Mock model operations
-                mock_model.fit.return_value = None
-                
-                # This should cover lines 502-519 successfully
-                optimizer.train_model(mock_df)
-                
-                # Verify the expected calls were made
-                mock_scaler.fit_transform.assert_called_once()
-                mock_model.fit.assert_called_once()
+        # Train the model
+        optimizer.train_model(training_data)
+        
+        # Check that the model is marked as trained
+        assert optimizer.is_trained
 
     def test_train_model_no_feature_columns(self):
         """Test training model with no feature columns (lines 498-499)"""
         optimizer = LiquidityOptimizer()
         
-        # Create a DataFrame with no feature columns
-        mock_df = MagicMock()
-        mock_df.columns = ['price', 'volume']  # No columns starting with 'feature_'
+        # Create a DataFrame with only target columns (no feature columns)
+        import pandas as pd
+        df = pd.DataFrame({
+            'lower_bound': [0.1, 0.2],
+            'upper_bound': [0.3, 0.4], 
+            'confidence': [0.8, 0.9]
+        })
         
         # This should trigger the ValueError due to no feature columns
         with pytest.raises(ValueError, match="No feature columns found"):
-            optimizer.train_model(mock_df)
+            optimizer.train_model(df)
                 
     def test_train_model_exception_handling(self):
         """Test model training exception handling (lines 521-523)"""

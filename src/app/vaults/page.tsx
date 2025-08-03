@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +14,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 import { useVaults, useDepositToVault } from '@/hooks/useVaults';
 import { useSeiMarketData } from '@/hooks/useMarketData';
-import { useVaultStore } from '@/stores/vaultStore';
-import { useAppStore } from '@/stores/appStore';
+import { useVaultStore, VaultData } from '@/stores/vaultStore';
+// import { useAppStore } from '@/stores/appStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,7 +54,7 @@ export default function VaultsPage() {
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
-  const [depositVault, setDepositVault] = useState<any>(null);
+  const [depositVault, setDepositVault] = useState<VaultData | null>(null);
 
   // State management
   const {
@@ -71,6 +71,13 @@ export default function VaultsPage() {
   const { data: marketData } = useSeiMarketData()
   const depositMutation = useDepositToVault()
   
+  // Debug API data
+  React.useEffect(() => {
+    if (vaultsData) {
+      console.log('[VaultsPage] API vaultsData loaded:', vaultsData.length, 'vaults');
+    }
+  }, [vaultsData]);
+  
   // Combine loading states
   const isLoading = vaultLoading || queryLoading
   const error = vaultError || queryError
@@ -80,7 +87,7 @@ export default function VaultsPage() {
   const totalTVL = getTotalTVL()
   
   // Handler functions for vault actions
-  const handleDeposit = async (vault: any) => {
+  const handleDeposit = async (vault: VaultData) => {
     try {
       console.log('[Deposit] handleDeposit called', { vault });
       setSelectedVault(vault)
@@ -103,7 +110,7 @@ export default function VaultsPage() {
     // Could add toast notification here
   }
   
-  const handleViewAnalytics = (vault: any) => {
+  const handleViewAnalytics = (vault: VaultData) => {
     setSelectedVault(vault)
     // Navigate to vault analytics page
     router.push(`/vault?address=${vault.address}&tab=analytics`)
@@ -180,6 +187,7 @@ export default function VaultsPage() {
 
     camera.position.z = 30;
     setScene(scene);
+    console.log('[VaultsPage] Three.js scene created with', scene.children.length, 'objects');
 
     // Animation loop
     const animate = () => {
@@ -295,7 +303,7 @@ export default function VaultsPage() {
                 Dynamic Liquidity Vaults
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-                AI-powered yield optimization with real-time rebalancing on SEI's 400ms finality network
+                AI-powered yield optimization with real-time rebalancing on SEI&apos;s 400ms finality network
               </p>
               
               {/* Live Stats */}
@@ -485,7 +493,10 @@ export default function VaultsPage() {
                     <div className="flex gap-3 mt-6" style={{gap: '1rem'}}>
                       <Button 
                         className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95"
-                        onClick={() => handleDeposit(vault)}
+                        onClick={() => {
+                          console.log('[VaultsPage] Deposit button clicked for vault:', vault.name);
+                          handleDeposit(vault);
+                        }}
                         disabled={depositMutation.isPending}
                       >
                         {depositMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Deposit'}
@@ -510,7 +521,7 @@ export default function VaultsPage() {
 
       {/* AI Chat Interface */}
       {showChat && (
-        <div className="fixed inset-0 z-50 flex items-end justify-end p-4 pointer-events-none">
+        <div className="fixed inset-0 z-40 flex items-end justify-end p-4 pointer-events-none">
           <div className="pointer-events-auto w-full max-w-md h-[600px] mr-4 mb-20">
             <AIChat
               className="h-full"
@@ -551,7 +562,7 @@ export default function VaultsPage() {
       />
 
       {/* Floating AI Chat Button */}
-      <div className="fixed bottom-8 right-8 z-20">
+      <div className="fixed bottom-8 right-8 z-[70]">
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full animate-pulse opacity-30"></div>
           <button

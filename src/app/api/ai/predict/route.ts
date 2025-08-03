@@ -11,7 +11,7 @@ const PredictionRequestSchema = z.object({
     liquidity: z.number().positive()
   }),
   timeframe: z.enum(['1h', '4h', '1d', '7d', '30d']).default('1d'),
-  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)')
+  chainId: z.number().refine(id => id === 713715, 'Must be SEI devnet (713715)')
 })
 
 /**
@@ -93,6 +93,7 @@ async function generateAIPrediction(data: z.infer<typeof PredictionRequestSchema
     // Transform AI engine response to match UI expectations
     const { marketData, timeframe, vaultAddress } = data
     const rangeMultiplier = getTimeframeMultiplier(timeframe)
+    console.log('[AI Predict] Range multiplier for timeframe', timeframe, ':', rangeMultiplier)
     
     return {
       vaultAddress,

@@ -36,7 +36,7 @@ export interface PaginationMetadata {
 
 // Vault Types
 export interface VaultStrategy {
-  type: 'concentrated_liquidity' | 'yield_farming' | 'arbitrage' | 'hedge'
+  type: 'concentrated_liquidity' | 'yield_farming' | 'arbitrage' | 'hedge' | 'delta_neutral'
   parameters: Record<string, unknown>
 }
 
@@ -83,6 +83,17 @@ export interface VaultAISignals {
   confidence: number
   nextRebalanceEstimate: string
 }
+
+export interface VaultState {
+  currentTick: number
+  lowerTick: number
+  upperTick: number
+  utilizationRate: number
+  totalValueLocked: number
+  impermanentLoss: number
+  lastRebalance: string
+}
+
 
 export interface Vault {
   address: string
@@ -363,7 +374,7 @@ export interface SystemHealth {
 export interface ApiError {
   success: false
   error: string
-  details?: any
+  details?: Record<string, unknown>
   timestamp: string
   chainId: 713715
 }
