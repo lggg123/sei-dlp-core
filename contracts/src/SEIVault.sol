@@ -13,7 +13,7 @@ import "./interfaces/ISEIVault.sol";
  * @notice Core vault implementing concentrated liquidity + AI rebalancing
  */
 contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
-    // SEI Chain ID validation
+    // SEI Chain ID validation (devnet)
     uint256 private constant SEI_CHAIN_ID = 713715;
     
     // Vault configuration

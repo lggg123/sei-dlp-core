@@ -41,7 +41,7 @@ contract AIOracle is Ownable, ReentrancyGuard {
     error RequestExpired();
     error RequestAlreadyExecuted();
 
-    // SEI Chain validation
+    // SEI Chain validation (devnet)
     uint256 public constant SEI_CHAIN_ID = 713715;
 
     // AI model management

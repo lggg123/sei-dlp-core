@@ -10,7 +10,7 @@ import "./StrategyVault.sol";
  * @dev Factory contract for creating AI-driven liquidity vaults on SEI
  */
 contract VaultFactory is Ownable, ReentrancyGuard {
-    // SEI Network Chain ID
+    // SEI Network Chain ID (devnet)
     uint256 public constant SEI_CHAIN_ID = 713715;
     
     struct VaultCreationParams {

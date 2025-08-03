@@ -7,7 +7,7 @@ import "../src/VaultFactory.sol";
 import "../src/AIOracle.sol";
 import "../src/StrategyVault.sol";
 
-contract DeployScript is Script {
+contract SimpleDeployScript is Script {
     // SEI Network Configuration (devnet chain ID 713715)
     uint256 constant SEI_CHAIN_ID = 713715;
     
@@ -22,20 +22,16 @@ contract DeployScript is Script {
         // Verify we're deploying to SEI network
         require(block.chainid == SEI_CHAIN_ID, "Must deploy to SEI network");
         
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        address deployer = vm.addr(deployerPrivateKey);
+        // Use a deterministic deployer address for simulation
+        address deployer = address(0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf);
+        vm.startBroadcast(deployer);
         
-        console.log("Deploying to SEI Network (Chain ID: %s)", block.chainid);
+        console.log("Deploying to SEI Devnet (Chain ID: %s)", block.chainid);
         console.log("Deployer address: %s", deployer);
-        console.log("Deployer balance: %s", deployer.balance);
         
-        vm.startBroadcast(deployerPrivateKey);
-        
-        // 1. Deploy Mock Token for testing (only on devnet)
-        if (block.chainid == 713715) { // SEI devnet
-            mockToken = deployMockToken();
-            console.log("Mock Token deployed at: %s", mockToken);
-        }
+        // 1. Deploy Mock Token for testing on devnet
+        mockToken = deployMockToken();
+        console.log("Mock Token deployed at: %s", mockToken);
         
         // 2. Deploy AI Oracle
         aiOracle = deployAIOracle(deployer);
@@ -49,14 +45,10 @@ contract DeployScript is Script {
         seiVault = deploySEIVault(mockToken, deployer, deployer);
         console.log("SEI Vault deployed at: %s", seiVault);
         
-        // 5. Deploy Strategy Vault through Factory
-        strategyVault = deployStrategyVaultThroughFactory(mockToken, deployer);
-        console.log("Strategy Vault deployed at: %s", strategyVault);
+        // 5. Configure AI Oracle with deployed contracts
+        configureAIOracle();
         
-        // 6. Configure AI Oracle with deployed contracts
-        configureAIOracle(deployer);
-        
-        // 7. Set up initial vault parameters
+        // 6. Set up initial vault parameters
         configureVaults();
         
         vm.stopBroadcast();
@@ -77,7 +69,7 @@ contract DeployScript is Script {
     }
     
     function deployVaultFactory(address owner, address oracle) internal returns (address) {
-        VaultFactory factory = new VaultFactory(owner, oracle);
+        VaultFactory factory = new VaultFactory(oracle, owner);
         return address(factory);
     }
     
@@ -92,24 +84,7 @@ contract DeployScript is Script {
         return address(vault);
     }
     
-    function deployStrategyVaultThroughFactory(address asset, address owner) internal returns (address) {
-        VaultFactory factory = VaultFactory(vaultFactory);
-        
-        VaultFactory.VaultCreationParams memory params = VaultFactory.VaultCreationParams({
-            name: "SEI Strategy Vault",
-            symbol: "SEISV",
-            token0: asset,
-            token1: address(0x0000000000000000000000000000000000000001), // Placeholder token1
-            poolFee: 3000,
-            aiOracle: aiOracle
-        });
-        
-        address vault = factory.createVault{value: 0.1 ether}(params);
-        
-        return vault;
-    }
-    
-    function configureAIOracle(address deployer) internal {
+    function configureAIOracle() internal {
         AIOracle oracle = AIOracle(aiOracle);
         
         // Register AI models with string identifiers
@@ -149,7 +124,6 @@ contract DeployScript is Script {
         console.log("- AI Oracle: %s", aiOracle);
         console.log("- Vault Factory: %s", vaultFactory);
         console.log("- SEI Vault: %s", seiVault);
-        console.log("- Strategy Vault: %s", strategyVault);
         console.log("\nConfiguration:");
         console.log("- Parallel Execution: Enabled");
         console.log("- Finality Optimization: Enabled");

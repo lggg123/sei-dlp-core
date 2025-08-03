@@ -15,7 +15,7 @@ import "../src/AIOracle.sol";
 contract DevnetMocks is Test {
     
     // Chain configuration
-    uint256 public constant DEVNET_CHAIN_ID = 13289;
+    uint256 public constant DEVNET_CHAIN_ID = 713715;
     string public constant DEVNET_RPC_URL = "https://evm-rpc-devnet.sei-apis.com";
     
     // Core contracts
@@ -43,7 +43,7 @@ contract DevnetMocks is Test {
     
     // Mock addresses (matching devnet-contracts.ts)
     address public constant MOCK_AMM_FACTORY = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
-    address public constant MOCK_POSITION_MANAGER = 0xC36442b4b4e7ec3ce2e6e1b9b5b5f6F8C3C86e1f;
+    address public constant MOCK_POSITION_MANAGER = 0xc36442B4B4E7ec3CE2e6e1b9b5B5F6f8c3c86e1f;
     address public constant MOCK_ROUTER = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
     address public constant MOCK_DRIFT_PROTOCOL = 0x8888888888888888888888888888888888888888;
     
@@ -65,7 +65,7 @@ contract DevnetMocks is Test {
         emit DevnetMockSetup("AIOracle", address(aiOracle));
         
         // Deploy Vault Factory
-        vaultFactory = new VaultFactory(address(aiOracle));
+        vaultFactory = new VaultFactory(address(aiOracle), owner);
         emit DevnetMockSetup("VaultFactory", address(vaultFactory));
         
         // Deploy mock tokens with realistic supplies
@@ -100,84 +100,92 @@ contract DevnetMocks is Test {
     
     function _deployStrategyVaults() internal {
         // Strategy 1: Concentrated Liquidity (SEI-USDC)
-        concentratedLiquidityVault = StrategyVault(vaultFactory.createVault(
-            address(seiToken),
-            address(usdcToken),
-            3000, // 0.3% fee
-            60,   // tick spacing
-            "SEI-USDC Concentrated LP",
-            "concentrated_liquidity"
-        ));
+        VaultFactory.VaultCreationParams memory params1 = VaultFactory.VaultCreationParams({
+            name: "SEI-USDC Concentrated LP",
+            symbol: "SEIDLP",
+            token0: address(seiToken),
+            token1: address(usdcToken),
+            poolFee: 3000,
+            aiOracle: address(aiOracle)
+        });
+        concentratedLiquidityVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params1));
         
         // Strategy 2: Yield Farming (ATOM-SEI)
-        yieldFarmingVault = StrategyVault(vaultFactory.createVault(
-            address(atomToken),
-            address(seiToken),
-            3000,
-            60,
-            "ATOM-SEI Yield Farm",
-            "yield_farming"
-        ));
+        VaultFactory.VaultCreationParams memory params2 = VaultFactory.VaultCreationParams({
+            name: "ATOM-SEI Yield Farm",
+            symbol: "ASMYLP",
+            token0: address(atomToken),
+            token1: address(seiToken),
+            poolFee: 3000,
+            aiOracle: address(aiOracle)
+        });
+        yieldFarmingVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params2));
         
         // Strategy 3: Arbitrage (ETH-USDT)
-        arbitrageVault = StrategyVault(vaultFactory.createVault(
-            address(ethToken),
-            address(usdtToken),
-            5000, // 0.5% fee
-            10,
-            "ETH-USDT Arbitrage Bot",
-            "arbitrage"
-        ));
+        VaultFactory.VaultCreationParams memory params3 = VaultFactory.VaultCreationParams({
+            name: "ETH-USDT Arbitrage Bot",
+            symbol: "ETHLP",
+            token0: address(ethToken),
+            token1: address(usdtToken),
+            poolFee: 5000,
+            aiOracle: address(aiOracle)
+        });
+        arbitrageVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params3));
         
         // Strategy 4: Hedge (BTC-SEI)
-        hedgeVault = StrategyVault(vaultFactory.createVault(
-            address(btcToken),
-            address(seiToken),
-            10000, // 1% fee
-            200,
-            "BTC-SEI Hedge Strategy",
-            "hedge"
-        ));
+        VaultFactory.VaultCreationParams memory params4 = VaultFactory.VaultCreationParams({
+            name: "BTC-SEI Hedge Strategy",
+            symbol: "BTCLP",
+            token0: address(btcToken),
+            token1: address(seiToken),
+            poolFee: 10000,
+            aiOracle: address(aiOracle)
+        });
+        hedgeVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params4));
         
         // Strategy 5: Stable Max (USDC-DAI)
-        stableMaxVault = StrategyVault(vaultFactory.createVault(
-            address(usdcToken),
-            address(daiToken),
-            500, // 0.05% fee
-            1,
-            "Stable Max Yield Vault",
-            "stable_max"
-        ));
+        VaultFactory.VaultCreationParams memory params5 = VaultFactory.VaultCreationParams({
+            name: "Stable Max Yield Vault",
+            symbol: "STBLP",
+            token0: address(usdcToken),
+            token1: address(daiToken),
+            poolFee: 500,
+            aiOracle: address(aiOracle)
+        });
+        stableMaxVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params5));
         
         // Strategy 6: SEI Hypergrowth (SEI-ETH)
-        seiHypergrowthVault = StrategyVault(vaultFactory.createVault(
-            address(seiToken),
-            address(ethToken),
-            10000, // 1% fee
-            200,
-            "SEI Hypergrowth Vault",
-            "sei_hypergrowth"
-        ));
+        VaultFactory.VaultCreationParams memory params6 = VaultFactory.VaultCreationParams({
+            name: "SEI Hypergrowth Vault",
+            symbol: "HGLP",
+            token0: address(seiToken),
+            token1: address(ethToken),
+            poolFee: 10000,
+            aiOracle: address(aiOracle)
+        });
+        seiHypergrowthVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params6));
         
         // Strategy 7: Blue Chip (ETH-BTC simulated)
-        blueChipVault = StrategyVault(vaultFactory.createVault(
-            address(ethToken),
-            address(btcToken),
-            3000,
-            60,
-            "Blue Chip Diversified",
-            "blue_chip"
-        ));
+        VaultFactory.VaultCreationParams memory params7 = VaultFactory.VaultCreationParams({
+            name: "Blue Chip Diversified",
+            symbol: "BCLP",
+            token0: address(ethToken),
+            token1: address(btcToken),
+            poolFee: 3000,
+            aiOracle: address(aiOracle)
+        });
+        blueChipVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params7));
         
         // Strategy 8: Delta Neutral LP (SEI-USDC with perpetual hedge)
-        deltaNeutralVault = StrategyVault(vaultFactory.createVault(
-            address(seiToken),
-            address(usdcToken),
-            3000,
-            60,
-            "Delta Neutral LP Vault",
-            "delta_neutral"
-        ));
+        VaultFactory.VaultCreationParams memory params8 = VaultFactory.VaultCreationParams({
+            name: "Delta Neutral LP Vault",
+            symbol: "DNLP",
+            token0: address(seiToken),
+            token1: address(usdcToken),
+            poolFee: 3000,
+            aiOracle: address(aiOracle)
+        });
+        deltaNeutralVault = StrategyVault(vaultFactory.createVault{value: 0.1 ether}(params8));
         
         emit DevnetMockSetup("Concentrated Liquidity Vault", address(concentratedLiquidityVault));
         emit DevnetMockSetup("Yield Farming Vault", address(yieldFarmingVault));
@@ -190,16 +198,9 @@ contract DevnetMocks is Test {
     }
     
     function _setupMockMarketData() internal {
-        // Set up realistic price feeds for AI Oracle
-        // Prices in USD with 8 decimal precision
-        
-        aiOracle.updatePrice(address(seiToken), 85000000); // $0.85
-        aiOracle.updatePrice(address(usdcToken), 100000000); // $1.00
-        aiOracle.updatePrice(address(usdtToken), 100000000); // $1.00
-        aiOracle.updatePrice(address(ethToken), 385000000000); // $3,850.00
-        aiOracle.updatePrice(address(btcToken), 9500000000000); // $95,000.00
-        aiOracle.updatePrice(address(atomToken), 1250000000); // $12.50
-        aiOracle.updatePrice(address(daiToken), 100000000); // $1.00
+        // Register AI models for mock testing
+        aiOracle.registerAIModel("liquidity-optimizer-v1.0", aiSigner);
+        aiOracle.registerAIModel("risk-manager-v1.0", aiSigner);
     }
     
     // Helper functions for testing
@@ -259,7 +260,7 @@ contract DevnetMocks is Test {
         if (vault == address(0x7890123456789012345678901234567890123456)) return 8500000; // Stable
         if (vault == address(0x8901234567890123456789012345678901234567)) return 1800000; // Hypergrowth
         if (vault == address(0x9012345678901234567890123456789012345678)) return 5200000; // Blue Chip
-        if (vault == address(0xa123456789012345678901234567890123456789)) return 3200000; // Delta Neutral
+        if (vault == address(0xA123456789012345678901234567890123456789)) return 3200000; // Delta Neutral
         
         return 1000000; // Default
     }

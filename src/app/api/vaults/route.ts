@@ -233,11 +233,11 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateVaultSchema.parse(body)
     
     // SEI-specific validation
-    if (validatedData.chainId !== 13289) {
+    if (validatedData.chainId !== 713715) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Invalid chain ID - must be SEI devnet (13289)' 
+          error: 'Invalid chain ID - must be SEI devnet (713715)' 
         },
         { status: 400 }
       )
