@@ -83,6 +83,25 @@ class RebalanceResponse(BaseModel):
     risk_assessment: str
     gas_cost_estimate: float
 
+class DeltaNeutralRequest(BaseModel):
+    pair: str
+    position_size: float
+    current_price: float
+    volatility: float
+    market_conditions: Optional[Dict[str, Any]] = None
+
+class DeltaNeutralResponse(BaseModel):
+    pair: str
+    hedge_ratio: float
+    lower_tick: int
+    upper_tick: int
+    lower_price: float
+    upper_price: float
+    expected_neutrality: float
+    expected_apr: float
+    revenue_breakdown: Dict[str, float]
+    reasoning: str
+
 # API Endpoints
 
 @app.get("/health")
@@ -270,6 +289,96 @@ async def analyze_rebalance_need(request: RebalanceRecommendationRequest):
         logger.error(f"Error in rebalance analysis: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Rebalance analysis failed: {str(e)}")
 
+@app.post("/predict/delta-neutral-optimization", response_model=DeltaNeutralResponse)
+async def predict_delta_neutral_optimization(request: DeltaNeutralRequest):
+    """
+    Optimize delta neutral strategy combining LP positions with perpetual hedging
+    """
+    try:
+        logger.info(f"Optimizing delta neutral strategy for {request.pair}")
+        
+        # Validate input parameters
+        if request.position_size <= 0:
+            raise HTTPException(status_code=400, detail="Position size must be positive")
+        if request.current_price <= 0:
+            raise HTTPException(status_code=400, detail="Current price must be positive")
+        if request.volatility < 0 or request.volatility > 2.0:
+            raise HTTPException(status_code=422, detail="Volatility must be between 0 and 2.0")
+        
+        # Calculate optimal hedge ratio for delta neutrality
+        # Base hedge ratio starts at 0.95 (95% hedged)
+        base_hedge_ratio = 0.95
+        
+        # Adjust based on volatility - higher vol needs higher hedge ratio
+        volatility_adjustment = min(request.volatility * 0.05, 0.04)
+        hedge_ratio = min(base_hedge_ratio + volatility_adjustment, 0.98)
+        
+        # Calculate LP range for delta neutral strategy
+        # Tighter ranges for delta neutral to maximize fee generation
+        volatility_factor = min(request.volatility, 1.0)
+        price_buffer = request.current_price * volatility_factor * 0.08  # Tighter than regular LP
+        
+        # SEI-specific tick spacing optimization
+        tick_spacing = 60
+        current_tick = int(request.current_price * 10000)
+        
+        optimal_range_width = int(price_buffer * 10000 / tick_spacing) * tick_spacing
+        
+        lower_tick = current_tick - optimal_range_width // 2
+        upper_tick = current_tick + optimal_range_width // 2
+        
+        # Align to tick spacing
+        lower_tick = (lower_tick // tick_spacing) * tick_spacing
+        upper_tick = (upper_tick // tick_spacing) * tick_spacing
+        
+        # Calculate expected neutrality (how close to delta neutral)
+        expected_neutrality = hedge_ratio * 0.98  # Small margin for imperfection
+        
+        # Calculate expected APR from multiple revenue sources
+        market_conditions = request.market_conditions or {}
+        funding_rate = market_conditions.get('funding_rate', 0.01)
+        liquidity_depth = market_conditions.get('liquidity_depth', 1000000)
+        
+        # Revenue breakdown
+        lp_fees = request.position_size * 0.08  # 8% from LP fees (tighter range = higher fees)
+        funding_rates = request.position_size * funding_rate * 365  # Annualized funding
+        volatility_capture = request.position_size * request.volatility * 0.12  # Rebalancing alpha
+        
+        total_revenue = lp_fees + funding_rates + volatility_capture
+        expected_apr = total_revenue / request.position_size
+        
+        # Ensure minimum APR for delta neutral strategy
+        expected_apr = max(expected_apr, 0.12)
+        
+        revenue_breakdown = {
+            'lp_fees': lp_fees,
+            'funding_rates': funding_rates,
+            'volatility_capture': volatility_capture
+        }
+        
+        reasoning = f"Delta neutral strategy with {hedge_ratio:.1%} hedge ratio for {request.pair}. " \
+                   f"Optimized for {expected_neutrality:.1%} market neutrality while capturing " \
+                   f"{expected_apr:.1%} APR from LP fees, funding rates, and volatility."
+        
+        return DeltaNeutralResponse(
+            pair=request.pair,
+            hedge_ratio=hedge_ratio,
+            lower_tick=lower_tick,
+            upper_tick=upper_tick,
+            lower_price=lower_tick / 10000,
+            upper_price=upper_tick / 10000,
+            expected_neutrality=expected_neutrality,
+            expected_apr=expected_apr,
+            revenue_breakdown=revenue_breakdown,
+            reasoning=reasoning
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in delta neutral optimization: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Delta neutral optimization failed: {str(e)}")
+
 @app.post("/eliza/webhook")
 async def eliza_webhook(data: Dict[str, Any]):
     """
@@ -322,7 +431,8 @@ async def get_models_status():
             "optimal_range_prediction",
             "market_movement_prediction", 
             "rebalance_analysis",
-            "risk_assessment"
+            "risk_assessment",
+            "delta_neutral_optimization"
         ],
         "timestamp": datetime.utcnow().isoformat()
     }

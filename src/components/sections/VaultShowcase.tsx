@@ -1,8 +1,6 @@
 'use client'
 
 import VaultCard from '@/components/VaultCard';
-import { useState } from 'react';
-import DepositModal from '@/components/DepositModal';
 
 const vaultData = [
     {
@@ -32,19 +30,6 @@ const vaultData = [
 ];
 
 export default function VaultShowcase() {
-    const [showDepositModal, setShowDepositModal] = useState(false);
-    const [selectedVault, setSelectedVault] = useState(null);
-
-    const handleDeposit = (vault) => {
-        setSelectedVault(vault);
-        setShowDepositModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setShowDepositModal(false);
-        setSelectedVault(null);
-    };
-
     return (
         <section className="py-32 relative">
             <div className="container mx-auto px-4">
@@ -126,16 +111,11 @@ export default function VaultShowcase() {
                                 padding: '0'
                             }}
                         >
-                            <VaultCard vault={vault} index={index} onDeposit={() => handleDeposit(vault)} />
+                            <VaultCard vault={vault} index={index} />
                         </div>
                     ))}
                 </div>
             </div>
-            <DepositModal
-                vault={selectedVault}
-                isOpen={showDepositModal}
-                onClose={handleCloseModal}
-            />
         </section>
     );
 }

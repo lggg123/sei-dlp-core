@@ -12,7 +12,7 @@ const RebalanceRequestSchema = z.object({
     maxGasPrice: z.number().positive().optional(),
     deadline: z.number().int().positive().optional() // Unix timestamp
   }).optional(),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)')
+  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)')
 })
 
 /**

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import StatsCardGraphic from '@/components/StatsCardGraphic';
 import Navigation from '@/components/Navigation';
 import AIChat from '@/components/AIChat';
 import DepositModal from '@/components/DepositModal';
@@ -81,9 +82,16 @@ export default function VaultsPage() {
   // Handler functions for vault actions
   const handleDeposit = async (vault: any) => {
     try {
+      console.log('[Deposit] handleDeposit called', { vault });
       setSelectedVault(vault)
       setDepositVault(vault)
       setShowDepositModal(true)
+      setTimeout(() => {
+        console.log('[Deposit] Modal state after open', {
+          showDepositModal: true,
+          depositVault: vault
+        });
+      }, 100);
     } catch (error) {
       console.error('Deposit error:', error)
     }
@@ -291,10 +299,11 @@ export default function VaultsPage() {
               </p>
               
               {/* Live Stats */}
-              <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                {[
-                  { 
-                    label: 'Total TVL', 
+              <div className="max-w-5xl mx-auto" style={{padding: '0 1rem'}}>
+                <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-8" style={{gap: '2rem'}}>
+                  {[
+                    { 
+                      label: 'Total TVL', 
                     value: isLoading ? '...' : formatCurrency(totalTVL), 
                     change: '+12.4%' 
                   },
@@ -309,10 +318,44 @@ export default function VaultsPage() {
                     change: '+3.2%' 
                   },
                   { label: 'AI Uptime', value: '99.97%', change: '+0.02%' },
-                ].map((stat, index) => (
-                  <Card key={index} className="glass-card border-primary/20 hover:border-primary/50 transition-all duration-300 h-20 flex items-center justify-center group">
-                    <CardContent className="p-3 text-center flex flex-col justify-center h-full relative z-10">
-                      <div className="text-lg font-bold text-white leading-tight" style={{
+                  ].map((stat, index) => (
+                  <Card 
+                    key={index} 
+                    className="glass-card border-primary/20 hover:border-primary/50 transition-all duration-300 flex items-center justify-center group stats-3d-card"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.10)',
+                      border: '1px solid rgba(255, 255, 255, 0.18)',
+                      minHeight: '130px',
+                      maxWidth: '220px',
+                      margin: '0 auto',
+                      boxShadow: '0 8px 32px 0 rgba(0,245,212,0.10), 0 1.5px 8px 0 rgba(155,93,229,0.10)',
+                      transform: 'perspective(600px) rotateX(6deg) scale(1)',
+                      transition: 'box-shadow 0.3s, transform 0.3s',
+                      position: 'relative',
+                      overflow: 'visible',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'perspective(600px) rotateX(0deg) scale(1.04)';
+                      e.currentTarget.style.boxShadow = '0 16px 48px 0 rgba(0,245,212,0.18), 0 4px 24px 0 rgba(155,93,229,0.18)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'perspective(600px) rotateX(6deg) scale(1)';
+                      e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0,245,212,0.10), 0 1.5px 8px 0 rgba(155,93,229,0.10)';
+                    }}
+                  >
+                    {/* Animated Glow */}
+                    <div className="absolute -inset-1 rounded-2xl pointer-events-none animate-pulse-glow" style={{
+                      background: 'radial-gradient(ellipse at center, rgba(0,245,212,0.10) 0%, rgba(155,93,229,0.08) 60%, transparent 100%)',
+                      zIndex: 1,
+                      filter: 'blur(8px)',
+                    }} />
+                    <CardContent className="p-4 text-center flex flex-col justify-center h-full relative z-10">
+                      <StatsCardGraphic 
+                        type={index === 0 ? 'tvl' : index === 1 ? 'vaults' : index === 2 ? 'apy' : 'ai'} 
+                        className="mx-auto mb-2" 
+                        style={{ width: 40, height: 40 }} 
+                      />
+                      <div className="text-xl font-bold text-white leading-tight" style={{
                         textShadow: '0 0 15px hsl(var(--primary)), 0 4px 8px rgba(0,0,0,0.8)'
                       }}>{stat.value}</div>
                       <div className="text-xs text-gray-200 font-medium" style={{
@@ -323,7 +366,8 @@ export default function VaultsPage() {
                       }}>{stat.change}</div>
                     </CardContent>
                   </Card>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -351,14 +395,15 @@ export default function VaultsPage() {
             {!isLoading && !error && (
               <div 
                 ref={vaultCardsRef} 
-                className="grid gap-6 max-w-7xl mx-auto"
+                className="grid gap-8 md:gap-12 max-w-7xl mx-auto"
                 style={{ 
                   gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 340px))',
                   justifyContent: 'center',
-                  gridAutoRows: '1fr'
+                  gridAutoRows: '1fr',
+                  gap: '2rem'
                 }}
               >
-                {filteredVaults.map((vault) => {
+                {filteredVaults && filteredVaults.map((vault) => {
                   const vaultColor = getVaultColor(vault.strategy)
                   const riskLevel = getRiskLevel(vault.apy)
                   
@@ -366,10 +411,7 @@ export default function VaultsPage() {
                 <Card 
                   key={vault.address}
                   className="vault-solid-card transition-all duration-500 cursor-pointer group relative overflow-hidden"
-                  onClick={() => {
-                    setSelectedVault(vault)
-                    router.push(`/vault?address=${vault.address}`)
-                  }}
+                  // Remove card click navigation to analytics, only use explicit Analytics button
                 >
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start mb-2">
@@ -377,15 +419,16 @@ export default function VaultsPage() {
                         <CardTitle className="text-2xl font-black mb-1 text-vault-primary">
                           {vault.name}
                         </CardTitle>
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-3" style={{gap: '1rem'}}>
                           <div className="text-3xl font-black text-enhanced-glow" style={{ color: vaultColor }}>
                             {(vault.apy * 100).toFixed(1)}% APY
                           </div>
-                          <div className={`px-3 py-1 rounded-full text-xs font-bold border drop-shadow-sm ${
-                            riskLevel === 'Low' ? 'bg-green-500/30 text-green-300 border-green-500/50' :
-                            riskLevel === 'Medium' ? 'bg-yellow-500/30 text-yellow-300 border-yellow-500/50' :
-                            'bg-red-500/30 text-red-300 border-red-500/50'
-                          }`}>
+                          <div className={`px-4 py-2 rounded-full text-xs font-bold border-2 drop-shadow-sm`} style={{
+                            backgroundColor: riskLevel === 'Low' ? 'rgba(16, 185, 129, 0.2)' : riskLevel === 'Medium' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(239, 68, 68, 0.3)',
+                            color: riskLevel === 'Low' ? '#10b981' : riskLevel === 'Medium' ? '#f59e0b' : '#ef4444',
+                            borderColor: riskLevel === 'Low' ? '#10b981' : riskLevel === 'Medium' ? '#f59e0b' : '#ef4444',
+                            marginLeft: '0'
+                          }}>
                             {riskLevel} Risk
                           </div>
                         </div>
@@ -403,7 +446,7 @@ export default function VaultsPage() {
                     </p>
                     
                     {/* Advanced Metrics */}
-                    <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-2 gap-3 mb-4 mt-8">
                       <div className="space-y-1.5">
                         <div className="flex justify-between">
                           <span className="text-xs text-muted-foreground font-medium">Performance</span>
@@ -439,14 +482,10 @@ export default function VaultsPage() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3 mt-6">
+                    <div className="flex gap-3 mt-6" style={{gap: '1rem'}}>
                       <Button 
                         className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          // Handle deposit functionality
-                          handleDeposit(vault)
-                        }}
+                        onClick={() => handleDeposit(vault)}
                         disabled={depositMutation.isPending}
                       >
                         {depositMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Deposit'}
@@ -454,11 +493,7 @@ export default function VaultsPage() {
                       <Button 
                         variant="outline" 
                         className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          // Navigate to vault analytics page
-                          handleViewAnalytics(vault)
-                        }}
+                        onClick={() => handleViewAnalytics(vault)}
                       >
                         Analytics
                       </Button>
@@ -502,8 +537,15 @@ export default function VaultsPage() {
         vault={depositVault}
         isOpen={showDepositModal}
         onClose={() => {
+          console.log('[DepositModal] onClose called');
           setShowDepositModal(false)
           setDepositVault(null)
+          setTimeout(() => {
+            console.log('[DepositModal] Modal state after close', {
+              showDepositModal: false,
+              depositVault: null
+            });
+          }, 100);
         }}
         onSuccess={handleDepositSuccess}
       />

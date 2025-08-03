@@ -11,7 +11,7 @@ const PredictionRequestSchema = z.object({
     liquidity: z.number().positive()
   }),
   timeframe: z.enum(['1h', '4h', '1d', '7d', '30d']).default('1d'),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)')
+  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)')
 })
 
 /**
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: prediction,
       timestamp: new Date().toISOString(),
-      chainId: 713715
+      chainId: 13289
     })
 
   } catch (error) {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to generate AI prediction',
-        chainId: 713715
+        chainId: 13289
       },
       { status: 500 }
     )

@@ -30,17 +30,17 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   };
 
   return (
-    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`} style={{ position: 'relative' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ position: 'relative' }}>
+    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`} style={{ position: 'relative', marginTop: '2.5rem' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ position: 'relative', marginTop: '0.5rem' }}>
         <div className="flex justify-between items-center h-16">
           
           {/* Logo and Brand */}
           <div className="flex items-center space-x-3">
             <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-              <Logo variant="icon" size={32} className="flex-shrink-0" />
+              <Logo variant="icon" size={48} className="flex-shrink-0" />
               <div className="hidden sm:block">
-                <div className="font-bold text-lg text-foreground">SEI DLP</div>
-                <div className="text-xs text-muted-foreground -mt-1">Dynamic Liquidity Protocol</div>
+                <div className="font-bold text-2xl text-foreground">SEI DLP</div>
+                <div className="text-sm text-muted-foreground -mt-1">Dynamic Liquidity Protocol</div>
               </div>
             </Link>
           </div>

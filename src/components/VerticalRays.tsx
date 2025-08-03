@@ -1,13 +1,41 @@
+"use client"
+
 import React from 'react';
 
+import { useEffect, useRef } from 'react';
+
 export default function VerticalRays({ className = '', style = {} }) {
+  const raysRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let frame: number;
+    let t = 0;
+    const animate = () => {
+      t += 0.008;
+      if (raysRef.current) {
+        const rays = raysRef.current.querySelectorAll('rect');
+        rays.forEach((ray, i) => {
+          const phase = t + i * 0.5;
+          const offset = Math.sin(phase) * 18;
+          (ray as SVGRectElement).setAttribute('x', String(180 + i * 180 + offset));
+          (ray as SVGRectElement).setAttribute('opacity', String(0.5 + 0.2 * Math.sin(phase)));
+        });
+      }
+      frame = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <div
+      ref={raysRef}
       className={`pointer-events-none absolute left-0 right-0 mx-auto z-0 ${className}`}
       style={{
         top: 0,
         width: '100%',
         height: '180px',
+        marginTop: 0,
         ...style,
       }}
     >

@@ -3,16 +3,22 @@ import { NextRequest } from 'next/server'
 
 describe('/api/vaults', () => {
   describe('GET', () => {
-    it('should return list of vaults', async () => {
+    it('should return all 8 strategies including delta neutral', async () => {
       const request = new NextRequest('http://localhost:3000/api/vaults')
       const response = await GET(request)
       const data = await response.json()
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(Array.isArray(data.data)).toBe(true)
-      expect(data.data.length).toBeGreaterThan(0)
+      expect(data.data).toHaveLength(8) // 7 existing + 1 delta neutral
       expect(data.chainId).toBe(713715)
+
+      // Verify delta neutral vault exists
+      const deltaNeutralVault = data.data.find((vault: any) => vault.strategy === 'delta_neutral')
+      expect(deltaNeutralVault).toBeDefined()
+      expect(deltaNeutralVault.name).toBe('Delta Neutral LP Vault')
+      expect(deltaNeutralVault.active).toBe(true)
+      expect(deltaNeutralVault.performance.sharpeRatio).toBeGreaterThan(1.5)
     })
 
     it('should filter vaults by strategy', async () => {
@@ -35,6 +41,38 @@ describe('/api/vaults', () => {
       expect(data.data.every((vault: { active: boolean }) => vault.active === true)).toBe(true)
     })
 
+    it('can filter by delta neutral strategy', async () => {
+      const request = new NextRequest('http://localhost:3000/api/vaults?strategy=delta_neutral')
+      const response = await GET(request)
+      const data = await response.json()
+
+      expect(response.status).toBe(200)
+      expect(data.data).toHaveLength(1)
+      expect(data.data[0].strategy).toBe('delta_neutral')
+    })
+
+    it('returns correct strategy types', async () => {
+      const request = new NextRequest('http://localhost:3000/api/vaults')
+      const response = await GET(request)
+      const data = await response.json()
+
+      const strategies = data.data.map((vault: any) => vault.strategy)
+      const expectedStrategies = [
+        'concentrated_liquidity',
+        'yield_farming', 
+        'arbitrage',
+        'hedge',
+        'stable_max',
+        'sei_hypergrowth',
+        'blue_chip',
+        'delta_neutral'
+      ]
+
+      expectedStrategies.forEach(strategy => {
+        expect(strategies).toContain(strategy)
+      })
+    })
+
     it('should return vault with correct structure', async () => {
       const request = new NextRequest('http://localhost:3000/api/vaults')
       const response = await GET(request)
@@ -44,7 +82,7 @@ describe('/api/vaults', () => {
       expect(vault).toMatchObject({
         address: expect.stringMatching(/^0x[a-fA-F0-9]{40}$/),
         name: expect.any(String),
-        strategy: expect.stringMatching(/^(concentrated_liquidity|yield_farming|arbitrage|hedge)$/),
+        strategy: expect.stringMatching(/^(concentrated_liquidity|yield_farming|arbitrage|hedge|stable_max|sei_hypergrowth|blue_chip|delta_neutral)$/),
         tokenA: expect.any(String),
         tokenB: expect.any(String),
         fee: expect.any(Number),

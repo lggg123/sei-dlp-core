@@ -1,11 +1,14 @@
 "use client";
 
+"use client";
+
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import gsap from 'gsap';
 import styles from './VaultCard.module.css';
+import Link from 'next/link';
 
 interface VaultData {
   name: string;
@@ -19,10 +22,9 @@ interface VaultData {
 interface VaultCardProps {
   vault: VaultData;
   index: number;
-  onDeposit?: () => void;
 }
 
-export default function VaultCard({ vault, index, onDeposit }: VaultCardProps) {
+export default function VaultCard({ vault, index }: VaultCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const apyRef = useRef<HTMLSpanElement>(null);
   const [displayApy, setDisplayApy] = useState(0);
@@ -159,15 +161,17 @@ export default function VaultCard({ vault, index, onDeposit }: VaultCardProps) {
           
           {/* Action Button (Landing Page) */}
           <div className={styles.buttonRow}>
-            <Button 
-              variant="outline" 
-              className={styles.analyticsButton}
-              style={{ position: 'relative', overflow: 'hidden' }}
-            >
-              <span className="animate-pulse text-primary font-semibold tracking-wide" style={{ display: 'inline-block' }}>
-                View
-              </span>
-            </Button>
+            <Link href="/vault" passHref>
+              <Button 
+                variant="outline" 
+                className={styles.analyticsButton}
+                style={{ position: 'relative', overflow: 'hidden' }}
+              >
+                <span className="animate-pulse text-primary font-semibold tracking-wide" style={{ display: 'inline-block' }}>
+                  View
+                </span>
+              </Button>
+            </Link>
           </div>
         </div>
       </CardContent>

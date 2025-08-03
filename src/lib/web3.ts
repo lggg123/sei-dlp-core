@@ -30,11 +30,26 @@ export const seiTestnet = defineChain({
   testnet: true
 })
 
+// SEI Devnet
+export const seiDevnet = defineChain({
+  id: 13289,
+  name: 'SEI Devnet',
+  nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://evm-rpc-devnet.sei-apis.com'] }
+  },
+  blockExplorers: {
+    default: { name: 'SeiTrace Devnet', url: 'https://seitrace.com/?chain=devnet' }
+  },
+  testnet: true
+})
+
 export const config = getDefaultConfig({
   appName: 'SEI DLP',
   projectId: process.env.NEXT_PUBLIC_WC_ID || 'dummy-project-id',
-  chains: [seiMainnet, seiTestnet],
+  chains: [seiDevnet, seiMainnet, seiTestnet],
   transports: {
+    [seiDevnet.id]: http(),
     [seiMainnet.id]: http(),
     [seiTestnet.id]: http()
   },

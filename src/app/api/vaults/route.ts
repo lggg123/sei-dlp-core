@@ -5,12 +5,12 @@ import { z } from 'zod'
 const VaultSchema = z.object({
   address: z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid SEI address'),
   name: z.string().min(1, 'Vault name required'),
-  strategy: z.enum(['concentrated_liquidity', 'yield_farming', 'arbitrage', 'hedge']),
+  strategy: z.enum(['concentrated_liquidity', 'yield_farming', 'arbitrage', 'hedge', 'stable_max', 'sei_hypergrowth', 'blue_chip', 'delta_neutral']),
   tokenA: z.string(),
   tokenB: z.string(),
   fee: z.number().min(0),
   tickSpacing: z.number().min(1),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)')
+  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)')
 })
 
 const CreateVaultSchema = VaultSchema.omit({ address: true })
@@ -112,41 +112,84 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0x5678901234567890123456789012345678901234',
-        name: 'OSMO-ATOM Concentrated Range',
-        strategy: 'concentrated_liquidity',
-        tokenA: 'OSMO',
-        tokenB: 'ATOM',
-        fee: 0.003,
-        tickSpacing: 60,
-        tvl: 650000,
-        apy: 0.234,
+        address: '0x7890123456789012345678901234567890123456',
+        name: 'Stable Max Yield Vault',
+        strategy: 'stable_max',
+        tokenA: 'USDC',
+        tokenB: 'DAI',
+        fee: 0.0005,
+        tickSpacing: 1,
+        tvl: 8500000,
+        apy: 0.045,
         chainId: 713715,
         active: true,
         performance: {
-          totalReturn: 0.198,
-          sharpeRatio: 1.67,
-          maxDrawdown: 0.041,
-          winRate: 0.74
+          totalReturn: 0.022,
+          sharpeRatio: 2.34,
+          maxDrawdown: 0.003,
+          winRate: 0.95
         }
       },
       {
-        address: '0x6789012345678901234567890123456789012345',
-        name: 'USDC-USDT Stable Yield',
-        strategy: 'yield_farming',
-        tokenA: 'USDC',
-        tokenB: 'USDT',
-        fee: 0.001,
-        tickSpacing: 1,
-        tvl: 5200000,
-        apy: 0.067,
+        address: '0x8901234567890123456789012345678901234567',
+        name: 'SEI Hypergrowth Vault',
+        strategy: 'sei_hypergrowth',
+        tokenA: 'SEI',
+        tokenB: 'ETH',
+        fee: 0.01,
+        tickSpacing: 200,
+        tvl: 1800000,
+        apy: 0.420,
         chainId: 713715,
         active: true,
         performance: {
-          totalReturn: 0.034,
-          sharpeRatio: 1.89,
+          totalReturn: 0.324,
+          sharpeRatio: 1.12,
+          maxDrawdown: 0.187,
+          winRate: 0.63
+        }
+      },
+      {
+        address: '0x9012345678901234567890123456789012345678',
+        name: 'Blue Chip DeFi Vault',
+        strategy: 'blue_chip',
+        tokenA: 'BTC',
+        tokenB: 'ETH',
+        fee: 0.003,
+        tickSpacing: 60,
+        tvl: 4200000,
+        apy: 0.156,
+        chainId: 713715,
+        active: true,
+        performance: {
+          totalReturn: 0.098,
+          sharpeRatio: 1.78,
+          maxDrawdown: 0.034,
+          winRate: 0.76
+        }
+      },
+      {
+        address: '0xa123456789012345678901234567890123456789',
+        name: 'Delta Neutral LP Vault',
+        strategy: 'delta_neutral',
+        tokenA: 'ETH',
+        tokenB: 'USDC',
+        fee: 0.003,
+        tickSpacing: 60,
+        tvl: 3100000,
+        apy: 0.155,
+        chainId: 713715,
+        active: true,
+        performance: {
+          totalReturn: 0.098,
+          sharpeRatio: 2.45,
           maxDrawdown: 0.008,
-          winRate: 0.89
+          winRate: 0.92
+        },
+        strategy_details: {
+          hedge_ratio: 0.95,
+          market_neutrality: 0.93,
+          revenue_sources: ['lp_fees', 'funding_rates', 'volatility_capture']
         }
       }
     ]

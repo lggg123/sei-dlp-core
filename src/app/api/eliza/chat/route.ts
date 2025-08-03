@@ -10,7 +10,7 @@ const ChatRequestSchema = z.object({
     vaultData: z.any().optional(),
     userPreferences: z.any().optional()
   }).optional(),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)').default(713715)
+  chainId: z.number().refine(id => id === 13289, 'Must be SEI devnet (13289)').default(13289)
 })
 
 /**
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: elizaResponse,
       timestamp: new Date().toISOString(),
-      chainId: 713715
+      chainId: 13289
     })
 
   } catch (error) {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to communicate with AI agent',
-        chainId: 713715
+        chainId: 13289
       },
       { status: 500 }
     )
