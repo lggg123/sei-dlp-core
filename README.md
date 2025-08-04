@@ -24,3 +24,15 @@ git clone --recurse-submodules https://github.com/your-org/sei-dlp-core.git
 
 # Start development
 pnpm install && pnpm dev
+
+# 1. Deploy to SEI Devnet
+  cd contracts
+  forge script script/Deploy.s.sol \
+    --rpc-url https://evm-rpc-devnet.sei-apis.com \
+    --private-key $PRIVATE_KEY \
+    --broadcast --verify
+
+  # 2. Verify deployment
+  forge verify-contract <CONTRACT_ADDRESS> \
+    --chain-id 713715 \
+    --constructor-args $(cast abi-encode "constructor(...)")w

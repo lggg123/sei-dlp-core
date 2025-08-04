@@ -89,7 +89,7 @@ export const seiChains: Record<SeiNetworkName, SeiChain> = {
     },
   },
   "sei-devnet": {
-    id: 713716,
+    id: 713715,
     name: "Sei Devnet",
     network: "sei-devnet",
     nativeCurrency: {

@@ -37,6 +37,10 @@ const getVaultColor = (strategy: string) => {
     yield_farming: '#9b5de5',
     arbitrage: '#ff206e',
     hedge: '#ffa500',
+    stable_max: '#10b981',
+    sei_hypergrowth: '#f59e0b',
+    blue_chip: '#3b82f6',
+    delta_neutral: '#8b5cf6',
   }
   return colors[strategy as keyof typeof colors] || '#00f5d4'
 }
@@ -164,7 +168,10 @@ export default function VaultDetailPage() {
                   <Button 
                     size="lg"
                     className="btn-vault-primary h-14 px-8 text-lg"
-                    onClick={() => setShowDepositModal(true)}
+                    onClick={() => {
+                      console.log('[VaultDetail] Deposit button clicked - setting modal to true');
+                      setShowDepositModal(true);
+                    }}
                     style={{
                       background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
                       color: '#000',
@@ -428,7 +435,15 @@ export default function VaultDetailPage() {
 
       {/* Deposit Modal */}
       {showDepositModal && (
-        <div className="fixed inset-0 z-[45] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+          onClick={(e) => {
+            console.log('[VaultDetailModal] Backdrop clicked');
+            if (e.target === e.currentTarget) {
+              setShowDepositModal(false);
+            }
+          }}
+        >
           <Card className="w-full max-w-md vault-solid-card relative z-[50]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-vault-primary">

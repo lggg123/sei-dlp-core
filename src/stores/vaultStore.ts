@@ -4,7 +4,7 @@ import { devtools, subscribeWithSelector } from 'zustand/middleware'
 export interface VaultData {
   address: string
   name: string
-  strategy: 'concentrated_liquidity' | 'yield_farming' | 'arbitrage' | 'hedge'
+  strategy: 'concentrated_liquidity' | 'yield_farming' | 'arbitrage' | 'hedge' | 'stable_max' | 'sei_hypergrowth' | 'blue_chip' | 'delta_neutral'
   tokenA: string
   tokenB: string
   fee: number

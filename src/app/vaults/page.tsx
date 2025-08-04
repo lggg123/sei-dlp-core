@@ -42,6 +42,10 @@ const getVaultColor = (strategy: string) => {
     yield_farming: '#9b5de5',
     arbitrage: '#ff206e',
     hedge: '#ffa500',
+    stable_max: '#10b981',
+    sei_hypergrowth: '#f59e0b',
+    blue_chip: '#3b82f6',
+    delta_neutral: '#8b5cf6',
   }
   return colors[strategy as keyof typeof colors] || '#00f5d4'
 }
@@ -71,33 +75,62 @@ export default function VaultsPage() {
   const { data: marketData } = useSeiMarketData()
   const depositMutation = useDepositToVault()
   
-  // Debug API data
-  React.useEffect(() => {
-    if (vaultsData) {
-      console.log('[VaultsPage] API vaultsData loaded:', vaultsData.length, 'vaults');
-    }
-  }, [vaultsData]);
-  
   // Combine loading states
   const isLoading = vaultLoading || queryLoading
   const error = vaultError || queryError
   
-  // Get filtered vaults from store
-  const filteredVaults = getFilteredVaults()
-  const totalTVL = getTotalTVL()
+  // Get filtered vaults from store - prefer API data over store
+  const filteredVaults = vaultsData && vaultsData.length > 0 ? vaultsData : getFilteredVaults()
+  
+  // Debug API data
+  React.useEffect(() => {
+    if (vaultsData) {
+      console.log('[VaultsPage] API vaultsData loaded:', vaultsData.length, 'vaults');
+      console.log('[VaultsPage] First vault example:', vaultsData[0]);
+    }
+  }, [vaultsData]);
+  
+  // Debug store data
+  React.useEffect(() => {
+    console.log('[VaultsPage] Store filteredVaults:', filteredVaults.length, 'vaults');
+    console.log('[VaultsPage] Store state:', { 
+      selectedVault: selectedVault?.name || 'NONE',
+      depositVault: depositVault?.name || 'NONE',
+      showDepositModal 
+    });
+  }, [filteredVaults, selectedVault, depositVault, showDepositModal]);
+  const totalTVL = vaultsData && vaultsData.length > 0 ? 
+    vaultsData.reduce((total, vault) => total + vault.tvl, 0) : 
+    getTotalTVL()
   
   // Handler functions for vault actions
   const handleDeposit = async (vault: VaultData) => {
     try {
-      console.log('[Deposit] handleDeposit called', { vault });
+      console.log('[Deposit] handleDeposit called', { 
+        vault: vault?.name || 'VAULT IS NULL/UNDEFINED',
+        vaultExists: !!vault,
+        vaultKeys: vault ? Object.keys(vault) : 'no keys',
+        vaultStrategy: vault?.strategy,
+        vaultAddress: vault?.address
+      });
+      
+      if (!vault) {
+        console.error('[Deposit] ERROR: Vault is null or undefined!');
+        return;
+      }
+      
+      // Set both store state and local state
       setSelectedVault(vault)
       setDepositVault(vault)
       setShowDepositModal(true)
+      
+      // Debug the state immediately
+      console.log('[Deposit] State set - showModal:', true, 'vault:', vault.name);
+      console.log('[Deposit] Full vault data:', JSON.stringify(vault, null, 2));
+      
+      // Force a re-render to check if the state persists
       setTimeout(() => {
-        console.log('[Deposit] Modal state after open', {
-          showDepositModal: true,
-          depositVault: vault
-        });
+        console.log('[Deposit] Modal state after 100ms - checking current state');
       }, 100);
     } catch (error) {
       console.error('Deposit error:', error)
@@ -492,19 +525,38 @@ export default function VaultsPage() {
                     {/* Action Buttons */}
                     <div className="flex gap-3 mt-6" style={{gap: '1rem'}}>
                       <Button 
-                        className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95"
-                        onClick={() => {
+                        className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20"
+                        onClick={(e) => {
+                          console.log('[BUTTON CLICK] Deposit button clicked - IMMEDIATE');
+                          e.preventDefault();
+                          e.stopPropagation();
                           console.log('[VaultsPage] Deposit button clicked for vault:', vault.name);
+                          console.log('[VaultsPage] Event details:', { target: e.target, currentTarget: e.currentTarget });
+                          console.log('[VaultsPage] Button disabled state:', depositMutation.isPending);
                           handleDeposit(vault);
                         }}
+                        onMouseDown={() => console.log('[VaultsPage] Deposit button mouse down')}
+                        onMouseUp={() => console.log('[VaultsPage] Deposit button mouse up')}
+                        onMouseEnter={() => console.log('[VaultsPage] Deposit button mouse enter')}
+                        onMouseLeave={() => console.log('[VaultsPage] Deposit button mouse leave')}
                         disabled={depositMutation.isPending}
+                        style={{
+                          pointerEvents: 'auto',
+                          cursor: 'pointer',
+                          border: '2px solid red' // Debug border to see button boundaries
+                        }}
                       >
                         {depositMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Deposit'}
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95"
-                        onClick={() => handleViewAnalytics(vault)}
+                        className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95 relative z-20"
+                        onClick={(e) => { 
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('[VaultsPage] Analytics button clicked for vault:', vault.name);
+                          handleViewAnalytics(vault);
+                        }}
                       >
                         Analytics
                       </Button>
