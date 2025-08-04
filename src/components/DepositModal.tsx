@@ -63,7 +63,24 @@ const getVaultColor = (strategy: string) => {
 
 export default function DepositModal({ vault, isOpen, onClose, onSuccess }: DepositModalProps) {
   const [depositAmount, setDepositAmount] = useState('');
-  const depositMutation = useDepositToVault();
+
+  const mutationOptions = React.useMemo(() => ({
+    onSuccess: (data: any) => {
+      console.log('[DepositModal] Deposit mutation successful:', data);
+      setDepositAmount('');
+      if (onSuccess && (data as { txHash?: string })?.txHash) {
+        onSuccess((data as { txHash: string }).txHash);
+      }
+      onClose(); // Close modal on success
+    },
+    onError: (error: any) => {
+      console.error('[DepositModal] Deposit mutation error:', error);
+      // Here you could set an error state to show in the UI
+      // For now, we just log it. The modal remains open for the user to retry.
+    },
+  }), [onSuccess, onClose]);
+
+  const depositMutation = useDepositToVault(mutationOptions);
 
   // Debug all props on every render
   console.log('[DepositModal] Component render with props:', {
@@ -102,26 +119,18 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const riskLevel = getRiskLevel(vault.apy);
   const isValidAmount = depositAmount && parseFloat(depositAmount) > 0;
 
-  const handleDeposit = async () => {
-    if (!isValidAmount) return;
-    
-    try {
-      console.log('[DepositModal] Starting deposit:', { amount: depositAmount, vault: vault.address });
-      
-      const result = await depositMutation.mutateAsync({
-        vaultAddress: vault.address,
-        amount: depositAmount
-      });
-      
-      setDepositAmount('');
-      onClose();
-      
-      if (onSuccess && (result as { txHash?: string })?.txHash) {
-        onSuccess((result as { txHash: string }).txHash);
-      }
-    } catch (error) {
-      console.error('Deposit error:', error);
-    }
+  const handleDeposit = () => {
+    if (!isValidAmount || !vault) return;
+
+    console.log('[DepositModal] Initiating deposit via mutation:', {
+      amount: depositAmount,
+      vaultAddress: vault.address,
+    });
+
+    depositMutation.mutate({
+      vaultAddress: vault.address,
+      amount: depositAmount,
+    });
   };
 
   const handleClose = () => {

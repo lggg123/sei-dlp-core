@@ -230,7 +230,10 @@ export const useUserPositions = (walletAddress: string) => {
 }
 
 // Deposit to vault
-export const useDepositToVault = () => {
+export const useDepositToVault = (options?: {
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
+}) => {
   const queryClient = useQueryClient()
   const addNotification = useAppStore((state) => state.addNotification)
 
@@ -244,7 +247,7 @@ export const useDepositToVault = () => {
         }, 2000)
       })
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.detail(variables.vaultAddress) })
       queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
@@ -254,6 +257,10 @@ export const useDepositToVault = () => {
         title: 'Deposit Successful',
         message: `Successfully deposited ${variables.amount} tokens`,
       })
+
+      if (options?.onSuccess) {
+        options.onSuccess(data)
+      }
     },
     onError: (error) => {
       const errorMessage = error instanceof Error ? error.message : 'Deposit failed'
@@ -262,6 +269,10 @@ export const useDepositToVault = () => {
         title: 'Deposit Failed',
         message: errorMessage,
       })
+
+      if (options?.onError) {
+        options.onError(error)
+      }
     },
   })
 }

@@ -71,60 +71,274 @@ The `DevnetMocks.t.sol` contract deploys realistic mock tokens with appropriate 
 ### 8 DLP Strategy Implementations
 
 #### 1. **Concentrated Liquidity** (SEI-USDC)
-- **Contract**: `concentratedLiquidityVault`
+- **Contract**: `ConcentratedLiquidityVault.sol`
 - **Symbol**: SEIDLP
 - **Pool Fee**: 0.30%
 - **Mock TVL**: $1,250,000
 - **Strategy**: AI-optimized concentrated liquidity ranges
+- **Implementation Logic**:
+  - Utilizes Uniswap V3-style concentrated liquidity positions
+  - AI Oracle determines optimal tickLower and tickUpper ranges
+  - Maximizes fee collection by concentrating liquidity around current price
+  - Dynamic range adjustment based on market volatility
+  - Integration with SEI's parallel execution for gas optimization
+  - Core logic implemented in `_executeConcentratedLiquidityRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 2. **Yield Farming** (ATOM-SEI)
-- **Contract**: `yieldFarmingVault`
+- **Contract**: `YieldFarmingVault.sol`
 - **Symbol**: ASMYLP
 - **Pool Fee**: 0.30%
 - **Mock TVL**: $850,000
 - **Strategy**: Cross-chain yield optimization
+- **Implementation Logic**:
+  - Cross-chain asset management for ATOM/SEI pairs
+  - Yield farming optimization across multiple protocols
+  - AI-driven allocation between liquidity provision and staking rewards
+  - Automated compound farming strategies
+  - IBC integration for cross-chain asset movement
+  - Core logic implemented in `_executeYieldFarmingRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 3. **Arbitrage Bot** (ETH-USDT)
-- **Contract**: `arbitrageVault`
+- **Contract**: `ArbitrageVault.sol`
 - **Symbol**: ETHLP
 - **Pool Fee**: 0.50%
 - **Mock TVL**: $2,100,000
 - **Strategy**: MEV-protected arbitrage execution
+- **Implementation Logic**:
+  - MEV protection mechanisms to prevent front-running
+  - Real-time price discovery across multiple DEXs
+  - AI-driven arbitrage opportunity identification
+  - Fast execution leveraging SEI's 400ms finality
+  - Risk management with stop-loss mechanisms
+  - Core logic implemented in `_executeArbitrageRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 4. **Hedge Strategy** (BTC-SEI)
-- **Contract**: `hedgeVault`
+- **Contract**: `HedgeVault.sol`
 - **Symbol**: BTCLP
 - **Pool Fee**: 1.00%
 - **Mock TVL**: $3,400,000
 - **Strategy**: Delta-hedged position management
+- **Implementation Logic**:
+  - Delta-neutral hedging strategies
+  - Dynamic position sizing based on volatility
+  - Options-like exposure without traditional options
+  - Risk-adjusted returns through sophisticated hedging
+  - Integration with perpetual swap protocols for hedging
+  - Core logic implemented in `_executeHedgeRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 5. **Stable Max Yield** (USDC-DAI)
-- **Contract**: `stableMaxVault`
+- **Contract**: `StableMaxVault.sol`
 - **Symbol**: STBLP
 - **Pool Fee**: 0.05%
 - **Mock TVL**: $8,500,000
 - **Strategy**: Low-risk stablecoin yield farming
+- **Implementation Logic**:
+  - Low-risk stable-to-stable pairs with minimal impermanent loss
+  - High capital efficiency through stable pair farming
+  - Automated yield harvesting and compounding
+  - Integration with lending protocols for additional yield
+  - Risk monitoring for stablecoin depeg events
+  - Core logic implemented in `_executeStableMaxRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 6. **SEI Hypergrowth** (SEI-ETH)
-- **Contract**: `seiHypergrowthVault`
+- **Contract**: `SeiHypergrowthVault.sol`
 - **Symbol**: HGLP
 - **Pool Fee**: 1.00%
 - **Mock TVL**: $1,800,000
 - **Strategy**: High-risk, high-reward SEI exposure
+- **Implementation Logic**:
+  - Concentrated SEI exposure with leverage-like characteristics
+  - Growth-oriented position management
+  - High volatility tolerance with dynamic risk management
+  - SEI ecosystem token integration and optimization
+  - Aggressive rebalancing for maximum SEI upside capture
+  - Core logic implemented in `_executeHypergrowthRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 7. **Blue Chip Diversified** (ETH-BTC)
-- **Contract**: `blueChipVault`
+- **Contract**: `BlueChipVault.sol`
 - **Symbol**: BCLP
 - **Pool Fee**: 0.30%
 - **Mock TVL**: $5,200,000
 - **Strategy**: Large-cap cryptocurrency exposure
+- **Implementation Logic**:
+  - Conservative large-cap crypto allocation
+  - Balanced exposure to major cryptocurrencies
+  - Lower volatility through diversification
+  - Long-term value accumulation strategy
+  - Institutional-grade risk management
+  - Core logic implemented in `_executeBlueChipRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
 
 #### 8. **Delta Neutral LP** (SEI-USDC)
-- **Contract**: `deltaNeutralVault`
+- **Contract**: `DeltaNeutralVault.sol`
 - **Symbol**: DNLP
 - **Pool Fee**: 0.30%
 - **Mock TVL**: $3,200,000
 - **Strategy**: Market-neutral liquidity provision
+- **Implementation Logic**:
+  - Market-neutral strategies with hedged exposure
+  - Liquidity provision with delta-neutral positioning
+  - Fee collection without directional risk
+  - Sophisticated hedging mechanisms
+  - Consistent returns regardless of market direction
+  - Core logic implemented in `_executeDeltaNeutralRebalance()` function
+  - Uses `AIRebalanceParams` for AI-driven position adjustments
+  - Implements signature verification for AI requests
+  - Enforces minimum rebalance intervals (1 hour)
+  - Tracks executed AI requests to prevent replay attacks
+  - Emits `PositionRebalanced` and `AIRebalanceExecuted` events
+  - Maintains current position state with tick ranges
+  - Calculates total value based on token balances
+  - Implements deposit/withdraw with share-based accounting
+  - Uses SEI chain validation and emergency pause mechanisms
+
+## Strategy Contract Architecture
+
+### Common Implementation Patterns
+
+All strategy vaults inherit from `IStrategyVault` interface and implement:
+
+#### Core Functions
+- `deposit()`: Accepts dual-token deposits, calculates proportional shares
+- `withdraw()`: Burns shares, returns proportional token amounts
+- `rebalance()`: AI Oracle-driven position optimization
+- `getVaultInfo()`: Returns vault metadata and current status
+- `getCurrentPosition()`: Returns current liquidity position details
+
+#### Security Features
+- **SEI Chain Validation**: `onlySEI()` modifier ensures devnet operation
+- **AI Oracle Authentication**: `onlyAIOracle()` for rebalancing authorization
+- **Reentrancy Protection**: `nonReentrant` on all state-changing functions
+- **Emergency Pause**: Owner-controlled emergency stop mechanism
+- **Request Replay Protection**: Prevents duplicate AI rebalancing requests
+
+#### AI Integration Points
+- **Signature Verification**: ECDSA signature validation for AI decisions
+- **Request ID Tracking**: Prevents replay attacks on AI rebalancing
+- **Deadline Enforcement**: Time-bound AI rebalancing requests
+- **Gas Optimization**: Leverages SEI's parallel execution capabilities
+
+#### Fee Structure
+- **Management Fee**: 1% (100 basis points) annual management fee
+- **Performance Fee**: 10% (1000 basis points) on profits
+- **Fee Precision**: 10,000 basis points for accurate calculations
+- **SEI Optimization**: Fee structure optimized for SEI's low gas costs
+
+### Frontend Integration Points
+
+#### Vault Discovery
+- Each vault exposes `getVaultInfo()` for frontend metadata
+- Standardized naming convention for strategy identification
+- Token pair information for UI display
+- Active status for vault filtering
+
+#### User Interface Data
+- Total Value Locked (TVL) calculation for display
+- Share price calculation for user portfolio valuation
+- Current position data for advanced users
+- Historical performance tracking (via events)
+
+#### Transaction Interface
+- Standardized deposit/withdraw flows across all strategies
+- Share-based accounting for proportional ownership
+- Gas-optimized operations leveraging SEI features
+- Error handling with descriptive revert messages
+
+### ElizaOS Integration
+
+#### AI Agent Communication
+- Vault contracts accept AI-signed rebalancing instructions
+- Standardized `AIRebalanceParams` structure across all strategies
+- Event emission for AI performance tracking
+- Gas usage reporting for AI cost optimization
+
+#### Decision Engine Interface
+- Each strategy exposes current position data for AI analysis
+- Historical performance data through event logs
+- Risk metrics calculation for AI decision making
+- Market data integration points for strategy optimization
+
+### AI Engine Integration
+
+#### Model Registration
+- AI Oracle manages multiple AI models per strategy
+- Performance tracking and model comparison
+- Signature-based model authentication
+- Model versioning and upgrade capabilities
+
+#### Execution Pipeline
+- AI models analyze current market conditions
+- Generate signed rebalancing instructions
+- Vault contracts validate and execute instructions
+- Performance feedback loop for model improvement
+
+#### Risk Management
+- Minimum rebalance intervals prevent over-trading
+- Emergency pause mechanisms for model failures
+- Position limits and risk controls per strategy
+- Performance monitoring and alerting systems
 
 ## Testing & Development Features
 

@@ -12,7 +12,7 @@ import { MessageCircle, X, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
-import { useVaults, useDepositToVault } from '@/hooks/useVaults';
+import { useVaults } from '@/hooks/useVaults';
 import { useSeiMarketData } from '@/hooks/useMarketData';
 import { useVaultStore, VaultData } from '@/stores/vaultStore';
 // import { useAppStore } from '@/stores/appStore';
@@ -73,7 +73,6 @@ export default function VaultsPage() {
   // API hooks
   const { data: vaultsData, isLoading: queryLoading, error: queryError } = useVaults()
   const { data: marketData } = useSeiMarketData()
-  const depositMutation = useDepositToVault()
   
   // Combine loading states
   const isLoading = vaultLoading || queryLoading
@@ -137,11 +136,23 @@ export default function VaultsPage() {
     }
   }
 
-  const handleDepositSuccess = (txHash: string) => {
+  const handleDepositSuccess = React.useCallback((txHash: string) => {
     // Optional: Show success notification or redirect to transaction
     console.log('Deposit successful:', txHash)
     // Could add toast notification here
-  }
+  }, [])
+
+  const handleCloseModal = React.useCallback(() => {
+    console.log('[DepositModal] onClose called');
+    setShowDepositModal(false)
+    setDepositVault(null)
+    setTimeout(() => {
+      console.log('[DepositModal] Modal state after close', {
+        showDepositModal: false,
+        depositVault: null
+      });
+    }, 100);
+  }, []);
   
   const handleViewAnalytics = (vault: VaultData) => {
     setSelectedVault(vault)
@@ -532,21 +543,19 @@ export default function VaultsPage() {
                           e.stopPropagation();
                           console.log('[VaultsPage] Deposit button clicked for vault:', vault.name);
                           console.log('[VaultsPage] Event details:', { target: e.target, currentTarget: e.currentTarget });
-                          console.log('[VaultsPage] Button disabled state:', depositMutation.isPending);
                           handleDeposit(vault);
                         }}
                         onMouseDown={() => console.log('[VaultsPage] Deposit button mouse down')}
                         onMouseUp={() => console.log('[VaultsPage] Deposit button mouse up')}
                         onMouseEnter={() => console.log('[VaultsPage] Deposit button mouse enter')}
                         onMouseLeave={() => console.log('[VaultsPage] Deposit button mouse leave')}
-                        disabled={depositMutation.isPending}
                         style={{
                           pointerEvents: 'auto',
                           cursor: 'pointer',
                           border: '2px solid red' // Debug border to see button boundaries
                         }}
                       >
-                        {depositMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Deposit'}
+                        Deposit
                       </Button>
                       <Button 
                         variant="outline" 
@@ -599,17 +608,7 @@ export default function VaultsPage() {
       <DepositModal
         vault={depositVault}
         isOpen={showDepositModal}
-        onClose={() => {
-          console.log('[DepositModal] onClose called');
-          setShowDepositModal(false)
-          setDepositVault(null)
-          setTimeout(() => {
-            console.log('[DepositModal] Modal state after close', {
-              showDepositModal: false,
-              depositVault: null
-            });
-          }, 100);
-        }}
+        onClose={handleCloseModal}
         onSuccess={handleDepositSuccess}
       />
 
