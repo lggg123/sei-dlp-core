@@ -38,7 +38,8 @@ contract DeployScript is Script {
         // Verify we're deploying to SEI network
         require(block.chainid == SEI_CHAIN_ID, "Must deploy to SEI network");
         
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        // Hardcoded devnet private key (for SEI devnet only, safe for testing)
+        uint256 deployerPrivateKey = 0x123456789abcdef123456789abcdef123456789abcdef123456789abcdef1234; // example key, replace as needed
         address deployer = vm.addr(deployerPrivateKey);
         
         console.log("Deploying to SEI Network (Chain ID: %s)", block.chainid);
@@ -86,6 +87,23 @@ contract DeployScript is Script {
         blueChipVault = deployBlueChipVault(eth, btc, aiOracle, deployer);
         deltaNeutralVault = deployDeltaNeutralVault(sei, usdc, aiOracle, deployer);
         
+        // === FUND VAULTS TO MATCH FRONTEND MOCKS ===
+        // SEI-USDC Concentrated LP: 1,250,000 TVL (625,000 SEI + 625,000 USDC)
+        MockERC20(sei).transfer(concentratedLiquidityVault, 625_000e18);
+        MockERC20(usdc).transfer(concentratedLiquidityVault, 625_000e18);
+
+        // ATOM-SEI Yield Farm: 850,000 TVL (425,000 ATOM + 425,000 SEI)
+        MockERC20(atom).transfer(yieldFarmingVault, 425_000e18);
+        MockERC20(sei).transfer(yieldFarmingVault, 425_000e18);
+
+        // ETH-USDT Arbitrage Bot: 2,100,000 TVL (1,050,000 ETH + 1,050,000 USDT)
+        MockERC20(eth).transfer(arbitrageVault, 1_050_000e18);
+        MockERC20(usdt).transfer(arbitrageVault, 1_050_000e18);
+
+        // BTC-SEI Hedge Strategy: 3,400,000 TVL (1,700,000 BTC + 1,700,000 SEI)
+        MockERC20(btc).transfer(hedgeVault, 1_700_000e18);
+        MockERC20(sei).transfer(hedgeVault, 1_700_000e18);
+
         vm.stopBroadcast();
         
         // Log deployment summary

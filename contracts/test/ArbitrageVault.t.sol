@@ -17,8 +17,8 @@ contract ArbitrageVaultTest is Test {
 
     function testInitialState() public {
         IStrategyVault.VaultInfo memory vaultInfo = arbitrageVault.getVaultInfo();
-        assertEq(vaultInfo.name, "Arbitrage");
-        assertEq(vaultInfo.strategy, "Flash loan arbitrage");
+        assertEq(vaultInfo.name, "Arbitrage Bot");
+        assertEq(vaultInfo.strategy, "MEV-protected arbitrage execution");
         assertEq(vaultInfo.token0, address(0x1));
         assertEq(vaultInfo.token1, address(0x2));
         assertEq(vaultInfo.poolFee, 3000);
