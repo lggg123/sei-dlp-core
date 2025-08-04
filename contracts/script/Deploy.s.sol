@@ -6,6 +6,14 @@ import "../src/SEIVault.sol";
 import "../src/VaultFactory.sol";
 import "../src/AIOracle.sol";
 import "../src/StrategyVault.sol";
+import "../src/strategies/ConcentratedLiquidityVault.sol";
+import "../src/strategies/YieldFarmingVault.sol";
+import "../src/strategies/ArbitrageVault.sol";
+import "../src/strategies/HedgeVault.sol";
+import "../src/strategies/StableMaxVault.sol";
+import "../src/strategies/SeiHypergrowthVault.sol";
+import "../src/strategies/BlueChipVault.sol";
+import "../src/strategies/DeltaNeutralVault.sol";
 
 contract DeployScript is Script {
     // SEI Network Configuration (devnet chain ID 713715)
@@ -17,6 +25,14 @@ contract DeployScript is Script {
     address public vaultFactory;
     address public aiOracle;
     address public strategyVault;
+    address public concentratedLiquidityVault;
+    address public yieldFarmingVault;
+    address public arbitrageVault;
+    address public hedgeVault;
+    address public stableMaxVault;
+    address public seiHypergrowthVault;
+    address public blueChipVault;
+    address public deltaNeutralVault;
     
     function run() external {
         // Verify we're deploying to SEI network
@@ -58,6 +74,17 @@ contract DeployScript is Script {
         
         // 7. Set up initial vault parameters
         configureVaults();
+
+        // 8. Deploy Strategy Vaults
+        (address sei, address usdc, address usdt, address eth, address btc, address atom, address dai) = deployMockTokens();
+        concentratedLiquidityVault = deployConcentratedLiquidityVault(sei, usdc, aiOracle, deployer);
+        yieldFarmingVault = deployYieldFarmingVault(atom, sei, aiOracle, deployer);
+        arbitrageVault = deployArbitrageVault(eth, usdt, aiOracle, deployer);
+        hedgeVault = deployHedgeVault(btc, sei, aiOracle, deployer);
+        stableMaxVault = deployStableMaxVault(usdc, dai, aiOracle, deployer);
+        seiHypergrowthVault = deploySeiHypergrowthVault(sei, eth, aiOracle, deployer);
+        blueChipVault = deployBlueChipVault(eth, btc, aiOracle, deployer);
+        deltaNeutralVault = deployDeltaNeutralVault(sei, usdc, aiOracle, deployer);
         
         vm.stopBroadcast();
         
@@ -139,6 +166,58 @@ contract DeployScript is Script {
         console.log("SEI Vault configured with optimizations");
     }
     
+    function deployMockTokens() internal returns (address, address, address, address, address, address, address) {
+        // Deploy a mock ERC20 token for testing
+        MockERC20 sei = new MockERC20("SEI", "SEI");
+        MockERC20 usdc = new MockERC20("USD Coin", "USDC");
+        MockERC20 usdt = new MockERC20("Tether", "USDT");
+        MockERC20 eth = new MockERC20("Ethereum", "ETH");
+        MockERC20 btc = new MockERC20("Bitcoin", "BTC");
+        MockERC20 atom = new MockERC20("Cosmos", "ATOM");
+        MockERC20 dai = new MockERC20("Dai Stablecoin", "DAI");
+        return (address(sei), address(usdc), address(usdt), address(eth), address(btc), address(atom), address(dai));
+    }
+
+    function deployConcentratedLiquidityVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        ConcentratedLiquidityVault vault = new ConcentratedLiquidityVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deployYieldFarmingVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        YieldFarmingVault vault = new YieldFarmingVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deployArbitrageVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        ArbitrageVault vault = new ArbitrageVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deployHedgeVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        HedgeVault vault = new HedgeVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deployStableMaxVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        StableMaxVault vault = new StableMaxVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deploySeiHypergrowthVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        SeiHypergrowthVault vault = new SeiHypergrowthVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deployBlueChipVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        BlueChipVault vault = new BlueChipVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
+    function deployDeltaNeutralVault(address token0, address token1, address oracle, address owner) internal returns (address) {
+        DeltaNeutralVault vault = new DeltaNeutralVault(token0, token1, oracle, owner);
+        return address(vault);
+    }
+
     function logDeploymentSummary() internal view {
         console.log("\n=== SEI DLP DEPLOYMENT SUMMARY ===");
         console.log("Network: SEI (Chain ID: %s)", block.chainid);
@@ -150,6 +229,15 @@ contract DeployScript is Script {
         console.log("- Vault Factory: %s", vaultFactory);
         console.log("- SEI Vault: %s", seiVault);
         console.log("- Strategy Vault: %s", strategyVault);
+        console.log("\nStrategy Vaults:");
+        console.log("- Concentrated Liquidity Vault: %s", concentratedLiquidityVault);
+        console.log("- Yield Farming Vault: %s", yieldFarmingVault);
+        console.log("- Arbitrage Vault: %s", arbitrageVault);
+        console.log("- Hedge Vault: %s", hedgeVault);
+        console.log("- Stable Max Vault: %s", stableMaxVault);
+        console.log("- SEI Hypergrowth Vault: %s", seiHypergrowthVault);
+        console.log("- Blue Chip Vault: %s", blueChipVault);
+        console.log("- Delta Neutral Vault: %s", deltaNeutralVault);
         console.log("\nConfiguration:");
         console.log("- Parallel Execution: Enabled");
         console.log("- Finality Optimization: Enabled");
