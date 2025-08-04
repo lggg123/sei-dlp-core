@@ -28,7 +28,7 @@ pnpm install && pnpm dev
 # 1. Deploy to SEI Devnet
   cd contracts
   forge script script/Deploy.s.sol \
-    --rpc-url https://evm-rpc-devnet.sei-apis.com \
+    --rpc-url https://evm-rpc-arctic-1.sei-apis.com \
     --private-key $PRIVATE_KEY \
     --broadcast --verify
 

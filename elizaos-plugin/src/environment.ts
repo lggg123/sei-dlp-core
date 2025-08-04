@@ -99,7 +99,7 @@ export const seiChains: Record<SeiNetworkName, SeiChain> = {
     },
     rpcUrls: {
       default: {
-        http: ["https://evm-rpc-devnet.sei-apis.com"],
+        http: ["https://evm-rpc-arctic-1.sei-apis.com"],
       },
     },
     blockExplorers: {

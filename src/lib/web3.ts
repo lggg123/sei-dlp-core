@@ -22,7 +22,7 @@ export const seiDevnet = defineChain({
   name: 'SEI Devnet',
   nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://evm-rpc-devnet.sei-apis.com'] }
+    default: { http: ['https://evm-rpc-arctic-1.sei-apis.com'] }
   },
   blockExplorers: {
     default: { name: 'SeiTrace Devnet', url: 'https://seitrace.com/?chain=devnet' }

@@ -16,7 +16,7 @@ import "../src/strategies/BlueChipVault.sol";
 import "../src/strategies/DeltaNeutralVault.sol";
 
 contract DeployScript is Script {
-    // SEI Network Configuration (devnet chain ID 713715)
+    // SEI Network Configuration (devnet chain ID 713715, Arctic endpoint)
     uint256 constant SEI_CHAIN_ID = 713715;
     
     // Deployment addresses (will be set during deployment)
@@ -48,7 +48,7 @@ contract DeployScript is Script {
         vm.startBroadcast(deployerPrivateKey);
         
         // 1. Deploy Mock Token for testing (only on devnet)
-        if (block.chainid == 713715) { // SEI devnet
+        if (block.chainid == 713715) { // SEI devnet (Arctic)
             mockToken = deployMockToken();
             console.log("Mock Token deployed at: %s", mockToken);
         }

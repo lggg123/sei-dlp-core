@@ -16,7 +16,7 @@ contract DevnetMocks is Test {
     
     // Chain configuration
     uint256 public constant DEVNET_CHAIN_ID = 713715;
-    string public constant DEVNET_RPC_URL = "https://evm-rpc-devnet.sei-apis.com";
+    string public constant DEVNET_RPC_URL = "https://evm-rpc-arctic-1.sei-apis.com";
     
     // Core contracts
     VaultFactory public vaultFactory;
