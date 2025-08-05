@@ -73,13 +73,14 @@ export default function VaultsPage() {
   // API hooks
   const { data: vaultsData, isLoading: queryLoading, error: queryError } = useVaults()
   const { data: marketData } = useSeiMarketData()
-  
   // Combine loading states
   const isLoading = vaultLoading || queryLoading
   const error = vaultError || queryError
   
   // Get filtered vaults from store - prefer API data over store
-  const filteredVaults = vaultsData && vaultsData.length > 0 ? vaultsData : getFilteredVaults()
+  const filteredVaults = React.useMemo(() => {
+    return vaultsData && vaultsData.length > 0 ? vaultsData : getFilteredVaults()
+  }, [vaultsData, getFilteredVaults])
   
   // Debug API data
   React.useEffect(() => {
@@ -98,12 +99,17 @@ export default function VaultsPage() {
       showDepositModal 
     });
   }, [filteredVaults, selectedVault, depositVault, showDepositModal]);
+  
+  // Debug modal state changes
+  React.useEffect(() => {
+    console.log('[VaultsPage] Modal state changed:', { showDepositModal, depositVaultName: depositVault?.name || 'NONE' });
+  }, [showDepositModal, depositVault]);
   const totalTVL = vaultsData && vaultsData.length > 0 ? 
     vaultsData.reduce((total, vault) => total + vault.tvl, 0) : 
     getTotalTVL()
   
   // Handler functions for vault actions
-  const handleDeposit = async (vault: VaultData) => {
+  const handleDeposit = React.useCallback((vault: VaultData) => {
     try {
       console.log('[Deposit] handleDeposit called', { 
         vault: vault?.name || 'VAULT IS NULL/UNDEFINED',
@@ -134,7 +140,7 @@ export default function VaultsPage() {
     } catch (error) {
       console.error('Deposit error:', error)
     }
-  }
+  }, [setSelectedVault, setDepositVault, setShowDepositModal]);
 
   const handleDepositSuccess = React.useCallback((txHash: string) => {
     // Optional: Show success notification or redirect to transaction
@@ -145,14 +151,15 @@ export default function VaultsPage() {
   const handleCloseModal = React.useCallback(() => {
     console.log('[DepositModal] onClose called');
     setShowDepositModal(false)
-    setDepositVault(null)
+    // Delay setting depositVault to null to ensure smooth transition
     setTimeout(() => {
+      setDepositVault(null)
       console.log('[DepositModal] Modal state after close', {
         showDepositModal: false,
         depositVault: null
       });
-    }, 100);
-  }, []);
+    }, 300);
+  }, [setDepositVault]);
   
   const handleViewAnalytics = (vault: VaultData) => {
     setSelectedVault(vault)

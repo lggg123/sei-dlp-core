@@ -54,7 +54,7 @@ contract HedgeVault is IStrategyVault, ERC20, Ownable, ReentrancyGuard {
             strategy: "Delta-hedged position management",
             token0: _token0,
             token1: _token1,
-            poolFee: 10000,
+            poolFee: 3000,
             totalSupply: 0,
             totalValueLocked: 0,
             isActive: true

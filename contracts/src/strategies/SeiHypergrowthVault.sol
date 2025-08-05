@@ -54,7 +54,7 @@ contract SeiHypergrowthVault is IStrategyVault, ERC20, Ownable, ReentrancyGuard 
             strategy: "High-risk, high-reward SEI exposure",
             token0: _token0,
             token1: _token1,
-            poolFee: 10000,
+            poolFee: 3000,
             totalSupply: 0,
             totalValueLocked: 0,
             isActive: true

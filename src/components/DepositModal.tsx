@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,12 +33,12 @@ interface DepositModalProps {
 
 const formatCurrency = (amount: number) => {
   if (amount >= 1000000) {
-    return `$${(amount / 1000000).toFixed(1)}M`
+    return `${(amount / 1000000).toFixed(1)}M`
   }
   if (amount >= 1000) {
-    return `$${(amount / 1000).toFixed(0)}K`
+    return `${(amount / 1000).toFixed(0)}K`
   }
-  return `$${amount.toFixed(0)}`
+  return `${amount.toFixed(0)}`
 }
 
 const getRiskLevel = (apy: number): 'Low' | 'Medium' | 'High' => {
@@ -63,6 +63,7 @@ const getVaultColor = (strategy: string) => {
 
 export default function DepositModal({ vault, isOpen, onClose, onSuccess }: DepositModalProps) {
   const [depositAmount, setDepositAmount] = useState('');
+  const hasLoggedRender = useRef(false);
 
   const mutationOptions = React.useMemo(() => ({
     onSuccess: (data: any) => {
@@ -82,38 +83,53 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
 
   const depositMutation = useDepositToVault(mutationOptions);
 
-  // Debug all props on every render
-  console.log('[DepositModal] Component render with props:', {
-    vaultExists: !!vault,
-    vaultName: vault?.name || 'NO VAULT',
-    vaultStrategy: vault?.strategy || 'NO STRATEGY',
-    vaultAddress: vault?.address || 'NO ADDRESS',
-    isOpen,
-    propsReceived: { vault: !!vault, isOpen, onClose: !!onClose, onSuccess: !!onSuccess }
-  });
+  // Reset logging flag when vault or isOpen changes
+  useEffect(() => {
+    hasLoggedRender.current = false;
+  }, [vault, isOpen]);
 
-  // Log the entire vault object when it exists
-  if (vault) {
-    console.log('[DepositModal] Full vault data received:', vault);
+  // Debug all props on render (but only log once per vault/isOpen combination)
+  if (!hasLoggedRender.current) {
+    console.log('[DepositModal] Component render with props:', {
+      vaultExists: !!vault,
+      vaultName: vault?.name || 'NO VAULT',
+      vaultStrategy: vault?.strategy || 'NO STRATEGY',
+      vaultAddress: vault?.address || 'NO ADDRESS',
+      isOpen,
+      propsReceived: { vault: !!vault, isOpen, onClose: !!onClose, onSuccess: !!onSuccess }
+    });
+    hasLoggedRender.current = true;
   }
 
-  // Add effect to track when the modal should be opening - must be before early return
-  React.useEffect(() => {
-    if (isOpen && vault) {
-      console.log('[DepositModal] Modal should be opening now for vault:', vault.name);
+  // Log the entire vault object when it exists (but only once)
+  useEffect(() => {
+    if (vault && hasLoggedRender.current) {
+      console.log('[DepositModal] Full vault data received:', vault);
     }
-    if (isOpen && !vault) {
-      console.error('[DepositModal] ERROR: Modal is open but vault is null!');
+  }, [vault]);
+
+  // Add effect to track when the modal should be opening
+  useEffect(() => {
+    if (isOpen) {
+      if (vault) {
+        console.log('[DepositModal] Modal should be opening now for vault:', vault.name);
+      } else {
+        console.error('[DepositModal] ERROR: Modal is open but vault is null!');
+      }
     }
   }, [isOpen, vault]);
 
-  // Don't render if vault is null
-  if (!vault) {
-    console.log('[DepositModal] Vault is null, not rendering modal overlay');
+  // Don't render if vault is null or modal is not open
+  if (!isOpen || !vault) {
+    if (!isOpen) {
+      console.log('[DepositModal] Modal is not open, not rendering');
+    } else if (!vault) {
+      console.log('[DepositModal] Vault is null, not rendering modal overlay');
+    }
     return null;
   }
 
-  console.log('[DepositModal] Rendering with:', { vault: vault.name, isOpen });
+  console.log('[DepositModal] Rendering modal content for:', vault.name);
 
   const vaultColor = getVaultColor(vault.strategy);
   const riskLevel = getRiskLevel(vault.apy);
@@ -134,13 +150,11 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   };
 
   const handleClose = () => {
+    console.log('[DepositModal] handleClose called');
     setDepositAmount('');
     onClose();
   };
 
-  // Mobile-friendly modal for iPad/Codespaces
-  if (!isOpen) return null;
-  
   console.log('[DepositModal] About to render modal overlay');
   
   return (

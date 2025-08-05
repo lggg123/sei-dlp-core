@@ -54,7 +54,7 @@ contract ArbitrageVault is IStrategyVault, ERC20, Ownable, ReentrancyGuard {
             strategy: "MEV-protected arbitrage execution",
             token0: _token0,
             token1: _token1,
-            poolFee: 5000,
+            poolFee: 3000, // 0.3% industry standard
             totalSupply: 0,
             totalValueLocked: 0,
             isActive: true
