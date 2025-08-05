@@ -70,9 +70,44 @@ export default function VaultsPage() {
     isError: vaultError,
   } = useVaultStore()
   
-  // API hooks
-  const { data: vaultsData, isLoading: queryLoading, error: queryError } = useVaults()
-  const { data: marketData } = useSeiMarketData()
+  // Temporary direct fetch to bypass React Query issues
+  const [vaultsData, setVaultsData] = React.useState<any[]>([]);
+  const [queryLoading, setQueryLoading] = React.useState(true);
+  const [queryError, setQueryError] = React.useState<Error | null>(null);
+
+  React.useEffect(() => {
+    const fetchVaults = async () => {
+      try {
+        console.log('[VaultsPage] Direct fetch starting...');
+        setQueryLoading(true);
+        const response = await fetch('/api/vaults');
+        console.log('[VaultsPage] Direct fetch response:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log('[VaultsPage] Direct fetch result:', result);
+        
+        if (result.success && result.data) {
+          setVaultsData(result.data);
+          console.log('[VaultsPage] Successfully loaded', result.data.length, 'vaults');
+        } else {
+          throw new Error(result.error || 'Invalid response format');
+        }
+      } catch (error) {
+        console.error('[VaultsPage] Direct fetch error:', error);
+        setQueryError(error as Error);
+      } finally {
+        setQueryLoading(false);
+      }
+    };
+
+    fetchVaults();
+  }, []);
+
+  const { data: marketData } = useSeiMarketData();
   // Combine loading states
   const isLoading = vaultLoading || queryLoading
   const error = vaultError || queryError
@@ -90,20 +125,20 @@ export default function VaultsPage() {
     }
   }, [vaultsData]);
   
-  // Debug store data
+  // Debug store data (throttled)
+  const lastLogRef = useRef<string>('');
   React.useEffect(() => {
-    console.log('[VaultsPage] Store filteredVaults:', filteredVaults.length, 'vaults');
-    console.log('[VaultsPage] Store state:', { 
-      selectedVault: selectedVault?.name || 'NONE',
-      depositVault: depositVault?.name || 'NONE',
-      showDepositModal 
-    });
+    const currentState = `${filteredVaults.length}|${selectedVault?.name || 'NONE'}|${depositVault?.name || 'NONE'}|${showDepositModal}`;
+    if (currentState !== lastLogRef.current) {
+      console.log('[VaultsPage] Store state changed:', { 
+        filteredVaults: filteredVaults.length,
+        selectedVault: selectedVault?.name || 'NONE',
+        depositVault: depositVault?.name || 'NONE',
+        showDepositModal 
+      });
+      lastLogRef.current = currentState;
+    }
   }, [filteredVaults, selectedVault, depositVault, showDepositModal]);
-  
-  // Debug modal state changes
-  React.useEffect(() => {
-    console.log('[VaultsPage] Modal state changed:', { showDepositModal, depositVaultName: depositVault?.name || 'NONE' });
-  }, [showDepositModal, depositVault]);
   const totalTVL = vaultsData && vaultsData.length > 0 ? 
     vaultsData.reduce((total, vault) => total + vault.tvl, 0) : 
     getTotalTVL()
@@ -169,10 +204,10 @@ export default function VaultsPage() {
 
   // Three.js Setup
   useEffect(() => {
-    if (!mountRef.current) return;
+    if (!mountRef.current || scene) return; // Prevent multiple scene creations
 
     // Scene setup
-    const scene = new THREE.Scene();
+    const newScene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     
@@ -210,7 +245,7 @@ export default function VaultsPage() {
     });
 
     const particleSystem = new THREE.Points(particles, particleMaterial);
-    scene.add(particleSystem);
+    newScene.add(particleSystem);
 
     // Geometric shapes for depth
     const geometries = [
@@ -233,12 +268,12 @@ export default function VaultsPage() {
         (Math.random() - 0.5) * 50,
         (Math.random() - 0.5) * 50
       );
-      scene.add(mesh);
+      newScene.add(mesh);
     });
 
     camera.position.z = 30;
-    setScene(scene);
-    console.log('[VaultsPage] Three.js scene created with', scene.children.length, 'objects');
+    setScene(newScene);
+    console.log('[VaultsPage] Three.js scene created with', newScene.children.length, 'objects');
 
     // Animation loop
     const animate = () => {
@@ -249,14 +284,14 @@ export default function VaultsPage() {
       particleSystem.rotation.y += 0.002;
 
       // Rotate geometric shapes
-      scene.children.forEach((child) => {
+      newScene.children.forEach((child) => {
         if (child instanceof THREE.Mesh) {
           child.rotation.x += 0.01;
           child.rotation.y += 0.01;
         }
       });
 
-      renderer.render(scene, camera);
+      renderer.render(newScene, camera);
     };
 
     animate();
@@ -277,7 +312,7 @@ export default function VaultsPage() {
       }
       renderer.dispose();
     };
-  }, []);
+  }, [scene]); // Add scene as dependency to prevent recreation
 
   // GSAP Animations
   useEffect(() => {
@@ -545,12 +580,15 @@ export default function VaultsPage() {
                       <Button 
                         className="flex-1 max-w-[140px] font-bold text-sm h-10 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20"
                         onClick={(e) => {
-                          console.log('[BUTTON CLICK] Deposit button clicked - IMMEDIATE');
+                          console.log('[BUTTON CLICK] Deposit button clicked - IMMEDIATE', new Date().toISOString());
                           e.preventDefault();
                           e.stopPropagation();
                           console.log('[VaultsPage] Deposit button clicked for vault:', vault.name);
+                          console.log('[VaultsPage] Vault object:', vault);
                           console.log('[VaultsPage] Event details:', { target: e.target, currentTarget: e.currentTarget });
+                          console.log('[VaultsPage] About to call handleDeposit with vault:', vault);
                           handleDeposit(vault);
+                          console.log('[VaultsPage] handleDeposit call completed');
                         }}
                         onMouseDown={() => console.log('[VaultsPage] Deposit button mouse down')}
                         onMouseUp={() => console.log('[VaultsPage] Deposit button mouse up')}

@@ -39,6 +39,8 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
   return useQuery({
     queryKey: VAULT_QUERY_KEYS.list(filters || {}),
     queryFn: async (): Promise<VaultData[]> => {
+      console.log('[useVaults] queryFn called - starting fetch');
+      
       // Only set loading in store if it's the client
       if (typeof window !== 'undefined') {
         setLoading(true)
@@ -49,12 +51,22 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
         if (filters?.strategy) params.append('strategy', filters.strategy)
         if (filters?.active !== undefined) params.append('active', filters.active.toString())
         
-        const response = await fetch(`/api/vaults?${params.toString()}`, {
+        const url = `/api/vaults?${params.toString()}`;
+        console.log('[useVaults] Fetching from URL:', url);
+        
+        const response = await fetch(url, {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
         })
+        
+        console.log('[useVaults] Response received:', {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok,
+          headers: Object.fromEntries(response.headers.entries())
+        });
         
         if (!response.ok) {
           const errorText = await response.text()
@@ -62,10 +74,13 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
         }
         
         const result: VaultResponse = await response.json()
+        console.log('[useVaults] API response:', result);
         
         if (!result.success) {
           throw new Error(result.error || 'Failed to fetch vaults')
         }
+        
+        console.log('[useVaults] Successfully fetched', result.data.length, 'vaults');
         
         // Update store with fetched data (only on client)
         if (typeof window !== 'undefined') {
@@ -76,6 +91,12 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
         return result.data
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+        console.error('[useVaults] Fetch error:', error);
+        console.error('[useVaults] Error details:', {
+          message: errorMessage,
+          stack: error instanceof Error ? error.stack : 'No stack',
+          name: error instanceof Error ? error.name : 'Unknown error type'
+        });
         
         // Only update store and show notifications on client
         if (typeof window !== 'undefined') {
@@ -104,7 +125,7 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
       }
       return failureCount < 3
     },
-    enabled: typeof window !== 'undefined', // Only run on client
+    enabled: true, // Allow on both client and server temporarily for debugging
   })
 }
 

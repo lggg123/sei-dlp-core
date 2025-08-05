@@ -63,7 +63,6 @@ const getVaultColor = (strategy: string) => {
 
 export default function DepositModal({ vault, isOpen, onClose, onSuccess }: DepositModalProps) {
   const [depositAmount, setDepositAmount] = useState('');
-  const hasLoggedRender = useRef(false);
 
   const mutationOptions = React.useMemo(() => ({
     onSuccess: (data: any) => {
@@ -83,13 +82,8 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
 
   const depositMutation = useDepositToVault(mutationOptions);
 
-  // Reset logging flag when vault or isOpen changes
+  // Debug logging moved to useEffect to prevent render loops
   useEffect(() => {
-    hasLoggedRender.current = false;
-  }, [vault, isOpen]);
-
-  // Debug all props on render (but only log once per vault/isOpen combination)
-  if (!hasLoggedRender.current) {
     console.log('[DepositModal] Component render with props:', {
       vaultExists: !!vault,
       vaultName: vault?.name || 'NO VAULT',
@@ -98,38 +92,43 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       isOpen,
       propsReceived: { vault: !!vault, isOpen, onClose: !!onClose, onSuccess: !!onSuccess }
     });
-    hasLoggedRender.current = true;
-  }
-
-  // Log the entire vault object when it exists (but only once)
-  useEffect(() => {
-    if (vault && hasLoggedRender.current) {
+    
+    if (vault) {
       console.log('[DepositModal] Full vault data received:', vault);
     }
-  }, [vault]);
+  }, [vault, isOpen, onClose, onSuccess]);
 
-  // Add effect to track when the modal should be opening
+  // Add effect to track when the modal should be opening + handle body scroll
   useEffect(() => {
     if (isOpen) {
       if (vault) {
         console.log('[DepositModal] Modal should be opening now for vault:', vault.name);
+        // Lock body scroll on mobile
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
       } else {
         console.error('[DepositModal] ERROR: Modal is open but vault is null!');
       }
+    } else {
+      // Unlock body scroll
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
   }, [isOpen, vault]);
 
   // Don't render if vault is null or modal is not open
   if (!isOpen || !vault) {
-    if (!isOpen) {
-      console.log('[DepositModal] Modal is not open, not rendering');
-    } else if (!vault) {
-      console.log('[DepositModal] Vault is null, not rendering modal overlay');
-    }
     return null;
   }
-
-  console.log('[DepositModal] Rendering modal content for:', vault.name);
 
   const vaultColor = getVaultColor(vault.strategy);
   const riskLevel = getRiskLevel(vault.apy);
@@ -154,14 +153,24 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
     setDepositAmount('');
     onClose();
   };
-
-  console.log('[DepositModal] About to render modal overlay');
+  
+  console.log('[DepositModal] RENDERING MODAL NOW - isOpen:', isOpen, 'vault:', vault?.name);
   
   return (
     <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      className="fixed flex items-center justify-center p-4"
       style={{ 
-        backgroundColor: 'rgba(0, 0, 0, 0.8)' // Semi-transparent black backdrop
+        backgroundColor: 'rgba(0, 0, 0, 0.9)', // Darker backdrop for better visibility
+        zIndex: 10000, // Use inline style for maximum priority
+        top: 0,
+        left: 0, 
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        minHeight: '100vh', // Safari fallback
+        position: 'fixed',
+        overflow: 'auto' // Allow scrolling if needed
       }}
       onClick={(e) => {
         console.log('[DepositModal] Backdrop clicked');
@@ -174,9 +183,13 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         className="w-full max-w-md p-6 rounded-lg shadow-2xl"
         style={{
           backgroundColor: '#1a1a1a',
-          border: '2px solid #333',
-          maxHeight: '90vh',
-          overflow: 'auto'
+          border: '3px solid #00f5d4', // Make border even more visible
+          maxHeight: '80vh', // Reduced for mobile
+          overflow: 'auto',
+          zIndex: 10001, // Ensure modal content is above backdrop
+          position: 'relative',
+          margin: '20px', // Add margin for mobile
+          boxShadow: '0 20px 60px rgba(0, 245, 212, 0.3), 0 0 0 1px rgba(255,255,255,0.1)' // Enhanced visibility
         }}
         onClick={(e) => {
           console.log('[DepositModal] Modal content clicked - preventing propagation');
