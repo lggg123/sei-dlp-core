@@ -108,9 +108,6 @@ module.exports = {
         // Holo text
         '.holo-text': {
           fontWeight:             theme('fontWeight.extrabold') + ' !important',
-          fontSize:               theme('fontSize.4xl')[0] + ' !important',
-          '@screen md': { fontSize: theme('fontSize.5xl')[0] + ' !important' },
-          '@screen lg': { fontSize: theme('fontSize.6xl')[0] + ' !important' },
           background:             'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent))) !important',
           backgroundSize:         '300% 100% !important',
           backgroundClip:         'text !important',

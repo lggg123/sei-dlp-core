@@ -134,7 +134,7 @@ export default function VaultDetailPage() {
     <div className="min-h-screen bg-background">
       <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
       
-      <div className="pt-20 px-4">
+      <div className="pt-16 px-4">
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-8">
@@ -148,33 +148,38 @@ export default function VaultDetailPage() {
             </Button>
             
             <div ref={cardRef} className="vault-solid-card relative z-10">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-                <div>
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
+                <div className="flex-1">
                   <h1 className="text-4xl font-bold mb-2 text-enhanced-glow" style={{ color: vaultColor }}>
                     {vault.name}
                   </h1>
-                  <p className="text-muted-foreground text-lg">
+                  <p className="text-muted-foreground text-lg mb-4">
                     {vault.strategy.replace('_', ' ').toUpperCase()} • {vault.tokenA}-{vault.tokenB}
                   </p>
+                  <div className="flex items-center gap-4">
+                    <Badge className={`px-4 py-2 text-sm ${
+                      riskLevel === 'Low' ? 'bg-green-500/20 text-green-400' :
+                      riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-red-500/20 text-red-400'
+                    }`}>
+                      {riskLevel} Risk
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 mt-4 lg:mt-0">
-                  <Badge className={`px-4 py-2 text-sm ${
-                    riskLevel === 'Low' ? 'bg-green-500/20 text-green-400' :
-                    riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-red-500/20 text-red-400'
-                  }`}>
-                    {riskLevel} Risk
-                  </Badge>
+                <div className="mt-6 lg:mt-0 lg:ml-8">
                   <Button 
                     size="lg"
-                    className="btn-vault-primary h-14 px-8 text-lg"
+                    className="w-full lg:w-auto btn-vault-primary h-14 px-8 text-lg font-bold"
                     onClick={() => {
                       console.log('[VaultDetail] Deposit button clicked - setting modal to true');
                       setShowDepositModal(true);
                     }}
                     style={{
                       background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
-                      color: '#000',
+                      color: '#000000',
+                      border: 'none',
+                      boxShadow: `0 4px 20px ${vaultColor}40`,
+                      minWidth: '160px'
                     }}
                   >
                     Deposit Funds
@@ -218,10 +223,47 @@ export default function VaultDetailPage() {
             params.set('tab', value);
             router.push(`/vault?${params.toString()}`);
           }}>
-            <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="strategy">Strategy</TabsTrigger>
+            <TabsList 
+              className="grid w-full grid-cols-3 mb-8 h-14 p-1 rounded-lg"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              <TabsTrigger 
+                value="overview" 
+                className="h-12 text-base font-semibold transition-all duration-200"
+                style={{
+                  color: activeTab === 'overview' ? '#000000' : '#a1a1aa',
+                  backgroundColor: activeTab === 'overview' ? vaultColor : 'transparent',
+                  borderRadius: '6px',
+                }}
+              >
+                Overview
+              </TabsTrigger>
+              <TabsTrigger 
+                value="analytics" 
+                className="h-12 text-base font-semibold transition-all duration-200"
+                style={{
+                  color: activeTab === 'analytics' ? '#000000' : '#a1a1aa',
+                  backgroundColor: activeTab === 'analytics' ? vaultColor : 'transparent',
+                  borderRadius: '6px',
+                }}
+              >
+                Analytics
+              </TabsTrigger>
+              <TabsTrigger 
+                value="strategy" 
+                className="h-12 text-base font-semibold transition-all duration-200"
+                style={{
+                  color: activeTab === 'strategy' ? '#000000' : '#a1a1aa',
+                  backgroundColor: activeTab === 'strategy' ? vaultColor : 'transparent',
+                  borderRadius: '6px',
+                }}
+              >
+                Strategy
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">

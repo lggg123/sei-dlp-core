@@ -180,42 +180,74 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       }}
     >
       <div 
-        className="w-full max-w-md p-6 rounded-lg shadow-2xl"
+        className="w-full max-w-md p-6 rounded-2xl shadow-2xl"
         style={{
           backgroundColor: '#1a1a1a',
-          border: '3px solid #00f5d4', // Make border even more visible
-          maxHeight: '80vh', // Reduced for mobile
+          border: `2px solid ${vaultColor}`, 
+          maxHeight: '80vh',
           overflow: 'auto',
-          zIndex: 10001, // Ensure modal content is above backdrop
+          zIndex: 10001,
           position: 'relative',
-          margin: '20px', // Add margin for mobile
-          boxShadow: '0 20px 60px rgba(0, 245, 212, 0.3), 0 0 0 1px rgba(255,255,255,0.1)' // Enhanced visibility
+          margin: '20px',
+          boxShadow: `0 20px 60px ${vaultColor}30, 0 0 0 1px rgba(255,255,255,0.1)`,
+          color: '#ffffff',
+          borderRadius: '24px'
         }}
         onClick={(e) => {
           console.log('[DepositModal] Modal content clicked - preventing propagation');
           e.stopPropagation();
         }}
       >
-            <h2 className="text-2xl font-bold text-center mb-4">Deposit to {vault.name}</h2>
+            <h2 className="text-2xl font-bold text-center mb-4" style={{ color: '#ffffff' }}>Deposit to {vault.name}</h2>
             
-            <div className="space-y-4">
+            <div className="space-y-4" style={{ color: '#ffffff' }}>
               <div className="text-center">
                 <div className="text-lg font-bold" style={{ color: vaultColor }}>
                   {(vault.apy * 100).toFixed(1)}% APY
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm" style={{ color: '#a1a1aa' }}>
                   {vault.strategy.replace('_', ' ').toUpperCase()} • {formatCurrency(vault.tvl)} TVL • {riskLevel} Risk
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="deposit-amount">Amount (USD)</Label>
+              <div className="space-y-4">
+                <Label htmlFor="deposit-amount" style={{ color: '#ffffff', fontSize: '14px', fontWeight: '500' }}>Amount (USD)</Label>
+                
+                {/* Preset Amount Buttons */}
+                <div className="grid grid-cols-4 gap-2">
+                  {[100, 500, 1000, 5000].map((amount) => (
+                    <Button
+                      key={amount}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDepositAmount(amount.toString())}
+                      className="h-8 text-xs font-medium"
+                      style={{
+                        backgroundColor: depositAmount === amount.toString() ? `${vaultColor}20` : 'rgba(42, 42, 42, 0.5)',
+                        border: `1px solid ${depositAmount === amount.toString() ? vaultColor : '#404040'}`,
+                        color: depositAmount === amount.toString() ? vaultColor : '#ffffff',
+                        borderRadius: '12px'
+                      }}
+                    >
+                      ${amount}
+                    </Button>
+                  ))}
+                </div>
+                
                 <Input
                   id="deposit-amount"
                   type="number"
-                  placeholder="Enter amount..."
+                  placeholder="Enter custom amount..."
                   value={depositAmount}
                   onChange={(e) => setDepositAmount(e.target.value)}
+                  style={{
+                    backgroundColor: '#2a2a2a',
+                    border: `1px solid ${vaultColor}40`,
+                    color: '#ffffff',
+                    padding: '12px',
+                    borderRadius: '12px',
+                    fontSize: '16px'
+                  }}
                 />
               </div>
 
@@ -225,6 +257,17 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                   onClick={handleClose}
                   className="flex-1"
                   disabled={depositMutation.isPending}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: '2px solid #404040',
+                    color: '#ffffff',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    height: '48px',
+                    transition: 'all 0.2s ease'
+                  }}
                 >
                   Cancel
                 </Button>
@@ -232,6 +275,18 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                   onClick={handleDeposit}
                   disabled={!isValidAmount || depositMutation.isPending}
                   className="flex-1"
+                  style={{
+                    backgroundColor: vaultColor,
+                    border: 'none',
+                    color: '#000000',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    height: '48px',
+                    boxShadow: `0 4px 20px ${vaultColor}40`,
+                    transition: 'all 0.2s ease'
+                  }}
                 >
                   {depositMutation.isPending ? (
                     <>

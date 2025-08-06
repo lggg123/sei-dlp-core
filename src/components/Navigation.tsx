@@ -30,12 +30,12 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   };
 
   return (
-    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`} style={{ position: 'relative', marginTop: '2.5rem' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ position: 'relative', marginTop: '0.5rem' }}>
-        <div className="flex justify-between items-center h-16">
+    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', width: '100%' }}>
           
-          {/* Logo and Brand */}
-          <div className="flex items-center space-x-3">
+          {/* Left side - Logo, Brand and Navigation Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
             <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <Logo variant="icon" size={48} className="flex-shrink-0" />
               <div className="hidden sm:block">
@@ -43,49 +43,46 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
                 <div className="text-sm text-muted-foreground -mt-1">Dynamic Liquidity Protocol</div>
               </div>
             </Link>
-          </div>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/vaults" 
-              className="text-foreground hover:text-primary transition-colors"
-            >
-              Vaults
-            </Link>
-            <Link 
-              href="/analytics" 
-              className="text-foreground hover:text-primary transition-colors"
-            >
-              Analytics
-            </Link>
-            <Link 
-              href="/docs" 
-              className="text-foreground hover:text-primary transition-colors"
-            >
-              Docs
-            </Link>
-            <Link 
-              href="/logo-showcase" 
-              className="text-foreground hover:text-primary transition-colors"
-            >
-              Logo
-            </Link>
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link 
+                href="/vaults" 
+                className="text-foreground hover:text-primary transition-colors"
+                style={{ textDecoration: 'none' }}
+              >
+                Vaults
+              </Link>
+              <Link 
+                href="/analytics" 
+                className="text-foreground hover:text-primary transition-colors"
+                style={{ textDecoration: 'none' }}
+              >
+                Analytics
+              </Link>
+              <Link 
+                href="/docs" 
+                className="text-foreground hover:text-primary transition-colors"
+                style={{ textDecoration: 'none' }}
+              >
+                Docs
+              </Link>
+              <Link 
+                href="/logo-showcase" 
+                className="text-foreground hover:text-primary transition-colors"
+                style={{ textDecoration: 'none' }}
+              >
+                Logo
+              </Link>
+            </div>
           </div>
 
           {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
-          <div className="flex items-center space-x-4">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {showLaunchApp && (
               <Link
                 href="/vaults"
-                className="btn-cyber gap-2"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '1rem',
-                  transform: 'translateY(-50%)',
-                  zIndex: 1000
-                }}
+                className="btn-cyber gap-2 flex"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

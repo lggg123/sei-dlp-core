@@ -596,8 +596,7 @@ export default function VaultsPage() {
                         onMouseLeave={() => console.log('[VaultsPage] Deposit button mouse leave')}
                         style={{
                           pointerEvents: 'auto',
-                          cursor: 'pointer',
-                          border: '2px solid red' // Debug border to see button boundaries
+                          cursor: 'pointer'
                         }}
                       >
                         Deposit
