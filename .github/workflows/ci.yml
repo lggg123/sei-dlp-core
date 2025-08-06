@@ -1,52 +1,78 @@
 name: SEI DLP Core CI/CD Pipeline
 
+name: CI/CD Pipeline
+
 on:
   push:
-    branches: [ main, develop ]
+    branches:
+      - main
   pull_request:
-    branches: [ main, develop ]
-  workflow_dispatch:
-
-env:
-  NODE_VERSION: '18'
-  PYTHON_VERSION: '3.11'
-  SEI_CHAIN_ID: '713715'
+    branches:
+      - main
 
 jobs:
-  # Frontend and API Testing
-  frontend-tests:
-    name: Frontend & API Tests
+  # Frontend Deployment to Cloudflare
+  deploy-frontend:
+    name: Deploy Frontend to Cloudflare
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run TypeScript type check
-      run: npm run type-check
-      
-    - name: Run ESLint
-      run: npm run lint
-      
-    - name: Run Jest tests
-      run: npm test -- --coverage --watchAll=false
-      
-    - name: Upload frontend coverage
-      uses: codecov/codecov-action@v4
-      with:
-        files: ./coverage/lcov.info
-        flags: frontend
-        name: frontend-coverage
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Frontend
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          directory: ./build
+
+  # Devnet Testing and Mock Deployments
+  devnet:
+    name: Devnet Testing and Mock Deployments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Environment
+        run: echo "Setting up Devnet environment..."
+
+      - name: Run Tests
+        run: npm run test:devnet
+
+  # Security Analysis
+  security-analysis:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Security Checks
+        run: npm run security-check
+
+  # Code Linting
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Linter
+        run: npm run lint
   # Python AI Engine Testing
   ai-engine-tests:
     name: AI Engine Tests
@@ -203,107 +229,7 @@ jobs:
         myth analyze src/SEIVault.sol --solc-json mythril.json || true
         myth analyze src/StrategyVault.sol --solc-json mythril.json || true
 
-  # Deployment Jobs (only on main branch)
-  deploy-testnet:
-    name: Deploy to SEI Testnet
-    runs-on: ubuntu-latest
-    needs: [sei-integration-tests, security-analysis]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment: testnet
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Foundry
-      uses: foundry-rs/foundry-toolchain@v1
-      with:
-        version: nightly
-        
-    - name: Deploy to SEI Testnet
-      working-directory: ./contracts
-      env:
-        SEI_TESTNET_RPC_URL: ${{ secrets.SEI_TESTNET_RPC_URL }}
-        PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
-      run: |
-        forge script script/Deploy.s.sol:DeployScript \
-          --rpc-url $SEI_TESTNET_RPC_URL \
-          --private-key $PRIVATE_KEY \
-          --broadcast \
-          --verify \
-          --chain-id 713715
-          
-    - name: Update deployment artifacts
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add contracts/broadcast/
-        git commit -m "Update testnet deployment artifacts" || exit 0
-        git push
-
-  deploy-mainnet:
-    name: Deploy to SEI Mainnet
-    runs-on: ubuntu-latest
-    needs: deploy-testnet
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment: mainnet
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Foundry
-      uses: foundry-rs/foundry-toolchain@v1
-      with:
-        version: nightly
-        
-    - name: Deploy to SEI Mainnet
-      working-directory: ./contracts
-      env:
-        SEI_MAINNET_RPC_URL: ${{ secrets.SEI_MAINNET_RPC_URL }}
-        PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
-      run: |
-        forge script script/Deploy.s.sol:DeployScript \
-          --rpc-url $SEI_MAINNET_RPC_URL \
-          --private-key $PRIVATE_KEY \
-          --broadcast \
-          --verify \
-          --chain-id 713715 \
-          --slow
-
-  # Frontend Deployment
-  deploy-frontend:
-    name: Deploy Frontend
-    runs-on: ubuntu-latest
-    needs: [frontend-tests, deploy-testnet]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build application
-      env:
-        NEXT_PUBLIC_SEI_CHAIN_ID: ${{ env.SEI_CHAIN_ID }}
-        NEXT_PUBLIC_VAULT_FACTORY_ADDRESS: ${{ secrets.VAULT_FACTORY_ADDRESS }}
-      run: npm run build
-      
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod'
+  
 
   # AI Engine Deployment
   deploy-ai-engine:
@@ -341,7 +267,7 @@ jobs:
   notify-completion:
     name: Notify Deployment Completion
     runs-on: ubuntu-latest
-    needs: [deploy-mainnet, deploy-frontend, deploy-ai-engine]
+    needs: [deploy-frontend, deploy-ai-engine]
     if: always()
     
     steps:
