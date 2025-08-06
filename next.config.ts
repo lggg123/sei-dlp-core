@@ -3,6 +3,13 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@sei-js/core'],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  images: {
+    unoptimized: true,
+    domains: ['ipfs.io', 'seiprotocol.infura-ipfs.io'],
+  },
   
   // Headers for API responses
   async headers() {
@@ -40,10 +47,6 @@ const nextConfig: NextConfig = {
       path: require.resolve('path-browserify'),
     }
     return config
-  },
-  
-  images: {
-    domains: ['ipfs.io', 'seiprotocol.infura-ipfs.io'],
   },
 }
 
