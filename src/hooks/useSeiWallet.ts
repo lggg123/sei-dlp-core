@@ -55,11 +55,11 @@ export function useSeiWallet() {
       // Determine the cosmos chain ID based on EVM chain ID
       let cosmosChainId: string
       if (chainId === 1329) {
-        cosmosChainId = 'pacific-1' // mainnet
+        cosmosChainId = 'pacific-1' // legacy production support
       } else if (chainId === 713715) {
-        cosmosChainId = 'devnet-1' // devnet (for DeFi compliance)
+        cosmosChainId = 'devnet-1' // devnet (primary development environment)
       } else {
-        cosmosChainId = 'arctic-1' // testnet fallback
+        cosmosChainId = 'devnet-1' // devnet fallback
       }
       
       console.log('[useSeiWallet] Using chain ID:', chainId, 'mapping to cosmos:', cosmosChainId);
