@@ -18,6 +18,9 @@ export const character: Character = {
     
     // Bootstrap plugin for core functionality
     '@elizaos/plugin-bootstrap',
+    
+    // Supabase adapter for production database
+    '@elizaos/adapter-supabase',
   ],
   
   settings: {

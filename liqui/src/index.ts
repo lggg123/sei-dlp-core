@@ -18,7 +18,7 @@ try {
 
 const initCharacter = ({ runtime }: { runtime: IAgentRuntime }) => {
   logger.info('Initializing SEI DLP Liqui character');
-  logger.info('Name: ', character.name);
+  logger.info(`Name: ${character.name}`);
   logger.info('SEI Chain ID: 713715');
   logger.info('Optimized for 400ms finality');
   
