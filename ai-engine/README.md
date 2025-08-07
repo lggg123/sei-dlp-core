@@ -24,6 +24,7 @@ Funding Arbitrage      Portfolio Optimizer  Position Manager
 ### Setup
 ```bash
 cd ai-engine
+./install.sh
 poetry install
 poetry run pytest  # Run tests
 ```

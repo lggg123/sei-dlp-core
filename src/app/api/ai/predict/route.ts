@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: prediction,
       timestamp: new Date().toISOString(),
-      chainId: 13289
+      chainId: 713715
     })
 
   } catch (error) {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to generate AI prediction',
-        chainId: 13289
+        chainId: 713715
       },
       { status: 500 }
     )

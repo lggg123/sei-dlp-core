@@ -1,0 +1,36 @@
+# SEI DLP AI Engine - Python Dependencies
+# Core ML and Data Science packages
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+onnxruntime>=1.16.0
+
+# Web framework and API
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.4.0
+httpx>=0.25.0
+
+# WebSocket support for real-time communication
+websockets>=12.0
+aiohttp>=3.9.0
+
+# Testing framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Type checking and development tools
+mypy>=1.6.0
+black>=23.9.0
+isort>=5.12.0
+
+# Logging and monitoring
+structlog>=23.1.0
+
+# Decimal precision for financial calculations
+# (Decimal is built-in to Python, no separate package needed)
+
+# Optional: For advanced ML features (can be added later)
+# tensorflow>=2.13.0
+# torch>=2.0.0
+# transformers>=4.30.0
