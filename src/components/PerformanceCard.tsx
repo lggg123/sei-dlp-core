@@ -59,13 +59,13 @@ export default function PerformanceCard({
 
   const getIcon = () => {
     if (description.toLowerCase().includes('apy') || description.toLowerCase().includes('trend')) {
-      return <TrendingUp size={32} />;
+      return <TrendingUp size={48} />;
     } else if (description.toLowerCase().includes('value') || description.toLowerCase().includes('tvl')) {
-      return <DollarSign size={32} />;
+      return <DollarSign size={48} />;
     } else if (description.toLowerCase().includes('loss') || description.toLowerCase().includes('security')) {
-      return <Shield size={32} />;
+      return <Shield size={48} />;
     } else {
-      return <Activity size={32} />;
+      return <Activity size={48} />;
     }
   };
 
@@ -73,7 +73,28 @@ export default function PerformanceCard({
     <Card 
       ref={cardRef}
       className={`${styles.performanceCard} group relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105`}
-      style={{ perspective: '1000px' }}
+      style={{ 
+        perspective: '1000px !important',
+        minHeight: '200px !important',
+        width: '100% !important',
+        display: 'flex !important',
+        flexDirection: 'column !important',
+        backdropFilter: 'blur(24px) !important',
+        WebkitBackdropFilter: 'blur(24px) !important',
+        border: '2px solid hsl(var(--primary) / 0.3) !important',
+        background: 'hsl(var(--card) / 0.9) !important',
+        borderRadius: '12px !important',
+        boxShadow: '0 8px 32px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5) !important',
+        transition: 'all 300ms ease-in-out !important'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.5)';
+        e.currentTarget.style.boxShadow = '0 20px 60px hsl(var(--primary) / 0.3), inset 0 1px 0 hsl(var(--border) / 0.6)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.3)';
+        e.currentTarget.style.boxShadow = '0 8px 32px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5)';
+      }}
     >
       <CardContent 
         className="p-6 text-center h-full flex flex-col justify-center"
@@ -104,25 +125,74 @@ export default function PerformanceCard({
         <div 
           className={`${styles.metric} text-4xl font-bold mb-4 transition-all duration-300`}
           style={{ 
-            color: color,
-            filter: `drop-shadow(0 0 12px ${color})`
+            color: `${color} !important`,
+            filter: `drop-shadow(0 0 12px ${color}) !important`,
+            fontSize: '3rem !important',
+            fontWeight: '800 !important',
+            lineHeight: '1 !important',
+            marginBottom: '1rem !important',
+            textAlign: 'center !important'
           }}
         >
           {metric}
         </div>
-        <div className={`${styles.description} text-lg font-semibold mb-2 text-foreground`}>
+        <div 
+          className={`${styles.description} text-lg font-semibold mb-2 text-foreground`}
+          style={{
+            fontSize: '1.25rem !important',
+            fontWeight: '600 !important',
+            lineHeight: '1.3 !important',
+            marginBottom: '0.75rem !important',
+            color: 'hsl(var(--foreground)) !important',
+            textAlign: 'center !important'
+          }}
+        >
           {description}
         </div>
-        <div className={`${styles.comparison} text-sm text-muted-foreground mb-4`}>
+        <div 
+          className={`${styles.comparison} text-sm text-muted-foreground mb-4`}
+          style={{
+            fontSize: '1rem !important',
+            lineHeight: '1.4 !important',
+            opacity: '0.9 !important',
+            marginBottom: '1rem !important',
+            color: 'hsl(var(--muted-foreground)) !important',
+            textAlign: 'center !important'
+          }}
+        >
           {comparison}
         </div>
         
-        <div className={`${styles.statusRow} flex items-center justify-center gap-2`}>
+        <div 
+          className={`${styles.statusRow} flex items-center justify-center gap-2`}
+          style={{
+            marginTop: 'auto !important',
+            display: 'flex !important',
+            alignItems: 'center !important',
+            justifyContent: 'center !important',
+            gap: '0.5rem !important'
+          }}
+        >
           <div 
             className={`${styles.statusIndicator} w-2 h-2 rounded-full animate-pulse`}
-            style={{ backgroundColor: color }}
+            style={{ 
+              backgroundColor: `${color} !important`,
+              width: '8px !important',
+              height: '8px !important',
+              borderRadius: '50% !important',
+              flexShrink: '0 !important',
+              animation: 'pulseGlow 2s ease-in-out infinite !important'
+            }}
           />
-          <span className="text-xs text-muted-foreground">Active</span>
+          <span 
+            className="text-xs text-muted-foreground"
+            style={{
+              fontSize: '0.75rem !important',
+              color: 'hsl(var(--muted-foreground)) !important'
+            }}
+          >
+            Active
+          </span>
         </div>
       </CardContent>
     </Card>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function CTASection() {
     return (
-        <section className="py-48 relative overflow-hidden">
+        <section className="py-48 relative overflow-hidden" style={{ paddingTop: '12rem', paddingBottom: '8rem' }}>
             <div
                 className="absolute inset-0"
                 style={{
@@ -22,7 +22,7 @@ export default function CTASection() {
                     </h2>
                     <p 
                         className="text-2xl text-muted-foreground mb-16"
-                        style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)' }}
+                        style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', marginBottom: '4rem' }}
                     >
                         Join the future of liquidity provision with AI-powered optimization on
                         SEI

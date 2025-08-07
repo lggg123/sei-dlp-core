@@ -180,15 +180,15 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       }}
     >
       <div 
-        className="w-full max-w-md p-6 rounded-2xl shadow-2xl"
+        className="w-[90%] max-w-[400px] sm:max-w-[420px] md:max-w-[440px] p-4 sm:p-6 rounded-2xl shadow-2xl"
         style={{
           backgroundColor: '#1a1a1a',
           border: `2px solid ${vaultColor}`, 
-          maxHeight: '80vh',
+          maxHeight: '85vh',
           overflow: 'auto',
           zIndex: 10001,
           position: 'relative',
-          margin: '20px',
+          margin: '10px',
           boxShadow: `0 20px 60px ${vaultColor}30, 0 0 0 1px rgba(255,255,255,0.1)`,
           color: '#ffffff',
           borderRadius: '24px'
@@ -202,10 +202,18 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
             
             <div className="space-y-4" style={{ color: '#ffffff' }}>
               <div className="text-center">
-                <div className="text-lg font-bold" style={{ color: vaultColor }}>
+                <div className="text-2xl font-bold mb-1" style={{ 
+                  color: vaultColor,
+                  textShadow: `0 0 10px ${vaultColor}40`,
+                  fontWeight: '800'
+                }}>
                   {(vault.apy * 100).toFixed(1)}% APY
                 </div>
-                <div className="text-sm" style={{ color: '#a1a1aa' }}>
+                <div className="text-sm" style={{ 
+                  color: '#e4e4e7',
+                  fontWeight: '500',
+                  letterSpacing: '0.025em'
+                }}>
                   {vault.strategy.replace('_', ' ').toUpperCase()} • {formatCurrency(vault.tvl)} TVL • {riskLevel} Risk
                 </div>
               </div>

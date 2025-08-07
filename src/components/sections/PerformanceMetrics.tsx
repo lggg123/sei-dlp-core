@@ -1,10 +1,12 @@
+'use client'
+
 import PerformanceCard from '@/components/PerformanceCard';
 
 export default function PerformanceMetrics() {
     return (
-        <section className="py-32 relative">
+        <section className="py-32 relative" style={{ paddingTop: '12rem', paddingBottom: '12rem' }}>
             <div className="container mx-auto px-4">
-                <div className="text-center mb-20">
+                <div className="text-center mb-20" style={{ marginBottom: '6rem' }}>
                     <h2 
                         className="text-5xl lg:text-6xl font-bold mb-6 holo-text"
                         style={{ 
@@ -16,13 +18,50 @@ export default function PerformanceMetrics() {
                     >
                         Real-Time Performance
                     </h2>
-                    <p className="text-2xl text-muted-foreground max-w-4xl mx-auto">
+                    <p className="track-performance-text-override">
                         Track your vault performance with AI-powered analytics and real-time metrics.
                     </p>
                 </div>
                 
-                <div className="flex flex-wrap justify-center max-w-7xl mx-auto" style={{ gap: '2rem' }}>
-                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                <div 
+                    className="performance-grid"
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        gap: '2rem',
+                        maxWidth: '1200px',
+                        margin: '0 auto',
+                        padding: '0 1rem'
+                    }}
+                >
+                    <style jsx>{`
+                        .track-performance-text-override {
+                            font-size: 2.25rem !important;
+                            font-weight: 500 !important;
+                            line-height: 1.4 !important;
+                            color: hsl(var(--muted-foreground)) !important;
+                            max-width: 64rem !important;
+                            margin: 0 auto !important;
+                            text-align: center !important;
+                            letter-spacing: -0.01em !important;
+                        }
+                        @media (min-width: 768px) {
+                            .performance-grid {
+                                grid-template-columns: repeat(3, 1fr) !important;
+                            }
+                        }
+                        @media (max-width: 767px) {
+                            .performance-grid {
+                                grid-template-columns: repeat(2, 1fr) !important;
+                            }
+                        }
+                        @media (max-width: 640px) {
+                            .performance-grid {
+                                grid-template-columns: 1fr !important;
+                            }
+                        }
+                    `}</style>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <PerformanceCard
                             metric="24.5%"
                             description="Average APY"
@@ -31,7 +70,7 @@ export default function PerformanceMetrics() {
                             positive={true}
                         />
                     </div>
-                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <PerformanceCard
                             metric="$8.3M"
                             description="Total Value Locked"
@@ -40,7 +79,7 @@ export default function PerformanceMetrics() {
                             positive={true}
                         />
                     </div>
-                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <PerformanceCard
                             metric="0.012%"
                             description="Impermanent Loss"
@@ -49,12 +88,30 @@ export default function PerformanceMetrics() {
                             positive={true}
                         />
                     </div>
-                    <div className="w-full sm:w-1/2 lg:w-1/4" style={{ maxWidth: '280px', margin: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <PerformanceCard
                             metric="99.8%"
                             description="Uptime"
                             comparison="AI optimization active"
                             color="#fee75c"
+                            positive={true}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <PerformanceCard
+                            metric="3.2s"
+                            description="Avg Response Time"
+                            comparison="Lightning fast execution"
+                            color="#00bcd4"
+                            positive={true}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <PerformanceCard
+                            metric="127"
+                            description="Active Strategies"
+                            comparison="Continuously optimizing"
+                            color="#ff9800"
                             positive={true}
                         />
                     </div>

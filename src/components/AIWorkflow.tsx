@@ -104,7 +104,17 @@ export default function AIWorkflow() {
   }, []);
 
   return (
-    <div ref={containerRef} className="py-32 neural-grid">
+    <div 
+      ref={containerRef} 
+      className="py-32 neural-grid"
+      style={{
+        paddingTop: '15rem !important',
+        paddingBottom: '8rem !important',
+        marginTop: '5rem !important',
+        minHeight: '100vh !important',
+        overflow: 'visible !important'
+      }}
+    >
       <style jsx>{`
         @keyframes flowMove {
           0% { transform: translateX(-100%) translateY(-50%); opacity: 0; }
@@ -130,6 +140,134 @@ export default function AIWorkflow() {
         .animate-pulse-glow {
           animation: pulse-glow 2s ease-in-out infinite;
         }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .ai-title-override {
+          font-size: 4rem !important;
+          font-weight: 700 !important;
+          color: hsl(var(--foreground)) !important;
+          margin-bottom: 2rem !important;
+          text-align: center !important;
+          line-height: 1.2 !important;
+        }
+        .ai-description-override {
+          font-size: 1.75rem !important;
+          color: hsl(var(--muted-foreground)) !important;
+          line-height: 1.5 !important;
+          text-align: center !important;
+          font-weight: 400 !important;
+        }
+        .ai-character-override {
+          font-size: 8rem !important;
+          filter: drop-shadow(0 0 30px hsl(var(--primary))) !important;
+        }
+        .performance-metrics-text-override {
+          font-size: 1.5rem !important;
+          background: linear-gradient(45deg, #9b5de5, #00f5d4, #ff206e) !important;
+          background-size: 200% 200% !important;
+          background-clip: text !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          color: transparent !important;
+          font-weight: 700 !important;
+          text-align: center !important;
+          white-space: nowrap !important;
+          display: block !important;
+          animation: gradientShift 3s ease-in-out infinite !important;
+          text-shadow: none !important;
+        }
+        .performance-card-label-cyan {
+          font-size: 1.25rem !important;
+          font-weight: 700 !important;
+          color: white !important;
+          text-decoration: underline !important;
+          text-decoration-color: #00f5d4 !important;
+          text-decoration-thickness: 3px !important;
+          text-underline-offset: 6px !important;
+          text-shadow: 0 0 12px #00f5d4, 0 0 24px #00f5d4, 0 0 36px #00f5d4 !important;
+          filter: drop-shadow(0 0 8px #00f5d4) !important;
+        }
+        .performance-card-label-purple {
+          font-size: 1.25rem !important;
+          font-weight: 700 !important;
+          color: white !important;
+          text-decoration: underline !important;
+          text-decoration-color: #9b5de5 !important;
+          text-decoration-thickness: 3px !important;
+          text-underline-offset: 6px !important;
+          text-shadow: 0 0 12px #9b5de5, 0 0 24px #9b5de5, 0 0 36px #9b5de5 !important;
+          filter: drop-shadow(0 0 8px #9b5de5) !important;
+        }
+        .performance-card-label-pink {
+          font-size: 1.25rem !important;
+          font-weight: 700 !important;
+          color: white !important;
+          text-decoration: underline !important;
+          text-decoration-color: #ff206e !important;
+          text-decoration-thickness: 3px !important;
+          text-underline-offset: 6px !important;
+          text-shadow: 0 0 12px #ff206e, 0 0 24px #ff206e, 0 0 36px #ff206e !important;
+          filter: drop-shadow(0 0 8px #ff206e) !important;
+        }
+        .performance-card-metric {
+          font-size: 3rem !important;
+          font-weight: 800 !important;
+          margin-bottom: 1rem !important;
+        }
+        .performance-metrics-divider-container {
+          margin-top: 8rem !important;
+          margin-bottom: 6rem !important;
+          padding-top: 1rem !important;
+          padding-bottom: 1rem !important;
+        }
+        .performance-metrics-enhanced-text {
+          font-size: 2rem !important;
+          font-weight: 700 !important;
+          background: linear-gradient(135deg, #00f5d4, #9b5de5, #ff206e) !important;
+          background-size: 200% 200% !important;
+          background-clip: text !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          color: transparent !important;
+          text-align: center !important;
+          white-space: nowrap !important;
+          display: block !important;
+          animation: gradientShift 4s ease-in-out infinite !important;
+          text-shadow: none !important;
+          padding: 1.5rem 3rem !important;
+          border-radius: 50px !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+          border: 2px solid transparent !important;
+          background-origin: border-box !important;
+          background-image: linear-gradient(135deg, rgba(0, 245, 212, 0.1), rgba(155, 93, 229, 0.1), rgba(255, 32, 110, 0.1)), 
+                           linear-gradient(135deg, #00f5d4, #9b5de5, #ff206e) !important;
+          background-clip: padding-box, text !important;
+          -webkit-background-clip: padding-box, text !important;
+          box-shadow: 0 8px 32px rgba(0, 245, 212, 0.2), 
+                     0 0 0 1px rgba(255, 255, 255, 0.1), 
+                     inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+        .elizaos-subtitle-override {
+          font-size: 1.75rem !important;
+          color: hsl(var(--muted-foreground)) !important;
+          line-height: 1.4 !important;
+          font-weight: 400 !important;
+          max-width: 64rem !important;
+          margin: 0 auto !important;
+          text-align: center !important;
+        }
       `}</style>
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
@@ -144,15 +282,7 @@ export default function AIWorkflow() {
           >
             AI-Powered Liquidity Engine
           </h2>
-          <p 
-            className="max-w-4xl mx-auto"
-            style={{
-              fontSize: '1.25rem !important',
-              color: 'hsl(var(--muted-foreground)) !important',
-              lineHeight: '1.4 !important',
-              fontWeight: '400 !important'
-            }}
-          >
+          <p className="elizaos-subtitle-override">
             Watch how ElizaOS optimizes your capital in real-time across SEI&apos;s DeFi ecosystem
           </p>
         </div>
@@ -181,38 +311,72 @@ export default function AIWorkflow() {
                 >
                   {/* Outer Glow Ring */}
                   <div 
-                    className="absolute inset-0 rounded-full animate-pulse"
                     style={{
-                      background: `conic-gradient(${step.color}, transparent, ${step.color})`,
-                      padding: '3px',
-                      zIndex: 1
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      right: '0',
+                      bottom: '0',
+                      borderRadius: '50%',
+                      background: `conic-gradient(${step.color}, ${step.color}AA, ${step.color}, ${step.color}AA, ${step.color})`,
+                      padding: '4px',
+                      zIndex: 1,
+                      width: '100%',
+                      height: '100%',
+                      display: 'block',
+                      visibility: 'visible',
+                      opacity: 1,
+                      boxShadow: `0 0 40px ${step.color}, 0 0 80px ${step.color}80`,
+                      animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                     }}
                   >
                     <div 
                       className="w-full h-full rounded-full"
-                      style={{ backgroundColor: 'hsl(var(--background))' }}
+                      style={{ 
+                        backgroundColor: 'hsl(var(--background)) !important',
+                        borderRadius: '50% !important',
+                        width: '100% !important',
+                        height: '100% !important'
+                      }}
                     ></div>
                   </div>
 
                   {/* Main Circle */}
                   <div 
-                    className="absolute inset-1 rounded-full transition-all duration-500 group-hover:border-4"
                     style={{
-                      background: `radial-gradient(circle at center, ${step.color}15, hsl(var(--card) / 0.9)) !important`,
-                      border: `2px solid ${step.color}60 !important`,
-                      boxShadow: `0 0 30px ${step.color}40, inset 0 1px 20px ${step.color}20 !important`,
+                      position: 'absolute',
+                      top: '4px',
+                      left: '4px',
+                      right: '4px',
+                      bottom: '4px',
+                      borderRadius: '50%',
+                      background: `radial-gradient(circle at center, ${step.color}40, rgba(30, 30, 50, 0.95), ${step.color}20)`,
+                      border: `4px solid ${step.color}`,
+                      boxShadow: `0 0 60px ${step.color}, 0 0 120px ${step.color}60, inset 0 0 30px ${step.color}40`,
                       backdropFilter: 'blur(20px)',
                       WebkitBackdropFilter: 'blur(20px)',
-                      borderRadius: '50% !important',
-                      zIndex: 2
+                      zIndex: 2,
+                      width: 'calc(100% - 8px)',
+                      height: 'calc(100% - 8px)',
+                      display: 'block',
+                      visibility: 'visible',
+                      opacity: 1,
+                      transition: 'all 0.5s ease'
                     }}
                   >
                     {/* Rotating Border Animation */}
                     <div 
-                      className="absolute -inset-1 rounded-full opacity-50 animate-spin"
                       style={{
-                        background: `conic-gradient(${step.color}, transparent, transparent, transparent)`,
-                        animationDuration: '4s'
+                        position: 'absolute',
+                        top: '-4px',
+                        left: '-4px',
+                        right: '-4px',
+                        bottom: '-4px',
+                        borderRadius: '50%',
+                        opacity: 0.8,
+                        background: `conic-gradient(${step.color}, transparent, ${step.color}80, transparent, ${step.color})`,
+                        boxShadow: `0 0 20px ${step.color}`,
+                        animation: 'spin 3s linear infinite'
                       }}
                     ></div>
 
@@ -270,21 +434,23 @@ export default function AIWorkflow() {
                 <div className="text-center mt-6 max-w-[140px]">
                   <h3 
                     style={{
-                      fontSize: '1.125rem !important',
+                      fontSize: '1.5rem !important',
                       fontWeight: '700 !important',
                       color: 'hsl(var(--foreground)) !important',
-                      marginBottom: '0.5rem !important',
-                      textAlign: 'center'
+                      marginBottom: '0.75rem !important',
+                      textAlign: 'center',
+                      lineHeight: '1.2 !important'
                     }}
                   >
                     {step.title}
                   </h3>
                   <p 
                     style={{
-                      fontSize: '0.875rem !important',
+                      fontSize: '1.125rem !important',
                       color: 'hsl(var(--muted-foreground)) !important',
-                      lineHeight: '1.5 !important',
-                      textAlign: 'center'
+                      lineHeight: '1.4 !important',
+                      textAlign: 'center',
+                      fontWeight: '400 !important'
                     }}
                   >
                     {step.description}
@@ -354,8 +520,8 @@ export default function AIWorkflow() {
               <div 
                 className="rounded-full backdrop-blur-xl border-2 flex items-center justify-center animate-float shadow-2xl"
                 style={{
-                  width: '180px !important',
-                  height: '180px !important',
+                  width: '240px !important',
+                  height: '240px !important',
                   background: 'radial-gradient(circle at center, hsl(var(--primary) / 0.3), hsl(var(--secondary) / 0.2), hsl(var(--accent) / 0.3)) !important',
                   border: '2px solid hsl(var(--primary) / 0.4) !important',
                   backdropFilter: 'blur(20px)',
@@ -372,13 +538,7 @@ export default function AIWorkflow() {
                 ></div>
                 
                 {/* AI Character */}
-                <div 
-                  className="relative z-10 animate-pulse" 
-                  style={{ 
-                    fontSize: '4rem !important',
-                    filter: 'drop-shadow(0 0 20px hsl(var(--primary))) !important'
-                  }}
-                >
+                <div className="relative z-10 animate-pulse ai-character-override">
                   🤖
                 </div>
                 
@@ -446,26 +606,17 @@ export default function AIWorkflow() {
             </div>
             
             {/* AI Description */}
-            <div className="mt-6 text-center max-w-md">
-              <h3 
-                style={{
-                  fontSize: '1.25rem !important',
-                  fontWeight: '700 !important',
-                  color: 'hsl(var(--foreground)) !important',
-                  marginBottom: '0.5rem !important',
-                  textAlign: 'center'
-                }}
-              >
+            <div 
+              className="mt-6 text-center max-w-md"
+              style={{
+                marginBottom: '8rem !important',
+                paddingBottom: '4rem !important'
+              }}
+            >
+              <h3 className="ai-title-override">
                 AI-Powered Optimization
               </h3>
-              <p 
-                style={{
-                  fontSize: '0.95rem !important',
-                  color: 'hsl(var(--muted-foreground)) !important',
-                  lineHeight: '1.6 !important',
-                  textAlign: 'center'
-                }}
-              >
+              <p className="ai-description-override">
                 Our advanced AI continuously monitors market conditions, optimizes liquidity positions, and minimizes impermanent loss through intelligent rebalancing.
               </p>
             </div>
@@ -473,25 +624,23 @@ export default function AIWorkflow() {
         </div>
 
         {/* Section Divider */}
-        <div className="mt-32 mb-24 flex items-center justify-center" style={{ marginBottom: '6rem' }}>
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs"></div>
-          <div className="mx-4 px-4 py-2 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-full">
-            <span 
-              style={{
-                fontSize: '0.875rem !important',
-                color: 'hsl(var(--primary)) !important',
-                fontWeight: '500 !important',
-                textAlign: 'center'
-              }}
-            >
-              Performance Metrics
-            </span>
-          </div>
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs"></div>
+        <div className="performance-metrics-divider-container flex items-center justify-center">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs" style={{ height: '1px !important', background: 'linear-gradient(to right, transparent, hsl(var(--primary) / 0.3), transparent) !important' }}></div>
+          <span className="performance-metrics-enhanced-text">
+            Performance Metrics
+          </span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs" style={{ height: '1px !important', background: 'linear-gradient(to right, transparent, hsl(var(--primary) / 0.3), transparent) !important' }}></div>
         </div>
 
         {/* Performance Metrics */}
-        <div className="max-w-5xl mx-auto px-6">
+        <div 
+          className="max-w-5xl mx-auto px-6"
+          style={{
+            marginTop: '8rem !important',
+            paddingTop: '6rem !important',
+            marginBottom: '4rem !important'
+          }}
+        >
           <div className="flex justify-center items-stretch" style={{ gap: '3rem' }}>
           {[
             { metric: '62%', label: 'Less Impermanent Loss', color: '#00f5d4' },
@@ -506,11 +655,11 @@ export default function AIWorkflow() {
                 flex: '0 0 220px',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                border: '2px solid hsl(var(--primary) / 0.2)',
+                border: '4px solid hsl(var(--primary) / 0.4)',
                 background: 'hsl(var(--card) / 0.8)',
                 borderRadius: '12px',
                 padding: '1.5rem',
-                boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)',
+                boxShadow: '0 12px 48px hsl(var(--primary) / 0.25), inset 0 1px 0 hsl(var(--border) / 0.5)',
                 textAlign: 'center',
                 minHeight: '120px',
                 display: 'flex',
@@ -519,12 +668,12 @@ export default function AIWorkflow() {
                 alignItems: 'center'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
-                e.currentTarget.style.boxShadow = '0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5)';
+                e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.7)';
+                e.currentTarget.style.boxShadow = '0 20px 80px hsl(var(--primary) / 0.35), inset 0 1px 0 hsl(var(--border) / 0.7)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.2)';
-                e.currentTarget.style.boxShadow = '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)';
+                e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
+                e.currentTarget.style.boxShadow = '0 12px 48px hsl(var(--primary) / 0.25), inset 0 1px 0 hsl(var(--border) / 0.5)';
               }}
             >
               {/* Background gradient effect */}
@@ -545,7 +694,7 @@ export default function AIWorkflow() {
                   }}
                 >
                   {index === 0 && (
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                          className="animate-bounce">
                       <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" 
                             stroke={item.color} strokeWidth="2.5" fill={`${item.color}20`}/>
@@ -554,7 +703,7 @@ export default function AIWorkflow() {
                     </svg>
                   )}
                   {index === 1 && (
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                          className="animate-spin" style={{ animationDuration: '3s' }}>
                       <circle cx="12" cy="12" r="10" stroke={item.color} strokeWidth="2.5" fill={`${item.color}15`}/>
                       <polyline points="12,6 12,12 16,14" stroke={item.color} strokeWidth="3" 
@@ -562,7 +711,7 @@ export default function AIWorkflow() {
                     </svg>
                   )}
                   {index === 2 && (
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" 
                             stroke={item.color} strokeWidth="2.5" fill={`${item.color}10`}/>
                       <circle cx="12" cy="12" r="3" stroke={item.color} strokeWidth="2.5" 
@@ -573,16 +722,23 @@ export default function AIWorkflow() {
               </div>
               
               <div 
-                className="text-2xl font-bold mb-1 relative z-10"
+                className="performance-card-metric relative z-10"
                 style={{ 
                   color: item.color,
-                  filter: `drop-shadow(0 0 8px ${item.color})`,
-                  fontWeight: '800'
+                  filter: `drop-shadow(0 0 8px ${item.color})`
                 }}
               >
                 {item.metric}
               </div>
-              <div className="text-sm text-muted-foreground relative z-10">{item.label}</div>
+              <div 
+                className={`relative z-10 ${
+                  index === 0 ? 'performance-card-label-cyan' :
+                  index === 1 ? 'performance-card-label-purple' :
+                  'performance-card-label-pink'
+                }`}
+              >
+                {item.label}
+              </div>
               
               {/* Pulsing indicator */}
               <div 

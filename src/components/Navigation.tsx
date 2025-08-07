@@ -32,10 +32,10 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   return (
     <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', width: '100%', position: 'relative' }}>
+        <div className="flex justify-between items-center h-16 w-full relative">
           
           {/* Left side - Logo, Brand and Navigation Links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', zIndex: '1' }}>
+          <div className="flex items-center gap-8 z-10 flex-1">
             <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <Logo variant="icon" size={48} className="flex-shrink-0" />
               <div className="hidden sm:block">
@@ -78,13 +78,18 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
           </div>
 
           {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', zIndex: '2' }}>
+          <div className="flex items-center gap-4 z-20 flex-shrink-0 ml-auto">
             {showLaunchApp && (
               <Link
                 href="/vaults"
-                className="btn-cyber gap-2 flex"
+                className="btn-cyber flex items-center gap-2 whitespace-nowrap"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg 
+                  className="w-4 h-4 flex-shrink-0" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 Launch App

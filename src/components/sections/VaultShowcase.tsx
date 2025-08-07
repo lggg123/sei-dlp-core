@@ -31,7 +31,7 @@ const vaultData = [
 
 export default function VaultShowcase() {
     return (
-        <section className="py-32 relative">
+        <section className="py-32 relative" style={{ paddingTop: '12rem', paddingBottom: '8rem' }}>
             <div className="container mx-auto px-4">
                 <div className="text-center mb-20" style={{ marginBottom: '5rem' }}>
                     <h2 
