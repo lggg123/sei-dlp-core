@@ -1,0 +1,27 @@
+.wallet_container_override {
+  display: flex !important;
+  flex: 1 !important;
+  justify-content: flex-end !important;
+  text-decoration: none !important;
+}
+
+.risk_badge_override {
+  padding: 0.5rem 1rem !important;
+  background: linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4)) !important;
+  color: #a7f3d0 !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5) !important;
+  white-space: nowrap !important;
+  border-radius: 9999px !important;
+  margin-top: 1.5rem !important;
+  display: inline-block !important;
+}
+
+/* Enhanced card styling for better contrast over 3D backgrounds */
+.vault_card_enhanced {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+}
