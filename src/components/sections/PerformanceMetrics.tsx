@@ -5,7 +5,15 @@ export default function PerformanceMetrics() {
         <section className="py-32 relative">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-20">
-                    <h2 className="text-5xl lg:text-6xl font-bold mb-6 holo-text">
+                    <h2 
+                        className="text-5xl lg:text-6xl font-bold mb-6 holo-text"
+                        style={{ 
+                            fontSize: 'clamp(3rem, 6vw, 4.5rem)',
+                            fontWeight: 'bold',
+                            marginBottom: '2rem',
+                            lineHeight: '1.1'
+                        }}
+                    >
                         Real-Time Performance
                     </h2>
                     <p className="text-2xl text-muted-foreground max-w-4xl mx-auto">

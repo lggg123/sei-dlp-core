@@ -105,117 +105,243 @@ export default function AIWorkflow() {
 
   return (
     <div ref={containerRef} className="py-32 neural-grid">
+      <style jsx>{`
+        @keyframes flowMove {
+          0% { transform: translateX(-100%) translateY(-50%); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateX(4rem) translateY(-50%); opacity: 0; }
+        }
+        @keyframes streamFlow {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(200%); }
+        }
+        @keyframes animate-float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        .animate-float {
+          animation: animate-float 6s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        .animate-pulse-glow {
+          animation: pulse-glow 2s ease-in-out infinite;
+        }
+      `}</style>
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-6xl font-bold mb-6 holo-text">
+          <h2 
+            className="text-5xl lg:text-6xl font-bold mb-6 holo-text"
+            style={{ 
+              fontSize: 'clamp(3rem, 6vw, 4.5rem)',
+              fontWeight: 'bold',
+              marginBottom: '2rem',
+              lineHeight: '1.1'
+            }}
+          >
             AI-Powered Liquidity Engine
           </h2>
-          <p className="text-2xl text-muted-foreground max-w-4xl mx-auto">
+          <p 
+            className="max-w-4xl mx-auto"
+            style={{
+              fontSize: '1.25rem !important',
+              color: 'hsl(var(--muted-foreground)) !important',
+              lineHeight: '1.4 !important',
+              fontWeight: '400 !important'
+            }}
+          >
             Watch how ElizaOS optimizes your capital in real-time across SEI&apos;s DeFi ecosystem
           </p>
         </div>
 
         {/* Workflow Steps */}
         <div className="relative py-12">
-          <div className="flex flex-row items-center justify-center overflow-x-auto pb-8 max-w-full px-8" style={{ gap: '2rem' }}>
+          <div className="flex flex-row items-center justify-center overflow-x-auto pb-8 max-w-full px-8" style={{ gap: '4rem' }}>
             {workflowSteps.map((step, index) => (
-              <div key={step.id} className="flex flex-col items-center relative" style={{ margin: '0 1rem' }}>
-                {/* Step Card */}
-                <Card
+              <div key={step.id} className="flex flex-col items-center relative">
+                {/* Circular Step Card */}
+                <div
                   ref={el => { stepsRef.current[index] = el; }}
-                  className="cursor-pointer group relative overflow-hidden transition-all duration-300"
+                  className="cursor-pointer group relative overflow-visible transition-all duration-500 hover:scale-110"
                   style={{
-                    width: '140px !important',
-                    maxWidth: '140px !important',
-                    minHeight: '140px !important',
-                    maxHeight: '140px !important',
+                    width: '160px',
+                    height: '160px',
                     flexShrink: 0,
-                    backdropFilter: 'blur(24px)',
-                    WebkitBackdropFilter: 'blur(24px)',
-                    border: '2px solid hsl(var(--primary) / 0.2)',
-                    background: 'hsl(var(--card) / 0.8)',
-                    borderRadius: '12px',
-                    padding: '0.75rem !important',
-                    boxShadow: '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)',
-                    textAlign: 'center'
+                    position: 'relative'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
-                    e.currentTarget.style.boxShadow = '0 20px 60px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(var(--border) / 0.5)';
-                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.transform = 'scale(1.15)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.2)';
-                    e.currentTarget.style.boxShadow = '0 8px 32px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--border) / 0.4)';
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
-                  {/* Animated Background Effects */}
-                  <div className="absolute inset-0 opacity-10 transition-opacity duration-300 group-hover:opacity-20">
-                    <div 
-                      className="absolute inset-0"
-                      style={{
-                        background: `linear-gradient(45deg, ${step.color}20, transparent)`
-                      }}
-                    />
-                  </div>
-                  
-                  {/* Data Streams */}
+                  {/* Outer Glow Ring */}
                   <div 
-                    className="absolute top-0 left-1/4 w-px h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute inset-0 rounded-full animate-pulse"
                     style={{
-                      background: `linear-gradient(to bottom, transparent 0%, ${step.color} 50%, transparent 100%)`,
-                      animation: 'streamFlow 2s linear infinite'
+                      background: `conic-gradient(${step.color}, transparent, ${step.color})`,
+                      padding: '3px',
+                      zIndex: 1
                     }}
-                  />
-                  <div 
-                    className="absolute top-0 right-1/4 w-px h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background: `linear-gradient(to bottom, transparent 0%, ${step.color} 50%, transparent 100%)`,
-                      animation: 'streamFlow 2s linear infinite 0.5s'
-                    }}
-                  />
-                  
-                  <div 
-                    className="text-4xl mb-4 filter drop-shadow-lg relative z-10"
-                    style={{ filter: `drop-shadow(0 0 10px ${step.color})` }}
                   >
-                    {step.icon}
+                    <div 
+                      className="w-full h-full rounded-full"
+                      style={{ backgroundColor: 'hsl(var(--background))' }}
+                    ></div>
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-foreground relative z-10">
+
+                  {/* Main Circle */}
+                  <div 
+                    className="absolute inset-1 rounded-full transition-all duration-500 group-hover:border-4"
+                    style={{
+                      background: `radial-gradient(circle at center, ${step.color}15, hsl(var(--card) / 0.9)) !important`,
+                      border: `2px solid ${step.color}60 !important`,
+                      boxShadow: `0 0 30px ${step.color}40, inset 0 1px 20px ${step.color}20 !important`,
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      borderRadius: '50% !important',
+                      zIndex: 2
+                    }}
+                  >
+                    {/* Rotating Border Animation */}
+                    <div 
+                      className="absolute -inset-1 rounded-full opacity-50 animate-spin"
+                      style={{
+                        background: `conic-gradient(${step.color}, transparent, transparent, transparent)`,
+                        animationDuration: '4s'
+                      }}
+                    ></div>
+
+                    {/* Enhanced Icon with Glow */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div 
+                        className="text-5xl transition-all duration-300 group-hover:text-6xl relative z-10"
+                        style={{ 
+                          filter: `drop-shadow(0 0 20px ${step.color}) drop-shadow(0 0 40px ${step.color}80)`,
+                          textShadow: `0 0 20px ${step.color}, 0 0 40px ${step.color}80`
+                        }}
+                      >
+                        {step.icon}
+                      </div>
+                    </div>
+
+                    {/* Pulsing Core */}
+                    <div 
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full animate-pulse opacity-30"
+                      style={{
+                        background: `radial-gradient(circle, ${step.color}60, transparent)`
+                      }}
+                    ></div>
+
+                    {/* Orbiting Particles */}
+                    <div 
+                      className="absolute top-2 left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full animate-ping"
+                      style={{ backgroundColor: step.color }}
+                    ></div>
+                    <div 
+                      className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full animate-ping"
+                      style={{ 
+                        backgroundColor: step.color,
+                        animationDelay: '1s'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute top-1/2 left-2 transform -translate-y-1/2 w-2 h-2 rounded-full animate-ping"
+                      style={{ 
+                        backgroundColor: step.color,
+                        animationDelay: '0.5s'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute top-1/2 right-2 transform -translate-y-1/2 w-2 h-2 rounded-full animate-ping"
+                      style={{ 
+                        backgroundColor: step.color,
+                        animationDelay: '1.5s'
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Step Labels Below Circle */}
+                <div className="text-center mt-6 max-w-[140px]">
+                  <h3 
+                    style={{
+                      fontSize: '1.125rem !important',
+                      fontWeight: '700 !important',
+                      color: 'hsl(var(--foreground)) !important',
+                      marginBottom: '0.5rem !important',
+                      textAlign: 'center'
+                    }}
+                  >
                     {step.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground relative z-10">
+                  <p 
+                    style={{
+                      fontSize: '0.875rem !important',
+                      color: 'hsl(var(--muted-foreground)) !important',
+                      lineHeight: '1.5 !important',
+                      textAlign: 'center'
+                    }}
+                  >
                     {step.description}
                   </p>
-                  
-                  {/* Pulsing Indicator */}
-                  <div 
-                    className="absolute -top-2 -right-2 w-4 h-4 rounded-full animate-pulse-glow"
-                    style={{ backgroundColor: step.color }}
-                  />
-                </Card>
+                </div>
 
                 {/* Enhanced Connector Arrow (hidden on last item) */}
                 {index < workflowSteps.length - 1 && (
-                  <div className="absolute top-1/2 transform -translate-y-1/2 z-20" style={{ right: '-1.5rem' }}>
+                  <div 
+                    className="absolute top-20 left-full transform -translate-y-1/2 z-10" 
+                    style={{ width: '4rem' }}
+                  >
+                    {/* Main Arrow Line */}
                     <div
                       ref={el => { connectorsRef.current[index] = el; }}
-                      className="w-8 md:w-10 h-0.5 bg-gradient-to-r from-primary via-secondary to-primary origin-left opacity-80 shadow-lg"
+                      className="relative origin-left transition-all duration-500"
                       style={{
-                        boxShadow: '0 0 8px hsl(var(--primary) / 0.4), 0 0 16px hsl(var(--secondary) / 0.2)'
+                        height: '4px !important',
+                        width: '100% !important',
+                        background: `linear-gradient(to right, ${workflowSteps[index].color}, ${workflowSteps[index + 1].color}) !important`,
+                        boxShadow: `0 0 12px ${workflowSteps[index].color}60, 0 0 24px ${workflowSteps[index + 1].color}40 !important`,
+                        borderRadius: '2px !important',
+                        display: 'block !important',
+                        opacity: '1 !important'
                       }}
-                    />
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1">
+                    >
+                      {/* Animated Flow Dots */}
                       <div 
-                        className="w-0 h-0 border-l-4 border-l-primary border-t-2 border-b-2 border-t-transparent border-b-transparent opacity-70"
+                        className="absolute top-1/2 left-0 w-2 h-2 rounded-full transform -translate-y-1/2 animate-bounce"
                         style={{
-                          filter: 'drop-shadow(0 0 4px hsl(var(--primary) / 0.6))'
+                          backgroundColor: workflowSteps[index].color,
+                          animation: 'flowMove 2s linear infinite',
+                          boxShadow: `0 0 8px ${workflowSteps[index].color}`
+                        }}
+                      ></div>
+                    </div>
+                    
+                    {/* Arrow Head */}
+                    <div 
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1"
+                      style={{ zIndex: 10 }}
+                    >
+                      <div 
+                        className="transition-all duration-300"
+                        style={{
+                          width: '0 !important',
+                          height: '0 !important',
+                          borderLeft: `8px solid ${workflowSteps[index + 1].color} !important`,
+                          borderTop: '4px solid transparent !important',
+                          borderBottom: '4px solid transparent !important',
+                          borderRight: '0 !important',
+                          filter: `drop-shadow(0 0 8px ${workflowSteps[index + 1].color}80) !important`,
+                          display: 'block !important',
+                          opacity: '1 !important'
                         }}
                       />
                     </div>
-                    {/* Animated Flow Indicator */}
-                    <div className="absolute top-1/2 left-0 w-2 h-2 bg-primary rounded-full transform -translate-y-1/2 animate-ping opacity-60" />
                   </div>
                 )}
               </div>
@@ -225,33 +351,121 @@ export default function AIWorkflow() {
           {/* Central AI Character - Enhanced 3D Look */}
           <div className="mt-24 flex flex-col items-center" style={{ marginTop: '6rem' }}>
             <div className="relative">
-              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-primary/30 via-secondary/20 to-accent/30 backdrop-blur-xl border-2 border-primary/40 flex items-center justify-center animate-float shadow-2xl">
+              <div 
+                className="rounded-full backdrop-blur-xl border-2 flex items-center justify-center animate-float shadow-2xl"
+                style={{
+                  width: '180px !important',
+                  height: '180px !important',
+                  background: 'radial-gradient(circle at center, hsl(var(--primary) / 0.3), hsl(var(--secondary) / 0.2), hsl(var(--accent) / 0.3)) !important',
+                  border: '2px solid hsl(var(--primary) / 0.4) !important',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)'
+                }}
+              >
                 {/* Inner glow effect */}
-                <div className="absolute inset-4 rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-sm"></div>
+                <div 
+                  className="absolute rounded-full blur-sm"
+                  style={{
+                    inset: '1rem',
+                    background: 'radial-gradient(circle at center, hsl(var(--primary) / 0.2), transparent)'
+                  }}
+                ></div>
                 
                 {/* AI Character */}
-                <div className="relative z-10 text-6xl animate-pulse" style={{ filter: 'drop-shadow(0 0 20px hsl(var(--primary)))' }}>
+                <div 
+                  className="relative z-10 animate-pulse" 
+                  style={{ 
+                    fontSize: '4rem !important',
+                    filter: 'drop-shadow(0 0 20px hsl(var(--primary))) !important'
+                  }}
+                >
                   🤖
                 </div>
                 
                 {/* Rotating outer ring */}
-                <div className="absolute inset-0 rounded-full border-2 border-primary/60 animate-spin" style={{ animationDuration: '4s' }} />
+                <div 
+                  className="absolute inset-0 rounded-full animate-spin" 
+                  style={{ 
+                    animationDuration: '4s',
+                    border: '2px solid hsl(var(--primary) / 0.6) !important'
+                  }} 
+                />
                 
                 {/* Counter-rotating inner ring */}
-                <div className="absolute inset-6 rounded-full border border-secondary/60 animate-spin" style={{ animationDuration: '3s', animationDirection: 'reverse' }} />
+                <div 
+                  className="absolute rounded-full animate-spin" 
+                  style={{ 
+                    animationDuration: '3s', 
+                    animationDirection: 'reverse',
+                    inset: '1.5rem',
+                    border: '1px solid hsl(var(--secondary) / 0.6) !important'
+                  }} 
+                />
                 
                 {/* Pulsing dots */}
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary rounded-full animate-ping"></div>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-secondary rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-                <div className="absolute top-1/2 -left-2 transform -translate-y-1/2 w-2 h-2 bg-accent rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute top-1/2 -right-2 transform -translate-y-1/2 w-2 h-2 bg-primary rounded-full animate-ping" style={{ animationDelay: '1.5s' }}></div>
+                <div 
+                  className="absolute left-1/2 transform -translate-x-1/2 rounded-full animate-ping"
+                  style={{
+                    top: '-8px',
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'hsl(var(--primary))'
+                  }}
+                ></div>
+                <div 
+                  className="absolute left-1/2 transform -translate-x-1/2 rounded-full animate-ping"
+                  style={{
+                    bottom: '-8px',
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'hsl(var(--secondary))',
+                    animationDelay: '0.5s'
+                  }}
+                ></div>
+                <div 
+                  className="absolute top-1/2 transform -translate-y-1/2 rounded-full animate-ping"
+                  style={{
+                    left: '-8px',
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'hsl(var(--accent))',
+                    animationDelay: '1s'
+                  }}
+                ></div>
+                <div 
+                  className="absolute top-1/2 transform -translate-y-1/2 rounded-full animate-ping"
+                  style={{
+                    right: '-8px',
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'hsl(var(--primary))',
+                    animationDelay: '1.5s'
+                  }}
+                ></div>
               </div>
             </div>
             
             {/* AI Description */}
             <div className="mt-6 text-center max-w-md">
-              <h3 className="text-xl font-bold text-foreground mb-2">AI-Powered Optimization</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <h3 
+                style={{
+                  fontSize: '1.25rem !important',
+                  fontWeight: '700 !important',
+                  color: 'hsl(var(--foreground)) !important',
+                  marginBottom: '0.5rem !important',
+                  textAlign: 'center'
+                }}
+              >
+                AI-Powered Optimization
+              </h3>
+              <p 
+                style={{
+                  fontSize: '0.95rem !important',
+                  color: 'hsl(var(--muted-foreground)) !important',
+                  lineHeight: '1.6 !important',
+                  textAlign: 'center'
+                }}
+              >
                 Our advanced AI continuously monitors market conditions, optimizes liquidity positions, and minimizes impermanent loss through intelligent rebalancing.
               </p>
             </div>
@@ -262,7 +476,16 @@ export default function AIWorkflow() {
         <div className="mt-32 mb-24 flex items-center justify-center" style={{ marginBottom: '6rem' }}>
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs"></div>
           <div className="mx-4 px-4 py-2 bg-card/50 backdrop-blur-sm border border-primary/20 rounded-full">
-            <span className="text-sm text-primary font-medium">Performance Metrics</span>
+            <span 
+              style={{
+                fontSize: '0.875rem !important',
+                color: 'hsl(var(--primary)) !important',
+                fontWeight: '500 !important',
+                textAlign: 'center'
+              }}
+            >
+              Performance Metrics
+            </span>
           </div>
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent max-w-xs"></div>
         </div>
@@ -313,16 +536,16 @@ export default function AIWorkflow() {
               />
               
               {/* Animated 3D Icon */}
-              <div className="mb-3 relative z-10 transform-gpu transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+              <div className="mb-4 relative z-10 transform-gpu transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
                 <div 
                   className="animate-pulse"
                   style={{
-                    filter: `drop-shadow(0 4px 8px ${item.color}40)`,
+                    filter: `drop-shadow(0 6px 12px ${item.color}40)`,
                     transform: 'perspective(100px) rotateX(10deg)'
                   }}
                 >
                   {index === 0 && (
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                          className="animate-bounce">
                       <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" 
                             stroke={item.color} strokeWidth="2.5" fill={`${item.color}20`}/>
@@ -331,7 +554,7 @@ export default function AIWorkflow() {
                     </svg>
                   )}
                   {index === 1 && (
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                          className="animate-spin" style={{ animationDuration: '3s' }}>
                       <circle cx="12" cy="12" r="10" stroke={item.color} strokeWidth="2.5" fill={`${item.color}15`}/>
                       <polyline points="12,6 12,12 16,14" stroke={item.color} strokeWidth="3" 
@@ -339,7 +562,7 @@ export default function AIWorkflow() {
                     </svg>
                   )}
                   {index === 2 && (
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" 
                             stroke={item.color} strokeWidth="2.5" fill={`${item.color}10`}/>
                       <circle cx="12" cy="12" r="3" stroke={item.color} strokeWidth="2.5" 
