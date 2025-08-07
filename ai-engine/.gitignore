@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+
+# Poetry
+poetry.lock
+
+# Virtual environments
+.env/
+.venv/
+env/
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Test and coverage outputs
+htmlcov/
+.coverage
+.cache/
+.pytest_cache/
+coverage.xml
+
+# Logs
+*.log
+
+# Data/model artifacts
+*.onnx
+*.h5
+*.pkl
+*.joblib
+*.csv
+*.db
+*.sqlite3
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
