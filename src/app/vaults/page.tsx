@@ -12,7 +12,6 @@ import { MessageCircle, X, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
-import { useVaults } from '@/hooks/useVaults';
 import { useSeiMarketData } from '@/hooks/useMarketData';
 import { useVaultStore, VaultData } from '@/stores/vaultStore';
 // import { useAppStore } from '@/stores/appStore';
@@ -71,7 +70,7 @@ export default function VaultsPage() {
   } = useVaultStore()
   
   // Temporary direct fetch to bypass React Query issues
-  const [vaultsData, setVaultsData] = React.useState<any[]>([]);
+  const [vaultsData, setVaultsData] = React.useState<VaultData[]>([]);
   const [queryLoading, setQueryLoading] = React.useState(true);
   const [queryError, setQueryError] = React.useState<Error | null>(null);
 
@@ -204,7 +203,8 @@ export default function VaultsPage() {
 
   // Three.js Setup
   useEffect(() => {
-    if (!mountRef.current || scene) return; // Prevent multiple scene creations
+    const currentMount = mountRef.current;
+    if (!currentMount || scene) return; // Prevent multiple scene creations
 
     // Scene setup
     const newScene = new THREE.Scene();
@@ -213,7 +213,7 @@ export default function VaultsPage() {
     
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
-    mountRef.current.appendChild(renderer.domElement);
+    currentMount.appendChild(renderer.domElement);
 
     // Particle system
     const particleCount = 1000;
@@ -307,8 +307,8 @@ export default function VaultsPage() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (currentMount && renderer.domElement) {
+        currentMount.removeChild(renderer.domElement);
       }
       renderer.dispose();
     };
@@ -397,22 +397,22 @@ export default function VaultsPage() {
                 >
                   <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-sm font-medium text-white flex-wrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      <StatsCardGraphic type="tvl" className="w-6 h-6" />
                       <span>Total TVL: {isLoading ? '...' : formatCurrency(totalTVL)}</span>
                     </div>
                     <div className="w-px h-4 bg-border hidden sm:block"></div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-secondary rounded-full"></div>
+                      <StatsCardGraphic type="vaults" className="w-6 h-6" />
                       <span>Active Vaults: {isLoading ? '...' : filteredVaults.length}</span>
                     </div>
                     <div className="w-px h-4 bg-border hidden sm:block"></div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-accent rounded-full"></div>
+                      <StatsCardGraphic type="apy" className="w-6 h-6" />
                       <span>Avg APY: {isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
                     </div>
                     <div className="w-px h-4 bg-border hidden sm:block"></div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <StatsCardGraphic type="uptime" className="w-6 h-6" />
                       <span>AI Uptime: 99.97%</span>
                     </div>
                   </div>

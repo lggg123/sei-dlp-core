@@ -125,7 +125,8 @@ export function validateSeiAddress(address: string): boolean {
  * Validate API key (mock implementation)
  */
 export function validateApiKey(request: NextRequest): boolean {
-  const apiKey = request.headers.get('X-API-Key')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _apiKey = request.headers.get('X-API-Key')
   // In production, implement proper API key validation
   return true // Allow all for now
 }

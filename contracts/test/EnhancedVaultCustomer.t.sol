@@ -267,6 +267,7 @@ contract EnhancedVaultCustomerTest is Test {
         assertTrue(shareDiff <= shares1 / 100); // Less than 1% difference
         
         // Total supply should equal sum of individual shares
-        assertEq(vault.totalSupply(), shares1 + shares2 + 1000); // +1000 for burned initial liquidity
+        // Note: 1000 minimum liquidity is burned from the first deposit, so it's not in totalSupply
+        assertEq(vault.totalSupply(), shares1 + shares2);
     }
 }

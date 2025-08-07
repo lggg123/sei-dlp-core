@@ -122,7 +122,8 @@ contract EnhancedStrategyVault is IStrategyVault, ERC20, Ownable, ReentrancyGuar
             shares -= 1000; // Burn minimum liquidity
         } else {
             uint256 depositValue = _calculateDepositValue(amount0, amount1);
-            shares = (depositValue * currentSupply) / totalValue;
+            // Add precision to avoid rounding errors
+            shares = (depositValue * currentSupply + totalValue / 2) / totalValue;
         }
         
         // Transfer tokens
@@ -137,7 +138,11 @@ contract EnhancedStrategyVault is IStrategyVault, ERC20, Ownable, ReentrancyGuar
         _mint(recipient, shares);
         
         // Update customer tracking
-        customerDepositTime[recipient] = block.timestamp;
+        // Only update deposit time for new customers or if no existing lock period
+        if (customerDepositTime[recipient] == 0 || 
+            block.timestamp >= customerDepositTime[recipient] + minimumLockPeriod) {
+            customerDepositTime[recipient] = block.timestamp;
+        }
         customerTotalDeposited[recipient] += amount0 + amount1;
         
         // Update vault info

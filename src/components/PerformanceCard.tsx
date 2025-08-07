@@ -19,7 +19,8 @@ export default function PerformanceCard({
   description, 
   comparison, 
   color, 
-  positive = true 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  positive: _positive = true 
 }: PerformanceCardProps) {
   const iconRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ export default function PerformanceCard({
         minHeight: '200px !important',
         width: '100% !important',
         display: 'flex !important',
-        flexDirection: 'column !important',
+        flexDirection: 'column',
         backdropFilter: 'blur(24px) !important',
         WebkitBackdropFilter: 'blur(24px) !important',
         border: '2px solid hsl(var(--primary) / 0.3) !important',
@@ -131,7 +132,7 @@ export default function PerformanceCard({
             fontWeight: '800 !important',
             lineHeight: '1 !important',
             marginBottom: '1rem !important',
-            textAlign: 'center !important'
+            textAlign: 'center'
           }}
         >
           {metric}
@@ -144,7 +145,7 @@ export default function PerformanceCard({
             lineHeight: '1.3 !important',
             marginBottom: '0.75rem !important',
             color: 'hsl(var(--foreground)) !important',
-            textAlign: 'center !important'
+            textAlign: 'center'
           }}
         >
           {description}
@@ -157,7 +158,7 @@ export default function PerformanceCard({
             opacity: '0.9 !important',
             marginBottom: '1rem !important',
             color: 'hsl(var(--muted-foreground)) !important',
-            textAlign: 'center !important'
+            textAlign: 'center'
           }}
         >
           {comparison}

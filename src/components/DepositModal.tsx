@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,7 +65,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const [depositAmount, setDepositAmount] = useState('');
 
   const mutationOptions = React.useMemo(() => ({
-    onSuccess: (data: any) => {
+    onSuccess: (data: { txHash?: string } | unknown) => {
       console.log('[DepositModal] Deposit mutation successful:', data);
       setDepositAmount('');
       if (onSuccess && (data as { txHash?: string })?.txHash) {
@@ -73,7 +73,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       }
       onClose(); // Close modal on success
     },
-    onError: (error: any) => {
+    onError: (error: Error | unknown) => {
       console.error('[DepositModal] Deposit mutation error:', error);
       // Here you could set an error state to show in the UI
       // For now, we just log it. The modal remains open for the user to retry.

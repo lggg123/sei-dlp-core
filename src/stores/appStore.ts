@@ -36,7 +36,8 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   devtools(
-    (set, get) => ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (set, _get) => ({
       // Initial state
       sidebarOpen: false,
       theme: 'dark',

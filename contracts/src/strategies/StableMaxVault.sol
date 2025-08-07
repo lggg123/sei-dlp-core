@@ -51,10 +51,10 @@ contract StableMaxVault is IStrategyVault, ERC20, Ownable, ReentrancyGuard {
     ) ERC20("Stable Max Yield USDC/DAI", "STBLP") Ownable(_initialOwner) {
         vaultInfo = VaultInfo({
             name: "Stable Max Yield",
-            strategy: "Low-risk stablecoin yield farming",
+            strategy: "Stablecoin yield maximization",
             token0: _token0,
             token1: _token1,
-            poolFee: 500,
+            poolFee: 3000,
             totalSupply: 0,
             totalValueLocked: 0,
             isActive: true

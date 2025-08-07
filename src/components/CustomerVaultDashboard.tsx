@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
 import { Address, Abi } from 'viem';
@@ -44,7 +44,8 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   const { writeContract: withdraw, isPending: isWithdrawing } = useWriteContract();
 
   // Parse customer stats if available
-  const [shares, shareValue, totalDeposited, totalWithdrawn, depositTime, lockTimeRemaining] = customerStats || [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [shares, shareValue, totalDeposited, totalWithdrawn, _depositTime, lockTimeRemaining] = customerStats || [];
 
   // Calculate metrics
   const unrealizedGains = shareValue && totalDeposited && totalWithdrawn 

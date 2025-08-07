@@ -252,14 +252,15 @@ export const useUserPositions = (walletAddress: string) => {
 
 // Deposit to vault
 export const useDepositToVault = (options?: {
-  onSuccess?: (data: any) => void;
-  onError?: (error: any) => void;
+  onSuccess?: (data: { success: boolean; txHash: string } | unknown) => void;
+  onError?: (error: Error | unknown) => void;
 }) => {
   const queryClient = useQueryClient()
   const addNotification = useAppStore((state) => state.addNotification)
 
   return useMutation({
-    mutationFn: async ({ vaultAddress, amount }: { vaultAddress: string; amount: string }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    mutationFn: async (_params: { vaultAddress: string; amount: string }) => {
       // This would integrate with your smart contract
       // For now, simulating the deposit
       return new Promise((resolve) => {
@@ -304,7 +305,8 @@ export const useWithdrawFromVault = () => {
   const addNotification = useAppStore((state) => state.addNotification)
 
   return useMutation({
-    mutationFn: async ({ vaultAddress, shares }: { vaultAddress: string; shares: string }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    mutationFn: async (_params: { vaultAddress: string; shares: string }) => {
       // This would integrate with your smart contract
       // For now, simulating the withdrawal
       return new Promise((resolve) => {

@@ -184,10 +184,8 @@ export const useExecuteAIRebalance = () => {
   const addNotification = useAppStore((state) => state.addNotification)
 
   return useMutation({
-    mutationFn: async ({ 
-      vaultAddress, 
-      newPosition 
-    }: { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    mutationFn: async (_params: { 
       vaultAddress: string
       newPosition: { lowerTick: number; upperTick: number }
     }): Promise<{ gasUsed?: number }> => {

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { useSeiWallet, SUPPORTED_SEI_WALLETS } from '@/hooks/useSeiWallet'
+import { useSeiWallet } from '@/hooks/useSeiWallet'
 import { useAccount } from 'wagmi'
 
 interface SeiWalletModalProps {

@@ -18,7 +18,7 @@ contract VaultFactoryTest is Test {
     MockERC20 public token0;
     MockERC20 public token1;
     
-    address public owner = address(0x1);
+    address public owner = address(0x123);
     address public user = address(0x2);
     
     // Events from VaultFactory
