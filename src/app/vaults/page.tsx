@@ -14,6 +14,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 import { useSeiMarketData } from '@/hooks/useMarketData';
 import { useVaultStore, VaultData } from '@/stores/vaultStore';
+import '@/components/StatsCarousel.css';
 // import { useAppStore } from '@/stores/appStore';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -385,7 +386,7 @@ export default function VaultsPage() {
         <section className="py-6 px-4">
           <div className="container mx-auto">
             <div className="text-center mb-6">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-foreground">
                 AI-Powered Yield Optimization on SEI
               </h1>
               
@@ -395,7 +396,27 @@ export default function VaultsPage() {
                   ref={statsRef}
                   className="bg-card/20 border border-primary/20 rounded-full px-6 py-3 backdrop-blur-sm overflow-hidden"
                 >
-                  <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-sm font-medium text-white flex-wrap">
+                  <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-sm font-medium text-white flex-nowrap animate-scroll">
+                    <div className="flex items-center gap-2">
+                      <StatsCardGraphic type="tvl" className="w-6 h-6" />
+                      <span>Total TVL: {isLoading ? '...' : formatCurrency(totalTVL)}</span>
+                    </div>
+                    <div className="w-px h-4 bg-border hidden sm:block"></div>
+                    <div className="flex items-center gap-2">
+                      <StatsCardGraphic type="vaults" className="w-6 h-6" />
+                      <span>Active Vaults: {isLoading ? '...' : filteredVaults.length}</span>
+                    </div>
+                    <div className="w-px h-4 bg-border hidden sm:block"></div>
+                    <div className="flex items-center gap-2">
+                      <StatsCardGraphic type="apy" className="w-6 h-6" />
+                      <span>Avg APY: {isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
+                    </div>
+                    <div className="w-px h-4 bg-border hidden sm:block"></div>
+                    <div className="flex items-center gap-2">
+                      <StatsCardGraphic type="uptime" className="w-6 h-6" />
+                      <span>AI Uptime: 99.97%</span>
+                    </div>
+                    {/* Duplicate for seamless scroll */}
                     <div className="flex items-center gap-2">
                       <StatsCardGraphic type="tvl" className="w-6 h-6" />
                       <span>Total TVL: {isLoading ? '...' : formatCurrency(totalTVL)}</span>
@@ -446,7 +467,7 @@ export default function VaultsPage() {
                 ref={vaultCardsRef} 
                 className="grid gap-8 md:gap-12 max-w-7xl mx-auto"
                 style={{ 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 400px))',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
                   justifyContent: 'center',
                   gridAutoRows: '1fr',
                   gap: '2.5rem'
@@ -468,14 +489,16 @@ export default function VaultsPage() {
                         <CardTitle className="text-2xl font-black mb-1 text-vault-primary">
                           {vault.name}
                         </CardTitle>
-                        <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center justify-between" style={{ gap: '1rem' }}>
                           <div className="text-3xl font-black text-enhanced-glow" style={{ color: vaultColor }}>
                             {(vault.apy * 100).toFixed(1)}% APY
                           </div>
-                          <div className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 drop-shadow-sm`} style={{
-                            backgroundColor: riskLevel === 'Low' ? 'rgba(16, 185, 129, 0.2)' : riskLevel === 'Medium' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(239, 68, 68, 0.3)',
-                            color: riskLevel === 'Low' ? '#10b981' : riskLevel === 'Medium' ? '#f59e0b' : '#ef4444',
-                            borderColor: riskLevel === 'Low' ? '#10b981' : riskLevel === 'Medium' ? '#f59e0b' : '#ef4444',
+                          <div className={`rounded-full text-xs font-bold border-2 drop-shadow-sm`} style={{
+                            padding: '0.5rem 1rem',
+                            background: 'linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4))',
+                            color: '#10b981',
+                            borderColor: '#10b981',
+                            boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)',
                             whiteSpace: 'nowrap'
                           }}>
                             {riskLevel} Risk
@@ -495,7 +518,7 @@ export default function VaultsPage() {
                     </p>
                     
                     {/* Advanced Metrics */}
-                    <div className="grid grid-cols-2 gap-8 mb-8 mt-8">
+                    <div className="grid grid-cols-2 mb-8 mt-8" style={{ gap: '2rem' }}>
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-muted-foreground font-medium">Performance</span>
@@ -531,7 +554,7 @@ export default function VaultsPage() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-4 mt-8">
+                    <div className="flex justify-center" style={{ gap: '1rem', marginTop: '3rem' }}>
                       <Button 
                         className="flex-1 max-w-[150px] font-bold text-sm h-12 px-6 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20"
                         onClick={(e) => {

@@ -52,5 +52,5 @@ node_modules
 
 /yield-delta
 
-.claude
-.crush
+.claude/
+.crush/

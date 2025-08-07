@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Logo from './Logo';
+import styles from './Navigation.module.css';
 
 const WalletConnectButton = dynamic(
   () => import('./WalletConnectButton').then(mod => ({ default: mod.WalletConnectButton })),
@@ -32,7 +33,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   return (
     <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 w-full relative">
+        <div className="flex justify-between items-center h-16 w-full relative" style={{ textDecoration: 'none !important' }}>
           
           {/* Left side - Logo, Brand and Navigation Links */}
           <div className="flex items-center gap-8 z-10 flex-1">
@@ -49,28 +50,28 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
               <Link 
                 href="/vaults" 
                 className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: 'none !important' }}
               >
                 Vaults
               </Link>
-              <Link 
-                href="/analytics" 
+              <Link
+                href="/analytics"
                 className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: 'none !important' }}
               >
                 Analytics
               </Link>
-              <Link 
-                href="/docs" 
+              <Link
+                href="/docs"
                 className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: 'none !important' }}
               >
                 Docs
               </Link>
-              <Link 
-                href="/logo-showcase" 
+              <Link
+                href="/logo-showcase"
                 className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: 'none !important' }}
               >
                 Logo
               </Link>
@@ -78,7 +79,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
           </div>
 
           {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
-          <div className="flex items-center gap-4 z-20 flex-shrink-0 ml-auto">
+          <div className="flex items-center gap-4 z-20 flex-shrink-0" style={{ marginLeft: 'auto', textDecoration: 'none !important' }}>
             {showLaunchApp && (
               <Link
                 href="/vaults"
@@ -95,7 +96,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
                 Launch App
               </Link>
             )}
-            {showWallet && <WalletConnectButton />}
+            {showWallet && <div className={styles.walletContainer}><WalletConnectButton /></div>}
             
             {/* Mobile Menu Button */}
             <button className="md:hidden text-foreground hover:text-primary ml-2">
