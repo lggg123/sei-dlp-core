@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Logo from './Logo';
-import styles from './Navigation.module.css';
 
 const WalletConnectButton = dynamic(
   () => import('./WalletConnectButton').then(mod => ({ default: mod.WalletConnectButton })),
@@ -33,10 +32,10 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   return (
     <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 w-full relative" style={{ textDecoration: 'none !important' }}>
+        <div className="flex items-center justify-between h-16 w-full">
           
           {/* Left side - Logo, Brand and Navigation Links */}
-          <div className="flex items-center gap-8 z-10 flex-1">
+          <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <Logo variant="icon" size={48} className="flex-shrink-0" />
               <div className="hidden sm:block">
@@ -48,30 +47,26 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
               <Link 
-                href="/vaults" 
-                className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none !important' }}
+                href="/vaults"
+                className="text-foreground hover:text-primary transition-colors no-underline"
               >
                 Vaults
               </Link>
               <Link
                 href="/analytics"
-                className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none !important' }}
+                className="text-foreground hover:text-primary transition-colors no-underline"
               >
                 Analytics
               </Link>
               <Link
                 href="/docs"
-                className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none !important' }}
+                className="text-foreground hover:text-primary transition-colors no-underline"
               >
                 Docs
               </Link>
               <Link
                 href="/logo-showcase"
-                className="text-foreground hover:text-primary transition-colors"
-                style={{ textDecoration: 'none !important' }}
+                className="text-foreground hover:text-primary transition-colors no-underline"
               >
                 Logo
               </Link>
@@ -79,11 +74,11 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
           </div>
 
           {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
-          <div className="flex items-center gap-4 z-20 flex-shrink-0" style={{ marginLeft: 'auto', textDecoration: 'none !important' }}>
+          <div className="flex items-center gap-4 wallet-container-override">
             {showLaunchApp && (
               <Link
                 href="/vaults"
-                className="btn-cyber flex items-center gap-2 whitespace-nowrap"
+                className="btn-cyber flex items-center gap-2 whitespace-nowrap no-underline"
               >
                 <svg 
                   className="w-4 h-4 flex-shrink-0" 
@@ -96,8 +91,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
                 Launch App
               </Link>
             )}
-            {showWallet && <div className={styles.walletContainer}><WalletConnectButton /></div>}
-            
+            {showWallet && <WalletConnectButton />}
             {/* Mobile Menu Button */}
             <button className="md:hidden text-foreground hover:text-primary ml-2">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

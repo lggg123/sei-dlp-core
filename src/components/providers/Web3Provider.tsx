@@ -1,6 +1,11 @@
-'use client'
+"use client"
 
+// Polyfill indexedDB on server to prevent WalletConnect SSR errors
+if (typeof window === 'undefined') {
+  (global as any).indexedDB = { open: () => ({}) }
+}
 import '@rainbow-me/rainbowkit/styles.css'
+import { SeiGlobalWalletProvider } from './SeiGlobalWalletProvider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
@@ -66,33 +71,20 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     setMounted(true)
   }, [])
 
+  // Don't render providers until mounted to prevent double initialization
   if (!mounted) {
-    return (
-      <div suppressHydrationWarning>
-        <WagmiProvider config={config}>
-          <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider 
-              initialChain={1329}
-              showRecentTransactions={false}
-            >
-              {children}
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
-      </div>
-    )
+    return null
   }
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider 
-          initialChain={1329}
-          showRecentTransactions={false}
-        >
-          {children}
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <SeiGlobalWalletProvider>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider initialChain={713715} showRecentTransactions={false}>
+            {children}
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </SeiGlobalWalletProvider>
   )
 }

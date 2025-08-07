@@ -44,17 +44,37 @@ export const seiTestnet = defineChain({
   testnet: true
 })
 
-export const config = getDefaultConfig({
-  appName: 'SEI DLP',
-  projectId: process.env.NEXT_PUBLIC_WC_ID || 'dummy-project-id',
-  chains: [seiDevnet, seiMainnet, seiTestnet],
-  transports: {
-    [seiDevnet.id]: http(),
-    [seiMainnet.id]: http(),
-    [seiTestnet.id]: http()
-  },
-  ssr: true,
-  batch: {
-    multicall: false,
-  },
-})
+// Singleton pattern to prevent multiple config instantiation
+let configInstance: ReturnType<typeof getDefaultConfig> | null = null
+
+function createConfig() {
+  if (configInstance) {
+    return configInstance
+  }
+
+  const projectId = process.env.NEXT_PUBLIC_WC_ID
+  
+  if (!projectId || projectId === 'dummy-project-id' || projectId === 'your_walletconnect_project_id_here') {
+    console.warn('⚠️ WalletConnect Project ID not set. Please add NEXT_PUBLIC_WC_ID to your .env.local file.')
+    console.warn('Get your Project ID from: https://walletconnect.com/cloud')
+  }
+
+  configInstance = getDefaultConfig({
+    appName: 'SEI DLP',
+    projectId: projectId || 'fallback-project-id',
+    chains: [seiDevnet, seiMainnet, seiTestnet],
+    transports: {
+      [seiDevnet.id]: http(),
+      [seiMainnet.id]: http(),
+      [seiTestnet.id]: http()
+    },
+    ssr: true,
+    batch: {
+      multicall: false,
+    },
+  })
+
+  return configInstance
+}
+
+export const config = createConfig()

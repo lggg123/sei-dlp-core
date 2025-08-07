@@ -645,3 +645,72 @@
   }
 }
 
+/* Wallet Button Override - High Priority */
+.wallet-container-override {
+  display: flex !important;
+  flex: 1 !important;
+  justify-content: flex-end !important;
+  text-decoration: none !important;
+}
+
+/* Vault Detail Page Specific Overrides - Controlled Priority */
+.vault-deposit-enhanced {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.deposit-button-container {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+}
+
+/* Tab Navigation Enhancement */
+.tabs-container-enhanced {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  margin-bottom: 2rem;
+  height: 4.5rem;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.tab-trigger-custom {
+  height: 4rem;
+  font-size: 1.125rem;
+  font-weight: 900;
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Risk Badge Enhancement */
+.risk-badge-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 8px 20px;
+  cursor: default;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 700;
+  min-width: 90px;
+  height: 32px;
+}
+

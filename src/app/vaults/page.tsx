@@ -15,7 +15,7 @@ import * as THREE from 'three';
 import { useSeiMarketData } from '@/hooks/useMarketData';
 import { useVaultStore, VaultData } from '@/stores/vaultStore';
 import '@/components/StatsCarousel.css';
-// import { useAppStore } from '@/stores/appStore';
+import styles from './page.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -382,59 +382,92 @@ export default function VaultsPage() {
 
       {/* Main Content */}
       <div className="relative z-10 pt-20">
-        {/* Header Section */}
-        <section className="py-6 px-4">
+        {/* Header Section - Enhanced */}
+        <section className="py-8 px-4">
           <div className="container mx-auto">
-            <div className="text-center mb-6">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-foreground">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary">
                 AI-Powered Yield Optimization on SEI
               </h1>
               
-              {/* Live Stats Ticker */}
+              {/* Live Stats Ticker - Enhanced Design with Carousel */}
               <div className="max-w-5xl mx-auto px-4 mb-6">
                 <div 
                   ref={statsRef}
-                  className="bg-card/20 border border-primary/20 rounded-full px-6 py-3 backdrop-blur-sm overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(155, 93, 229, 0.15) 0%, rgba(0, 245, 212, 0.08) 50%, rgba(255, 32, 110, 0.12) 100%)',
+                    backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(155, 93, 229, 0.3)',
+                    borderRadius: '16px',
+                    padding: '16px 24px',
+                    boxShadow: '0 8px 32px rgba(0, 245, 212, 0.1), 0 0 0 1px rgba(155, 93, 229, 0.2)',
+                    overflow: 'hidden',
+                    position: 'relative'
+                  }}
                 >
-                  <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-sm font-medium text-white flex-nowrap animate-scroll">
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="tvl" className="w-6 h-6" />
-                      <span>Total TVL: {isLoading ? '...' : formatCurrency(totalTVL)}</span>
+                  <div className="flex items-center justify-center gap-6 lg:gap-8 text-sm font-semibold text-white/90 animate-scroll">
+                    {/* First set */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="tvl" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>TVL</span>
+                      <span style={{ fontWeight: 'bold', color: '#00f5d4' }}>{isLoading ? '...' : formatCurrency(totalTVL)}</span>
                     </div>
-                    <div className="w-px h-4 bg-border hidden sm:block"></div>
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="vaults" className="w-6 h-6" />
-                      <span>Active Vaults: {isLoading ? '...' : filteredVaults.length}</span>
+                    
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="vaults" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>Vaults</span>
+                      <span style={{ fontWeight: 'bold', color: '#9b5de5' }}>{isLoading ? '...' : filteredVaults.length}</span>
                     </div>
-                    <div className="w-px h-4 bg-border hidden sm:block"></div>
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="apy" className="w-6 h-6" />
-                      <span>Avg APY: {isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
+                    
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="apy" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>APY</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981' }}>{isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
                     </div>
-                    <div className="w-px h-4 bg-border hidden sm:block"></div>
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="uptime" className="w-6 h-6" />
-                      <span>AI Uptime: 99.97%</span>
+                    
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="uptime" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>AI</span>
+                      <span style={{ fontWeight: 'bold', color: '#3b82f6' }}>99.97%</span>
                     </div>
-                    {/* Duplicate for seamless scroll */}
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="tvl" className="w-6 h-6" />
-                      <span>Total TVL: {isLoading ? '...' : formatCurrency(totalTVL)}</span>
+
+                    {/* Duplicate set for seamless scroll */}
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="tvl" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>TVL</span>
+                      <span style={{ fontWeight: 'bold', color: '#00f5d4' }}>{isLoading ? '...' : formatCurrency(totalTVL)}</span>
                     </div>
-                    <div className="w-px h-4 bg-border hidden sm:block"></div>
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="vaults" className="w-6 h-6" />
-                      <span>Active Vaults: {isLoading ? '...' : filteredVaults.length}</span>
+                    
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="vaults" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>Vaults</span>
+                      <span style={{ fontWeight: 'bold', color: '#9b5de5' }}>{isLoading ? '...' : filteredVaults.length}</span>
                     </div>
-                    <div className="w-px h-4 bg-border hidden sm:block"></div>
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="apy" className="w-6 h-6" />
-                      <span>Avg APY: {isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
+                    
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="apy" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>APY</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981' }}>{isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
                     </div>
-                    <div className="w-px h-4 bg-border hidden sm:block"></div>
-                    <div className="flex items-center gap-2">
-                      <StatsCardGraphic type="uptime" className="w-6 h-6" />
-                      <span>AI Uptime: 99.97%</span>
+                    
+                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
+                      <StatsCardGraphic type="uptime" className="w-5 h-5" />
+                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>AI</span>
+                      <span style={{ fontWeight: 'bold', color: '#3b82f6' }}>99.97%</span>
                     </div>
                   </div>
                 </div>
@@ -480,7 +513,22 @@ export default function VaultsPage() {
                   return (
                 <Card 
                   key={vault.address}
-                  className="vault-solid-card transition-all duration-500 cursor-pointer group relative overflow-hidden"
+                  className="vault-solid-card transition-all duration-500 cursor-pointer group relative overflow-hidden hover:scale-[1.02] hover:shadow-2xl"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '20px',
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = `${vaultColor}60`;
+                    e.currentTarget.style.boxShadow = `0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px ${vaultColor}40, 0 0 0 1px rgba(255, 255, 255, 0.15) inset`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset';
+                  }}
                   // Remove card click navigation to analytics, only use explicit Analytics button
                 >
                   <CardHeader className="pb-3">
@@ -489,18 +537,27 @@ export default function VaultsPage() {
                         <CardTitle className="text-2xl font-black mb-1 text-vault-primary">
                           {vault.name}
                         </CardTitle>
-                        <div className="flex items-center justify-between" style={{ gap: '1rem' }}>
+                        <div className="flex items-center justify-between" style={{ gap: '1rem', marginTop: '1.25rem', marginBottom: '1rem' }}>
                           <div className="text-3xl font-black text-enhanced-glow" style={{ color: vaultColor }}>
                             {(vault.apy * 100).toFixed(1)}% APY
                           </div>
-                          <div className={`rounded-full text-xs font-bold border-2 drop-shadow-sm`} style={{
-                            padding: '0.5rem 1rem',
-                            background: 'linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4))',
-                            color: '#10b981',
-                            borderColor: '#10b981',
-                            boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          {/* Enhanced Risk Badge */}
+                          <div 
+                            style={{
+                              padding: '0.4rem 0.875rem',
+                              background: 'linear-gradient(45deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.45))',
+                              color: '#d1fae5',
+                              border: '1px solid rgba(16, 185, 129, 0.6)',
+                              boxShadow: '0 0 12px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                              whiteSpace: 'nowrap',
+                              borderRadius: '12px',
+                              display: 'inline-block',
+                              fontSize: '0.8125rem',
+                              fontWeight: '700',
+                              textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+                              backdropFilter: 'blur(8px)'
+                            }}
+                          >
                             {riskLevel} Risk
                           </div>
                         </div>
@@ -517,8 +574,8 @@ export default function VaultsPage() {
                       {vault.strategy.replace('_', ' ').toUpperCase()} strategy with {vault.tokenA}-{vault.tokenB} pair
                     </p>
                     
-                    {/* Advanced Metrics */}
-                    <div className="grid grid-cols-2 mb-8 mt-8" style={{ gap: '2rem' }}>
+                    {/* Advanced Metrics - Enhanced Layout */}
+                    <div className="grid grid-cols-2 mb-6 mt-6" style={{ gap: '2rem' }}>
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-muted-foreground font-medium">Performance</span>
@@ -553,10 +610,10 @@ export default function VaultsPage() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex justify-center" style={{ gap: '1rem', marginTop: '3rem' }}>
+                    {/* Action Buttons - Optimized Sizing */}
+                    <div className="flex justify-center gap-3 mt-6">  
                       <Button 
-                        className="flex-1 max-w-[150px] font-bold text-sm h-12 px-6 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20"
+                        className="w-32 font-bold text-sm h-11 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20 shadow-lg"
                         onClick={(e) => {
                           console.log('[BUTTON CLICK] Deposit button clicked - IMMEDIATE', new Date().toISOString());
                           e.preventDefault();
@@ -568,10 +625,6 @@ export default function VaultsPage() {
                           handleDeposit(vault);
                           console.log('[VaultsPage] handleDeposit call completed');
                         }}
-                        onMouseDown={() => console.log('[VaultsPage] Deposit button mouse down')}
-                        onMouseUp={() => console.log('[VaultsPage] Deposit button mouse up')}
-                        onMouseEnter={() => console.log('[VaultsPage] Deposit button mouse enter')}
-                        onMouseLeave={() => console.log('[VaultsPage] Deposit button mouse leave')}
                         style={{
                           pointerEvents: 'auto',
                           cursor: 'pointer'
@@ -581,7 +634,7 @@ export default function VaultsPage() {
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="flex-1 max-w-[150px] font-bold text-sm h-12 px-6 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95 relative z-20"
+                        className="w-32 font-bold text-sm h-11 px-4 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95 relative z-20 shadow-lg"
                         onClick={(e) => { 
                           e.preventDefault();
                           e.stopPropagation();

@@ -131,10 +131,15 @@ export default function VaultDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative vault-page" style={{
+      background: 'radial-gradient(ellipse at top, rgba(155, 93, 229, 0.1) 0%, rgba(0, 245, 212, 0.05) 50%, transparent 100%)',
+    }}>
+      {/* Background overlay for better content contrast */}
+      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/80 pointer-events-none" />
+      
       <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
       
-      <div className="pt-16 px-4">
+      <div className="relative z-10 pt-20 px-4 pb-12">
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-8">
@@ -147,71 +152,204 @@ export default function VaultDetailPage() {
               Back to Vaults
             </Button>
             
-            <div ref={cardRef} className="vault-solid-card relative z-10">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
+            <div ref={cardRef} className="vault-solid-card relative z-10" style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              borderRadius: '24px',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+              padding: '2rem',
+              position: 'relative'
+            }}>
+              {/* Deposit Button - Fixed Top Right Positioning with CSS Reset Override */}
+              <div 
+                className="deposit-button-container"
+                style={{ 
+                  position: 'absolute', 
+                  top: '1.5rem', 
+                  right: '1.5rem', 
+                  zIndex: 50,
+                  all: 'initial',
+                  fontFamily: 'inherit'
+                }}
+              >
+                <button
+                  className="vault-deposit-enhanced"
+                  onClick={() => {
+                    console.log('[VaultDetail] Deposit button clicked - setting modal to true');
+                    setShowDepositModal(true);
+                  }}
+                  style={{
+                    all: 'initial',
+                    fontFamily: 'inherit',
+                    background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD, ${vaultColor}BB)`,
+                    color: '#000000',
+                    border: `2px solid ${vaultColor}`,
+                    boxShadow: `
+                      0 8px 25px ${vaultColor}60, 
+                      0 0 30px ${vaultColor}40, 
+                      0 0 0 1px rgba(255,255,255,0.3) inset,
+                      0 2px 8px rgba(0,0,0,0.4)
+                    `,
+                    width: '170px',
+                    height: '54px',
+                    fontSize: '0.95rem',
+                    fontWeight: '800',
+                    borderRadius: '14px',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.8), 0 0 1px rgba(0,0,0,1)',
+                    backdropFilter: 'blur(10px)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textDecoration: 'none',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    position: 'relative',
+                    zIndex: 1000
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                    e.currentTarget.style.boxShadow = `
+                      0 12px 35px ${vaultColor}70, 
+                      0 0 40px ${vaultColor}50, 
+                      0 0 0 1px rgba(255,255,255,0.4) inset,
+                      0 4px 12px rgba(0,0,0,0.5)
+                    `;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = `
+                      0 8px 25px ${vaultColor}60, 
+                      0 0 30px ${vaultColor}40, 
+                      0 0 0 1px rgba(255,255,255,0.3) inset,
+                      0 2px 8px rgba(0,0,0,0.4)
+                    `;
+                  }}
+                >
+                  Deposit Funds
+                </button>
+              </div>
+
+              <div className="pr-52 mb-10">
                 <div className="flex-1">
-                  <h1 className="text-4xl font-bold mb-2 text-enhanced-glow" style={{ color: vaultColor }}>
+                  <h1 className="text-5xl font-black mb-4 text-enhanced-glow leading-tight" style={{ 
+                    color: vaultColor,
+                    textShadow: `0 0 30px ${vaultColor}60, 0 2px 4px rgba(0,0,0,0.3)`
+                  }}>
                     {vault.name}
                   </h1>
-                  <p className="text-muted-foreground text-lg mb-4">
+                  <p className="text-muted-foreground text-xl mb-8 font-medium opacity-90">
                     {vault.strategy.replace('_', ' ').toUpperCase()} • {vault.tokenA}-{vault.tokenB}
                   </p>
                   <div className="flex items-center gap-4">
-                    <Badge className={`px-4 py-2 text-sm ${
-                      riskLevel === 'Low' ? 'bg-green-500/20 text-green-400' :
-                      riskLevel === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-red-500/20 text-red-400'
-                    }`}>
+                    <div
+                      className="risk-badge-custom"
+                      style={{
+                        all: 'initial',
+                        fontFamily: 'inherit',
+                        background: riskLevel === 'Low' ? 
+                          'linear-gradient(135deg, #22c55e, #16a34a, #15803d)' :
+                          riskLevel === 'Medium' ? 
+                          'linear-gradient(135deg, #f59e0b, #d97706, #b45309)' :
+                          'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)',
+                        color: riskLevel === 'Low' ? '#fef3c7' :  // Light yellow for green background
+                               riskLevel === 'Medium' ? '#fef3c7' : // Light yellow for orange background
+                               '#fef3c7', // Light yellow for red background
+                        border: riskLevel === 'Low' ? '1px solid rgba(34, 197, 94, 0.6)' :
+                                riskLevel === 'Medium' ? '1px solid rgba(245, 158, 11, 0.6)' :
+                                '1px solid rgba(239, 68, 68, 0.6)',
+                        boxShadow: riskLevel === 'Low' ? 
+                          '0 0 15px rgba(34, 197, 94, 0.4), 0 2px 8px rgba(34, 197, 94, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset' :
+                          riskLevel === 'Medium' ? 
+                          '0 0 15px rgba(245, 158, 11, 0.4), 0 2px 8px rgba(245, 158, 11, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset' :
+                          '0 0 15px rgba(239, 68, 68, 0.4), 0 2px 8px rgba(239, 68, 68, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.6), 0 0 1px rgba(0,0,0,0.8)',
+                        backdropFilter: 'blur(10px)',
+                        fontWeight: '700',
+                        letterSpacing: '0.3px',
+                        textTransform: 'uppercase',
+                        minWidth: '90px',
+                        height: '32px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '16px',
+                        padding: '8px 20px',
+                        fontSize: '0.875rem',
+                        cursor: 'default',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
                       {riskLevel} Risk
-                    </Badge>
+                    </div>
                   </div>
-                </div>
-                <div className="mt-6 lg:mt-0 lg:ml-8">
-                  <Button 
-                    size="lg"
-                    className="w-full lg:w-auto btn-vault-primary h-14 px-8 text-lg font-bold"
-                    onClick={() => {
-                      console.log('[VaultDetail] Deposit button clicked - setting modal to true');
-                      setShowDepositModal(true);
-                    }}
-                    style={{
-                      background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
-                      color: '#000000',
-                      border: 'none',
-                      boxShadow: `0 4px 20px ${vaultColor}40`,
-                      minWidth: '160px'
-                    }}
-                  >
-                    Deposit Funds
-                  </Button>
                 </div>
               </div>
 
-              {/* Key Metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-enhanced-glow" style={{ color: vaultColor }}>
+              {/* Key Metrics - Bento Grid Design */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto">
+                {/* APY - Large Corner Focus */}
+                <div className="col-span-2 md:col-span-2 text-center p-6 transition-all duration-300 hover:scale-105" style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  backdropFilter: 'blur(15px)',
+                  borderRadius: '24px 24px 8px 8px',
+                  boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset'
+                }}>
+                  <div className="text-5xl font-black text-enhanced-glow mb-3" style={{ 
+                    color: vaultColor,
+                    textShadow: `0 0 25px ${vaultColor}60, 0 2px 4px rgba(0,0,0,0.3)`
+                  }}>
                     {(vault.apy * 100).toFixed(1)}%
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">APY</div>
+                  <div className="text-base text-muted-foreground font-bold uppercase tracking-wider opacity-90">Current APY</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-vault-primary">
+                
+                {/* TVL */}
+                <div className="text-center p-4 transition-all duration-300 hover:scale-105" style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '8px 24px 8px 8px',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+                }}>
+                  <div className="text-2xl font-black text-vault-primary mb-2 text-enhanced-glow">
                     {formatCurrency(vault.tvl)}
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">TVL</div>
+                  <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">TVL</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-400 text-enhanced-glow">
+                
+                {/* Total Return */}
+                <div className="text-center p-4 transition-all duration-300 hover:scale-105" style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '8px 8px 24px 8px',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+                }}>
+                  <div className="text-2xl font-black text-green-400 text-enhanced-glow mb-2" style={{
+                    textShadow: '0 0 20px rgba(34, 197, 94, 0.5)'
+                  }}>
                     {(vault.performance.totalReturn * 100).toFixed(1)}%
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">Total Return</div>
+                  <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Total Return</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-secondary text-enhanced-glow">
+                
+                {/* Sharpe Ratio - Spanning full width */}
+                <div className="col-span-2 md:col-span-4 text-center p-4 transition-all duration-300 hover:scale-105" style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '8px 8px 24px 24px',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+                }}>
+                  <div className="text-3xl font-black text-secondary text-enhanced-glow mb-2" style={{
+                    textShadow: '0 0 20px rgba(155, 93, 229, 0.5)'
+                  }}>
                     {vault.performance.sharpeRatio.toFixed(2)}
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">Sharpe Ratio</div>
+                  <div className="text-sm text-muted-foreground font-bold uppercase tracking-wider opacity-90">Sharpe Ratio</div>
                 </div>
               </div>
             </div>
@@ -224,97 +362,236 @@ export default function VaultDetailPage() {
             router.push(`/vault?${params.toString()}`);
           }}>
             <TabsList 
-              className="grid w-full grid-cols-3 mb-8 h-14 p-1 rounded-lg"
+              className="grid w-full grid-cols-3 mb-8 h-18 p-2 rounded-2xl relative tabs-container-enhanced"
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)'
+                all: 'initial',
+                fontFamily: 'inherit',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                width: '100%',
+                marginBottom: '2rem',
+                height: '4.5rem',
+                padding: '0.5rem',
+                borderRadius: '1rem',
+                position: 'relative',
+                backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(25px)',
+                boxShadow: '0 15px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset'
               }}
             >
-              <TabsTrigger 
-                value="overview" 
-                className="h-12 text-base font-semibold transition-all duration-200"
+              <div
+                className="tab-trigger-custom"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('tab', 'overview');
+                  router.push(`/vault?${params.toString()}`);
+                }}
                 style={{
-                  color: activeTab === 'overview' ? '#000000' : '#a1a1aa',
-                  backgroundColor: activeTab === 'overview' ? vaultColor : 'transparent',
-                  borderRadius: '6px',
+                  all: 'initial',
+                  fontFamily: 'inherit',
+                  height: '4rem',
+                  fontSize: '1.125rem',
+                  fontWeight: '900',
+                  borderRadius: '0.75rem',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  color: activeTab === 'overview' ? '#000000' : '#ffffff',
+                  backgroundColor: activeTab === 'overview' ? vaultColor : 'rgba(51, 65, 85, 0.6)',
+                  textShadow: activeTab === 'overview' ? 
+                    '0 1px 3px rgba(0,0,0,0.6)' : 
+                    `0 0 15px ${vaultColor}80, 0 0 25px ${vaultColor}40, 0 2px 4px rgba(0,0,0,0.8)`,
+                  border: activeTab !== 'overview' ? 
+                    `1px solid ${vaultColor}80` : 'none',
+                  boxShadow: activeTab === 'overview' ? 
+                    `0 4px 15px ${vaultColor}40, 0 0 0 1px rgba(255,255,255,0.2) inset` : 
+                    `0 0 15px ${vaultColor}30, 0 0 25px ${vaultColor}15`,
+                  transform: activeTab === 'overview' ? 'scale(1.02)' : 'scale(1)',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  zIndex: activeTab === 'overview' ? 10 : 1
                 }}
               >
                 Overview
-              </TabsTrigger>
-              <TabsTrigger 
-                value="analytics" 
-                className="h-12 text-base font-semibold transition-all duration-200"
+              </div>
+              <div
+                className="tab-trigger-custom"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('tab', 'analytics');
+                  router.push(`/vault?${params.toString()}`);
+                }}
                 style={{
-                  color: activeTab === 'analytics' ? '#000000' : '#a1a1aa',
-                  backgroundColor: activeTab === 'analytics' ? vaultColor : 'transparent',
-                  borderRadius: '6px',
+                  all: 'initial',
+                  fontFamily: 'inherit',
+                  height: '4rem',
+                  fontSize: '1.125rem',
+                  fontWeight: '900',
+                  borderRadius: '0.75rem',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  color: activeTab === 'analytics' ? '#000000' : '#ffffff',
+                  backgroundColor: activeTab === 'analytics' ? vaultColor : 'rgba(51, 65, 85, 0.6)',
+                  textShadow: activeTab === 'analytics' ? 
+                    '0 1px 3px rgba(0,0,0,0.6)' : 
+                    `0 0 15px ${vaultColor}80, 0 0 25px ${vaultColor}40, 0 2px 4px rgba(0,0,0,0.8)`,
+                  border: activeTab !== 'analytics' ? 
+                    `1px solid ${vaultColor}80` : 'none',
+                  boxShadow: activeTab === 'analytics' ? 
+                    `0 4px 15px ${vaultColor}40, 0 0 0 1px rgba(255,255,255,0.2) inset` : 
+                    `0 0 15px ${vaultColor}30, 0 0 25px ${vaultColor}15`,
+                  transform: activeTab === 'analytics' ? 'scale(1.02)' : 'scale(1)',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  zIndex: activeTab === 'analytics' ? 10 : 1
                 }}
               >
                 Analytics
-              </TabsTrigger>
-              <TabsTrigger 
-                value="strategy" 
-                className="h-12 text-base font-semibold transition-all duration-200"
+              </div>
+              <div
+                className="tab-trigger-custom"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('tab', 'strategy');
+                  router.push(`/vault?${params.toString()}`);
+                }}
                 style={{
-                  color: activeTab === 'strategy' ? '#000000' : '#a1a1aa',
-                  backgroundColor: activeTab === 'strategy' ? vaultColor : 'transparent',
-                  borderRadius: '6px',
+                  all: 'initial',
+                  fontFamily: 'inherit',
+                  height: '4rem',
+                  fontSize: '1.125rem',
+                  fontWeight: '900',
+                  borderRadius: '0.75rem',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  color: activeTab === 'strategy' ? '#000000' : '#ffffff',
+                  backgroundColor: activeTab === 'strategy' ? vaultColor : 'rgba(51, 65, 85, 0.6)',
+                  textShadow: activeTab === 'strategy' ? 
+                    '0 1px 3px rgba(0,0,0,0.6)' : 
+                    `0 0 15px ${vaultColor}80, 0 0 25px ${vaultColor}40, 0 2px 4px rgba(0,0,0,0.8)`,
+                  border: activeTab !== 'strategy' ? 
+                    `1px solid ${vaultColor}80` : 'none',
+                  boxShadow: activeTab === 'strategy' ? 
+                    `0 4px 15px ${vaultColor}40, 0 0 0 1px rgba(255,255,255,0.2) inset` : 
+                    `0 0 15px ${vaultColor}30, 0 0 25px ${vaultColor}15`,
+                  transform: activeTab === 'strategy' ? 'scale(1.02)' : 'scale(1)',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                  zIndex: activeTab === 'strategy' ? 10 : 1
                 }}
               >
                 Strategy
-              </TabsTrigger>
+              </div>
             </TabsList>
 
             <TabsContent value="overview">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                {/* Performance Metrics */}
-                <Card className="vault-solid-card relative z-10">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-vault-primary">
-                      <TrendingUp className="w-5 h-5" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {/* Performance Metrics - Enhanced */}
+                <Card className="vault-solid-card relative z-10" style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '20px',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset'
+                }}>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center gap-3 text-vault-primary text-xl font-bold">
+                      <div className="p-2 rounded-lg" style={{
+                        background: `linear-gradient(135deg, ${vaultColor}30, ${vaultColor}15)`,
+                        border: `1px solid ${vaultColor}40`
+                      }}>
+                        <TrendingUp className="w-5 h-5" style={{ color: vaultColor }} />
+                      </div>
                       Performance Metrics
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Win Rate</span>
-                      <span className="font-bold text-green-400 text-enhanced-glow">
+                  <CardContent className="space-y-5">
+                    <div className="flex justify-between items-center p-3 rounded-xl" style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <span className="text-muted-foreground font-medium">Win Rate</span>
+                      <span className="font-bold text-green-400 text-enhanced-glow text-lg" style={{
+                        textShadow: '0 0 15px rgba(34, 197, 94, 0.4)'
+                      }}>
                         {(vault.performance.winRate * 100).toFixed(0)}%
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Max Drawdown</span>
-                      <span className={`font-bold text-enhanced-glow ${
+                    <div className="flex justify-between items-center p-3 rounded-xl" style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <span className="text-muted-foreground font-medium">Max Drawdown</span>
+                      <span className={`font-bold text-enhanced-glow text-lg ${
                         vault.performance.maxDrawdown > 0.05 ? 'text-red-400' : 'text-green-400'
-                      }`}>
+                      }`} style={{
+                        textShadow: vault.performance.maxDrawdown > 0.05 ? 
+                          '0 0 15px rgba(239, 68, 68, 0.4)' : 
+                          '0 0 15px rgba(34, 197, 94, 0.4)'
+                      }}>
                         {(vault.performance.maxDrawdown * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Fee Tier</span>
-                      <span className="font-bold text-blue-400 text-enhanced-glow">
+                    <div className="flex justify-between items-center p-3 rounded-xl" style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <span className="text-muted-foreground font-medium">Fee Tier</span>
+                      <span className="font-bold text-blue-400 text-enhanced-glow text-lg" style={{
+                        textShadow: '0 0 15px rgba(59, 130, 246, 0.4)'
+                      }}>
                         {(vault.fee * 100).toFixed(2)}%
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Chain ID</span>
-                      <span className="font-bold text-cyan-400 text-enhanced-glow">
+                    <div className="flex justify-between items-center p-3 rounded-xl" style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <span className="text-muted-foreground font-medium">Chain ID</span>
+                      <span className="font-bold text-cyan-400 text-enhanced-glow text-lg" style={{
+                        textShadow: '0 0 15px rgba(6, 182, 212, 0.4)'
+                      }}>
                         {vault.chainId}
                       </span>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Risk Analysis */}
-                <Card className="vault-solid-card relative z-10">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-vault-primary">
-                      <Shield className="w-5 h-5" />
+                {/* Risk Analysis - Enhanced */}
+                <Card className="vault-solid-card relative z-10" style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '20px',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset'
+                }}>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center gap-3 text-vault-primary text-xl font-bold">
+                      <div className="p-2 rounded-lg" style={{
+                        background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.15))',
+                        border: '1px solid rgba(34, 197, 94, 0.4)'
+                      }}>
+                        <Shield className="w-5 h-5 text-green-400" />
+                      </div>
                       Risk Analysis
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-5">
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Risk Level</span>
