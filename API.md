@@ -274,6 +274,144 @@ AI_ENGINE_URL=http://localhost:8000
 - **Frontend**: React components for vault management
 - **Smart Contracts**: Solidity contracts on SEI Network
 
+## 💰 Vault Deposit & Withdrawal UX Flow
+
+The following diagram illustrates the complete user experience flow for depositing money into vaults and withdrawing funds:
+
+```mermaid
+flowchart TD
+    A[User visits /vaults page] --> B[Browse Available Vaults]
+    B --> C{Select Vault Action}
+    
+    C -->|View Details| D[Navigate to /vault?address=X&tab=overview]
+    C -->|Quick Deposit| E[Click Deposit Button on Card]
+    
+    D --> D1[View Vault Details Page]
+    D1 --> D2[Enhanced Deposit Button]
+    D2 --> E
+    
+    E --> F[DepositModal Opens]
+    F --> G[Enter Deposit Amount]
+    G --> H[Review Deposit Details]
+    H --> H1[Current APY: XX.X%]
+    H --> H2[Fee Tier: X.XX%]
+    H --> H3[Lock Period: 24 hours]
+    
+    H --> I{Confirm Deposit?}
+    I -->|Cancel| J[Close Modal]
+    I -->|Confirm| K[Connect Wallet]
+    
+    K --> L[Wallet Connection Check]
+    L -->|Not Connected| M[Show Wallet Connect Modal]
+    L -->|Connected| N[Initiate Smart Contract Call]
+    
+    M --> N
+    
+    N --> O[Call deposit(amount0, amount1, recipient)]
+    O --> P[Smart Contract Processing]
+    P --> Q{Transaction Success?}
+    
+    Q -->|Failed| R[Show Error Message]
+    Q -->|Success| S[Transaction Confirmed]
+    
+    R --> F
+    S --> T[Update User Balance]
+    T --> U[Show Success Notification]
+    U --> V[Update Vault TVL]
+    V --> W[Apply 24-hour Lock Period]
+    
+    W --> X[User Can View Position]
+    X --> Y[CustomerVaultDashboard Component]
+    
+    Y --> Z[Dashboard Shows:]
+    Z --> Z1[• Your Shares: XXX SEIDLPE]
+    Z --> Z2[• Share Value: $XXX.XX]
+    Z --> Z3[• Total Deposited: $XXX.XX]
+    Z --> Z4[• Unrealized Gains: +/-$XX.XX]
+    Z --> Z5[• Lock Status: Remaining Time]
+    
+    Z --> AA{Lock Period Active?}
+    AA -->|Yes| AB[Withdrawal Disabled]
+    AA -->|No| AC[Withdrawal Available]
+    
+    AB --> AD[Show Lock Timer]
+    AD --> AE[Lock period: Xh Xm remaining]
+    
+    AC --> AF[Enable Withdraw Button]
+    AF --> AG[Click Withdraw]
+    AG --> AH[Enter Withdrawal Shares]
+    AH --> AI[Show Withdrawal Preview]
+    AI --> AI1[Available Shares: XXX]
+    AI --> AI2[Withdrawal Fee: 0.5%]
+    AI --> AI3[Estimated Output: Token0 + Token1]
+    
+    AI --> AJ{Confirm Withdrawal?}
+    AJ -->|Cancel| AK[Return to Dashboard]
+    AJ -->|Confirm| AL[Call withdraw(shares, recipient)]
+    
+    AL --> AM[Smart Contract Processing]
+    AM --> AN{Withdrawal Success?}
+    
+    AN -->|Failed| AO[Show Error Message]
+    AN -->|Success| AP[Tokens Returned to Wallet]
+    
+    AO --> AG
+    AP --> AQ[Update User Position]
+    AQ --> AR[Show Success Notification]
+    AR --> AS[Refresh Dashboard Data]
+    
+    AS --> Y
+    
+    %% Styling
+    classDef processBox fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
+    classDef decisionBox fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef successBox fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef errorBox fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+    classDef userAction fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    
+    class A,B,G,H,X,Y,Z processBox
+    class C,I,L,Q,AA,AJ,AN decisionBox
+    class S,T,U,V,AP,AQ,AR,AS successBox
+    class R,AO errorBox
+    class E,D2,AG userAction
+```
+
+### CustomerVaultDashboard Implementation Status
+
+**✅ IMPLEMENTED** - The `CustomerVaultDashboard.tsx` component is fully implemented with the following features:
+
+1. **Real-time Position Tracking**:
+   - User shares (SEIDLPE tokens)
+   - Current share value in USD
+   - Total deposited amount
+   - Unrealized gains/losses calculation
+
+2. **Lock Period Management**:
+   - 24-hour minimum lock period for new deposits
+   - Real-time countdown timer
+   - Visual lock status indicator
+   - Disabled withdrawal when locked
+
+3. **Deposit Functionality**:
+   - Dual token input (Token0 + Token1)
+   - Smart contract integration via wagmi
+   - Transaction status tracking
+   - Error handling and user feedback
+
+4. **Withdrawal Functionality**:
+   - Share-based withdrawal system
+   - 0.5% withdrawal fee display
+   - Available shares validation
+   - Lock period enforcement
+
+5. **Smart Contract Integration**:
+   - `getCustomerStats()` for user data
+   - `getVaultInfo()` for vault details
+   - `deposit()` and `withdraw()` functions
+   - Real-time balance updates
+
+The component uses the SEI network's 400ms finality and integrates with the vault smart contracts through the wagmi library for seamless Web3 interactions.
+
 ---
 
 **Built for SEI Network** 🚀 - Optimized for 400ms finality and parallel execution

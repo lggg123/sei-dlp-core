@@ -4,15 +4,14 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import Navigation from '@/components/Navigation';
-import { ArrowLeft, TrendingUp, Activity, DollarSign, Shield, Target, BarChart3, Loader2 } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Activity, Shield, Target, BarChart3, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import { useVaultStore } from '@/stores/vaultStore';
-import { useVaults, useDepositToVault } from '@/hooks/useVaults';
+import { useVaults } from '@/hooks/useVaults';
+import DepositModal from '@/components/DepositModal';
 
 // Utility functions
 const formatCurrency = (amount: number) => {
@@ -56,13 +55,11 @@ export default function VaultDetailPage() {
   const action = searchParams.get('action');
   
   // State
-  const [depositAmount, setDepositAmount] = useState('');
   const [showDepositModal, setShowDepositModal] = useState(action === 'deposit');
   
   // Store and API hooks
   const { selectedVault, setSelectedVault, getVaultByAddress } = useVaultStore();
   const { data: vaultsData, isLoading } = useVaults();
-  const depositMutation = useDepositToVault();
   
   // Get vault data
   const vault = selectedVault || (vaultAddress ? getVaultByAddress(vaultAddress) : null);
@@ -114,20 +111,9 @@ export default function VaultDetailPage() {
   const vaultColor = getVaultColor(vault.strategy);
   const riskLevel = getRiskLevel(vault.apy);
 
-  const handleDeposit = async () => {
-    if (!depositAmount || parseFloat(depositAmount) <= 0) return;
-    
-    try {
-      await depositMutation.mutateAsync({
-        vaultAddress: vault.address,
-        amount: depositAmount
-      });
-      setDepositAmount('');
-      setShowDepositModal(false);
-      // Show success message or update UI
-    } catch (error) {
-      console.error('Deposit failed:', error);
-    }
+  const handleDepositSuccess = (txHash: string) => {
+    console.log('Deposit successful:', txHash);
+    setShowDepositModal(false);
   };
 
   return (
@@ -904,74 +890,12 @@ export default function VaultDetailPage() {
       </div>
 
       {/* Deposit Modal */}
-      {showDepositModal && (
-        <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
-          onClick={(e) => {
-            console.log('[VaultDetailModal] Backdrop clicked');
-            if (e.target === e.currentTarget) {
-              setShowDepositModal(false);
-            }
-          }}
-        >
-          <Card className="w-full max-w-md vault-solid-card relative z-[50]">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-vault-primary">
-                <DollarSign className="w-5 h-5" />
-                Deposit to {vault.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="deposit-amount" className="text-muted-foreground font-medium">Amount (USD)</Label>
-                <Input
-                  id="deposit-amount"
-                  type="number"
-                  placeholder="0.00"
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                />
-              </div>
-              
-              <div className="text-sm text-muted-foreground space-y-1">
-                <div className="flex justify-between">
-                  <span>Current APY:</span>
-                  <span className="font-bold text-green-400 text-enhanced-glow">{(vault.apy * 100).toFixed(1)}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Fee Tier:</span>
-                  <span className="font-bold text-blue-400 text-enhanced-glow">{(vault.fee * 100).toFixed(2)}%</span>
-                </div>
-              </div>
-              
-              <div className="flex gap-2 pt-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowDepositModal(false)}
-                  className="btn-vault-secondary flex-1 h-12 text-base"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleDeposit}
-                  disabled={!depositAmount || parseFloat(depositAmount) <= 0 || depositMutation.isPending}
-                  className="btn-vault-primary flex-1 h-12 text-base"
-                  style={{
-                    background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD)`,
-                    color: '#000',
-                  }}
-                >
-                  {depositMutation.isPending ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    'Deposit'
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      <DepositModal
+        vault={vault}
+        isOpen={showDepositModal}
+        onClose={() => setShowDepositModal(false)}
+        onSuccess={handleDepositSuccess}
+      />
 
     </div>
   );
