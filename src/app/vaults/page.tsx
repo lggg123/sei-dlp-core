@@ -390,8 +390,8 @@ export default function VaultsPage() {
                 AI-Powered Yield Optimization on SEI
               </h1>
               
-              {/* Live Stats Ticker - Enhanced Design with Carousel */}
-              <div className="max-w-5xl mx-auto px-4 mb-6">
+              {/* Live Stats Ticker - Enhanced Design with Tight Layout */}
+              <div className="w-full mb-6" style={{ display: 'flex', justifyContent: 'center' }}>
                 <div 
                   ref={statsRef}
                   style={{
@@ -399,75 +399,169 @@ export default function VaultsPage() {
                     backdropFilter: 'blur(16px)',
                     border: '1px solid rgba(155, 93, 229, 0.3)',
                     borderRadius: '16px',
-                    padding: '16px 24px',
+                    padding: '12px 20px',
                     boxShadow: '0 8px 32px rgba(0, 245, 212, 0.1), 0 0 0 1px rgba(155, 93, 229, 0.2)',
                     overflow: 'hidden',
-                    position: 'relative'
+                    position: 'relative',
+                    display: 'inline-block',
+                    maxWidth: '90vw'
                   }}
                 >
-                  <div className="flex items-center justify-center gap-6 lg:gap-8 text-sm font-semibold text-white/90 animate-scroll">
+                  <div 
+                    className="animate-scroll"
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '12px',
+                      whiteSpace: 'nowrap',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      width: 'fit-content'
+                    }}
+                  >
                     {/* First set */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="tvl" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>TVL</span>
-                      <span style={{ fontWeight: 'bold', color: '#00f5d4' }}>{isLoading ? '...' : formatCurrency(totalTVL)}</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="tvl" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>TVL</span>
+                      <span style={{ fontWeight: 'bold', color: '#00f5d4', fontSize: '13px' }}>{isLoading ? '...' : formatCurrency(totalTVL)}</span>
                     </div>
                     
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="vaults" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>Vaults</span>
-                      <span style={{ fontWeight: 'bold', color: '#9b5de5' }}>{isLoading ? '...' : filteredVaults.length}</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="vaults" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>Vaults</span>
+                      <span style={{ fontWeight: 'bold', color: '#9b5de5', fontSize: '13px' }}>{isLoading ? '...' : filteredVaults.length}</span>
                     </div>
                     
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="apy" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>APY</span>
-                      <span style={{ fontWeight: 'bold', color: '#10b981' }}>{isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="apy" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>APY</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '13px' }}>{isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
                     </div>
                     
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="uptime" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>AI</span>
-                      <span style={{ fontWeight: 'bold', color: '#3b82f6' }}>99.97%</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="uptime" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>AI</span>
+                      <span style={{ fontWeight: 'bold', color: '#3b82f6', fontSize: '13px' }}>99.97%</span>
                     </div>
 
-                    {/* Duplicate set for seamless scroll */}
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    {/* Duplicate set for seamless scrolling */}
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="tvl" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>TVL</span>
-                      <span style={{ fontWeight: 'bold', color: '#00f5d4' }}>{isLoading ? '...' : formatCurrency(totalTVL)}</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="tvl" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>TVL</span>
+                      <span style={{ fontWeight: 'bold', color: '#00f5d4', fontSize: '13px' }}>{isLoading ? '...' : formatCurrency(totalTVL)}</span>
                     </div>
                     
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="vaults" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>Vaults</span>
-                      <span style={{ fontWeight: 'bold', color: '#9b5de5' }}>{isLoading ? '...' : filteredVaults.length}</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="vaults" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>Vaults</span>
+                      <span style={{ fontWeight: 'bold', color: '#9b5de5', fontSize: '13px' }}>{isLoading ? '...' : filteredVaults.length}</span>
                     </div>
                     
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="apy" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>APY</span>
-                      <span style={{ fontWeight: 'bold', color: '#10b981' }}>{isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="apy" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>APY</span>
+                      <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '13px' }}>{isLoading ? '...' : `${filteredVaults.length > 0 ? (filteredVaults.reduce((sum, v) => sum + v.apy, 0) / filteredVaults.length).toFixed(1) : '0'}%`}</span>
                     </div>
                     
-                    <div style={{ width: '1px', height: '24px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.3), transparent)' }} className="hidden sm:block" />
+                    <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, transparent, rgba(155, 93, 229, 0.4), transparent)', flexShrink: 0 }} />
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '8px', padding: '8px 12px', border: '1px solid rgba(155, 93, 229, 0.2)' }}>
-                      <StatsCardGraphic type="uptime" className="w-5 h-5" />
-                      <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)' }}>AI</span>
-                      <span style={{ fontWeight: 'bold', color: '#3b82f6' }}>99.97%</span>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      background: 'rgba(0, 0, 0, 0.25)', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      border: '1px solid rgba(155, 93, 229, 0.2)',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
+                    }}>
+                      <StatsCardGraphic type="uptime" className="w-4 h-4 flex-shrink-0" />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)', fontWeight: '500' }}>AI</span>
+                      <span style={{ fontWeight: 'bold', color: '#3b82f6', fontSize: '13px' }}>99.97%</span>
                     </div>
                   </div>
                 </div>
@@ -610,10 +704,10 @@ export default function VaultsPage() {
                       </div>
                     </div>
 
-                    {/* Action Buttons - Optimized Sizing */}
-                    <div className="flex justify-center gap-3 mt-6">  
+                    {/* Action Buttons - Enhanced Spacing and Sizing */}
+                    <div className="vault-action-buttons">  
                       <Button 
-                        className="w-32 font-bold text-sm h-11 px-4 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20 shadow-lg"
+                        className="w-44 font-bold text-sm h-11 px-8 btn-vault-primary transition-all duration-300 border-2 border-transparent hover:scale-105 active:scale-95 relative z-20 shadow-lg"
                         onClick={(e) => {
                           console.log('[BUTTON CLICK] Deposit button clicked - IMMEDIATE', new Date().toISOString());
                           e.preventDefault();
@@ -634,7 +728,7 @@ export default function VaultsPage() {
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="w-32 font-bold text-sm h-11 px-4 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95 relative z-20 shadow-lg"
+                        className="w-44 font-bold text-sm h-11 px-8 btn-vault-secondary transition-all duration-300 border-2 hover:scale-105 active:scale-95 relative z-20 shadow-lg"
                         onClick={(e) => { 
                           e.preventDefault();
                           e.stopPropagation();

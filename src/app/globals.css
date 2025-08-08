@@ -599,7 +599,7 @@
       min-height: 48px;
       padding: 12px 20px;
       font-size: 0.9rem;
-      max-width: 140px !important;
+      max-width: 180px !important;
     }
 
     /* Better spacing for mobile vault cards */
@@ -653,8 +653,9 @@
   text-decoration: none !important;
 }
 
-/* Vault Detail Page Specific Overrides - Controlled Priority */
-.vault-deposit-enhanced {
+/* Vault Detail Page Specific Overrides - Enhanced Priority & Mobile Support */
+.vault-deposit-enhanced,
+.vault-deposit-enhanced-v2 {
   position: relative;
   display: flex;
   align-items: center;
@@ -663,16 +664,57 @@
   font-family: inherit;
   text-decoration: none;
   outline: none;
+  border: none;
+  overflow: hidden;
 }
 
-.deposit-button-container {
+.vault-deposit-button-wrapper {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  z-index: 50;
+  z-index: 100;
 }
 
-/* Tab Navigation Enhancement */
+.vault-detail-header-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Enhanced button shine animation */
+.vault-deposit-enhanced-v2:hover .button-shine {
+  left: 100% !important;
+  transition: left 0.6s ease !important;
+}
+
+.button-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Vault Page Enhanced Metrics Grid */
+.vault-metrics-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.vault-metric-primary:hover,
+.vault-metric-secondary:hover,
+.vault-metric-wide:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5), 
+    0 0 80px rgba(155, 93, 229, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Tab Navigation Enhancement - Vault Page */
 .tabs-container-enhanced {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -682,6 +724,158 @@
   padding: 0.5rem;
   border-radius: 1rem;
   position: relative;
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(25px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.tab-trigger-custom:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 
+    0 8px 25px rgba(155, 93, 229, 0.4), 
+    0 0 35px rgba(155, 93, 229, 0.25) !important;
+}
+
+/* Enhanced Mobile Responsiveness - Vault Detail Page */
+@media (max-width: 768px) {
+  .vault-deposit-button-wrapper {
+    position: static;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    z-index: 100;
+  }
+
+  .vault-deposit-enhanced-v2 {
+    width: 100% !important;
+    max-width: 280px !important;
+    height: 52px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .vault-header-content {
+    margin-right: 0 !important;
+    text-align: center;
+  }
+
+  .vault-main-title {
+    font-size: 2.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .vault-subtitle {
+    font-size: 1.125rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .vault-badges {
+    justify-content: center !important;
+  }
+
+  .vault-metrics-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .vault-metric-primary,
+  .vault-metric-wide {
+    grid-column: span 1 !important;
+  }
+
+  .tabs-container-enhanced {
+    height: 4rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tab-trigger-custom {
+    font-size: 0.9rem !important;
+    height: 3.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .vault-detail-header-card {
+    padding: 1.5rem !important;
+    border-radius: 20px !important;
+  }
+
+  .vault-main-title {
+    font-size: 2rem !important;
+  }
+
+  .vault-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .vault-deposit-enhanced-v2 {
+    height: 48px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .vault-metrics-grid {
+    gap: 0.75rem !important;
+  }
+
+  .vault-metric-primary,
+  .vault-metric-secondary,
+  .vault-metric-wide {
+    padding: 1.25rem !important;
+    border-radius: 16px !important;
+  }
+
+  .tabs-container-enhanced {
+    height: 3.5rem;
+    padding: 0.25rem;
+  }
+
+  .tab-trigger-custom {
+    font-size: 0.8rem !important;
+    height: 3rem !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+/* Tablet Responsiveness */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .vault-deposit-enhanced-v2 {
+    width: 160px !important;
+    height: 52px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .vault-header-content {
+    margin-right: 180px !important;
+  }
+
+  .vault-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-width: 600px !important;
+  }
+
+  .vault-metric-primary {
+    grid-column: span 2 !important;
+  }
+}
+
+/* Performance optimizations */
+.vault-detail-header-card,
+.vault-metric-primary,
+.vault-metric-secondary,
+.vault-metric-wide {
+  will-change: transform;
+}
+
+/* Accessibility improvements */
+.vault-deposit-enhanced-v2:focus {
+  outline: 2px solid rgba(155, 93, 229, 0.8);
+  outline-offset: 2px;
+}
+
+.tab-trigger-custom:focus {
+  outline: 2px solid rgba(155, 93, 229, 0.8);
+  outline-offset: 2px;
+  border-radius: 0.75rem;
 }
 
 .tab-trigger-custom {
@@ -712,5 +906,174 @@
   font-weight: 700;
   min-width: 90px;
   height: 32px;
+}
+
+/* ==========================================
+   ULTRA-COMPACT VAULT STYLING SYSTEM V3
+   Maximum content density with visual hierarchy
+   ========================================== */
+
+/* Ultra-Compact Tab System */
+.tabs-container-compact {
+  container-type: inline-size;
+}
+
+@container (max-width: 768px) {
+  .tabs-container-compact {
+    height: 2.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding: 0.1875rem !important;
+  }
+  
+  .tab-trigger-compact {
+    height: 2.125rem !important;
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+  }
+}
+
+@container (max-width: 480px) {
+  .tabs-container-compact {
+    height: 2.25rem !important;
+    padding: 0.125rem !important;
+    margin-bottom: 0.375rem !important;
+  }
+  
+  .tab-trigger-compact {
+    height: 2rem !important;
+    font-size: 0.625rem !important;
+    letter-spacing: 0.25px !important;
+  }
+}
+
+/* Ultra-Compact Metrics Grid */
+.vault-metrics-ultra-compact {
+  container-type: inline-size;
+}
+
+@container (max-width: 768px) {
+  .vault-metrics-ultra-compact {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  
+  .vault-metric-primary-compact {
+    grid-column: span 2 !important;
+    min-height: 75px !important;
+  }
+  
+  .vault-metric-wide-compact {
+    grid-column: span 2 !important;
+    min-height: 55px !important;
+  }
+}
+
+@container (max-width: 480px) {
+  .vault-metrics-ultra-compact {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+  
+  .vault-metric-primary-compact,
+  .vault-metric-secondary-compact,
+  .vault-metric-wide-compact {
+    grid-column: span 1 !important;
+    min-height: 65px !important;
+  }
+}
+
+/* Ultra-Compact Header */
+.vault-detail-header-card-ultra-compact {
+  container-type: inline-size;
+}
+
+@container (max-width: 768px) {
+  .vault-detail-header-card-ultra-compact {
+    min-height: 140px !important;
+    padding: 0.875rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-header-content {
+    margin-right: 100px !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-deposit-button-wrapper {
+    top: 0.625rem !important;
+    right: 0.625rem !important;
+  }
+}
+
+@container (max-width: 480px) {
+  .vault-detail-header-card-ultra-compact {
+    min-height: 120px !important;
+    padding: 0.75rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-header-content {
+    margin-right: 85px !important;
+    margin-bottom: 0.375rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-main-title {
+    font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-subtitle {
+    font-size: clamp(0.75rem, 1.75vw, 0.875rem) !important;
+  }
+}
+
+/* Performance Optimizations for Compact Elements */
+.tab-trigger-compact,
+.vault-metric-primary-compact,
+.vault-metric-secondary-compact,
+.vault-metric-wide-compact {
+  will-change: transform;
+  contain: layout style paint;
+  backface-visibility: hidden;
+}
+
+.tab-trigger-compact:hover {
+  transform: scale(1.005) !important;
+}
+
+.vault-metric-primary-compact:hover,
+.vault-metric-secondary-compact:hover,
+.vault-metric-wide-compact:hover {
+  transform: translateY(-1px) scale(1.01);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Motion Reduction for Compact UI */
+@media (prefers-reduced-motion: reduce) {
+  .tab-trigger-compact,
+  .vault-metric-primary-compact,
+  .vault-metric-secondary-compact,
+  .vault-metric-wide-compact {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  .tab-trigger-compact:hover,
+  .vault-metric-primary-compact:hover,
+  .vault-metric-secondary-compact:hover,
+  .vault-metric-wide-compact:hover {
+    transform: none !important;
+  }
+}
+
+/* Force button spacing in vault cards */
+.vault-action-buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 2rem !important;
+  margin-top: 2rem !important;
+}
+
+.vault-action-buttons > * {
+  flex-shrink: 0 !important;
+  min-width: 176px !important;
+  width: 176px !important;
 }
 

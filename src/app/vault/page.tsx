@@ -152,132 +152,170 @@ export default function VaultDetailPage() {
               Back to Vaults
             </Button>
             
-            <div ref={cardRef} className="vault-solid-card relative z-10" style={{
+                        <div ref={cardRef} className="vault-detail-header-card-optimized relative z-10" style={{
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(255, 255, 255, 0.25)',
-              borderRadius: '24px',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-              padding: '2rem',
-              position: 'relative'
+              borderRadius: '20px',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+              padding: 'clamp(1rem, 2.5vw, 1.5rem)',
+              position: 'relative',
+              overflow: 'hidden',
+              // Significantly reduced height for better content flow
+              minHeight: 'clamp(160px, 20vw, 220px)'
             }}>
-              {/* Deposit Button - Fixed Top Right Positioning with CSS Reset Override */}
+              {/* Enhanced Background Gradient for Header */}
               <div 
-                className="deposit-button-container"
+                className="absolute inset-0 opacity-30 pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle at top right, ${vaultColor}15 0%, transparent 60%)`
+                }}
+              />
+
+              {/* Deposit Button - Enhanced Fixed Positioning */}
+              <div 
+                className="vault-deposit-button-wrapper"
                 style={{ 
                   position: 'absolute', 
                   top: '1.5rem', 
                   right: '1.5rem', 
-                  zIndex: 50,
-                  all: 'initial',
-                  fontFamily: 'inherit'
+                  zIndex: 100
                 }}
               >
                 <button
-                  className="vault-deposit-enhanced"
+                  className="vault-deposit-enhanced-v2"
                   onClick={() => {
-                    console.log('[VaultDetail] Deposit button clicked - setting modal to true');
+                    console.log('[VaultDetail] Enhanced Deposit button clicked');
                     setShowDepositModal(true);
                   }}
                   style={{
-                    all: 'initial',
-                    fontFamily: 'inherit',
-                    background: `linear-gradient(135deg, ${vaultColor}, ${vaultColor}DD, ${vaultColor}BB)`,
+                    background: `linear-gradient(135deg, ${vaultColor}F0, ${vaultColor}DD, ${vaultColor}CC)`,
                     color: '#000000',
                     border: `2px solid ${vaultColor}`,
                     boxShadow: `
-                      0 8px 25px ${vaultColor}60, 
-                      0 0 30px ${vaultColor}40, 
-                      0 0 0 1px rgba(255,255,255,0.3) inset,
-                      0 2px 8px rgba(0,0,0,0.4)
+                      0 8px 32px ${vaultColor}50, 
+                      0 0 40px ${vaultColor}30, 
+                      0 0 0 1px rgba(255,255,255,0.4) inset,
+                      0 4px 16px rgba(0,0,0,0.3)
                     `,
-                    width: '170px',
-                    height: '54px',
-                    fontSize: '0.95rem',
-                    fontWeight: '800',
-                    borderRadius: '14px',
-                    textShadow: '0 1px 3px rgba(0,0,0,0.8), 0 0 1px rgba(0,0,0,1)',
-                    backdropFilter: 'blur(10px)',
+                    width: '180px',
+                    height: '56px',
+                    fontSize: '1rem',
+                    fontWeight: '900',
+                    borderRadius: '16px',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.7)',
+                    backdropFilter: 'blur(12px)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    textDecoration: 'none',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    fontFamily: 'inherit',
                     outline: 'none',
-                    transition: 'all 0.3s ease',
                     position: 'relative',
-                    zIndex: 1000
+                    overflow: 'hidden'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                    e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
                     e.currentTarget.style.boxShadow = `
-                      0 12px 35px ${vaultColor}70, 
-                      0 0 40px ${vaultColor}50, 
-                      0 0 0 1px rgba(255,255,255,0.4) inset,
-                      0 4px 12px rgba(0,0,0,0.5)
+                      0 12px 48px ${vaultColor}60, 
+                      0 0 60px ${vaultColor}40, 
+                      0 0 0 1px rgba(255,255,255,0.5) inset,
+                      0 6px 24px rgba(0,0,0,0.4)
                     `;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.boxShadow = `
-                      0 8px 25px ${vaultColor}60, 
-                      0 0 30px ${vaultColor}40, 
-                      0 0 0 1px rgba(255,255,255,0.3) inset,
-                      0 2px 8px rgba(0,0,0,0.4)
+                      0 8px 32px ${vaultColor}50, 
+                      0 0 40px ${vaultColor}30, 
+                      0 0 0 1px rgba(255,255,255,0.4) inset,
+                      0 4px 16px rgba(0,0,0,0.3)
                     `;
                   }}
                 >
-                  Deposit Funds
+                  <span style={{ position: 'relative', zIndex: 2 }}>Deposit Funds</span>
+                  {/* Button shine effect */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '-100%',
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                      transition: 'left 0.6s ease',
+                      pointerEvents: 'none'
+                    }}
+                    className="button-shine"
+                  />
                 </button>
               </div>
 
-              <div className="pr-52 mb-10">
-                <div className="flex-1">
-                  <h1 className="text-5xl font-black mb-4 text-enhanced-glow leading-tight" style={{ 
+              {/* Header Content with Compact Spacing */}
+              <div className="vault-header-content" style={{ 
+                marginRight: 'clamp(120px, 20vw, 160px)', 
+                marginBottom: 'clamp(0.75rem, 2vw, 1.25rem)',
+                position: 'relative',
+                zIndex: 2
+              }}>
+                <div className="vault-title-section">
+                  <h1 className="vault-main-title" style={{ 
+                    fontSize: 'clamp(1.75rem, 5vw, 2.75rem)',
+                    fontWeight: '900',
+                    marginBottom: 'clamp(0.375rem, 1.5vw, 0.75rem)',
+                    lineHeight: '1.1',
                     color: vaultColor,
-                    textShadow: `0 0 30px ${vaultColor}60, 0 2px 4px rgba(0,0,0,0.3)`
+                    textShadow: `
+                      0 0 30px ${vaultColor}40, 
+                      0 3px 6px rgba(0,0,0,0.4),
+                      0 1px 3px rgba(0,0,0,0.6)
+                    `,
+                    letterSpacing: '-0.02em'
                   }}>
                     {vault.name}
                   </h1>
-                  <p className="text-muted-foreground text-xl mb-8 font-medium opacity-90">
+                  <p className="vault-subtitle" style={{
+                    fontSize: 'clamp(0.875rem, 2vw, 1.125rem)',
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    marginBottom: 'clamp(0.75rem, 2vw, 1.25rem)',
+                    fontWeight: '500',
+                    letterSpacing: '0.5px'
+                  }}>
                     {vault.strategy.replace('_', ' ').toUpperCase()} • {vault.tokenA}-{vault.tokenB}
                   </p>
-                  <div className="flex items-center gap-4">
+                  <div className="vault-badges" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(0.5rem, 1.5vw, 0.75rem)' }}>
                     <div
-                      className="risk-badge-custom"
+                      className="vault-risk-badge-v2"
                       style={{
-                        all: 'initial',
-                        fontFamily: 'inherit',
                         background: riskLevel === 'Low' ? 
                           'linear-gradient(135deg, #22c55e, #16a34a, #15803d)' :
                           riskLevel === 'Medium' ? 
                           'linear-gradient(135deg, #f59e0b, #d97706, #b45309)' :
                           'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)',
-                        color: riskLevel === 'Low' ? '#fef3c7' :  // Light yellow for green background
-                               riskLevel === 'Medium' ? '#fef3c7' : // Light yellow for orange background
-                               '#fef3c7', // Light yellow for red background
-                        border: riskLevel === 'Low' ? '1px solid rgba(34, 197, 94, 0.6)' :
-                                riskLevel === 'Medium' ? '1px solid rgba(245, 158, 11, 0.6)' :
-                                '1px solid rgba(239, 68, 68, 0.6)',
+                        color: '#ffffff',
+                        border: riskLevel === 'Low' ? '2px solid rgba(34, 197, 94, 0.6)' :
+                                riskLevel === 'Medium' ? '2px solid rgba(245, 158, 11, 0.6)' :
+                                '2px solid rgba(239, 68, 68, 0.6)',
                         boxShadow: riskLevel === 'Low' ? 
-                          '0 0 15px rgba(34, 197, 94, 0.4), 0 2px 8px rgba(34, 197, 94, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset' :
+                          '0 0 20px rgba(34, 197, 94, 0.4), 0 4px 12px rgba(34, 197, 94, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset' :
                           riskLevel === 'Medium' ? 
-                          '0 0 15px rgba(245, 158, 11, 0.4), 0 2px 8px rgba(245, 158, 11, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset' :
-                          '0 0 15px rgba(239, 68, 68, 0.4), 0 2px 8px rgba(239, 68, 68, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
-                        textShadow: '0 1px 2px rgba(0,0,0,0.6), 0 0 1px rgba(0,0,0,0.8)',
+                          '0 0 20px rgba(245, 158, 11, 0.4), 0 4px 12px rgba(245, 158, 11, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset' :
+                          '0 0 20px rgba(239, 68, 68, 0.4), 0 4px 12px rgba(239, 68, 68, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                        textShadow: '0 1px 3px rgba(0,0,0,0.7)',
                         backdropFilter: 'blur(10px)',
-                        fontWeight: '700',
-                        letterSpacing: '0.3px',
+                        fontWeight: '800',
+                        letterSpacing: '0.5px',
                         textTransform: 'uppercase',
-                        minWidth: '90px',
-                        height: '32px',
+                        height: '40px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        borderRadius: '16px',
-                        padding: '8px 20px',
-                        fontSize: '0.875rem',
-                        cursor: 'default',
+                        borderRadius: '20px',
+                        padding: '0 24px',
+                        fontSize: '0.9rem',
                         transition: 'all 0.3s ease'
                       }}
                     >
@@ -287,101 +325,214 @@ export default function VaultDetailPage() {
                 </div>
               </div>
 
-              {/* Key Metrics - Bento Grid Design */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto">
-                {/* APY - Large Corner Focus */}
-                <div className="col-span-2 md:col-span-2 text-center p-6 transition-all duration-300 hover:scale-105" style={{
+              {/* Optimized Key Metrics - Responsive Bento Grid */}
+              <div className="vault-metrics-optimized" style={{ 
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: 'clamp(0.75rem, 2vw, 1.25rem)',
+                maxWidth: '100%',
+                margin: '0 auto',
+                position: 'relative',
+                zIndex: 2
+              }}>
+                {/* APY - Compact Primary Focus with Better Centering */}
+                <div className="vault-metric-primary-compact" style={{
+                  gridColumn: 'span 2',
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(15px)',
-                  borderRadius: '24px 24px 8px 8px',
-                  boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset'
+                  border: `1px solid ${vaultColor}50`,
+                  backdropFilter: 'blur(16px)',
+                  borderRadius: '18px',
+                  boxShadow: `
+                    0 10px 20px rgba(0, 0, 0, 0.25), 
+                    0 0 30px ${vaultColor}12,
+                    0 0 0 1px rgba(255, 255, 255, 0.1) inset
+                  `,
+                  padding: 'clamp(0.875rem, 2.5vw, 1.25rem)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  minHeight: 'clamp(85px, 12vw, 105px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}>
-                  <div className="text-5xl font-black text-enhanced-glow mb-3" style={{ 
-                    color: vaultColor,
-                    textShadow: `0 0 25px ${vaultColor}60, 0 2px 4px rgba(0,0,0,0.3)`
-                  }}>
-                    {(vault.apy * 100).toFixed(1)}%
+                  {/* Subtle glow effect */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      inset: '0',
+                      background: `radial-gradient(circle at center, ${vaultColor}06 0%, transparent 60%)`,
+                      opacity: '0.8',
+                      pointerEvents: 'none'
+                    }}
+                  />
+                  <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
+                    <div style={{ 
+                      fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
+                      fontWeight: '900',
+                      marginBottom: 'clamp(0.125rem, 0.75vw, 0.375rem)',
+                      color: vaultColor,
+                      textShadow: `
+                        0 0 25px ${vaultColor}45, 
+                        0 2px 5px rgba(0,0,0,0.4)
+                      `,
+                      letterSpacing: '-0.01em',
+                      lineHeight: '1',
+                      textAlign: 'center'
+                    }}>
+                      {(vault.apy * 100).toFixed(1)}%
+                    </div>
+                    <div style={{
+                      fontSize: 'clamp(0.6875rem, 1.75vw, 0.8125rem)',
+                      color: 'rgba(255, 255, 255, 0.85)',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.75px',
+                      textAlign: 'center'
+                    }}>
+                      Current APY
+                    </div>
                   </div>
-                  <div className="text-base text-muted-foreground font-bold uppercase tracking-wider opacity-90">Current APY</div>
                 </div>
                 
-                {/* TVL */}
-                <div className="text-center p-4 transition-all duration-300 hover:scale-105" style={{
+                {/* TVL - More Compact Secondary */}
+                <div className="vault-metric-secondary-compact" style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '8px 24px 8px 8px',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+                  backdropFilter: 'blur(12px)',
+                  borderRadius: '14px',
+                  boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)',
+                  padding: 'clamp(0.625rem, 1.75vw, 0.875rem)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  minHeight: 'clamp(70px, 10vw, 85px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
                 }}>
-                  <div className="text-2xl font-black text-vault-primary mb-2 text-enhanced-glow">
+                  <div style={{ 
+                    fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+                    fontWeight: '800',
+                    marginBottom: 'clamp(0.0625rem, 0.375vw, 0.1875rem)',
+                    color: '#ffffff',
+                    textShadow: '0 0 12px rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.4)'
+                  }}>
                     {formatCurrency(vault.tvl)}
                   </div>
-                  <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">TVL</div>
+                  <div style={{
+                    fontSize: 'clamp(0.5625rem, 1.25vw, 0.6875rem)',
+                    color: 'rgba(255, 255, 255, 0.65)',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    TVL
+                  </div>
                 </div>
                 
-                {/* Total Return */}
-                <div className="text-center p-4 transition-all duration-300 hover:scale-105" style={{
+                {/* Total Return - More Compact Secondary */}
+                <div className="vault-metric-secondary-compact" style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '8px 8px 24px 8px',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+                  backdropFilter: 'blur(12px)',
+                  borderRadius: '14px',
+                  boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)',
+                  padding: 'clamp(0.625rem, 1.75vw, 0.875rem)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  minHeight: 'clamp(70px, 10vw, 85px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
                 }}>
-                  <div className="text-2xl font-black text-green-400 text-enhanced-glow mb-2" style={{
-                    textShadow: '0 0 20px rgba(34, 197, 94, 0.5)'
+                  <div style={{ 
+                    fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+                    fontWeight: '800',
+                    marginBottom: 'clamp(0.0625rem, 0.375vw, 0.1875rem)',
+                    color: '#22c55e',
+                    textShadow: '0 0 12px rgba(34, 197, 94, 0.4), 0 1px 2px rgba(0,0,0,0.4)'
                   }}>
                     {(vault.performance.totalReturn * 100).toFixed(1)}%
                   </div>
-                  <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Total Return</div>
+                  <div style={{
+                    fontSize: 'clamp(0.5625rem, 1.25vw, 0.6875rem)',
+                    color: 'rgba(255, 255, 255, 0.65)',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    Return
+                  </div>
                 </div>
                 
-                {/* Sharpe Ratio - Spanning full width */}
-                <div className="col-span-2 md:col-span-4 text-center p-4 transition-all duration-300 hover:scale-105" style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '8px 8px 24px 24px',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+                {/* Sharpe Ratio - More Compact Full Width */}
+                <div className="vault-metric-wide-compact" style={{
+                  gridColumn: 'span 4',
+                  background: 'linear-gradient(135deg, rgba(155, 93, 229, 0.1) 0%, rgba(155, 93, 229, 0.035) 100%)',
+                  border: '1px solid rgba(155, 93, 229, 0.2)',
+                  backdropFilter: 'blur(12px)',
+                  borderRadius: '14px',
+                  boxShadow: '0 6px 16px rgba(155, 93, 229, 0.12)',
+                  padding: 'clamp(0.625rem, 1.75vw, 0.875rem)',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  minHeight: 'clamp(60px, 8vw, 75px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
                 }}>
-                  <div className="text-3xl font-black text-secondary text-enhanced-glow mb-2" style={{
-                    textShadow: '0 0 20px rgba(155, 93, 229, 0.5)'
+                  <div style={{ 
+                    fontSize: 'clamp(1.125rem, 3vw, 1.5rem)',
+                    fontWeight: '900',
+                    marginBottom: 'clamp(0.0625rem, 0.375vw, 0.1875rem)',
+                    color: '#9b5de5',
+                    textShadow: '0 0 16px rgba(155, 93, 229, 0.45), 0 1px 2px rgba(0,0,0,0.4)'
                   }}>
                     {vault.performance.sharpeRatio.toFixed(2)}
                   </div>
-                  <div className="text-sm text-muted-foreground font-bold uppercase tracking-wider opacity-90">Sharpe Ratio</div>
+                  <div style={{
+                    fontSize: 'clamp(0.5625rem, 1.25vw, 0.75rem)',
+                    color: 'rgba(255, 255, 255, 0.75)',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.75px'
+                  }}>
+                    Sharpe Ratio
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Tabs */}
+          {/* Compact Tabs Section - Smaller Height */}
           <Tabs value={activeTab} onValueChange={(value) => {
             const params = new URLSearchParams(searchParams.toString());
             params.set('tab', value);
             router.push(`/vault?${params.toString()}`);
           }}>
             <TabsList 
-              className="grid w-full grid-cols-3 mb-8 h-18 p-2 rounded-2xl relative tabs-container-enhanced"
+              className="grid w-full grid-cols-3 mb-4 h-12 p-1.5 rounded-xl relative tabs-container-compact"
               style={{
                 all: 'initial',
                 fontFamily: 'inherit',
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 width: '100%',
-                marginBottom: '2rem',
-                height: '4.5rem',
-                padding: '0.5rem',
-                borderRadius: '1rem',
+                marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
+                height: 'clamp(2.75rem, 6vw, 3rem)',
+                padding: 'clamp(0.25rem, 0.75vw, 0.375rem)',
+                borderRadius: '0.75rem',
                 position: 'relative',
                 backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(25px)',
-                boxShadow: '0 15px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset'
+                border: '1.5px solid rgba(255, 255, 255, 0.18)',
+                backdropFilter: 'blur(20px)',
+                boxShadow: '0 10px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) inset'
               }}
             >
               <div
-                className="tab-trigger-custom"
+                className="tab-trigger-compact"
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set('tab', 'overview');
@@ -390,29 +541,29 @@ export default function VaultDetailPage() {
                 style={{
                   all: 'initial',
                   fontFamily: 'inherit',
-                  height: '4rem',
-                  fontSize: '1.125rem',
-                  fontWeight: '900',
-                  borderRadius: '0.75rem',
+                  height: 'clamp(2.25rem, 5vw, 2.5rem)',
+                  fontSize: 'clamp(0.75rem, 1.75vw, 0.9375rem)',
+                  fontWeight: '800',
+                  borderRadius: '0.5rem',
                   position: 'relative',
                   overflow: 'hidden',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.25s ease',
                   color: activeTab === 'overview' ? '#000000' : '#ffffff',
-                  backgroundColor: activeTab === 'overview' ? vaultColor : 'rgba(51, 65, 85, 0.6)',
+                  backgroundColor: activeTab === 'overview' ? vaultColor : 'rgba(51, 65, 85, 0.5)',
                   textShadow: activeTab === 'overview' ? 
-                    '0 1px 3px rgba(0,0,0,0.6)' : 
-                    `0 0 15px ${vaultColor}80, 0 0 25px ${vaultColor}40, 0 2px 4px rgba(0,0,0,0.8)`,
+                    '0 1px 2px rgba(0,0,0,0.6)' : 
+                    `0 0 12px ${vaultColor}70, 0 0 20px ${vaultColor}35, 0 1px 3px rgba(0,0,0,0.7)`,
                   border: activeTab !== 'overview' ? 
-                    `1px solid ${vaultColor}80` : 'none',
+                    `1px solid ${vaultColor}70` : 'none',
                   boxShadow: activeTab === 'overview' ? 
-                    `0 4px 15px ${vaultColor}40, 0 0 0 1px rgba(255,255,255,0.2) inset` : 
-                    `0 0 15px ${vaultColor}30, 0 0 25px ${vaultColor}15`,
-                  transform: activeTab === 'overview' ? 'scale(1.02)' : 'scale(1)',
-                  letterSpacing: '0.5px',
+                    `0 3px 12px ${vaultColor}35, 0 0 0 1px rgba(255,255,255,0.15) inset` : 
+                    `0 0 12px ${vaultColor}25, 0 0 20px ${vaultColor}12`,
+                  transform: activeTab === 'overview' ? 'scale(1.01)' : 'scale(1)',
+                  letterSpacing: '0.375px',
                   textTransform: 'uppercase',
                   zIndex: activeTab === 'overview' ? 10 : 1
                 }}
@@ -420,7 +571,7 @@ export default function VaultDetailPage() {
                 Overview
               </div>
               <div
-                className="tab-trigger-custom"
+                className="tab-trigger-compact"
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set('tab', 'analytics');
@@ -429,29 +580,29 @@ export default function VaultDetailPage() {
                 style={{
                   all: 'initial',
                   fontFamily: 'inherit',
-                  height: '4rem',
-                  fontSize: '1.125rem',
-                  fontWeight: '900',
-                  borderRadius: '0.75rem',
+                  height: 'clamp(2.25rem, 5vw, 2.5rem)',
+                  fontSize: 'clamp(0.75rem, 1.75vw, 0.9375rem)',
+                  fontWeight: '800',
+                  borderRadius: '0.5rem',
                   position: 'relative',
                   overflow: 'hidden',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.25s ease',
                   color: activeTab === 'analytics' ? '#000000' : '#ffffff',
-                  backgroundColor: activeTab === 'analytics' ? vaultColor : 'rgba(51, 65, 85, 0.6)',
+                  backgroundColor: activeTab === 'analytics' ? vaultColor : 'rgba(51, 65, 85, 0.5)',
                   textShadow: activeTab === 'analytics' ? 
-                    '0 1px 3px rgba(0,0,0,0.6)' : 
-                    `0 0 15px ${vaultColor}80, 0 0 25px ${vaultColor}40, 0 2px 4px rgba(0,0,0,0.8)`,
+                    '0 1px 2px rgba(0,0,0,0.6)' : 
+                    `0 0 12px ${vaultColor}70, 0 0 20px ${vaultColor}35, 0 1px 3px rgba(0,0,0,0.7)`,
                   border: activeTab !== 'analytics' ? 
-                    `1px solid ${vaultColor}80` : 'none',
+                    `1px solid ${vaultColor}70` : 'none',
                   boxShadow: activeTab === 'analytics' ? 
-                    `0 4px 15px ${vaultColor}40, 0 0 0 1px rgba(255,255,255,0.2) inset` : 
-                    `0 0 15px ${vaultColor}30, 0 0 25px ${vaultColor}15`,
-                  transform: activeTab === 'analytics' ? 'scale(1.02)' : 'scale(1)',
-                  letterSpacing: '0.5px',
+                    `0 3px 12px ${vaultColor}35, 0 0 0 1px rgba(255,255,255,0.15) inset` : 
+                    `0 0 12px ${vaultColor}25, 0 0 20px ${vaultColor}12`,
+                  transform: activeTab === 'analytics' ? 'scale(1.01)' : 'scale(1)',
+                  letterSpacing: '0.375px',
                   textTransform: 'uppercase',
                   zIndex: activeTab === 'analytics' ? 10 : 1
                 }}
@@ -459,7 +610,7 @@ export default function VaultDetailPage() {
                 Analytics
               </div>
               <div
-                className="tab-trigger-custom"
+                className="tab-trigger-compact"
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set('tab', 'strategy');
@@ -468,29 +619,29 @@ export default function VaultDetailPage() {
                 style={{
                   all: 'initial',
                   fontFamily: 'inherit',
-                  height: '4rem',
-                  fontSize: '1.125rem',
-                  fontWeight: '900',
-                  borderRadius: '0.75rem',
+                  height: 'clamp(2.25rem, 5vw, 2.5rem)',
+                  fontSize: 'clamp(0.75rem, 1.75vw, 0.9375rem)',
+                  fontWeight: '800',
+                  borderRadius: '0.5rem',
                   position: 'relative',
                   overflow: 'hidden',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.25s ease',
                   color: activeTab === 'strategy' ? '#000000' : '#ffffff',
-                  backgroundColor: activeTab === 'strategy' ? vaultColor : 'rgba(51, 65, 85, 0.6)',
+                  backgroundColor: activeTab === 'strategy' ? vaultColor : 'rgba(51, 65, 85, 0.5)',
                   textShadow: activeTab === 'strategy' ? 
-                    '0 1px 3px rgba(0,0,0,0.6)' : 
-                    `0 0 15px ${vaultColor}80, 0 0 25px ${vaultColor}40, 0 2px 4px rgba(0,0,0,0.8)`,
+                    '0 1px 2px rgba(0,0,0,0.6)' : 
+                    `0 0 12px ${vaultColor}70, 0 0 20px ${vaultColor}35, 0 1px 3px rgba(0,0,0,0.7)`,
                   border: activeTab !== 'strategy' ? 
-                    `1px solid ${vaultColor}80` : 'none',
+                    `1px solid ${vaultColor}70` : 'none',
                   boxShadow: activeTab === 'strategy' ? 
-                    `0 4px 15px ${vaultColor}40, 0 0 0 1px rgba(255,255,255,0.2) inset` : 
-                    `0 0 15px ${vaultColor}30, 0 0 25px ${vaultColor}15`,
-                  transform: activeTab === 'strategy' ? 'scale(1.02)' : 'scale(1)',
-                  letterSpacing: '0.5px',
+                    `0 3px 12px ${vaultColor}35, 0 0 0 1px rgba(255,255,255,0.15) inset` : 
+                    `0 0 12px ${vaultColor}25, 0 0 20px ${vaultColor}12`,
+                  transform: activeTab === 'strategy' ? 'scale(1.01)' : 'scale(1)',
+                  letterSpacing: '0.375px',
                   textTransform: 'uppercase',
                   zIndex: activeTab === 'strategy' ? 10 : 1
                 }}
