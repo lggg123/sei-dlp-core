@@ -18,7 +18,19 @@ export default function PerformanceMetrics() {
                     >
                         Real-Time Performance
                     </h2>
-                    <p className="track-performance-text-override">
+                    <p 
+                        style={{
+                            fontSize: '2.25rem',
+                            fontWeight: '500',
+                            lineHeight: '1.4',
+                            color: 'hsl(var(--muted-foreground))',
+                            maxWidth: '64rem',
+                            margin: '0 auto',
+                            textAlign: 'center',
+                            letterSpacing: '-0.01em',
+                            opacity: '0.9'
+                        }}
+                    >
                         Track your vault performance with AI-powered analytics and real-time metrics.
                     </p>
                 </div>
@@ -35,16 +47,6 @@ export default function PerformanceMetrics() {
                     }}
                 >
                     <style jsx>{`
-                        .track-performance-text-override {
-                            font-size: 2.25rem !important;
-                            font-weight: 500 !important;
-                            line-height: 1.4 !important;
-                            color: hsl(var(--muted-foreground)) !important;
-                            max-width: 64rem !important;
-                            margin: 0 auto !important;
-                            text-align: center !important;
-                            letter-spacing: -0.01em !important;
-                        }
                         @media (min-width: 768px) {
                             .performance-grid {
                                 grid-template-columns: repeat(3, 1fr) !important;

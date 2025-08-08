@@ -292,7 +292,7 @@ export default function FeatureHighlight() {
                                                 fontWeight: '700 !important',
                                                 color: 'hsl(var(--foreground)) !important',
                                                 lineHeight: '1.3 !important',
-                                                margin: '0 0 1.25rem 0 !important',
+                                                margin: '0 0 0.75rem 0 !important',
                                                 textAlign: 'center'
                                             }}
                                         >

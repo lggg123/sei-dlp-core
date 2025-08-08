@@ -8,12 +8,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import gsap from 'gsap';
 import styles from './VaultCard.module.css';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface VaultData {
+  address?: string;
   name: string;
   apy: number;
-  tvl: string;
+  tvl: number | string;
   risk: 'Low' | 'Medium' | 'High';
   color: string;
   description: string;
@@ -28,6 +29,30 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const apyRef = useRef<HTMLSpanElement>(null);
   const [displayApy, setDisplayApy] = useState(0);
+  const router = useRouter();
+
+  const handleViewVault = () => {
+    // Generate address from name if not provided
+    const vaultAddress = vault.address || generateVaultAddress(vault.name);
+    router.push(`/vault?address=${vaultAddress}&tab=analytics`);
+  };
+
+  const generateVaultAddress = (name: string) => {
+    // Generate consistent address from vault name
+    const nameMap: {[key: string]: string} = {
+      'StableMax Vault': '0x7890123456789012345678901234567890123456',
+      'SEI Hypergrowth': '0x8901234567890123456789012345678901234567', 
+      'BlueChip Vault': '0x9012345678901234567890123456789012345678'
+    };
+    return nameMap[name] || '0x1234567890123456789012345678901234567890';
+  };
+
+  const formatTvl = (tvl: number | string) => {
+    if (typeof tvl === 'string') return tvl;
+    return tvl >= 1000000 ? `$${(tvl / 1000000).toFixed(1)}M` : 
+           tvl >= 1000 ? `$${(tvl / 1000).toFixed(0)}K` : 
+           `$${tvl.toFixed(0)}`;
+  };
 
   useEffect(() => {
     if (cardRef.current) {
@@ -143,7 +168,7 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
           
           <div className={styles.metricRow}>
             <span className={styles.metricLabel}>TVL</span>
-            <span className={styles.tvlValue}>{vault.tvl}</span>
+            <span className={styles.tvlValue}>{formatTvl(vault.tvl)}</span>
           </div>
           
           <p className={styles.description}>
@@ -161,17 +186,21 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
           
           {/* Action Button (Landing Page) */}
           <div className={styles.buttonRow}>
-            <Link href="/vault" passHref>
-              <Button 
-                variant="outline" 
-                className={styles.analyticsButton}
-                style={{ position: 'relative', overflow: 'hidden' }}
-              >
-                <span className="animate-pulse text-primary font-semibold tracking-wide" style={{ display: 'inline-block' }}>
-                  View
-                </span>
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className={styles.analyticsButton}
+              onClick={handleViewVault}
+              style={{ 
+                position: 'relative', 
+                overflow: 'hidden',
+                margin: '0 auto',
+                display: 'block'
+              }}
+            >
+              <span className="font-bold tracking-wide text-center" style={{ display: 'inline-block' }}>
+                View Vault
+              </span>
+            </Button>
           </div>
         </div>
       </CardContent>

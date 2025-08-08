@@ -108,9 +108,9 @@ export default function AIWorkflow() {
       ref={containerRef} 
       className="py-32 neural-grid"
       style={{
-        paddingTop: '15rem !important',
+        paddingTop: '20rem !important',
         paddingBottom: '8rem !important',
-        marginTop: '5rem !important',
+        marginTop: '8rem !important',
         minHeight: '100vh !important',
         overflow: 'visible !important'
       }}
@@ -288,8 +288,8 @@ export default function AIWorkflow() {
         </div>
 
         {/* Workflow Steps */}
-        <div className="relative py-12">
-          <div className="flex flex-row items-center justify-center overflow-x-auto pb-8 max-w-full px-8" style={{ gap: '4rem' }}>
+        <div className="relative py-12" style={{ paddingTop: '6rem', paddingBottom: '4rem' }}>
+          <div className="flex flex-row items-center justify-center overflow-x-auto pb-8 max-w-full px-8" style={{ gap: '4rem', paddingTop: '2rem' }}>
             {workflowSteps.map((step, index) => (
               <div key={step.id} className="flex flex-col items-center relative">
                 {/* Circular Step Card */}
