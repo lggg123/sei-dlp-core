@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Button } from '@/components/ui/button'
 import { SeiWalletModal } from './SeiWalletModal'
@@ -9,12 +9,117 @@ import { useSeiWallet } from '@/hooks/useSeiWallet'
 export function WalletConnectButton() {
   const [showSeiModal, setShowSeiModal] = useState(false)
   const { isSeiConnected, isFullyConnected, mounted } = useSeiWallet()
+  const [fallbackMode, setFallbackMode] = useState(false)
+  // Enhanced debug logging for visibility issues
+  React.useEffect(() => {
+    console.log('[WalletConnectButton] State:', { 
+      mounted, 
+      fallbackMode, 
+      isSeiConnected, 
+      isFullyConnected,
+      timestamp: new Date().toISOString()
+    })
+    
+    // Debug DOM visibility
+    const walletContainers = document.querySelectorAll('.wallet-container-override')
+    console.log('[WalletConnectButton] Found wallet containers:', walletContainers.length)
+    walletContainers.forEach((container, index) => {
+      const styles = window.getComputedStyle(container)
+      console.log(`[WalletConnectButton] Container ${index}:`, {
+        display: styles.display,
+        visibility: styles.visibility,
+        opacity: styles.opacity,
+        zIndex: styles.zIndex,
+        position: styles.position
+      })
+    })
+  }, [mounted, fallbackMode, isSeiConnected, isFullyConnected])
 
-  if (!mounted) {
+  // Reduced fallback timeout for better UX
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!mounted) {
+        console.log('[WalletConnectButton] Activating fallback mode after timeout')
+        setFallbackMode(true)
+      }
+    }, 3000) // Reduced from 5s to 3s
+
+    return () => clearTimeout(timer)
+  }, [mounted])
+
+  // Always show a button to ensure visibility - even during loading
+  if (!mounted && !fallbackMode) {
     return (
-      <Button className="btn-cyber text-sm" disabled>
-        Loading...
-      </Button>
+      <div 
+        className="wallet-container-override wallet-force-visible"
+        style={{
+          opacity: 1,
+          zIndex: 99999,
+          position: 'relative',
+          minWidth: '120px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Button 
+          className="btn-cyber text-sm wallet-button-visible" 
+          disabled
+          style={{
+            opacity: 1,
+            minWidth: '120px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            visibility: 'visible',
+            pointerEvents: 'none'
+          }}
+          data-testid="wallet-loading-button"
+        >
+          Loading...
+        </Button>
+      </div>
+    )
+  }
+
+  // Enhanced fallback mode with better error handling
+  if (fallbackMode) {
+    return (
+      <div 
+        className="wallet-container-override wallet-force-visible"
+        style={{
+          opacity: 1,
+          zIndex: 99999,
+          position: 'relative',
+          minWidth: '120px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Button 
+          className="btn-cyber text-sm wallet-button-visible"
+          onClick={() => {
+            console.log('[WalletConnectButton] Fallback mode - attempting wallet connection')
+            // More user-friendly fallback
+            const retry = window.confirm('Wallet connection is having issues. Would you like to refresh the page to try again?')
+            if (retry) {
+              window.location.reload()
+            }
+          }}
+          style={{
+            opacity: 1,
+            minWidth: '120px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            visibility: 'visible',
+            pointerEvents: 'auto'
+          }}
+        >
+          Connect Wallet
+        </Button>
+      </div>
     )
   }
 
@@ -40,20 +145,64 @@ export function WalletConnectButton() {
 
           return (
             <>
-              {ready && (
-                <div className="flex items-center">
-                  {(() => {
-                if (!connected) {
-                  return (
-                    <Button 
-                      onClick={openConnectModal} 
-                      className="btn-cyber text-sm"
-                      type="button"
-                    >
-                      Connect Wallet
-                    </Button>
-                  )
-                }
+              {/* Always render container - even if not ready for maximum visibility */}
+              <div 
+                className="wallet-container-override flex items-center wallet-force-visible"
+                style={{
+                  opacity: 1,
+                  zIndex: 99999,
+                  position: 'relative',
+                  minWidth: '120px',
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  visibility: 'visible'
+                }}
+              >
+                {(() => {
+                  // Show loading state if not ready
+                  if (!ready) {
+                    return (
+                      <Button 
+                        className="btn-cyber text-sm wallet-button-visible"
+                        disabled
+                        style={{
+                          opacity: 1,
+                          minWidth: '120px',
+                          zIndex: 100000,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          visibility: 'visible',
+                          pointerEvents: 'none'
+                        }}
+                      >
+                        Connecting...
+                      </Button>
+                    )
+                  }
+
+                  if (!connected) {
+                    return (
+                      <Button 
+                        onClick={openConnectModal} 
+                        className="btn-cyber text-sm wallet-button-visible"
+                        type="button"
+                        style={{
+                          opacity: 1,
+                          minWidth: '120px',
+                          zIndex: 100000,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          visibility: 'visible',
+                          pointerEvents: 'auto'
+                        }}
+                      >
+                        Connect Wallet
+                      </Button>
+                    )
+                  }
 
                 if (chain.unsupported) {
                   return (
@@ -126,9 +275,8 @@ export function WalletConnectButton() {
                     </Button>
                   </div>
                 )
-                  })()}
-                </div>
-              )}
+                })()}
+              </div>
             </>
           )
         }}

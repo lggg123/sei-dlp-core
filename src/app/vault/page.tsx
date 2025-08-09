@@ -117,22 +117,40 @@ export default function VaultDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative vault-page" style={{
-      background: 'radial-gradient(ellipse at top, rgba(155, 93, 229, 0.1) 0%, rgba(0, 245, 212, 0.05) 50%, transparent 100%)',
-    }}>
+    <div 
+      className="min-h-screen bg-background relative vault-page vault-page-container-isolated" 
+      style={{
+        background: 'radial-gradient(ellipse at top, rgba(155, 93, 229, 0.1) 0%, rgba(0, 245, 212, 0.05) 50%, transparent 100%)',
+        width: '100vw',
+        maxWidth: 'none',
+        position: 'relative',
+        containIntrinsicSize: 'auto'
+      }}
+    >
       {/* Background overlay for better content contrast */}
       <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/80 pointer-events-none" />
       
       <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
       
-      <div className="relative z-10 pt-20 px-4 pb-12">
+      <div className="relative z-10 pt-12 md:pt-14 lg:pt-16 px-4 pb-12">
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-8">
             <Button 
               variant="ghost" 
               onClick={() => router.push('/vaults')}
-              className="mb-4 text-muted-foreground hover:text-foreground"
+              className="mb-4 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-105 active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '12px',
+                padding: '0.75rem 1.5rem',
+                fontSize: '0.95rem',
+                fontWeight: '600',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
+                textShadow: '0 1px 2px rgba(0,0,0,0.7)'
+              }}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Vaults
@@ -148,7 +166,7 @@ export default function VaultDetailPage() {
               position: 'relative',
               overflow: 'hidden',
               // Significantly reduced height for better content flow
-              minHeight: 'clamp(160px, 20vw, 220px)'
+              minHeight: 'clamp(140px, 18vw, 180px)'
             }}>
               {/* Enhanced Background Gradient for Header */}
               <div 
@@ -551,7 +569,11 @@ export default function VaultDetailPage() {
                   transform: activeTab === 'overview' ? 'scale(1.01)' : 'scale(1)',
                   letterSpacing: '0.375px',
                   textTransform: 'uppercase',
-                  zIndex: activeTab === 'overview' ? 10 : 1
+                  zIndex: activeTab === 'overview' ? 10 : 1,
+                  textDecoration: 'none',
+                  textDecorationLine: 'none',
+                  textUnderlineOffset: 'initial',
+                  textDecorationColor: 'transparent'
                 }}
               >
                 Overview
@@ -590,7 +612,11 @@ export default function VaultDetailPage() {
                   transform: activeTab === 'analytics' ? 'scale(1.01)' : 'scale(1)',
                   letterSpacing: '0.375px',
                   textTransform: 'uppercase',
-                  zIndex: activeTab === 'analytics' ? 10 : 1
+                  zIndex: activeTab === 'analytics' ? 10 : 1,
+                  textDecoration: 'none',
+                  textDecorationLine: 'none',
+                  textUnderlineOffset: 'initial',
+                  textDecorationColor: 'transparent'
                 }}
               >
                 Analytics
@@ -629,7 +655,11 @@ export default function VaultDetailPage() {
                   transform: activeTab === 'strategy' ? 'scale(1.01)' : 'scale(1)',
                   letterSpacing: '0.375px',
                   textTransform: 'uppercase',
-                  zIndex: activeTab === 'strategy' ? 10 : 1
+                  zIndex: activeTab === 'strategy' ? 10 : 1,
+                  textDecoration: 'none',
+                  textDecorationLine: 'none',
+                  textUnderlineOffset: 'initial',
+                  textDecorationColor: 'transparent'
                 }}
               >
                 Strategy

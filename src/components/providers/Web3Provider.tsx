@@ -2,6 +2,7 @@
 
 // Polyfill indexedDB on server to prevent WalletConnect SSR errors
 if (typeof window === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (global as any).indexedDB = { open: () => ({}) }
 }
 import '@rainbow-me/rainbowkit/styles.css'

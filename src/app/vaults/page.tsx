@@ -15,7 +15,7 @@ import * as THREE from 'three';
 import { useSeiMarketData } from '@/hooks/useMarketData';
 import { useVaultStore, VaultData } from '@/stores/vaultStore';
 import '@/components/StatsCarousel.css';
-import styles from './page.module.css';
+// import styles from './page.module.css'; // Commented out as not used
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -386,9 +386,9 @@ export default function VaultsPage() {
       <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
 
       {/* Main Content */}
-      <div className="relative z-10 pt-20">
+      <div className="relative z-10 pt-16 md:pt-16 lg:pt-20">
         {/* Header Section - Enhanced */}
-        <section className="py-8 px-4">
+        <section className="py-6 px-4">
           <div className="container mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary">
@@ -396,7 +396,7 @@ export default function VaultsPage() {
               </h1>
               
               {/* Live Stats Ticker - Enhanced Design with Optimal Spacing */}
-              <div className="w-full" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2.5rem' }}>
+              <div className="w-full" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
                 <div 
                   ref={statsRef}
                   style={{

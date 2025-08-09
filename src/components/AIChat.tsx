@@ -25,6 +25,26 @@ const chatScrollbarStyles = `
 
   .ai-chat-input::placeholder {
     color: rgba(255, 255, 255, 0.4) !important;
+    font-style: normal !important;
+  }
+  
+  /* Enhanced input styling to override any external CSS */
+  .ai-chat-override .ai-chat-input {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+  }
+  
+  /* Enhanced text styling to ensure readability */
+  .ai-chat-override .ai-chat-messages p {
+    color: #ffffff !important;
+  }
+  
+  /* Status text styling */
+  .ai-chat-override .ai-chat-status {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-size: 11px !important;
   }
 `;
 
@@ -211,7 +231,7 @@ export default function AIChat({
       <style dangerouslySetInnerHTML={{ __html: chatScrollbarStyles }} />
       
       <div 
-        className={`flex flex-col rounded-xl ${className}`}
+        className={`ai-chat-override flex flex-col rounded-xl ${className}`}
         style={{
           background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(16, 24, 32, 0.98) 50%, rgba(0, 0, 0, 0.95) 100%)',
           backdropFilter: 'blur(20px)',
@@ -340,7 +360,7 @@ export default function AIChat({
                   <p 
                     className="text-sm leading-relaxed"
                     style={{ 
-                      color: 'inherit',
+                      color: '#ffffff !important',
                       fontSize: '14px',
                       lineHeight: '1.6',
                       fontWeight: '400'
@@ -474,10 +494,10 @@ export default function AIChat({
             placeholder="Ask about vault optimization, rebalancing, predictions..."
             className="ai-chat-input flex-1 rounded-lg px-4 py-2 transition-all duration-200"
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: '#ffffff',
-              fontSize: '14px',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%) !important',
+              border: '1px solid rgba(255, 255, 255, 0.2) !important',
+              color: '#ffffff !important',
+              fontSize: '14px !important',
               backdropFilter: 'blur(10px)',
               outline: 'none'
             }}
@@ -515,9 +535,9 @@ export default function AIChat({
           </button>
         </div>
         <div 
-          className="mt-2 text-xs"
+          className="mt-2 text-xs ai-chat-status"
           style={{ 
-            color: 'rgba(255, 255, 255, 0.5)',
+            color: 'rgba(255, 255, 255, 0.5) !important',
             fontSize: '11px'
           }}
         >

@@ -645,7 +645,7 @@
   }
 }
 
-/* Wallet Button Override - High Priority */
+/* WALLET BUTTON OVERRIDE - MAXIMUM PRIORITY FIXES - ISOLATED V3 */
 .wallet-container-override {
   display: flex !important;
   justify-content: flex-end !important;
@@ -653,20 +653,321 @@
   margin-left: auto !important;
   text-decoration: none !important;
   flex-shrink: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 99999 !important;
+  min-width: 120px !important;
+  position: relative !important;
+  /* Enhanced force visibility overrides */
+  transform: translateZ(0) !important;
+  backface-visibility: visible !important;
+  perspective: 1000px !important;
+  /* Ensure no layout shifts */
+  min-height: 40px !important;
+  /* Force GPU acceleration */
+  will-change: transform !important;
+  /* Prevent any hiding techniques */
+  clip: auto !important;
+  clip-path: none !important;
+  mask: none !important;
+  -webkit-mask: none !important;
 }
 
-/* Navigation Layout Fix - Target the exact structure */
-nav .max-w-7xl > div.flex.items-center.justify-between {
+/* CRITICAL: Prevent wallet styles from affecting main page containers */
+.vault-page .container,
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .max-w-6xl,
+.vault-page .max-w-5xl {
+  max-width: 72rem !important; /* 6xl = 72rem */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  position: relative !important;
+  transform: none !important;
+}
+
+.vault-page .container {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .vault-page .container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Vault Page Root Container Isolation */
+.vault-page-container-isolated {
+  width: 100vw !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+/* Ensure vault page content is properly centered */
+.vault-page-container-isolated .relative.z-10 {
+  width: 100% !important;
+  max-width: none !important;
+  position: relative !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+.vault-page-container-isolated .container.mx-auto.max-w-6xl {
+  width: 100% !important;
+  max-width: 72rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+/* Force reset any potential layout corruption */
+.vault-page-container-isolated,
+.vault-page-container-isolated * {
+  contain: none !important;
+  isolation: auto !important;
+}
+
+.vault-page-container-isolated .vault-detail-header-card-optimized {
+  width: 100% !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+/* Ensure Connect Wallet Button is Always Visible - Scoped V3 */
+nav .wallet-container-override .btn-cyber,
+nav .wallet-container-override button,
+nav .wallet-container-override > *,
+nav .wallet-container-override * {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100000 !important;
+  /* Enhanced force rendering overrides */
+  will-change: transform !important;
+  contain: layout !important;
+  transform: translateZ(0) !important;
+  /* Additional visibility guarantees */
+  min-height: 32px !important;
+  min-width: 100px !important;
+  /* Prevent common CSS hiding patterns */
+  max-height: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+/* CRITICAL: Limit wallet override max-width to only nav context */
+nav .wallet-container-override {
+  max-width: none !important;
+}
+
+/* Ensure main content containers are not affected */
+.vault-page-container-isolated * {
+  max-width: initial;
+}
+
+.vault-page-container-isolated .container,
+.vault-page-container-isolated .max-w-6xl,
+.vault-page-container-isolated .max-w-5xl {
+  max-width: 72rem !important;
+}
+
+/* RainbowKit Custom Button Override - Enhanced */
+.wallet-container-override [data-testid="rk-connect-button"],
+.wallet-container-override [data-testid="rk-account-button"],
+.wallet-container-override [data-testid="rk-chain-button"],
+/* Additional RainbowKit selectors */
+.wallet-container-override [data-rk],
+.wallet-container-override [class*="iekbcc"],
+.wallet-container-override [class*="rk-"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 100001 !important;
+  position: relative !important;
+  /* Force button appearance */
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border: none !important;
+  border-radius: calc(var(--radius) - 2px) !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  min-width: 120px !important;
+  cursor: pointer !important;
+}
+
+/* ENHANCED WALLET BUTTON VISIBILITY CLASSES */
+.wallet-force-visible {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateZ(0) !important;
+  backface-visibility: visible !important;
+  contain: layout !important;
+  will-change: transform !important;
+}
+
+.wallet-button-visible {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10000 !important;
+  transform: translateZ(0) !important;
+}
+
+/* Force visibility for all wallet-related elements */
+.wallet-force-visible *,
+.wallet-button-visible *,
+.wallet-container-override .wallet-force-visible,
+.wallet-container-override .wallet-button-visible {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* EMERGENCY WALLET BUTTON FIXES - Enhanced Last Resort Overrides */
+/* Handle cases where other CSS might hide the wallet button */
+.wallet-container-override,
+.wallet-container-override button,
+.wallet-container-override [role="button"],
+.wallet-container-override a,
+.wallet-container-override div,
+/* Additional selectors for dynamic content */
+.wallet-container-override span,
+.wallet-container-override [data-state],
+.wallet-container-override [aria-hidden],
+.wallet-container-override [style*="display: none"],
+.wallet-container-override [style*="opacity: 0"],
+.wallet-container-override [style*="visibility: hidden"] {
+  /* Prevent ALL common hiding techniques */
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  width: auto !important;
+  min-width: 120px !important;
+  max-height: none !important;
+  max-width: none !important;
+  overflow: visible !important;
+  clip: auto !important;
+  clip-path: none !important;
+  transform: translateZ(0) !important;
+  position: relative !important;
+  /* Override inline styles */
+  font-size: inherit !important;
+  line-height: inherit !important;
+  /* Force content to be selectable/clickable */
+  pointer-events: auto !important;
+  user-select: auto !important;
+  -webkit-user-select: auto !important;
+}
+
+/* Specific RainbowKit component overrides */
+[data-rk] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Navigation container specific fixes - Enhanced */
+header .wallet-container-override,
+nav .wallet-container-override,
+.navigation .wallet-container-override,
+.Navigation .wallet-container-override {
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  /* Ensure proper stacking context */
+  isolation: isolate !important;
+  /* Force into own layer */
+  z-index: 99999 !important;
+  /* Prevent parent containers from hiding */
+  contain: none !important;
+}
+
+/* Mobile responsiveness for wallet button */
+@media (max-width: 768px) {
+  .wallet-container-override {
+    min-width: 100px !important;
+  }
+  
+  .wallet-container-override .btn-cyber {
+    font-size: 0.8rem !important;
+    padding: 0.5rem 1rem !important;
+    min-width: 100px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-container-override {
+    min-width: 90px !important;
+  }
+  
+  .wallet-container-override .btn-cyber {
+    font-size: 0.75rem !important;
+    padding: 0.4rem 0.8rem !important;
+    min-width: 90px !important;
+  }
+}
+
+/* Debug mode - ENABLED to see wallet container boundaries */
+.wallet-container-override {
+  border: 2px solid red !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+.wallet-force-visible {
+  border: 2px solid blue !important;
+  background: rgba(0, 0, 255, 0.1) !important;
+}
+.wallet-button-visible {
+  border: 2px solid green !important;
+  background: rgba(0, 255, 0, 0.1) !important;
+}
+
+/* Navigation Layout Fix - Enhanced Target Structure */
+nav .max-w-7xl > div.flex.items-center.justify-between,
+nav .max-w-7xl > div[style*="display: flex"],
+nav .max-w-7xl > div:first-child {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
 }
 
-nav .max-w-7xl > div.flex.items-center.justify-between > div:last-child {
+nav .max-w-7xl > div.flex.items-center.justify-between > div:last-child,
+nav .max-w-7xl > div[style*="display: flex"] > div:last-child,
+nav .max-w-7xl > div:first-child > div:last-child {
   margin-left: auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
+  /* Ensure wallet container is always rendered */
+  min-width: 140px !important;
+  height: 100% !important;
 }
 
 /* Custom Navigation Launch Button - Final Working Solution */
@@ -700,11 +1001,10 @@ nav .max-w-7xl > div.flex.items-center.justify-between > div:last-child {
 .nav-launch-btn:hover {
   transform: translateY(-50%) scale(1.05) !important;
   box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2) !important;
-}
-
-.nav-launch-btn:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2) !important;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
 }
 
 /* Vault Detail Page Specific Overrides - Enhanced Priority & Mobile Support */
@@ -962,6 +1262,94 @@ nav .max-w-7xl > div.flex.items-center.justify-between > div:last-child {
   height: 32px;
 }
 
+/* Tab Navigation Link Underline Fixes */
+.tab-trigger-custom,
+.tab-trigger-compact {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+}
+
+.tab-trigger-custom:hover,
+.tab-trigger-compact:hover,
+.tab-trigger-custom:focus,
+.tab-trigger-compact:focus,
+.tab-trigger-custom:active,
+.tab-trigger-compact:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+}
+
+/* Navigation Links - Remove all underlines */
+nav a,
+nav Link,
+.nav-launch-btn {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+}
+
+nav a:hover,
+nav a:focus,
+nav a:active,
+nav a:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+}
+
+/* Global Link Reset - Prevent unwanted underlines */
+a, Link, button {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+}
+
+a:hover, a:focus, a:active, a:visited,
+Link:hover, Link:focus, Link:active, Link:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+}
+
+/* Specific fix for Tabs component underlines */
+[data-radix-tabs-trigger],
+[role="tab"],
+.tabs-trigger {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+[data-radix-tabs-trigger]:hover,
+[data-radix-tabs-trigger]:focus,
+[data-radix-tabs-trigger]:active,
+[role="tab"]:hover,
+[role="tab"]:focus,
+[role="tab"]:active,
+.tabs-trigger:hover,
+.tabs-trigger:focus,
+.tabs-trigger:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
 /* ==========================================
    ULTRA-COMPACT VAULT STYLING SYSTEM V3
    Maximum content density with visual hierarchy
@@ -1131,3 +1519,639 @@ nav .max-w-7xl > div.flex.items-center.justify-between > div:last-child {
   width: 176px !important;
 }
 
+/* Enhanced Header Size Controls - Fixed Priority System */
+.vault-main-title {
+  font-size: clamp(1.75rem, 5vw, 2.75rem) !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  margin-bottom: clamp(0.375rem, 1.5vw, 0.75rem) !important;
+}
+
+.vault-subtitle {
+  font-size: clamp(0.875rem, 2vw, 1.125rem) !important;
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Navigation Component Height Fix */
+nav {
+  height: 4rem !important;
+  min-height: 4rem !important;
+}
+
+nav .max-w-7xl > div {
+  height: 4rem !important;
+  min-height: 4rem !important;
+}
+
+/* Enhanced spacing for better visual hierarchy */
+.vault-page-spacing {
+  padding-top: 4rem; /* Reduced from 5rem (80px) to 4rem (64px) for better visual flow */
+  min-height: calc(100vh - 4rem);
+}
+
+/* Responsive spacing adjustments for optimal navigation-to-content flow */
+@media (max-width: 768px) {
+  .vault-page-spacing {
+    padding-top: 3.5rem; /* 56px for tablet */
+  }
+}
+
+@media (max-width: 480px) {
+  .vault-page-spacing {
+    padding-top: 3rem; /* 48px for mobile */
+  }
+}
+
+/* Add subtle visual separator below navigation */
+nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.1) 20%, 
+    rgba(0, 245, 212, 0.3) 50%, 
+    rgba(255, 255, 255, 0.1) 80%, 
+    transparent 100%);
+  opacity: 0.5;
+}
+
+/* Navigation Link Clean Class - Ultimate Fix */
+.nav-link-clean {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+.nav-link-clean:hover,
+.nav-link-clean:focus,
+.nav-link-clean:active,
+.nav-link-clean:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Enhanced Visual Hierarchy - Improved Contrast & Spacing */
+.vault-detail-header-card-optimized {
+  position: relative !important;
+  z-index: 10 !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 40px rgba(0, 245, 212, 0.08) !important;
+}
+
+/* Enhanced Tabs Visual Hierarchy */
+.tabs-container-compact {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(25px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.6),
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+}
+
+/* Performance & Accessibility Enhancements */
+.tab-trigger-compact:focus-visible,
+.vault-deposit-enhanced-v2:focus-visible {
+  outline: 3px solid rgba(0, 245, 212, 0.6) !important;
+  outline-offset: 3px !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Enhanced Glow Effects for Better Visual Feedback */
+.vault-metric-primary-compact:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.35),
+    0 0 40px var(--primary-glow, #00f5d4) !important;
+}
+
+.vault-metric-secondary-compact:hover,
+.vault-metric-wide-compact:hover {
+  transform: translateY(-2px) scale(1.015) !important;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Mobile-First Responsive Enhancements */
+@media (max-width: 640px) {
+  .vault-main-title {
+    font-size: clamp(1.5rem, 6vw, 2rem) !important;
+    text-align: center !important;
+  }
+  
+  .vault-subtitle {
+    font-size: clamp(0.75rem, 3vw, 1rem) !important;
+    text-align: center !important;
+  }
+  
+  .vault-detail-header-card-optimized {
+    padding: clamp(0.75rem, 3vw, 1rem) !important;
+    min-height: clamp(120px, 25vw, 160px) !important;
+  }
+  
+  nav {
+    height: 3.5rem !important;
+    min-height: 3.5rem !important;
+  }
+}
+
+/* High DPI & Retina Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .vault-main-title,
+  .vault-subtitle {
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+}
+
+/* ULTIMATE NAVIGATION UNDERLINE FIX - Highest Priority */
+nav,
+nav *,
+.navigation,
+.navigation *,
+.Navigation,
+.Navigation * {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  -webkit-text-decoration-skip: none !important;
+  text-decoration-skip: none !important;
+  text-decoration-skip-ink: none !important;
+}
+
+nav a:hover,
+nav a:focus,
+nav a:active,
+nav a:visited,
+nav Link:hover,
+nav Link:focus,
+nav Link:active,
+nav Link:visited,
+.navigation a:hover,
+.navigation a:focus,
+.navigation a:active,
+.navigation a:visited,
+.Navigation a:hover,
+.Navigation a:focus,
+.Navigation a:active,
+.Navigation a:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Enhanced Visual Hierarchy - Improved Content Hierarchy */
+.card-title {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.3 !important;
+}
+
+.card-content {
+  line-height: 1.6 !important;
+  font-size: 0.95rem !important;
+}
+
+/* Enhanced Badge Styling for Better Contrast */
+.risk-badge-custom {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 0 20px currentColor,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset !important;
+  border: 2px solid currentColor !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.75px !important;
+}
+
+/* Improved Button States for Better User Feedback */
+.btn-enhanced:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(0, 245, 212, 0.3) !important;
+}
+
+.btn-enhanced:active {
+  transform: translateY(-1px) scale(1.02) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Enhanced Card Hover Effects */
+.vault-solid-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(0, 245, 212, 0.15),
+    0 0 0 2px rgba(255, 255, 255, 0.2) inset !important;
+  border-color: rgba(0, 245, 212, 0.4) !important;
+}
+
+/* Improved Loading States */
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Enhanced Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(0, 245, 212, 0.6), rgba(155, 93, 229, 0.6));
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(0, 245, 212, 0.8), rgba(155, 93, 229, 0.8));
+}
+
+/* Enhanced Focus States for Accessibility */
+*:focus-visible {
+  outline: 2px solid rgba(0, 245, 212, 0.8) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+/* Dark Mode Optimizations */
+@media (prefers-color-scheme: dark) {
+  .vault-solid-card {
+    background: linear-gradient(135deg, 
+      rgba(8, 10, 23, 0.95) 0%,
+      rgba(16, 20, 40, 0.9) 50%,
+      rgba(8, 10, 23, 0.95) 100%
+    ) !important;
+    border: 2px solid rgba(255, 255, 255, 0.15) !important;
+  }
+}
+
+/* Cross-Browser Compatibility Fixes */
+/* Firefox backdrop-filter fallback */
+@-moz-document url-prefix() {
+  .vault-detail-header-card-optimized,
+  .tabs-container-compact,
+  .vault-solid-card {
+    background: rgba(8, 10, 23, 0.92) !important;
+  }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-appearance: none) {
+  .vault-deposit-enhanced-v2 {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  .tab-trigger-compact {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+}
+
+/* Enhanced Responsive Design - Container Queries */
+@container (max-width: 600px) {
+  .vault-metrics-optimized {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  .vault-metric-primary-compact,
+  .vault-metric-secondary-compact,
+  .vault-metric-wide-compact {
+    grid-column: span 1 !important;
+    min-height: 70px !important;
+    padding: 0.75rem !important;
+  }
+}
+
+@container (max-width: 400px) {
+  .vault-deposit-enhanced-v2 {
+    width: 140px !important;
+    height: 44px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .tabs-container-compact {
+    height: 2.25rem !important;
+    padding: 0.125rem !important;
+  }
+  
+  .tab-trigger-compact {
+    height: 2rem !important;
+    font-size: 0.65rem !important;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .vault-deposit-enhanced-v2,
+  .tab-trigger-compact,
+  .btn-enhanced {
+    min-height: 48px !important;
+    min-width: 48px !important;
+  }
+  
+  .vault-solid-card:hover,
+  .btn-enhanced:hover,
+  .tab-trigger-compact:hover {
+    transform: none !important;
+  }
+  
+  .vault-solid-card:active,
+  .btn-enhanced:active,
+  .tab-trigger-compact:active {
+    transform: scale(0.98) !important;
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* Landscape Mobile Optimization */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .vault-detail-header-card-optimized {
+    min-height: 100px !important;
+    padding: 0.75rem !important;
+  }
+  
+  .vault-main-title {
+    font-size: clamp(1.25rem, 4vw, 1.75rem) !important;
+  }
+  
+  nav {
+    height: 3rem !important;
+    min-height: 3rem !important;
+  }
+}
+
+/* Large Screen Optimizations */
+@media (min-width: 1440px) {
+  .vault-detail-header-card-optimized {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+  }
+  
+  .vault-metrics-optimized {
+    max-width: 1000px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Ultra-wide Screen Support */
+@media (min-width: 2560px) {
+  .vault-main-title {
+    font-size: 3.5rem !important;
+  }
+  
+  .vault-subtitle {
+    font-size: 1.5rem !important;
+  }
+  
+  .container {
+    max-width: 1600px !important;
+  }
+}
+
+/* COMPREHENSIVE TEXT-DECORATION RESET - Vault Page & Navigation Specific */
+/* Navigation Component Links - Enhanced Priority Fix */
+nav a,
+nav Link,
+nav button,
+.nav-launch-btn,
+.navigation a,
+.navigation Link,
+.navigation button,
+.Navigation a,
+.Navigation Link,
+.Navigation button {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  outline: none;
+}
+
+/* Comprehensive Nav Element Text Decoration Reset - Final V2 */
+nav a:hover, nav a:focus, nav a:active, nav a:visited,
+nav Link:hover, nav Link:focus, nav Link:active, nav Link:visited,
+nav button:hover, nav button:focus, nav button:active,
+.nav-launch-btn:focus, .nav-launch-btn:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Vault Page Specific Elements */
+.vault-page a,
+.vault-page Link,
+.vault-page button,
+.vault-page [data-radix-tabs-trigger],
+.vault-page [role="tab"],
+.vault-page .tab-trigger-compact,
+.vault-page .tabs-trigger {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.vault-page a:hover, .vault-page a:focus, .vault-page a:active,
+.vault-page Link:hover, .vault-page Link:focus, .vault-page Link:active,
+.vault-page button:hover, .vault-page button:focus, .vault-page button:active,
+.vault-page [data-radix-tabs-trigger]:hover, .vault-page [data-radix-tabs-trigger]:focus,
+.vault-page [role="tab"]:hover, .vault-page [role="tab"]:focus,
+.vault-page .tab-trigger-compact:hover, .vault-page .tab-trigger-compact:focus,
+.vault-page .tabs-trigger:hover, .vault-page .tabs-trigger:focus {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Override any default browser styling for links */
+* {
+  -webkit-text-decoration-skip: none !important;
+  text-decoration-skip: none !important;
+  text-decoration-skip-ink: none !important;
+}
+
+/* VAULT PAGE SPECIFIC FIXES - Final Override Layer */
+/* Remove any potential white underlines from browser defaults */
+.vault-page *[href],
+.vault-page a,
+.vault-page Link,
+.vault-page [role="link"] {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .vault-solid-card:hover,
+  .btn-enhanced:hover,
+  .tab-trigger-compact:hover {
+    transform: none !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .vault-detail-header-card-optimized,
+  .vault-solid-card,
+  .tabs-container-compact {
+    border: 3px solid #ffffff !important;
+    background: #000000 !important;
+  }
+  
+  .vault-main-title,
+  .vault-subtitle,
+  .tab-trigger-compact {
+    color: #ffffff !important;
+    text-shadow: none !important;
+  }
+  
+  .vault-deposit-enhanced-v2 {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .vault-detail-header-card-optimized,
+  .vault-solid-card {
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    color: #000000 !important;
+  }
+  
+  .vault-deposit-enhanced-v2,
+  .tab-trigger-compact {
+    display: none !important;
+  }
+}
+
+
+
+/* EMERGENCY VISIBILITY FIXES - Force Button Into View */
+.wallet-container-override {
+  /* Force element into viewport */
+  top: 0 \!important;
+  left: auto \!important;
+  right: 0 \!important;
+  bottom: auto \!important;
+  /* Override any layout constraints */
+  position: fixed \!important;
+  z-index: 999999 \!important;
+  /* Ensure it's in the navigation area */
+  margin-top: 12px \!important;
+  margin-right: 12px \!important;
+}
+
+/* Alternative: Force nav positioning if containers are misplaced */
+nav .wallet-container-override {
+  position: absolute \!important;
+  top: 50% \!important;
+  right: 16px \!important;
+  transform: translateY(-50%) \!important;
+  z-index: 999999 \!important;
+}
+
+/* Force buttons to have visible content */
+.wallet-container-override button,
+.wallet-container-override .btn-cyber {
+  min-height: 40px \!important;
+  padding: 8px 16px \!important;
+  font-size: 14px \!important;
+  line-height: 1.4 \!important;
+  white-space: nowrap \!important;
+  /* Force visible background */
+  background: #00f5d4 \!important;
+  color: #000 \!important;
+  border: 2px solid #fff \!important;
+}

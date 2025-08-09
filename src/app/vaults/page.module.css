@@ -27,7 +27,7 @@
 }
 
 /* AI Chat Input Overrides - Fix CSS conflicts */
-.ai-chat-override input {
+.ai-chat-override .ai-chat-input {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   color: #ffffff !important;
@@ -38,29 +38,38 @@
   transition: all 0.2s ease !important;
 }
 
-.ai-chat-override input:focus {
+.ai-chat-override .ai-chat-input:focus {
   border-color: rgba(0, 245, 212, 0.5) !important;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
   box-shadow: 0 0 20px rgba(0, 245, 212, 0.2) !important;
   outline: none !important;
 }
 
-.ai-chat-override input::placeholder {
+.ai-chat-override .ai-chat-input::placeholder {
   color: rgba(255, 255, 255, 0.4) !important;
   font-style: normal !important;
 }
 
-/* AI Chat Status Text Override */
-.ai-chat-override .text-xs {
+/* AI Chat Status Text Override - More specific targeting */
+.ai-chat-override > div:last-child .text-xs {
   color: rgba(255, 255, 255, 0.5) !important;
   font-size: 11px !important;
 }
 
-/* AI Chat Container Override */
-.ai-chat-override {
+/* AI Chat Message Text Override - Ensure message text is readable */
+.ai-chat-override .ai-chat-messages p {
   color: #ffffff !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
 }
 
-.ai-chat-override * {
-  color: inherit;
+/* AI Chat Header Text Override */
+.ai-chat-override h3 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* AI Chat Container Override - More targeted */
+.ai-chat-override {
+  /* Remove global color inheritance to prevent conflicts */
 }
