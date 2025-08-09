@@ -22,7 +22,7 @@ export default function CTASection() {
                     </h2>
                     <p 
                         className="text-2xl text-muted-foreground mb-16"
-                        style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', marginBottom: '4rem' }}
+                        style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', marginBottom: '4rem', lineHeight: '1.5' }}
                     >
                         Join the future of liquidity provision with AI-powered optimization on
                         SEI
@@ -30,13 +30,13 @@ export default function CTASection() {
                     <div className="flex flex-row justify-center items-center" style={{ gap: '4rem' }}>
                         <Link href="/vaults">
                             <Button 
-                                className="px-16 py-6 font-bold"
+                                className="px-20 py-8 font-bold"
                                 style={{
                                     background: 'linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%))',
                                     color: 'hsl(216 100% 4%)',
-                                    fontSize: '1.25rem',
-                                    minHeight: '64px',
-                                    minWidth: '180px',
+                                    fontSize: '1.375rem',
+                                    minHeight: '72px',
+                                    minWidth: '200px',
                                     boxShadow: '0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1)',
                                     border: 'none',
                                     borderRadius: '16px',
@@ -57,13 +57,13 @@ export default function CTASection() {
                         <Link href="/docs">
                             <Button
                                 variant="outline"
-                                className="px-16 py-6 font-bold"
+                                className="px-20 py-8 font-bold"
                                 style={{
                                     borderColor: 'hsl(180 100% 48%)',
                                     color: 'hsl(180 100% 48%)',
-                                    fontSize: '1.25rem',
-                                    minHeight: '64px',
-                                    minWidth: '180px',
+                                    fontSize: '1.375rem',
+                                    minHeight: '72px',
+                                    minWidth: '200px',
                                     background: 'transparent',
                                     borderRadius: '16px',
                                     transition: 'all 300ms ease-in-out',
