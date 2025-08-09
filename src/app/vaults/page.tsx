@@ -60,6 +60,11 @@ export default function VaultsPage() {
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [depositVault, setDepositVault] = useState<VaultData | null>(null);
 
+  // Debug chat state changes
+  useEffect(() => {
+    console.log('[AI Chat] showChat state changed to:', showChat);
+  }, [showChat]);
+
   // State management
   const {
     selectedVault,
@@ -364,7 +369,7 @@ export default function VaultsPage() {
 
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative">
       {/* Three.js Background */}
       <div 
         ref={mountRef} 
@@ -390,8 +395,8 @@ export default function VaultsPage() {
                 AI-Powered Yield Optimization on SEI
               </h1>
               
-              {/* Live Stats Ticker - Enhanced Design with Tight Layout */}
-              <div className="w-full mb-6" style={{ display: 'flex', justifyContent: 'center' }}>
+              {/* Live Stats Ticker - Enhanced Design with Optimal Spacing */}
+              <div className="w-full" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2.5rem' }}>
                 <div 
                   ref={statsRef}
                   style={{
@@ -404,7 +409,8 @@ export default function VaultsPage() {
                     overflow: 'hidden',
                     position: 'relative',
                     display: 'inline-block',
-                    maxWidth: '90vw'
+                    width: '100%',
+                    maxWidth: '1400px'
                   }}
                 >
                   <div 
@@ -417,7 +423,8 @@ export default function VaultsPage() {
                       fontSize: '14px',
                       fontWeight: '600',
                       color: 'rgba(255, 255, 255, 0.9)',
-                      width: 'fit-content'
+                      width: '100%',
+                      justifyContent: 'center'
                     }}
                   >
                     {/* First set */}
@@ -749,12 +756,58 @@ export default function VaultsPage() {
         </section>
       </div>
 
-      {/* AI Chat Interface */}
+      {/* AI Chat Interface - Fixed CSS Overrides */}
       {showChat && (
-        <div className="fixed inset-0 z-40 flex items-end justify-end p-4 pointer-events-none">
-          <div className="pointer-events-auto w-full max-w-md h-[600px] mr-4 mb-20">
+        <div 
+          className="fixed inset-0 z-40 flex items-end justify-end p-4 pointer-events-none"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 40,
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
+            padding: '1rem'
+          }}
+        >
+          <div 
+            className="pointer-events-auto w-full max-w-md h-[600px] mr-4 mb-20"
+            style={{
+              pointerEvents: 'auto',
+              width: '100%',
+              maxWidth: '28rem',
+              height: '600px',
+              marginRight: '1rem',
+              marginBottom: '5rem',
+              borderRadius: '20px',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 245, 212, 0.2)',
+              // Force text color inheritance
+              color: '#ffffff'
+            }}
+          >
+            {/* Debug Info - Improved Styling */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '10px', 
+              right: '10px', 
+              background: 'rgba(0, 245, 212, 0.9)', 
+              color: 'black', 
+              padding: '4px 8px', 
+              borderRadius: '6px', 
+              fontSize: '10px',
+              fontWeight: '600',
+              zIndex: 1000,
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+            }}>
+              Chat: {showChat ? 'ACTIVE' : 'CLOSED'}
+            </div>
+            
             <AIChat
-              className="h-full"
+              className="h-full ai-chat-override"
               vaultAddress={selectedVault?.address}
               context={{
                 currentPage: 'vaults',
@@ -769,6 +822,39 @@ export default function VaultsPage() {
               }}
               initialMessage="🎯 Welcome to SEI DLP Vaults! I'm Liqui, your AI assistant. I can help you analyze vault performance, predict optimal ranges, and recommend rebalancing strategies. What vault would you like to optimize today?"
             />
+            
+            {/* Inline CSS Override for AI Chat Input - Highest Specificity */}
+            <style jsx>{`
+              .ai-chat-override input {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                color: #ffffff !important;
+                font-size: 14px !important;
+                padding: 12px 16px !important;
+                border-radius: 12px !important;
+                backdrop-filter: blur(10px) !important;
+                outline: none !important;
+              }
+              
+              .ai-chat-override input:focus {
+                border-color: rgba(0, 245, 212, 0.5) !important;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+                box-shadow: 0 0 20px rgba(0, 245, 212, 0.2) !important;
+              }
+              
+              .ai-chat-override input::placeholder {
+                color: rgba(255, 255, 255, 0.4) !important;
+              }
+              
+              .ai-chat-override .text-xs {
+                color: rgba(255, 255, 255, 0.5) !important;
+                font-size: 11px !important;
+              }
+              
+              .ai-chat-override * {
+                color: #ffffff;
+              }
+            `}</style>
           </div>
         </div>
       )}
@@ -781,21 +867,136 @@ export default function VaultsPage() {
         onSuccess={handleDepositSuccess}
       />
 
-      {/* Floating AI Chat Button */}
-      <div className="fixed bottom-8 right-8 z-[70]">
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full animate-pulse opacity-30"></div>
-          <button
-            onClick={() => setShowChat(!showChat)}
-            className="relative bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 group"
+      {/* Floating AI Chat Button - Ultra-Enhanced Visibility Design */}
+      <div 
+        className="ai-chat-button-container-override"
+        style={{ 
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 999999,
+          isolation: 'isolate',
+          pointerEvents: 'auto'
+        }}
+      >
+        <div className="relative" style={{ isolation: 'isolate' }}>
+          {/* Ultra-Bright Glow Ring for Maximum Visibility */}
+          <div 
+            className="absolute inset-0 rounded-full"
+            style={{ 
+              background: 'linear-gradient(45deg, #00f5d4, #ff206e, #9b5de5, #00f5d4)',
+              backgroundSize: '400% 400%',
+              borderRadius: '50%',
+              animation: 'aiChatGlow 3s ease-in-out infinite',
+              filter: 'blur(8px)',
+              opacity: '0.6',
+              transform: 'scale(1.4)'
+            }}
+          ></div>
+          
+          {/* High-Contrast Border Ring */}
+          <div 
+            className="absolute inset-0 rounded-full"
+            style={{ 
+              background: 'conic-gradient(from 0deg, #ffffff, #00f5d4, #ffffff, #ff206e, #ffffff)',
+              borderRadius: '50%',
+              padding: '3px',
+              animation: 'aiChatBorderSpin 4s linear infinite'
+            }}
           >
-            {showChat ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-              {showChat ? 'Close AI Chat' : 'Open AI Assistant'}
+            <div style={{ 
+              background: '#000000',
+              borderRadius: '50%',
+              width: '100%',
+              height: '100%'
+            }}></div>
+          </div>
+          
+          {/* Main Ultra-Visible Button */}
+          <button
+            onClick={() => {
+              console.log('[AI Chat] Button clicked, current showChat:', showChat);
+              setShowChat(!showChat);
+              console.log('[AI Chat] Setting showChat to:', !showChat);
+            }}
+            className="ai-chat-button-main-override relative text-white rounded-full transition-all duration-300 hover:scale-110 group"
+            style={{ 
+              position: 'relative',
+              background: 'linear-gradient(135deg, #00f5d4 0%, #10b981 30%, #ff206e 70%, #9b5de5 100%)',
+              border: '4px solid #ffffff',
+              borderRadius: '50%',
+              padding: '20px',
+              boxShadow: '0 0 50px rgba(0, 245, 212, 0.8), 0 0 100px rgba(255, 32, 110, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.2)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '80px',
+              height: '80px',
+              fontSize: '28px',
+              zIndex: 999999,
+              isolation: 'isolate',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 80px rgba(0, 245, 212, 1), 0 0 150px rgba(255, 32, 110, 0.6), inset 0 0 40px rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.transform = 'scale(1.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 50px rgba(0, 245, 212, 0.8), 0 0 100px rgba(255, 32, 110, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            {showChat ? <X className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 10px #ffffff)' }} /> : <MessageCircle className="w-8 h-8" style={{ filter: 'drop-shadow(0 0 10px #ffffff)' }} />}
+            
+            {/* Ultra-Bright Tooltip */}
+            <div 
+              className="absolute -top-20 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none"
+              style={{
+                background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '2px solid #00f5d4',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                fontSize: '14px',
+                fontWeight: '700',
+                color: '#ffffff',
+                textShadow: '0 0 10px #00f5d4',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 245, 212, 0.5)',
+                zIndex: 9999999
+              }}
+            >
+              {showChat ? '✕ Close AI Assistant' : '🤖 Ask Liqui AI'}
+              <div 
+                className="absolute top-full left-1/2 transform -translate-x-1/2"
+                style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '8px solid transparent',
+                  borderRight: '8px solid transparent',
+                  borderTop: '8px solid #00f5d4'
+                }}
+              ></div>
             </div>
           </button>
+          
+          {/* Ultra-Bright Status Indicator */}
           {!showChat && (
-            <div className="absolute -top-2 -right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            <div 
+              className="absolute -top-2 -right-2"
+              style={{
+                width: '20px',
+                height: '20px',
+                background: 'radial-gradient(circle, #00ff00 0%, #00cc00 100%)',
+                borderRadius: '50%',
+                border: '3px solid #ffffff',
+                boxShadow: '0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.4)',
+                animation: 'aiChatPulse 2s ease-in-out infinite',
+                zIndex: 9999999
+              }}
+            ></div>
           )}
         </div>
       </div>

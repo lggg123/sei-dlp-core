@@ -30,12 +30,26 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   };
 
   return (
-    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 w-full">
+    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`} style={{ position: 'relative' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ position: 'relative' }}>
+        <div 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: '4rem',
+            width: '100%'
+          }}
+        >
           
           {/* Left side - Logo, Brand and Navigation Links */}
-          <div className="flex items-center gap-8">
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '2rem'
+            }}
+          >
             <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <Logo variant="icon" size={48} className="flex-shrink-0" />
               <div className="hidden sm:block">
@@ -74,11 +88,17 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
           </div>
 
           {/* Right side - Launch App, Connect Wallet & Mobile Menu */}
-          <div className="flex items-center gap-4 wallet-container-override">
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem'
+            }}
+          >
             {showLaunchApp && (
               <Link
                 href="/vaults"
-                className="btn-cyber flex items-center gap-2 whitespace-nowrap no-underline"
+                className="nav-launch-btn flex items-center gap-2 whitespace-nowrap no-underline"
               >
                 <svg 
                   className="w-4 h-4 flex-shrink-0" 

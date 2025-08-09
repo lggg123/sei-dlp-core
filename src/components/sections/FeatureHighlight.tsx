@@ -103,7 +103,7 @@ export default function FeatureHighlight() {
     }, []);
 
     return (
-        <section className="py-40 relative overflow-hidden" style={{ paddingTop: '12rem', paddingBottom: '12rem' }}>
+    <section className="py-24 relative overflow-hidden" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
             {/* Animated Background */}
             <div className="absolute inset-0">
                 <div className="absolute inset-0 opacity-30">
@@ -235,7 +235,7 @@ export default function FeatureHighlight() {
 
                     {/* Staggered Feature Cards */}
                     <div className="pt-20 pb-20 lg:pl-96">
-                        <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-start" style={{ gap: '3rem' }}>
+                        <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-start" style={{ gap: '2rem' }}>
                             {features.map((feature, index) => (
                                 <div
                                     key={feature.title}
@@ -254,8 +254,8 @@ export default function FeatureHighlight() {
                                             backdropFilter: 'blur(20px)',
                                             border: '2px solid hsl(var(--primary) / 0.2)',
                                             borderRadius: '1rem',
-                                            padding: '1.75rem',
-                                            minHeight: '340px',
+                                            padding: '1.5rem',
+                                            minHeight: '270px',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'center',

@@ -106,15 +106,36 @@ export default function AIWorkflow() {
   return (
     <div 
       ref={containerRef} 
-      className="py-32 neural-grid"
+      className="py-32 relative"
       style={{
-        paddingTop: '20rem !important',
-        paddingBottom: '8rem !important',
-        marginTop: '8rem !important',
-        minHeight: '100vh !important',
-        overflow: 'visible !important'
+        paddingTop: '8rem',
+        paddingBottom: '8rem',
+        marginTop: '-2rem',
+        minHeight: '100vh',
+        overflow: 'visible',
+        background: 'linear-gradient(180deg, rgba(20, 20, 30, 0.95) 0%, rgba(0, 245, 212, 0.08) 15%, rgba(155, 93, 229, 0.06) 40%, rgba(255, 32, 110, 0.08) 70%, rgba(20, 20, 30, 0.95) 100%)',
+        position: 'relative'
       }}
     >
+      {/* Enhanced Seamless Blending Overlay */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 10%, transparent 25%, transparent 75%, rgba(0,0,0,0.15) 90%, rgba(0,0,0,0.3) 100%)',
+          zIndex: 3
+        }}
+      />
+      
+      {/* Additional Top Blending Layer */}
+      <div 
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '120px',
+          background: 'linear-gradient(180deg, rgba(20, 20, 30, 1) 0%, rgba(20, 20, 30, 0.8) 30%, rgba(20, 20, 30, 0.4) 60%, transparent 100%)',
+          zIndex: 4
+        }}
+      />
+      
       <style jsx>{`
         @keyframes flowMove {
           0% { transform: translateX(-100%) translateY(-50%); opacity: 0; }
@@ -269,7 +290,7 @@ export default function AIWorkflow() {
           text-align: center !important;
         }
       `}</style>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative z-10" style={{ position: 'relative', zIndex: 10 }}>
         <div className="text-center mb-20">
           <h2 
             className="text-5xl lg:text-6xl font-bold mb-6 holo-text"
@@ -300,7 +321,10 @@ export default function AIWorkflow() {
                     width: '160px',
                     height: '160px',
                     flexShrink: 0,
-                    position: 'relative'
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'scale(1.15)';
@@ -380,13 +404,18 @@ export default function AIWorkflow() {
                       }}
                     ></div>
 
-                    {/* Enhanced Icon with Glow */}
+                    {/* Enhanced Icon with Glow - Centered */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div 
-                        className="text-5xl transition-all duration-300 group-hover:text-6xl relative z-10"
+                        className="text-4xl transition-all duration-300 group-hover:text-5xl relative z-10"
                         style={{ 
                           filter: `drop-shadow(0 0 20px ${step.color}) drop-shadow(0 0 40px ${step.color}80)`,
-                          textShadow: `0 0 20px ${step.color}, 0 0 40px ${step.color}80`
+                          textShadow: `0 0 20px ${step.color}, 0 0 40px ${step.color}80`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%'
                         }}
                       >
                         {step.icon}
