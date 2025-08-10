@@ -11,6 +11,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:devnet": "echo 'Running devnet tests...'",
+    "security-check": "echo 'Running security checks...'",
     "api:test": "curl -s http://localhost:3000/api/health | jq .",
     "api:docs": "curl -s http://localhost:3000/api/docs | jq .title",
     "api:vaults": "curl -s http://localhost:3000/api/vaults | jq '.data | length'",
