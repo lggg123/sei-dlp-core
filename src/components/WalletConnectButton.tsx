@@ -50,30 +50,10 @@ export function WalletConnectButton() {
   // Always show a button to ensure visibility - even during loading
   if (!mounted && !fallbackMode) {
     return (
-      <div 
-        className="wallet-container-override wallet-force-visible"
-        style={{
-          opacity: 1,
-          zIndex: 99999,
-          position: 'relative',
-          minWidth: '120px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
+      <div className="wallet-container-override">
         <Button 
-          className="btn-cyber text-sm wallet-button-visible" 
+          className="btn-cyber" 
           disabled
-          style={{
-            opacity: 1,
-            minWidth: '120px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            visibility: 'visible',
-            pointerEvents: 'none'
-          }}
           data-testid="wallet-loading-button"
         >
           Loading...
@@ -85,20 +65,9 @@ export function WalletConnectButton() {
   // Enhanced fallback mode with better error handling
   if (fallbackMode) {
     return (
-      <div 
-        className="wallet-container-override wallet-force-visible"
-        style={{
-          opacity: 1,
-          zIndex: 99999,
-          position: 'relative',
-          minWidth: '120px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
+      <div className="wallet-container-override">
         <Button 
-          className="btn-cyber text-sm wallet-button-visible"
+          className="btn-cyber"
           onClick={() => {
             console.log('[WalletConnectButton] Fallback mode - attempting wallet connection')
             // More user-friendly fallback
@@ -106,15 +75,6 @@ export function WalletConnectButton() {
             if (retry) {
               window.location.reload()
             }
-          }}
-          style={{
-            opacity: 1,
-            minWidth: '120px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            visibility: 'visible',
-            pointerEvents: 'auto'
           }}
         >
           Connect Wallet
@@ -146,36 +106,14 @@ export function WalletConnectButton() {
           return (
             <>
               {/* Always render container - even if not ready for maximum visibility */}
-              <div 
-                className="wallet-container-override flex items-center wallet-force-visible"
-                style={{
-                  opacity: 1,
-                  zIndex: 99999,
-                  position: 'relative',
-                  minWidth: '120px',
-                  alignItems: 'center',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  visibility: 'visible'
-                }}
-              >
+              <div className="wallet-container-override flex items-center">
                 {(() => {
                   // Show loading state if not ready
                   if (!ready) {
                     return (
                       <Button 
-                        className="btn-cyber text-sm wallet-button-visible"
+                        className="btn-cyber"
                         disabled
-                        style={{
-                          opacity: 1,
-                          minWidth: '120px',
-                          zIndex: 100000,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          visibility: 'visible',
-                          pointerEvents: 'none'
-                        }}
                       >
                         Connecting...
                       </Button>
@@ -186,18 +124,8 @@ export function WalletConnectButton() {
                     return (
                       <Button 
                         onClick={openConnectModal} 
-                        className="btn-cyber text-sm wallet-button-visible"
+                        className="btn-cyber"
                         type="button"
-                        style={{
-                          opacity: 1,
-                          minWidth: '120px',
-                          zIndex: 100000,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          visibility: 'visible',
-                          pointerEvents: 'auto'
-                        }}
                       >
                         Connect Wallet
                       </Button>
@@ -209,8 +137,7 @@ export function WalletConnectButton() {
                     <Button 
                       onClick={openChainModal} 
                       type="button"
-                      variant="destructive"
-                      className="text-sm"
+                      className="btn-cyber-error"
                     >
                       Wrong network
                     </Button>
@@ -221,7 +148,7 @@ export function WalletConnectButton() {
                   <div className="flex items-center gap-2">
                     <Button
                       onClick={openChainModal}
-                      className="text-sm px-3 py-2 bg-secondary/50 hover:bg-secondary/70 border border-primary/30"
+                      className="btn-cyber-secondary"
                       type="button"
                     >
                       {chain.hasIcon && (
@@ -251,7 +178,7 @@ export function WalletConnectButton() {
                     <Button
                       onClick={openAccountModal}
                       type="button"
-                      className="btn-cyber text-sm relative"
+                      className="btn-cyber relative"
                     >
                       {account.displayName}
                       {account.displayBalance
@@ -266,8 +193,7 @@ export function WalletConnectButton() {
                     {/* Sei Wallet Toggle */}
                     <Button
                       onClick={() => setShowSeiModal(true)}
-                      variant={isSeiConnected ? "default" : "outline"}
-                      className="text-sm px-2 py-2"
+                      className={isSeiConnected ? "btn-cyber-secondary" : "btn-cyber-outline"}
                       type="button"
                       title="Connect Sei Cosmos wallet"
                     >

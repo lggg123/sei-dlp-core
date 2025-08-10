@@ -209,13 +209,13 @@
     position: relative;
     overflow: hidden;
     padding: 0.75rem 1.5rem;
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: 12px;
     font-weight: 600;
     transition: all 300ms ease-in-out;
     font-size: 0.875rem;
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
-    color: hsl(var(--primary-foreground));
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1);
+    background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+    color: hsl(216 100% 4%);
+    box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1);
     border: none !important;
     display: flex;
     align-items: center;
@@ -224,11 +224,100 @@
     flex-shrink: 0;
     text-decoration: none !important;
     cursor: pointer;
+    white-space: nowrap;
   }
   
   .btn-cyber:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2);
+    background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%));
+    color: hsl(216 100% 4%);
+  }
+
+  /* Error state button for wrong network */
+  .btn-cyber-error {
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 300ms ease-in-out;
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 72% 50%));
+    color: hsl(0 0% 98%);
+    box-shadow: 0 0 20px hsl(0 84% 60% / 0.3), 0 0 40px hsl(0 84% 60% / 0.1);
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .btn-cyber-error:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px hsl(0 84% 60% / 0.4), 0 0 60px hsl(0 84% 60% / 0.2);
+    background: linear-gradient(135deg, hsl(0 84% 65%), hsl(0 72% 55%));
+  }
+
+  /* Secondary button style for connected states */
+  .btn-cyber-secondary {
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 300ms ease-in-out;
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: hsl(180 100% 48%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+  }
+  
+  .btn-cyber-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: hsl(180 100% 48% / 0.5);
+    transform: scale(1.02);
+  }
+
+  /* Outline button style */
+  .btn-cyber-outline {
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 300ms ease-in-out;
+    font-size: 0.75rem;
+    background: transparent;
+    color: hsl(180 100% 48%);
+    border: 1px solid hsl(180 100% 48% / 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .btn-cyber-outline:hover {
+    background: hsl(180 100% 48% / 0.1);
+    border-color: hsl(180 100% 48%);
+    transform: scale(1.02);
   }
   
   /* Hide scrollbars for better UX */
@@ -932,18 +1021,15 @@ nav .wallet-container-override,
   }
 }
 
-/* Debug mode - ENABLED to see wallet container boundaries */
+/* Wallet container styling - Clean production version */
 .wallet-container-override {
-  border: 2px solid red !important;
-  background: rgba(255, 0, 0, 0.1) !important;
-}
-.wallet-force-visible {
-  border: 2px solid blue !important;
-  background: rgba(0, 0, 255, 0.1) !important;
-}
-.wallet-button-visible {
-  border: 2px solid green !important;
-  background: rgba(0, 255, 0, 0.1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 120px;
+  flex-shrink: 0;
+  height: 100%;
+  margin-left: 1rem;
 }
 
 /* Navigation Layout Fix - Enhanced Target Structure */
@@ -972,39 +1058,52 @@ nav .max-w-7xl > div:first-child > div:last-child {
 
 /* Custom Navigation Launch Button - Final Working Solution */
 .nav-launch-btn {
-  position: absolute !important;
-  top: 50% !important;
-  right: 1rem !important;
-  transform: translateY(-50%) !important;
-  z-index: 9999 !important;
-  
-  /* Restored proper styling */
-  overflow: hidden !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: calc(var(--radius) - 2px) !important;
-  font-weight: 600 !important;
-  transition: all 300ms ease-in-out !important;
-  font-size: 0.875rem !important;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
-  color: hsl(var(--primary-foreground)) !important;
-  box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1) !important;
-  border: none !important;
+  /* Force Visibility */
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 99999 !important;
+
+  /* Layout & Typography */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
   min-width: 120px !important;
   flex-shrink: 0 !important;
-  text-decoration: none !important;
+  white-space: nowrap !important;
   cursor: pointer !important;
-}
-
-.nav-launch-btn:hover {
-  transform: translateY(-50%) scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2) !important;
+  
+  /* Visual Styling - Match Hero Button */
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  color: hsl(216 100% 4%) !important;
+  border: none !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  transition: all 300ms ease-in-out !important;
+  
+  /* Remove unwanted text decorations */
   text-decoration: none !important;
   text-decoration-line: none !important;
   text-underline-offset: initial !important;
   text-decoration-color: transparent !important;
+  border-bottom: none !important;
+  outline: none !important;
+}
+
+.nav-launch-btn:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
+  color: hsl(216 100% 4%) !important;
 }
 
 /* Vault Detail Page Specific Overrides - Enhanced Priority & Mobile Support */
@@ -1996,8 +2095,7 @@ nav button,
 /* Comprehensive Nav Element Text Decoration Reset - Final V2 */
 nav a:hover, nav a:focus, nav a:active, nav a:visited,
 nav Link:hover, nav Link:focus, nav Link:active, nav Link:visited,
-nav button:hover, nav button:focus, nav button:active,
-.nav-launch-btn:focus, .nav-launch-btn:active {
+nav button:hover, nav button:focus, nav button:active {
   text-decoration: none !important;
   text-decoration-line: none !important;
   text-underline-offset: initial !important;
@@ -2005,6 +2103,113 @@ nav button:hover, nav button:focus, nav button:active,
   text-decoration-thickness: 0 !important;
   border-bottom: none !important;
   box-shadow: none !important;
+}
+
+/* Launch Button Specific States - Preserve Visibility */
+.nav-launch-btn:focus, 
+.nav-launch-btn:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  /* DO NOT remove box-shadow for launch button - it needs it for visibility */
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  color: hsl(216 100% 4%) !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: scale(0.98) !important;
+}
+
+/* Force visibility for button text and icon */
+.nav-launch-btn span,
+.nav-launch-btn svg {
+  color: hsl(216 100% 4%) !important;
+  fill: hsl(216 100% 4%) !important;
+  stroke: hsl(216 100% 4%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.nav-launch-btn:focus span,
+.nav-launch-btn:active span,
+.nav-launch-btn:focus svg,
+.nav-launch-btn:active svg {
+  color: hsl(216 100% 4%) !important;
+  fill: hsl(216 100% 4%) !important;
+  stroke: hsl(216 100% 4%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ULTIMATE FALLBACK - Force visibility with maximum specificity */
+nav .nav-launch-btn,
+.Navigation .nav-launch-btn,
+.navigation .nav-launch-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  color: hsl(216 100% 4%) !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  pointer-events: auto !important;
+  z-index: 99999 !important;
+  position: relative !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  min-width: 120px !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  border: none !important;
+  transition: all 300ms ease-in-out !important;
+}
+
+nav .nav-launch-btn span,
+nav .nav-launch-btn svg,
+.Navigation .nav-launch-btn span,
+.Navigation .nav-launch-btn svg,
+.navigation .nav-launch-btn span,
+.navigation .nav-launch-btn svg {
+  color: hsl(216 100% 4%) !important;
+  fill: hsl(216 100% 4%) !important;
+  stroke: hsl(216 100% 4%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  -webkit-text-fill-color: hsl(216 100% 4%) !important;
+  text-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+/* Hover and interaction states */
+nav .nav-launch-btn:hover,
+.Navigation .nav-launch-btn:hover,
+.navigation .nav-launch-btn:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
+}
+
+nav .nav-launch-btn:focus,
+nav .nav-launch-btn:active,
+.Navigation .nav-launch-btn:focus,
+.Navigation .nav-launch-btn:active,
+.navigation .nav-launch-btn:focus,
+.navigation .nav-launch-btn:active {
+  transform: scale(0.98) !important;
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  color: hsl(216 100% 4%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Vault Page Specific Elements */
@@ -2143,15 +2348,63 @@ nav .wallet-container-override {
 }
 
 /* Force buttons to have visible content */
+/* Wallet Button Styling - Match Launch App Button */
 .wallet-container-override button,
 .wallet-container-override .btn-cyber {
-  min-height: 40px \!important;
-  padding: 8px 16px \!important;
-  font-size: 14px \!important;
-  line-height: 1.4 \!important;
-  white-space: nowrap \!important;
-  /* Force visible background */
-  background: #00f5d4 \!important;
-  color: #000 \!important;
-  border: 2px solid #fff \!important;
+  /* Layout & Typography */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  min-width: 120px !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  
+  /* Visual Styling - Match Launch App Button */
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  color: hsl(216 100% 4%) !important;
+  border: none !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  transition: all 300ms ease-in-out !important;
+  
+  /* Force Visibility */
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 99999 !important;
+  
+  /* Remove unwanted text decorations */
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  outline: none !important;
+}
+
+/* Wallet Button Hover States */
+.wallet-container-override button:hover,
+.wallet-container-override .btn-cyber:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
+  color: hsl(216 100% 4%) !important;
+}
+
+/* Wallet Button Focus/Active States */
+.wallet-container-override button:focus,
+.wallet-container-override button:active,
+.wallet-container-override .btn-cyber:focus,
+.wallet-container-override .btn-cyber:active {
+  transform: scale(0.98) !important;
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  color: hsl(216 100% 4%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }

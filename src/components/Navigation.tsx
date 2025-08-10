@@ -113,38 +113,34 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
             }}
           >
             {showLaunchApp && (
-              <Link
-                href="/vaults"
-                className="nav-launch-btn flex items-center gap-2 whitespace-nowrap nav-link-clean"
-                style={{ textDecoration: 'none !important', textDecorationLine: 'none !important', borderBottom: 'none !important', boxShadow: 'none !important', backgroundImage: 'none !important' }}
-              >
-                <svg 
-                  className="w-4 h-4 flex-shrink-0" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
+              <div style={{ isolation: 'isolate', position: 'relative', zIndex: 99999 }}>
+                <Link
+                  href="/vaults"
+                  className="nav-launch-btn flex items-center gap-2 whitespace-nowrap"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Launch App
-              </Link>
+                  <svg 
+                    className="w-4 h-4 flex-shrink-0" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span>
+                    Launch App
+                  </span>
+                </Link>
+              </div>
             )}
             {showWallet && (
               <div 
-                className="wallet-container-override wallet-force-visible"
+                className="wallet-container-override"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'flex-end',
                   minWidth: '120px',
                   flexShrink: 0,
-                  opacity: 1,
-                  zIndex: 99999,
-                  position: 'relative',
-                  // Force GPU acceleration for better rendering
-                  transform: 'translateZ(0)',
-                  willChange: 'transform',
-                  // Ensure proper layout within flexbox
                   height: '100%',
                   marginLeft: '1rem'
                 }}
