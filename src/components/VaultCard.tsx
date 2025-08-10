@@ -11,7 +11,7 @@ import styles from './VaultCard.module.css';
 import { useRouter } from 'next/navigation';
 
 interface VaultData {
-  address?: string;
+  address: string;
   name: string;
   apy: number;
   tvl: number | string;
@@ -32,19 +32,13 @@ export default function VaultCard({ vault, index }: VaultCardProps) {
   const router = useRouter();
 
   const handleViewVault = () => {
-    // Generate address from name if not provided
-    const vaultAddress = vault.address || generateVaultAddress(vault.name);
-    router.push(`/vault?address=${vaultAddress}&tab=analytics`);
-  };
-
-  const generateVaultAddress = (name: string) => {
-    // Generate consistent address from vault name
-    const nameMap: {[key: string]: string} = {
-      'StableMax Vault': '0x7890123456789012345678901234567890123456',
-      'SEI Hypergrowth': '0x8901234567890123456789012345678901234567', 
-      'BlueChip Vault': '0x9012345678901234567890123456789012345678'
-    };
-    return nameMap[name] || '0x1234567890123456789012345678901234567890';
+    // Use the actual vault address from the vault data
+    const vaultAddress = vault.address;
+    if (vaultAddress) {
+      router.push(`/vault?address=${vaultAddress}&tab=analytics`);
+    } else {
+      console.error('No address found for vault:', vault.name);
+    }
   };
 
   const formatTvl = (tvl: number | string) => {
