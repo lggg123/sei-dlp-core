@@ -43,7 +43,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   };
 
   return (
-    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`} style={{ position: 'relative' }}>
+    <nav className={`${baseClasses} ${variantClasses[variant]} ${className}`} style={{ position: 'fixed', height: '4rem' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ position: 'relative' }}>
         <div 
           style={{

@@ -2323,6 +2323,83 @@ nav .nav-launch-btn:active,
 
 
 
+/* VAULT PAGE SPECIFIC OVERRIDES - Enhanced Priority CSS Fixes V2 */
+.vault-page .max-w-5xl {
+  max-width: 64rem !important; /* Force 5xl = 64rem instead of 6xl = 72rem */
+}
+
+/* TabsList Width Override - Force Custom Width */
+.vault-page [data-slot="tabs-list"] {
+  width: min(100%, 60rem) !important;
+  max-width: 60rem !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+/* CRITICAL BACK BUTTON SPACING FIX - Maximum Priority Override */
+.vault-page .mb-4,
+.vault-page .mb-4:not([style*="margin-bottom"]),
+.vault-page button.mb-4,
+.vault-page .Button.mb-4 {
+  margin-bottom: 1rem !important; /* Force 16px spacing - mb-4 = 1rem */
+}
+
+/* Back Button Container Spacing Override */
+.vault-page .mb-12 {
+  margin-bottom: 3rem !important; /* 12 * 0.25rem = 3rem */
+}
+
+/* HEADER CARD TO TABS CONNECTION FIX */
+.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: 0.5rem !important; /* 8px bottom margin */
+}
+
+/* TABS CONTAINER SPACING FIX - Seamless Connection */
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"] {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important; /* Small gap after tabs */
+}
+
+/* WIDTH ALIGNMENT FIXES - Ensure All Content Matches Header Width */
+.vault-page .container.mx-auto.max-w-5xl,
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"],
+.vault-page [data-slot="tabs-content"] {
+  max-width: 64rem !important; /* max-w-5xl = 64rem */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* TAB CONTENT WIDTH AND SPACING FIXES */
+.vault-page [data-slot="tabs-content"] .grid {
+  max-width: 60rem !important; /* Match tabs list width */
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* FORCE REMOVE ANY CONFLICTING MARGINS FROM SHADCN COMPONENTS */
+.vault-page .ui-component,
+.vault-page [data-radix-tabs-list] {
+  margin-top: 0 !important;
+}
+
+/* ADDITIONAL BUTTON SPACING REINFORCEMENT */
+.vault-page button[class*="mb-"],
+.vault-page .Button[class*="mb-"] {
+  margin-bottom: 1rem !important;
+}
+
+/* Container Content Centering Override */
+.vault-page .container.mx-auto.max-w-5xl {
+  max-width: 64rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+}
+
 /* EMERGENCY VISIBILITY FIXES - Force Button Into View */
 .wallet-container-override {
   /* Force element into viewport */
@@ -2407,4 +2484,724 @@ nav .wallet-container-override {
   color: hsl(216 100% 4%) !important;
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+/* =================================================================
+   BULLETPROOF CSS OVERRIDE FIXES - VAULT PAGE SPACING & ALIGNMENT
+   High-specificity rules with !important to defeat any conflicting CSS
+   ================================================================= */
+
+/* CRITICAL FIX 1: Back Button Spacing - Force 16px margin-bottom */
+.vault-page .mb-4,
+.vault-page button.mb-4,
+.vault-page .Button.mb-4,
+.vault-page [class*="mb-4"],
+.vault-page .vault-page .mb-4,
+div.vault-page button.mb-4,
+html body div.vault-page button.mb-4 {
+  margin-bottom: 1rem !important; /* Force 16px spacing */
+}
+
+/* CRITICAL FIX 2: Header Card Bottom Margin - Force 8px for seamless tab connection */
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .vault-detail-header-card-optimized[style],
+div.vault-page .vault-detail-header-card-optimized,
+html body div.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: 0.5rem !important; /* Force 8px bottom margin */
+}
+
+/* CRITICAL FIX 3: Tab Container - Remove top margin for seamless connection */
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"],
+.vault-page .TabsList,
+.vault-page [role="tablist"],
+div.vault-page .tabs-container-compact,
+html body div.vault-page .tabs-container-compact {
+  margin-top: 0 !important; /* Force no top margin */
+  margin-bottom: 0.5rem !important; /* Add small bottom margin */
+}
+
+/* CRITICAL FIX 4: Width Alignment - Force consistent max-width across all containers */
+.vault-page .container.mx-auto.max-w-5xl,
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"],
+.vault-page [data-slot="tabs-content"],
+div.vault-page .container.mx-auto.max-w-5xl,
+html body div.vault-page .container.mx-auto.max-w-5xl {
+  max-width: 64rem !important; /* Force max-w-5xl = 64rem consistency */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* CRITICAL FIX 5: Tab Content Width - Force consistent inner content width */
+.vault-page [data-slot="tabs-content"] .grid,
+.vault-page .TabsContent .grid,
+div.vault-page [data-slot="tabs-content"] .grid {
+  max-width: 60rem !important; /* Match tabs list width */
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* NUCLEAR OPTION: Ultra-high specificity overrides for stubborn elements */
+html body main div.vault-page button.mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+html body main div.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: 0.5rem !important;
+}
+
+html body main div.vault-page .tabs-container-compact {
+  margin-top: 0 !important;
+}
+
+/* Force container centering with maximum specificity */
+html body main div.vault-page .container.mx-auto.max-w-5xl {
+  max-width: 64rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Additional reinforcement for tab list styling */
+.vault-page .TabsList[style*="margin"] {
+  margin-top: 0 !important;
+}
+
+/* Backup specificity for inline styles that might override */
+.vault-page [style*="marginBottom"] .mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+.vault-page [style*="marginTop"] .tabs-container-compact {
+  margin-top: 0 !important;
+}
+
+/* ==========================================
+   NUCLEAR OPTION: MAXIMUM SPECIFICITY CSS OVERRIDES
+   Ultra-high specificity rules to force visual fixes
+   ========================================== */
+
+/* NUCLEAR FIX 1: Width Alignment - Force all containers to match header width */
+html body main div.vault-page-container-isolated div.container.mx-auto[style*="max-w"] div[data-slot="tabs"] [data-slot="tabs-list"],
+html body main div.vault-page div.container.mx-auto div[data-slot="tabs"] [data-slot="tabs-list"],
+html body div.vault-page div[data-slot="tabs"] [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs-list"],
+body div.vault-page .tabs-container-compact,
+body div.vault-page div[class*="tabs-container-compact"] {
+  max-width: 64rem !important; /* Match header card width exactly */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* NUCLEAR FIX 2: Force tabs content to match header width */
+html body main div.vault-page div[data-slot="tabs-content"],
+html body div.vault-page [data-slot="tabs-content"],
+body div.vault-page [data-slot="tabs-content"] {
+  max-width: 64rem !important; /* Match header instead of 60rem */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 3: Force tabs content grid to match header width */
+html body main div.vault-page [data-slot="tabs-content"] div.grid,
+html body div.vault-page [data-slot="tabs-content"] > div.grid,
+body div.vault-page [data-slot="tabs-content"] .grid {
+  max-width: 64rem !important; /* Change from 60rem to match header */
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* NUCLEAR FIX 4: Remove Radix UI Tabs gap that creates spacing */
+html body main div.vault-page div[data-slot="tabs"],
+html body div.vault-page [data-slot="tabs"],
+body div.vault-page [data-slot="tabs"] {
+  gap: 0 !important; /* Remove default gap-2 (0.5rem) from Tabs component */
+  row-gap: 0 !important;
+  column-gap: 0 !important;
+}
+
+/* NUCLEAR FIX 5: Force zero margin on tabs list - ultimate specificity */
+html body main div.vault-page div[data-slot="tabs"] [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs"] > [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs-list"],
+body div.vault-page .tabs-container-compact,
+body div.vault-page div[class*="tabs-container-compact"],
+.vault-page .tabs-container-compact[style*="margin"],
+.vault-page [data-slot="tabs-list"][style*="margin"] {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+  padding-top: 0 !important;
+  transform: translateY(0) !important; /* Prevent any transform spacing */
+}
+
+/* NUCLEAR FIX 6: Force header card exact bottom margin for seamless connection */
+html body main div.vault-page div.vault-detail-header-card-optimized,
+html body div.vault-page .vault-detail-header-card-optimized,
+body div.vault-page .vault-detail-header-card-optimized,
+.vault-page .vault-detail-header-card-optimized[style*="margin"] {
+  margin-bottom: 0 !important; /* ZERO gap for seamless connection */
+  padding-bottom: 0 !important;
+  border-bottom-left-radius: 8px !important; /* Reduce bottom radius for connection */
+  border-bottom-right-radius: 8px !important;
+}
+
+/* NUCLEAR FIX 7: Force tabs container exact top positioning */
+html body main div.vault-page [data-slot="tabs-list"],
+body div.vault-page .tabs-container-compact,
+.vault-page .tabs-container-compact[style*="border-radius"] {
+  border-top-left-radius: 8px !important; /* Reduce top radius for connection */
+  border-top-right-radius: 8px !important;
+  margin-top: -2px !important; /* Slight overlap for seamless visual connection */
+}
+
+/* NUCLEAR FIX 8: Override any Tailwind utility classes with maximum specificity */
+.vault-page .mb-4[class*="mb-"],
+.vault-page button[class*="mb-4"],
+.vault-page .Button[class*="mb-4"] {
+  margin-bottom: 1rem !important;
+}
+
+.vault-page .grid[class*="grid-cols-"],
+.vault-page div[class*="grid"][class*="gap-"] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 9: CSS Custom Properties Override */
+html body div.vault-page {
+  --tabs-container-max-width: 64rem !important;
+  --tabs-content-max-width: 64rem !important;
+  --header-tabs-gap: 0px !important;
+}
+
+/* Apply custom properties */
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"] {
+  max-width: var(--tabs-container-max-width) !important;
+}
+
+.vault-page [data-slot="tabs-content"],
+.vault-page [data-slot="tabs-content"] .grid {
+  max-width: var(--tabs-content-max-width) !important;
+}
+
+/* NUCLEAR FIX 10: JavaScript Inline Style Override Protection */
+.vault-page [style*="maxWidth: \"60rem\""],
+.vault-page [style*="max-width: 60rem"],
+.vault-page [style*="maxWidth:60rem"] {
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="margin:"] .tabs-container-compact,
+.vault-page [style*="marginTop:"] [data-slot="tabs-list"] {
+  margin-top: 0 !important;
+}
+
+/* NUCLEAR FIX 11: Attribute-based selectors for maximum coverage */
+.vault-page div[data-slot="tabs"][class*="flex"][class*="gap-2"] {
+  gap: 0 !important;
+}
+
+.vault-page div[data-slot="tabs-list"][class*="w-fit"] {
+  width: 100% !important;
+  max-width: 64rem !important;
+}
+
+/* NUCLEAR FIX 12: Force exact visual connection styling */
+html body div.vault-page .vault-detail-header-card-optimized::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+}
+
+html body div.vault-page .tabs-container-compact::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+}
+
+/* ========================================= */
+/* NUCLEAR CSS OVERRIDE SOLUTION - LEVEL 2  */
+/* ========================================= */
+
+/* NUCLEAR FIX 13: Ultimate width alignment with maximum specificity */
+html body main div.vault-page-container-isolated div.container.mx-auto,
+html body main div.vault-page div.container.mx-auto,
+html body div.vault-page-container-isolated div.container.mx-auto,
+html body div.vault-page div.container.mx-auto[style*="max-width"] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 14: Header card perfect width enforcement */
+html body main div.vault-page div.vault-detail-header-card-optimized,
+html body div.vault-page div.vault-detail-header-card-optimized,
+html body main div.vault-page-container-isolated div.vault-detail-header-card-optimized,
+html body div.vault-page-container-isolated div.vault-detail-header-card-optimized {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 0 !important;
+}
+
+/* NUCLEAR FIX 15: Tabs container absolute zero margin */
+html body main div.vault-page div[data-radix-tabs-list],
+html body div.vault-page div[data-radix-tabs-list],
+html body main div.vault-page .tabs-container-compact,
+html body div.vault-page .tabs-container-compact,
+html body main div.vault-page-container-isolated div[data-radix-tabs-list],
+html body div.vault-page-container-isolated div[data-radix-tabs-list],
+html body main div.vault-page-container-isolated .tabs-container-compact,
+html body div.vault-page-container-isolated .tabs-container-compact {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin: 0 auto 0.5rem auto !important;
+  margin-top: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 16: TabsContent sections perfect alignment */
+html body main div.vault-page div[data-radix-tabs-content],
+html body div.vault-page div[data-radix-tabs-content],
+html body main div.vault-page-container-isolated div[data-radix-tabs-content],
+html body div.vault-page-container-isolated div[data-radix-tabs-content] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 17: Override any inline styles with atomic CSS */
+.vault-page [style*="maxWidth"] {
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="max-width"] {
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="marginBottom"] {
+  margin-bottom: 0 !important;
+}
+
+.vault-page [style*="margin-bottom"] {
+  margin-bottom: 0 !important;
+}
+
+/* NUCLEAR FIX 18: Data attribute targeting for Radix UI components */
+html body div.vault-page [data-slot="tabs"],
+html body div.vault-page [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs-content"] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 19: Force seamless visual connection with negative margin */
+html body div.vault-page .tabs-container-compact {
+  margin-top: -2px !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* NUCLEAR FIX 20: CSS Custom Properties for ultimate fallback */
+:root {
+  --vault-max-width: 64rem;
+  --vault-zero-margin: 0;
+  --vault-negative-margin: -2px;
+}
+
+/* NUCLEAR FIX 21: Apply custom properties with maximum specificity */
+html body main div.vault-page-container-isolated,
+html body main div.vault-page,
+html body div.vault-page-container-isolated,
+html body div.vault-page {
+  --max-width: var(--vault-max-width) !important;
+  --margin-bottom: var(--vault-zero-margin) !important;
+  --margin-top: var(--vault-negative-margin) !important;
+}
+
+/* NUCLEAR FIX 22: Universal selector for any missed elements */
+.vault-page * {
+  max-width: inherit;
+}
+
+/* Ensure tabs match header and content width */
+.vault-page .vault-tabs-clean {
+  width: 100% !important;
+  max-width: calc(64rem - 2rem) !important; /* Match header card exactly */
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.vault-page .container,
+.vault-page .max-w-5xl,
+.vault-page [class*="max-w"] {
+  max-width: 64rem !important;
+}
+
+/* NUCLEAR FIX 23: Grid and flexbox layout fixes */
+.vault-page .grid,
+.vault-page .flex {
+  max-width: 64rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* NUCLEAR FIX 24: Responsive breakpoints override */
+@media (min-width: 1024px) {
+  html body div.vault-page .container.mx-auto.max-w-5xl,
+  html body div.vault-page [style*="maxWidth"],
+  html body div.vault-page .vault-detail-header-card-optimized,
+  html body div.vault-page .tabs-container-compact,
+  html body div.vault-page div[data-radix-tabs-content] {
+    max-width: 64rem !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  html body div.vault-page .container.mx-auto,
+  html body div.vault-page [style*="maxWidth"],
+  html body div.vault-page .vault-detail-header-card-optimized,
+  html body div.vault-page .tabs-container-compact,
+  html body div.vault-page div[data-radix-tabs-content] {
+    max-width: min(64rem, 100vw - 2rem) !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* ================================================================
+   FINAL NUCLEAR CSS FIXES V5 - ADDRESSING SCREENSHOT ISSUES
+   Target: Navigation width, Tab width 100% of header, Zero gap
+   ================================================================ */
+
+/* === NAVIGATION WIDTH FIX - Restore full width navigation === */
+.vault-page nav,
+.vault-page header,
+.Navigation,
+.navigation,
+nav.Navigation {
+  max-width: none !important;
+  width: 100vw !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 !important;
+  position: fixed !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}
+
+/* Navigation inner container */
+.vault-page nav .max-w-7xl,
+.vault-page nav > div,
+.Navigation .max-w-7xl,
+.navigation .max-w-7xl,
+nav > div {
+  max-width: 80rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+/* === TAB WIDTH FIX - Force tabs to match header width exactly === */
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact,
+.vault-page [role="tablist"],
+html body div.vault-page [data-slot="tabs-list"],
+html body div.vault-page .tabs-container-compact {
+  width: 100% !important;
+  max-width: 64rem !important;
+  min-width: 100% !important;
+  flex: none !important;
+  flex-basis: 100% !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  margin: 0 auto !important;
+  /* Override Radix UI's w-fit class */
+  width: 100% !important;
+}
+
+/* Force grid layout for tabs */
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: clamp(0.25rem, 0.75vw, 0.375rem) !important;
+}
+
+/* === GAP FIX - Eliminate space between header and tabs === */
+.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: -4px !important;
+  position: relative !important;
+  z-index: 5 !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  margin-top: -4px !important;
+  margin-bottom: 1rem !important;
+  position: relative !important;
+  z-index: 10 !important;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+}
+
+/* Remove any gaps from parent tabs container */
+.vault-page [data-slot="tabs"] {
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* === RADIX UI OVERRIDES - Force our styles over component defaults === */
+.vault-page [data-radix-tabs-list] {
+  width: 100% !important;
+  max-width: 64rem !important;
+  margin: 0 auto !important;
+}
+
+/* Override the w-fit class specifically */
+.vault-page .w-fit[data-slot="tabs-list"] {
+  width: 100% !important;
+}
+
+/* === CONTENT WIDTH CONSISTENCY === */
+.vault-page [data-slot="tabs-content"],
+.vault-page [data-slot="tabs-content"] > div {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* ================================================================
+   EMERGENCY OVERRIDES - If the above doesn't work
+   ================================================================ */
+
+/* Use !important with inline style override */
+.vault-page [style*="width"] [data-slot="tabs-list"] {
+  width: 100% !important;
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="margin"] .vault-detail-header-card-optimized {
+  margin-bottom: -4px !important;
+}
+
+.vault-page [style*="margin"] [data-slot="tabs-list"] {
+  margin-top: -4px !important;
+}
+
+/* Force container width alignment */
+.vault-page .container.mx-auto.max-w-5xl > * {
+  max-width: inherit !important;
+  width: 100% !important;
+}
+
+/* ================================================================
+   ABSOLUTE FINAL OVERRIDE - CSS Custom Properties
+   ================================================================ */
+.vault-page {
+  --tabs-width: 100%;
+  --tabs-max-width: 64rem;
+  --header-margin-bottom: -4px;
+  --tabs-margin-top: -4px;
+}
+
+.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: var(--header-margin-bottom) !important;
+}
+
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  width: var(--tabs-width) !important;
+  max-width: var(--tabs-max-width) !important;
+  margin-top: var(--tabs-margin-top) !important;
+}
+
+/* ================================================================
+   FINAL POSITIONING ADJUSTMENTS
+   ================================================================ */
+.vault-page .vault-detail-header-card-optimized {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* VAULT PAGE CRITICAL FIXES - Navigation and Layout Spacing */
+.vault-page {
+  /* Ensure proper top spacing after fixed navigation */
+  padding-top: 0 !important;
+}
+
+.vault-page .relative.z-10 {
+  /* Override problematic padding-top values */
+  padding-top: 5rem !important; /* 80px - accounts for 64px nav height + 16px buffer */
+}
+
+.vault-page .vault-layout-container {
+  /* Ensure container doesn't get pushed up */
+  margin-top: 0 !important;
+  padding-top: 1rem !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Fix any container isolation issues */
+.vault-page-container-isolated {
+  /* Remove problematic positioning that was causing push-up effect */
+  position: static !important;
+}
+
+.vault-page-container-isolated .relative.z-10 {
+  /* Override isolation container padding issues */
+  padding-top: 5rem !important;
+}
+
+/* Navigation clearance fix */
+nav + * .vault-page,
+nav ~ * .vault-page {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Ensure proper spacing for back button */
+.vault-page button.mb-4 {
+  margin-top: 0 !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Header card positioning fix */
+.vault-page .vault-detail-header-card-optimized {
+  margin-top: 0 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Responsive navigation clearance */
+@media (max-width: 768px) {
+  .vault-page .relative.z-10 {
+    padding-top: 4.5rem !important; /* Slightly less on mobile */
+  }
+}
+
+@media (min-width: 1024px) {
+  .vault-page .relative.z-10 {
+    padding-top: 5.5rem !important; /* Slightly more on desktop for better spacing */
+  }
+}
+
+/* Clean header width constraint */
+.vault-detail-header-card-optimized {
+  max-width: calc(64rem - 2rem);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* MODAL WIDTH PROTECTION - Ensure modals are never constrained */
+/* ULTIMATE MODAL OVERRIDE - Maximum specificity for all scenarios */
+html body div.deposit-modal-container.deposit-modal-container.deposit-modal-container {
+  max-width: none !important;
+  width: 100vw !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 999999 !important;
+}
+
+html body div.deposit-modal-content.deposit-modal-content.deposit-modal-content {
+  width: 640px !important;
+  max-width: 640px !important;
+  min-width: 320px !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  flex-basis: 640px !important;
+}
+
+/* Override any global container constraints when modal is active */
+body:has(.deposit-modal-container) *:not(.deposit-modal-content):not(.deposit-modal-content *) {
+  max-width: none !important;
+}
+
+/* Reset Tailwind container class when modal is open */
+body:has(.deposit-modal-container) .container,
+body:has(.deposit-modal-container) [class*="max-w-"],
+body:has(.deposit-modal-container) [class*="container"] {
+  max-width: none !important;
+}
+
+.deposit-modal-container,
+[class*="modal-container"],
+[data-testid="modal-backdrop"] {
+  max-width: none !important;
+  width: 100vw !important;
+}
+
+.deposit-modal-content,
+[class*="modal-content"] {
+  max-width: inherit !important;
+  width: auto !important;
+}
+
+/* Prevent vault page constraints from affecting modals */
+.vault-page .deposit-modal-container,
+.vault-page .deposit-modal-content {
+  max-width: none !important;
+}
+
+
+/* Force consistent width across all vault sections */
+.vault-page .grid {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* Ensure tab buttons fill their containers */
+.vault-page .tab-trigger-clean {
+  width: 100% !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }

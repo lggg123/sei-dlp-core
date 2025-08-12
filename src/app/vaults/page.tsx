@@ -389,7 +389,7 @@ export default function VaultsPage() {
       <div className="relative z-10 pt-16 md:pt-16 lg:pt-20">
         {/* Header Section - Enhanced */}
         <section className="py-6 px-4">
-          <div className="container mx-auto">
+          <div className="container mx-auto max-w-7xl"> {/* Ensure consistent max-width */}
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary">
                 AI-Powered Yield Optimization on SEI
@@ -579,7 +579,7 @@ export default function VaultsPage() {
 
         {/* Vaults Grid */}
         <section className="py-4 px-4">
-          <div className="container mx-auto">
+          <div className="container mx-auto max-w-7xl"> {/* Ensure consistent max-width */}
             {isLoading && (
               <div className="flex justify-center items-center py-20">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />

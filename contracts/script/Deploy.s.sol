@@ -104,6 +104,9 @@ contract DeployScript is Script {
         MockERC20(btc).transfer(hedgeVault, 1_700_000e18);
         MockERC20(sei).transfer(hedgeVault, 1_700_000e18);
 
+        // === FUND TEST USERS FOR FRONTEND TESTING ===
+        setupTestUsers(sei, usdc, usdt, eth, btc, atom, dai);
+
         vm.stopBroadcast();
         
         // Log deployment summary
@@ -236,6 +239,53 @@ contract DeployScript is Script {
         return address(vault);
     }
 
+    function setupTestUsers(address sei, address usdc, address usdt, address eth, address btc, address atom, address dai) internal {
+        // Test user addresses (deterministic for consistent testing)
+        address user1 = address(0x2222222222222222222222222222222222222222); // Primary test user
+        address user2 = address(0x3333333333333333333333333333333333333333); // Secondary test user
+        address user3 = address(0x4444444444444444444444444444444444444444); // Whale test user
+        
+        console.log("\n=== FUNDING TEST USERS ===");
+        
+        // === PRIMARY TEST USER (user1) - Balanced Portfolio ===
+        MockERC20(sei).transfer(user1, 10_000 * 1e18);     // 10K SEI
+        MockERC20(usdc).transfer(user1, 10_000 * 1e18);    // 10K USDC  
+        MockERC20(usdt).transfer(user1, 5_000 * 1e18);     // 5K USDT
+        MockERC20(eth).transfer(user1, 100 * 1e18);        // 100 ETH
+        MockERC20(btc).transfer(user1, 5 * 1e18);          // 5 BTC
+        MockERC20(atom).transfer(user1, 1_000 * 1e18);     // 1K ATOM
+        MockERC20(dai).transfer(user1, 5_000 * 1e18);      // 5K DAI
+        
+        console.log("User1 funded: %s", user1);
+        console.log("  - 10K SEI, 10K USDC, 5K USDT, 100 ETH, 5 BTC, 1K ATOM, 5K DAI");
+        
+        // === SECONDARY TEST USER (user2) - Conservative Portfolio ===
+        MockERC20(sei).transfer(user2, 5_000 * 1e18);      // 5K SEI
+        MockERC20(usdc).transfer(user2, 5_000 * 1e18);     // 5K USDC
+        MockERC20(usdt).transfer(user2, 2_000 * 1e18);     // 2K USDT
+        MockERC20(eth).transfer(user2, 25 * 1e18);         // 25 ETH
+        MockERC20(btc).transfer(user2, 1 * 1e18);          // 1 BTC
+        MockERC20(atom).transfer(user2, 500 * 1e18);       // 500 ATOM
+        MockERC20(dai).transfer(user2, 3_000 * 1e18);      // 3K DAI
+        
+        console.log("User2 funded: %s", user2);
+        console.log("  - 5K SEI, 5K USDC, 2K USDT, 25 ETH, 1 BTC, 500 ATOM, 3K DAI");
+        
+        // === WHALE TEST USER (user3) - Large Portfolio for Testing Edge Cases ===
+        MockERC20(sei).transfer(user3, 100_000 * 1e18);    // 100K SEI
+        MockERC20(usdc).transfer(user3, 50_000 * 1e18);    // 50K USDC
+        MockERC20(usdt).transfer(user3, 25_000 * 1e18);    // 25K USDT
+        MockERC20(eth).transfer(user3, 500 * 1e18);        // 500 ETH
+        MockERC20(btc).transfer(user3, 20 * 1e18);         // 20 BTC
+        MockERC20(atom).transfer(user3, 10_000 * 1e18);    // 10K ATOM
+        MockERC20(dai).transfer(user3, 30_000 * 1e18);     // 30K DAI
+        
+        console.log("User3 (Whale) funded: %s", user3);
+        console.log("  - 100K SEI, 50K USDC, 25K USDT, 500 ETH, 20 BTC, 10K ATOM, 30K DAI");
+        
+        console.log("=== TEST USERS SETUP COMPLETE ===\n");
+    }
+
     function logDeploymentSummary() internal view {
         console.log("\n=== SEI DLP DEPLOYMENT SUMMARY ===");
         console.log("Network: SEI (Chain ID: %s)", block.chainid);
@@ -256,10 +306,15 @@ contract DeployScript is Script {
         console.log("- SEI Hypergrowth Vault: %s", seiHypergrowthVault);
         console.log("- Blue Chip Vault: %s", blueChipVault);
         console.log("- Delta Neutral Vault: %s", deltaNeutralVault);
+        console.log("\nTest Users:");
+        console.log("- User1 (Balanced): 0x2222222222222222222222222222222222222222");
+        console.log("- User2 (Conservative): 0x3333333333333333333333333333333333333333");
+        console.log("- User3 (Whale): 0x4444444444444444444444444444444444444444");
         console.log("\nConfiguration:");
         console.log("- Parallel Execution: Enabled");
         console.log("- Finality Optimization: Enabled");
         console.log("- SEI Chain Validation: Active");
+        console.log("- Test Users: 3 accounts funded with tokens");
         console.log("=====================================\n");
     }
 }
@@ -280,7 +335,7 @@ contract MockERC20 {
     constructor(string memory _name, string memory _symbol) {
         name = _name;
         symbol = _symbol;
-        totalSupply = 1000000 * 10**18; // 1M tokens
+        totalSupply = 10_000_000 * 10**18; // 10M tokens for testing
         balanceOf[msg.sender] = totalSupply;
         emit Transfer(address(0), msg.sender, totalSupply);
     }
