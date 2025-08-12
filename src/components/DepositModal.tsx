@@ -225,8 +225,8 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         }
         
         .deposit-modal-content {
-          width: 640px !important;
-          max-width: 640px !important;
+          width: 920px !important;
+          max-width: 920px !important;
           min-width: 320px !important;
           position: relative !important;
           margin: 0 !important;
@@ -249,18 +249,18 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         
         html body .deposit-modal-content,
         html body div.deposit-modal-content {
-          max-width: 640px !important;
-          width: 640px !important;
+          max-width: 860px !important;
+          width: 860px !important;
         }
         
         /* NUCLEAR OPTION: Ultimate width enforcement */
         .deposit-modal-container > .deposit-modal-content,
         div.deposit-modal-container > div.deposit-modal-content {
-          width: 640px !important;
-          max-width: 640px !important;
+          width: 920px !important;
+          max-width: 920px !important;
           min-width: 320px !important;
           flex: none !important;
-          flex-basis: 640px !important;
+          flex-basis: 920px !important;
           flex-grow: 0 !important;
           flex-shrink: 0 !important;
         }
@@ -280,12 +280,12 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         
         /* Restore modal content width specifically */
         .deposit-modal-container .deposit-modal-content {
-          width: 640px !important;
-          max-width: 640px !important;
+          width: 920px !important;
+          max-width: 920px !important;
         }
         
         /* Responsive handling for smaller screens - Enhanced */
-        @media (max-width: 680px) {
+        @media (max-width: 960px) {
           .deposit-modal-container {
             padding: 15px !important;
           }
@@ -308,11 +308,11 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         }
         
         /* Desktop size enforcement */
-        @media (min-width: 681px) {
+        @media (min-width: 961px) {
           .deposit-modal-content {
-            width: 640px !important;
-            max-width: 640px !important;
-            min-width: 640px !important;
+            width: 920px !important;
+            max-width: 920px !important;
+            min-width: 920px !important;
           }
         }
       `}</style>
