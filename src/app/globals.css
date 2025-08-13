@@ -734,32 +734,327 @@
   }
 }
 
-/* WALLET BUTTON OVERRIDE - MAXIMUM PRIORITY FIXES - ISOLATED V3 */
+/* Essential Navigation & Wallet Styling */
 .wallet-container-override {
   display: flex !important;
-  justify-content: flex-end !important;
   align-items: center !important;
-  margin-left: auto !important;
-  text-decoration: none !important;
+  justify-content: flex-end !important;
   flex-shrink: 0 !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  margin-left: auto !important;
+}
+
+/* Force right-side positioning for navigation buttons */
+.flex.items-center.gap-4.ml-auto {
+  margin-left: auto !important;
+  justify-content: flex-end !important;
+}
+
+/* Clean link styling - remove default underlines */
+nav a {
+  text-decoration: none !important;
+}
+
+nav a:hover {
+  text-decoration: none !important;
+}
+
+nav a:visited {
+  text-decoration: none !important;
+}
+
+nav a:active {
+  text-decoration: none !important;
+}
+
+/* CRITICAL: Enhanced Navigation Isolation and Z-Index */
+nav {
   z-index: 99999 !important;
-  min-width: 120px !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  isolation: isolate !important;
+}
+
+/* OLD NAV-LAUNCH-BTN CSS REMOVED - USING BTN-CYBER NOW */
+
+/* CRITICAL: Remove any body/html spacing that affects navigation */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* NUCLEAR NAVIGATION LAYOUT SOLUTION */
+nav {
+  margin: 0 !important;
+  padding: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  position: fixed !important;
+}
+
+nav .nav-inner-container {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Flexbox navigation container with space-between */
+nav .nav-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 3.5rem !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
   position: relative !important;
-  /* Enhanced force visibility overrides */
-  transform: translateZ(0) !important;
-  backface-visibility: visible !important;
-  perspective: 1000px !important;
-  /* Ensure no layout shifts */
-  min-height: 40px !important;
-  /* Force GPU acceleration */
-  will-change: transform !important;
-  /* Prevent any hiding techniques */
-  clip: auto !important;
-  clip-path: none !important;
-  mask: none !important;
-  -webkit-mask: none !important;
+}
+
+/* Left side navigation */
+nav .nav-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  flex: 0 0 auto !important;
+}
+
+nav .nav-logo-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  text-decoration: none !important;
+  transition: opacity 0.2s !important;
+}
+
+nav .nav-logo-link:hover {
+  opacity: 0.8 !important;
+}
+
+nav .nav-links {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2rem !important;
+}
+
+nav .nav-link {
+  color: hsl(var(--foreground)) !important;
+  text-decoration: none !important;
+  transition: color 0.2s !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+nav .nav-link:hover {
+  color: hsl(var(--primary)) !important;
+}
+
+/* ULTRA HIGH SPECIFICITY - Override Tailwind base completely */
+html body nav .nav-right,
+html body nav div.nav-right,
+html body nav .nav-right[class],
+html body nav div[class*="nav-right"] {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  flex: 0 0 auto !important;
+  float: none !important;
+  transform: none !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* Force the container to respect space-between */
+html body nav .nav-container,
+html body nav div.nav-container,
+html body nav .nav-container[class] {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  text-align: left !important;
+  direction: ltr !important;
+}
+
+/* CLEARFIX for float approach */
+html body nav .nav-container::after {
+  content: "" !important;
+  display: table !important;
+  clear: both !important;
+}
+
+/* FLOAT APPROACH - Sometimes more reliable than flexbox */
+html body nav .nav-left {
+  float: left !important;
+  display: block !important;
+}
+
+html body nav .nav-right {
+  float: right !important;
+  display: block !important;
+}
+
+/* Mobile menu button */
+nav .mobile-menu-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  color: hsl(var(--foreground)) !important;
+  transition: color 0.2s !important;
+}
+
+nav .mobile-menu-btn:hover {
+  color: hsl(var(--primary)) !important;
+}
+
+/* Wallet container */
+nav .wallet-container {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Override ANY conflicting rules */
+nav * {
+  box-sizing: border-box !important;
+}
+
+/* CLEANED UP - REMOVED DEBUG CSS */
+
+/* SIMPLE NAVIGATION LAYOUT - CLEAN APPROACH */
+nav div.simple-nav-container,
+nav .simple-nav-container {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 3.5rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+nav .nav-left-simple {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding-left: 0 !important;
+}
+
+nav .nav-right-simple,
+html body nav .nav-right-simple,
+html body nav div.nav-right-simple {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding-right: 1rem !important;
+  margin-right: -1rem !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+}
+
+nav .wallet-container {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Navigation Launch App Button - Use btn-cyber styling */
+nav .btn-cyber {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  transition: all 300ms ease-in-out !important;
+  font-size: 0.875rem !important;
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  color: hsl(216 100% 4%) !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 140px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  gap: 0.5rem !important;
+}
+
+nav .btn-cyber:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
+  color: hsl(216 100% 4%) !important;
+}
+
+/* Specific width fix for Link-based Launch App button */
+nav a.btn-cyber {
+  width: 140px !important;
+  min-width: 140px !important;
+}
+
+/* ULTRA HIGH SPECIFICITY - Force btn-cyber styling over any conflicts */
+html body nav a.btn-cyber,
+html body nav .nav-right-simple a.btn-cyber {
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
+  color: hsl(216 100% 4%) !important;
+  border: none !important;
+  text-decoration: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+}
+
+/* Hide navigation links on landing page - only show logo and right-side buttons */
+nav .nav-links {
+  display: none !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  nav .nav-brand {
+    display: none !important;
+  }
+}
+
+/* Ensure hamburger menu is hidden on desktop */
+@media (min-width: 768px) {
+  nav button[class*="md:hidden"] {
+    display: none !important;
+  }
+}
+
+/* CRITICAL: Wallet Container Right-Side Positioning */
+.wallet-container-override {
+  position: relative !important;
+  z-index: 99999 !important;
+  isolation: isolate !important;
+  margin-left: auto !important;
+}
+
+/* CRITICAL: Fix Content Overlapping Navigation */
+.min-h-screen {
+  padding-top: 4rem !important;
+}
+
+/* CRITICAL: Specific Page Layout Fixes */
+.vault-page,
+[class*="min-h-screen"] {
+  padding-top: 4rem !important;
 }
 
 /* CRITICAL: Prevent wallet styles from affecting main page containers */
@@ -838,34 +1133,6 @@
   transform: none !important;
 }
 
-/* Ensure Connect Wallet Button is Always Visible - Scoped V3 */
-nav .wallet-container-override .btn-cyber,
-nav .wallet-container-override button,
-nav .wallet-container-override > *,
-nav .wallet-container-override * {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  position: relative !important;
-  z-index: 100000 !important;
-  /* Enhanced force rendering overrides */
-  will-change: transform !important;
-  contain: layout !important;
-  transform: translateZ(0) !important;
-  /* Additional visibility guarantees */
-  min-height: 32px !important;
-  min-width: 100px !important;
-  /* Prevent common CSS hiding patterns */
-  max-height: none !important;
-  overflow: visible !important;
-  white-space: nowrap !important;
-}
-
-/* CRITICAL: Limit wallet override max-width to only nav context */
-nav .wallet-container-override {
-  max-width: none !important;
-}
 
 /* Ensure main content containers are not affected */
 .vault-page-container-isolated * {
@@ -878,233 +1145,13 @@ nav .wallet-container-override {
   max-width: 72rem !important;
 }
 
-/* RainbowKit Custom Button Override - Enhanced */
-.wallet-container-override [data-testid="rk-connect-button"],
-.wallet-container-override [data-testid="rk-account-button"],
-.wallet-container-override [data-testid="rk-chain-button"],
-/* Additional RainbowKit selectors */
-.wallet-container-override [data-rk],
-.wallet-container-override [class*="iekbcc"],
-.wallet-container-override [class*="rk-"] {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 100001 !important;
-  position: relative !important;
-  /* Force button appearance */
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
-  color: hsl(var(--primary-foreground)) !important;
-  border: none !important;
-  border-radius: calc(var(--radius) - 2px) !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 600 !important;
-  min-width: 120px !important;
-  cursor: pointer !important;
-}
 
-/* ENHANCED WALLET BUTTON VISIBILITY CLASSES */
-.wallet-force-visible {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  transform: translateZ(0) !important;
-  backface-visibility: visible !important;
-  contain: layout !important;
-  will-change: transform !important;
-}
 
-.wallet-button-visible {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  position: relative !important;
-  z-index: 10000 !important;
-  transform: translateZ(0) !important;
-}
 
-/* Force visibility for all wallet-related elements */
-.wallet-force-visible *,
-.wallet-button-visible *,
-.wallet-container-override .wallet-force-visible,
-.wallet-container-override .wallet-button-visible {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
 
-/* EMERGENCY WALLET BUTTON FIXES - Enhanced Last Resort Overrides */
-/* Handle cases where other CSS might hide the wallet button */
-.wallet-container-override,
-.wallet-container-override button,
-.wallet-container-override [role="button"],
-.wallet-container-override a,
-.wallet-container-override div,
-/* Additional selectors for dynamic content */
-.wallet-container-override span,
-.wallet-container-override [data-state],
-.wallet-container-override [aria-hidden],
-.wallet-container-override [style*="display: none"],
-.wallet-container-override [style*="opacity: 0"],
-.wallet-container-override [style*="visibility: hidden"] {
-  /* Prevent ALL common hiding techniques */
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  height: auto !important;
-  width: auto !important;
-  min-width: 120px !important;
-  max-height: none !important;
-  max-width: none !important;
-  overflow: visible !important;
-  clip: auto !important;
-  clip-path: none !important;
-  transform: translateZ(0) !important;
-  position: relative !important;
-  /* Override inline styles */
-  font-size: inherit !important;
-  line-height: inherit !important;
-  /* Force content to be selectable/clickable */
-  pointer-events: auto !important;
-  user-select: auto !important;
-  -webkit-user-select: auto !important;
-}
 
-/* Specific RainbowKit component overrides */
-[data-rk] {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
 
-/* Navigation container specific fixes - Enhanced */
-header .wallet-container-override,
-nav .wallet-container-override,
-.navigation .wallet-container-override,
-.Navigation .wallet-container-override {
-  margin-left: auto !important;
-  flex-shrink: 0 !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  /* Ensure proper stacking context */
-  isolation: isolate !important;
-  /* Force into own layer */
-  z-index: 99999 !important;
-  /* Prevent parent containers from hiding */
-  contain: none !important;
-}
 
-/* Mobile responsiveness for wallet button */
-@media (max-width: 768px) {
-  .wallet-container-override {
-    min-width: 100px !important;
-  }
-  
-  .wallet-container-override .btn-cyber {
-    font-size: 0.8rem !important;
-    padding: 0.5rem 1rem !important;
-    min-width: 100px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .wallet-container-override {
-    min-width: 90px !important;
-  }
-  
-  .wallet-container-override .btn-cyber {
-    font-size: 0.75rem !important;
-    padding: 0.4rem 0.8rem !important;
-    min-width: 90px !important;
-  }
-}
-
-/* Wallet container styling - Clean production version */
-.wallet-container-override {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 120px;
-  flex-shrink: 0;
-  height: 100%;
-  margin-left: 1rem;
-}
-
-/* Navigation Layout Fix - Enhanced Target Structure */
-nav .max-w-7xl > div.flex.items-center.justify-between,
-nav .max-w-7xl > div[style*="display: flex"],
-nav .max-w-7xl > div:first-child {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  position: relative !important;
-}
-
-nav .max-w-7xl > div.flex.items-center.justify-between > div:last-child,
-nav .max-w-7xl > div[style*="display: flex"] > div:last-child,
-nav .max-w-7xl > div:first-child > div:last-child {
-  margin-left: auto !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  /* Ensure wallet container is always rendered */
-  min-width: 140px !important;
-  height: 100% !important;
-}
-
-/* Custom Navigation Launch Button - Final Working Solution */
-.nav-launch-btn {
-  /* Force Visibility */
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  position: relative !important;
-  z-index: 99999 !important;
-
-  /* Layout & Typography */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.5rem !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 12px !important;
-  font-weight: 600 !important;
-  font-size: 0.875rem !important;
-  min-width: 120px !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
-  
-  /* Visual Styling - Match Hero Button */
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  color: hsl(216 100% 4%) !important;
-  border: none !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  transition: all 300ms ease-in-out !important;
-  
-  /* Remove unwanted text decorations */
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  border-bottom: none !important;
-  outline: none !important;
-}
-
-.nav-launch-btn:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
-  color: hsl(216 100% 4%) !important;
-}
 
 /* Vault Detail Page Specific Overrides - Enhanced Priority & Mobile Support */
 .vault-deposit-enhanced,
@@ -1382,25 +1429,6 @@ nav .max-w-7xl > div:first-child > div:last-child {
   text-decoration-color: transparent !important;
 }
 
-/* Navigation Links - Remove all underlines */
-nav a,
-nav Link,
-.nav-launch-btn {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-}
-
-nav a:hover,
-nav a:focus,
-nav a:active,
-nav a:visited {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-}
 
 /* Global Link Reset - Prevent unwanted underlines */
 a, Link, button {
@@ -1633,16 +1661,6 @@ Link:hover, Link:focus, Link:active, Link:visited {
   letter-spacing: 0.5px !important;
 }
 
-/* Navigation Component Height Fix */
-nav {
-  height: 4rem !important;
-  min-height: 4rem !important;
-}
-
-nav .max-w-7xl > div {
-  height: 4rem !important;
-  min-height: 4rem !important;
-}
 
 /* Enhanced spacing for better visual hierarchy */
 .vault-page-spacing {
@@ -1663,48 +1681,7 @@ nav .max-w-7xl > div {
   }
 }
 
-/* Add subtle visual separator below navigation */
-nav::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.1) 20%, 
-    rgba(0, 245, 212, 0.3) 50%, 
-    rgba(255, 255, 255, 0.1) 80%, 
-    transparent 100%);
-  opacity: 0.5;
-}
 
-/* Navigation Link Clean Class - Ultimate Fix */
-.nav-link-clean {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  background-image: none !important;
-}
-
-.nav-link-clean:hover,
-.nav-link-clean:focus,
-.nav-link-clean:active,
-.nav-link-clean:visited {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  background-image: none !important;
-}
 
 /* Enhanced Visual Hierarchy - Improved Contrast & Spacing */
 .vault-detail-header-card-optimized {
@@ -1789,51 +1766,6 @@ nav::after {
   }
 }
 
-/* ULTIMATE NAVIGATION UNDERLINE FIX - Highest Priority */
-nav,
-nav *,
-.navigation,
-.navigation *,
-.Navigation,
-.Navigation * {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  background-image: none !important;
-  -webkit-text-decoration-skip: none !important;
-  text-decoration-skip: none !important;
-  text-decoration-skip-ink: none !important;
-}
-
-nav a:hover,
-nav a:focus,
-nav a:active,
-nav a:visited,
-nav Link:hover,
-nav Link:focus,
-nav Link:active,
-nav Link:visited,
-.navigation a:hover,
-.navigation a:focus,
-.navigation a:active,
-.navigation a:visited,
-.Navigation a:hover,
-.Navigation a:focus,
-.Navigation a:active,
-.Navigation a:visited {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  background-image: none !important;
-}
 
 /* Enhanced Visual Hierarchy - Improved Content Hierarchy */
 .card-title {
@@ -2069,148 +2001,8 @@ nav Link:visited,
   }
 }
 
-/* COMPREHENSIVE TEXT-DECORATION RESET - Vault Page & Navigation Specific */
-/* Navigation Component Links - Enhanced Priority Fix */
-nav a,
-nav Link,
-nav button,
-.nav-launch-btn,
-.navigation a,
-.navigation Link,
-.navigation button,
-.Navigation a,
-.Navigation Link,
-.Navigation button {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  background-image: none !important;
-  outline: none;
-}
 
-/* Comprehensive Nav Element Text Decoration Reset - Final V2 */
-nav a:hover, nav a:focus, nav a:active, nav a:visited,
-nav Link:hover, nav Link:focus, nav Link:active, nav Link:visited,
-nav button:hover, nav button:focus, nav button:active {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-}
 
-/* Launch Button Specific States - Preserve Visibility */
-.nav-launch-btn:focus, 
-.nav-launch-btn:active {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  text-decoration-thickness: 0 !important;
-  border-bottom: none !important;
-  /* DO NOT remove box-shadow for launch button - it needs it for visibility */
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  color: hsl(216 100% 4%) !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: scale(0.98) !important;
-}
-
-/* Force visibility for button text and icon */
-.nav-launch-btn span,
-.nav-launch-btn svg {
-  color: hsl(216 100% 4%) !important;
-  fill: hsl(216 100% 4%) !important;
-  stroke: hsl(216 100% 4%) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.nav-launch-btn:focus span,
-.nav-launch-btn:active span,
-.nav-launch-btn:focus svg,
-.nav-launch-btn:active svg {
-  color: hsl(216 100% 4%) !important;
-  fill: hsl(216 100% 4%) !important;
-  stroke: hsl(216 100% 4%) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* ULTIMATE FALLBACK - Force visibility with maximum specificity */
-nav .nav-launch-btn,
-.Navigation .nav-launch-btn,
-.navigation .nav-launch-btn {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  color: hsl(216 100% 4%) !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  pointer-events: auto !important;
-  z-index: 99999 !important;
-  position: relative !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.5rem !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 12px !important;
-  font-weight: 600 !important;
-  font-size: 0.875rem !important;
-  min-width: 120px !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
-  text-decoration: none !important;
-  border: none !important;
-  transition: all 300ms ease-in-out !important;
-}
-
-nav .nav-launch-btn span,
-nav .nav-launch-btn svg,
-.Navigation .nav-launch-btn span,
-.Navigation .nav-launch-btn svg,
-.navigation .nav-launch-btn span,
-.navigation .nav-launch-btn svg {
-  color: hsl(216 100% 4%) !important;
-  fill: hsl(216 100% 4%) !important;
-  stroke: hsl(216 100% 4%) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  -webkit-text-fill-color: hsl(216 100% 4%) !important;
-  text-shadow: none !important;
-  font-weight: 600 !important;
-}
-
-/* Hover and interaction states */
-nav .nav-launch-btn:hover,
-.Navigation .nav-launch-btn:hover,
-.navigation .nav-launch-btn:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
-  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
-}
-
-nav .nav-launch-btn:focus,
-nav .nav-launch-btn:active,
-.Navigation .nav-launch-btn:focus,
-.Navigation .nav-launch-btn:active,
-.navigation .nav-launch-btn:focus,
-.navigation .nav-launch-btn:active {
-  transform: scale(0.98) !important;
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  color: hsl(216 100% 4%) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
 
 /* Vault Page Specific Elements */
 .vault-page a,
@@ -2400,91 +2192,7 @@ nav .nav-launch-btn:active,
   width: 100% !important;
 }
 
-/* EMERGENCY VISIBILITY FIXES - Force Button Into View */
-.wallet-container-override {
-  /* Force element into viewport */
-  top: 0 \!important;
-  left: auto \!important;
-  right: 0 \!important;
-  bottom: auto \!important;
-  /* Override any layout constraints */
-  position: fixed \!important;
-  z-index: 999999 \!important;
-  /* Ensure it's in the navigation area */
-  margin-top: 12px \!important;
-  margin-right: 12px \!important;
-}
 
-/* Alternative: Force nav positioning if containers are misplaced */
-nav .wallet-container-override {
-  position: absolute \!important;
-  top: 50% \!important;
-  right: 16px \!important;
-  transform: translateY(-50%) \!important;
-  z-index: 999999 \!important;
-}
-
-/* Force buttons to have visible content */
-/* Wallet Button Styling - Match Launch App Button */
-.wallet-container-override button,
-.wallet-container-override .btn-cyber {
-  /* Layout & Typography */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.5rem !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 12px !important;
-  font-weight: 600 !important;
-  font-size: 0.875rem !important;
-  min-width: 120px !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
-  
-  /* Visual Styling - Match Launch App Button */
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  color: hsl(216 100% 4%) !important;
-  border: none !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  transition: all 300ms ease-in-out !important;
-  
-  /* Force Visibility */
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  position: relative !important;
-  z-index: 99999 !important;
-  
-  /* Remove unwanted text decorations */
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  text-underline-offset: initial !important;
-  text-decoration-color: transparent !important;
-  outline: none !important;
-}
-
-/* Wallet Button Hover States */
-.wallet-container-override button:hover,
-.wallet-container-override .btn-cyber:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
-  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
-  color: hsl(216 100% 4%) !important;
-}
-
-/* Wallet Button Focus/Active States */
-.wallet-container-override button:focus,
-.wallet-container-override button:active,
-.wallet-container-override .btn-cyber:focus,
-.wallet-container-override .btn-cyber:active {
-  transform: scale(0.98) !important;
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  color: hsl(216 100% 4%) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
 
 /* =================================================================
    BULLETPROOF CSS OVERRIDE FIXES - VAULT PAGE SPACING & ALIGNMENT
@@ -2906,34 +2614,6 @@ html body div.vault-page {
    Target: Navigation width, Tab width 100% of header, Zero gap
    ================================================================ */
 
-/* === NAVIGATION WIDTH FIX - Restore full width navigation === */
-.vault-page nav,
-.vault-page header,
-.Navigation,
-.navigation,
-nav.Navigation {
-  max-width: none !important;
-  width: 100vw !important;
-  left: 0 !important;
-  right: 0 !important;
-  margin: 0 !important;
-  position: fixed !important;
-  top: 0 !important;
-  z-index: 50 !important;
-}
-
-/* Navigation inner container */
-.vault-page nav .max-w-7xl,
-.vault-page nav > div,
-.Navigation .max-w-7xl,
-.navigation .max-w-7xl,
-nav > div {
-  max-width: 80rem !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
 
 /* === TAB WIDTH FIX - Force tabs to match header width exactly === */
 .vault-page [data-slot="tabs-list"],
@@ -3066,68 +2746,6 @@ html body div.vault-page .tabs-container-compact {
   z-index: 10 !important;
 }
 
-/* VAULT PAGE CRITICAL FIXES - Navigation and Layout Spacing */
-.vault-page {
-  /* Ensure proper top spacing after fixed navigation */
-  padding-top: 0 !important;
-}
-
-.vault-page .relative.z-10 {
-  /* Override problematic padding-top values */
-  padding-top: 5rem !important; /* 80px - accounts for 64px nav height + 16px buffer */
-}
-
-.vault-page .vault-layout-container {
-  /* Ensure container doesn't get pushed up */
-  margin-top: 0 !important;
-  padding-top: 1rem !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* Fix any container isolation issues */
-.vault-page-container-isolated {
-  /* Remove problematic positioning that was causing push-up effect */
-  position: static !important;
-}
-
-.vault-page-container-isolated .relative.z-10 {
-  /* Override isolation container padding issues */
-  padding-top: 5rem !important;
-}
-
-/* Navigation clearance fix */
-nav + * .vault-page,
-nav ~ * .vault-page {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* Ensure proper spacing for back button */
-.vault-page button.mb-4 {
-  margin-top: 0 !important;
-  margin-bottom: 1rem !important;
-}
-
-/* Header card positioning fix */
-.vault-page .vault-detail-header-card-optimized {
-  margin-top: 0 !important;
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* Responsive navigation clearance */
-@media (max-width: 768px) {
-  .vault-page .relative.z-10 {
-    padding-top: 4.5rem !important; /* Slightly less on mobile */
-  }
-}
-
-@media (min-width: 1024px) {
-  .vault-page .relative.z-10 {
-    padding-top: 5.5rem !important; /* Slightly more on desktop for better spacing */
-  }
-}
 
 /* Clean header width constraint */
 .vault-detail-header-card-optimized {
