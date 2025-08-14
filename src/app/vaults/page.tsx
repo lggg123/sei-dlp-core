@@ -385,10 +385,10 @@ export default function VaultsPage() {
       {/* Navigation */}
       <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
 
-      {/* Main Content */}
-      <div className="relative z-10 pt-16 md:pt-16 lg:pt-20">
+      {/* Main Content - Minimal spacing between navigation and content */}
+      <div className="relative z-10" style={{ paddingTop: '3.5rem' }}>
         {/* Header Section - Enhanced */}
-        <section className="py-6 px-4">
+        <section className="py-0 px-4">
           <div className="container mx-auto max-w-7xl"> {/* Ensure consistent max-width */}
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary">
@@ -780,13 +780,16 @@ export default function VaultsPage() {
               pointerEvents: 'auto',
               width: '100%',
               maxWidth: '28rem',
+              minWidth: '320px',
               height: '600px',
               marginRight: '1rem',
               marginBottom: '5rem',
               borderRadius: '20px',
               boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 245, 212, 0.2)',
               // Force text color inheritance
-              color: '#ffffff'
+              color: '#ffffff',
+              overflow: 'hidden',
+              position: 'relative'
             }}
           >
             {/* Debug Info - Improved Styling */}
@@ -879,6 +882,31 @@ export default function VaultsPage() {
           pointerEvents: 'auto'
         }}
       >
+        {/* Mobile responsive positioning */}
+        <style jsx>{`
+          @media (max-width: 768px) {
+            .ai-chat-button-container-override {
+              bottom: 20px !important;
+              right: 20px !important;
+            }
+            .ai-chat-button-main-override {
+              width: 70px !important;
+              height: 70px !important;
+              padding: 18px !important;
+            }
+          }
+          @media (max-width: 480px) {
+            .ai-chat-button-container-override {
+              bottom: 16px !important;
+              right: 16px !important;
+            }
+            .ai-chat-button-main-override {
+              width: 64px !important;
+              height: 64px !important;
+              padding: 16px !important;
+            }
+          }
+        `}</style>
         <div className="relative" style={{ isolation: 'isolate' }}>
           {/* Ultra-Bright Glow Ring for Maximum Visibility */}
           <div 
@@ -982,19 +1010,20 @@ export default function VaultsPage() {
             </div>
           </button>
           
-          {/* Ultra-Bright Status Indicator */}
+          {/* Ultra-Bright Status Indicator - Fixed positioning to prevent cutoff */}
           {!showChat && (
             <div 
-              className="absolute -top-2 -right-2"
+              className="absolute -top-1 -right-1"
               style={{
-                width: '20px',
-                height: '20px',
+                width: '18px',
+                height: '18px',
                 background: 'radial-gradient(circle, #00ff00 0%, #00cc00 100%)',
                 borderRadius: '50%',
-                border: '3px solid #ffffff',
+                border: '2px solid #ffffff',
                 boxShadow: '0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.4)',
                 animation: 'aiChatPulse 2s ease-in-out infinite',
-                zIndex: 9999999
+                zIndex: 9999999,
+                transform: 'translate(-2px, -2px)' // Ensure it stays within button bounds
               }}
             ></div>
           )}

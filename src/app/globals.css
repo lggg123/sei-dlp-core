@@ -902,6 +902,40 @@ nav .btn-cyber:active {
   }
 }
 
+/* AI Chat Button Animations */
+@keyframes aiChatGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: blur(8px);
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: blur(12px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes aiChatBorderSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes aiChatPulse {
+  0%, 100% {
+    transform: translate(-2px, -2px) scale(1);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.4);
+  }
+  50% {
+    transform: translate(-2px, -2px) scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 255, 0, 1), 0 0 60px rgba(0, 255, 0, 0.6);
+  }
+}
+
 @keyframes gradient-shift {
   0%, 100% {
     background-position: 0% 50%;
