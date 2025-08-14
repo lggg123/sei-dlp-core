@@ -851,7 +851,7 @@ nav .btn-cyber {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  min-width: 140px;
+  min-width: 120px !important; /* Override cyberCompact class */
   background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
   color: hsl(216 100% 4%);
   border: none;
@@ -881,6 +881,34 @@ nav .btn-cyber:hover {
 nav .btn-cyber:active {
   transform: translateY(0) scale(0.98);
   transition-duration: 150ms;
+}
+
+/* Gradient text styling for company name */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease-in-out infinite;
+  
+  /* Fallback for browsers that don't support background-clip: text */
+  color: hsl(180 100% 48%);
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .gradient-text {
+    color: transparent;
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /* Mobile menu button (if needed) */

@@ -29,7 +29,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
   
   const variantClasses = {
     light: "bg-white/95 backdrop-blur-md border-b border-gray-200",
-    dark: "bg-background/95 backdrop-blur-md border-b border-border",
+    dark: "bg-background/95 backdrop-blur-md",
     transparent: "bg-transparent"
   };
 
@@ -52,8 +52,7 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
             className="flex-shrink-0"
           />
           <div className="nav-brand hidden sm:block">
-            <div className="font-bold text-2xl text-foreground">SEI DLP</div>
-            <div className="text-sm text-muted-foreground -mt-1">Dynamic Liquidity Protocol</div>
+            <div className="font-bold text-2xl gradient-text">Yield Delta</div>
           </div>
         </div>
 
