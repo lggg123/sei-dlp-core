@@ -796,245 +796,148 @@ nav {
   position: fixed !important;
 }
 
-nav .nav-inner-container {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+/* ========================================
+   CONSOLIDATED NAVIGATION SYSTEM
+   Clean, single-source CSS for navigation
+   ======================================== */
+
+/* Main navigation container */
+nav .simple-nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 3.5rem;
+  padding: 0 1rem;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-/* Flexbox navigation container with space-between */
-nav .nav-container {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  height: 3.5rem !important;
-  width: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  position: relative !important;
+/* Left side - Logo and brand */
+nav .nav-left-simple {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
-/* Left side navigation */
-nav .nav-left {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  flex: 0 0 auto !important;
+/* Brand text styling */
+nav .nav-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
 }
 
-nav .nav-logo-link {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  text-decoration: none !important;
-  transition: opacity 0.2s !important;
-}
-
-nav .nav-logo-link:hover {
-  opacity: 0.8 !important;
-}
-
-nav .nav-links {
-  display: flex !important;
-  align-items: center !important;
-  gap: 2rem !important;
-}
-
-nav .nav-link {
-  color: hsl(var(--foreground)) !important;
-  text-decoration: none !important;
-  transition: color 0.2s !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-nav .nav-link:hover {
-  color: hsl(var(--primary)) !important;
-}
-
-/* ULTRA HIGH SPECIFICITY - Override Tailwind base completely */
-html body nav .nav-right,
-html body nav div.nav-right,
-html body nav .nav-right[class],
-html body nav div[class*="nav-right"] {
-  position: relative !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 1rem !important;
-  margin-left: auto !important;
-  margin-right: 0 !important;
-  flex: 0 0 auto !important;
-  float: none !important;
-  transform: none !important;
-  left: auto !important;
-  right: auto !important;
-}
-
-/* Force the container to respect space-between */
-html body nav .nav-container,
-html body nav div.nav-container,
-html body nav .nav-container[class] {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  text-align: left !important;
-  direction: ltr !important;
-}
-
-/* CLEARFIX for float approach */
-html body nav .nav-container::after {
-  content: "" !important;
-  display: table !important;
-  clear: both !important;
-}
-
-/* FLOAT APPROACH - Sometimes more reliable than flexbox */
-html body nav .nav-left {
-  float: left !important;
-  display: block !important;
-}
-
-html body nav .nav-right {
-  float: right !important;
-  display: block !important;
-}
-
-/* Mobile menu button */
-nav .mobile-menu-btn {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 2rem !important;
-  height: 2rem !important;
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-  color: hsl(var(--foreground)) !important;
-  transition: color 0.2s !important;
-}
-
-nav .mobile-menu-btn:hover {
-  color: hsl(var(--primary)) !important;
+/* Right side - Action buttons */
+nav .nav-right-simple {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* Wallet container */
 nav .wallet-container {
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
 }
 
-/* Override ANY conflicting rules */
-nav * {
-  box-sizing: border-box !important;
-}
-
-/* CLEANED UP - REMOVED DEBUG CSS */
-
-/* SIMPLE NAVIGATION LAYOUT - CLEAN APPROACH */
-nav div.simple-nav-container,
-nav .simple-nav-container {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  width: 100% !important;
-  height: 3.5rem !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  box-sizing: border-box !important;
-}
-
-nav .nav-left-simple {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  padding-left: 0 !important;
-}
-
-nav .nav-right-simple,
-html body nav .nav-right-simple,
-html body nav div.nav-right-simple {
-  display: flex !important;
-  align-items: center !important;
-  gap: 1rem !important;
-  padding-right: 1rem !important;
-  margin-right: -1rem !important;
-  margin-left: auto !important;
-  flex-shrink: 0 !important;
-}
-
-nav .wallet-container {
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Navigation Launch App Button - Use btn-cyber styling */
+/* Launch App Button - Clean cyber styling */
 nav .btn-cyber {
-  position: relative !important;
-  overflow: hidden !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 12px !important;
-  font-weight: 600 !important;
-  transition: all 300ms ease-in-out !important;
-  font-size: 0.875rem !important;
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  color: hsl(216 100% 4%) !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
-  border: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 140px !important;
-  text-decoration: none !important;
-  cursor: pointer !important;
-  white-space: nowrap !important;
-  gap: 0.5rem !important;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-width: 140px;
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+  color: hsl(216 100% 4%);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+  box-shadow: 
+    0 0 20px hsl(180 100% 48% / 0.3), 
+    0 0 40px hsl(180 100% 48% / 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 nav .btn-cyber:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2) !important;
-  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%)) !important;
-  color: hsl(216 100% 4%) !important;
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%));
+  box-shadow: 
+    0 0 30px hsl(180 100% 48% / 0.4), 
+    0 0 60px hsl(180 100% 48% / 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* Specific width fix for Link-based Launch App button */
-nav a.btn-cyber {
-  width: 140px !important;
-  min-width: 140px !important;
+nav .btn-cyber:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 150ms;
 }
 
-/* ULTRA HIGH SPECIFICITY - Force btn-cyber styling over any conflicts */
-html body nav a.btn-cyber,
-html body nav .nav-right-simple a.btn-cyber {
-  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%)) !important;
-  color: hsl(216 100% 4%) !important;
-  border: none !important;
-  text-decoration: none !important;
-  border-radius: 12px !important;
-  box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1) !important;
+/* Mobile menu button (if needed) */
+nav .mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: hsl(var(--foreground));
+  transition: color 0.2s;
 }
 
-/* Hide navigation links on landing page - only show logo and right-side buttons */
-nav .nav-links {
-  display: none !important;
+nav .mobile-menu-btn:hover {
+  color: hsl(var(--primary));
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
+  nav .simple-nav-container {
+    padding: 0 0.75rem;
+  }
+  
   nav .nav-brand {
-    display: none !important;
+    display: none;
+  }
+  
+  nav .btn-cyber {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  nav .simple-nav-container {
+    padding: 0 0.5rem;
+  }
+  
+  nav .nav-right-simple {
+    gap: 0.5rem;
+  }
+  
+  nav .btn-cyber {
+    padding: 0.5rem 1rem;
+    min-width: 100px;
+    font-size: 0.75rem;
   }
 }
 
 /* Ensure hamburger menu is hidden on desktop */
 @media (min-width: 768px) {
   nav button[class*="md:hidden"] {
-    display: none !important;
+    display: none;
   }
 }
 
