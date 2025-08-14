@@ -1013,13 +1013,13 @@ nav .mobile-menu-btn:hover {
 
 /* CRITICAL: Fix Content Overlapping Navigation */
 .min-h-screen {
-  padding-top: 4rem !important;
+  padding-top: 3.5rem !important;
 }
 
 /* CRITICAL: Specific Page Layout Fixes */
 .vault-page,
 [class*="min-h-screen"] {
-  padding-top: 4rem !important;
+  padding-top: 3.5rem !important;
 }
 
 /* CRITICAL: Prevent wallet styles from affecting main page containers */
@@ -1629,14 +1629,14 @@ Link:hover, Link:focus, Link:active, Link:visited {
 
 /* Enhanced spacing for better visual hierarchy */
 .vault-page-spacing {
-  padding-top: 4rem; /* Reduced from 5rem (80px) to 4rem (64px) for better visual flow */
-  min-height: calc(100vh - 4rem);
+  padding-top: 3.5rem; /* Matched to navigation height (56px) for tighter spacing */
+  min-height: calc(100vh - 3.5rem);
 }
 
 /* Responsive spacing adjustments for optimal navigation-to-content flow */
 @media (max-width: 768px) {
   .vault-page-spacing {
-    padding-top: 3.5rem; /* 56px for tablet */
+    padding-top: 3.25rem; /* 52px for tablet - slightly tighter */
   }
 }
 
@@ -2036,6 +2036,71 @@ Link:hover, Link:focus, Link:active, Link:visited {
   .btn-enhanced:hover,
   .tab-trigger-compact:hover {
     transform: none !important;
+  }
+}
+
+/* Logo Animation Override - Force animations to work */
+nav .logo-animation-override,
+nav .logo-animation-override *,
+nav .logo-animation-override svg,
+nav .logo-animation-override svg *,
+.vault-page nav .logo-animation-override,
+.vault-page nav .logo-animation-override *,
+.vault-page nav .logo-animation-override svg,
+.vault-page nav .logo-animation-override svg * {
+  animation-duration: revert !important;
+  animation-iteration-count: revert !important;
+  transition-duration: revert !important;
+  transform: revert !important;
+}
+
+/* CSS-based logo animations as fallback */
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(155, 93, 229, 0.3)); }
+  50% { filter: drop-shadow(0 0 15px rgba(155, 93, 229, 0.8)); }
+}
+
+@keyframes logoRotate {
+  0% { transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) scale(1); }
+  25% { transform: perspective(1000px) rotateX(15deg) rotateY(-5deg) scale(1.05); }
+  50% { transform: perspective(1000px) rotateX(5deg) rotateY(-15deg) scale(1); }
+  75% { transform: perspective(1000px) rotateX(15deg) rotateY(-5deg) scale(1.05); }
+  100% { transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) scale(1); }
+}
+
+/* Apply animations with highest specificity */
+nav .logo-animation-override,
+.vault-page nav .logo-animation-override {
+  animation: logoPulse 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite !important;
+  transform: revert !important;
+}
+
+nav .logo-animation-override svg,
+.vault-page nav .logo-animation-override svg {
+  animation: logoRotate 8s ease-in-out infinite !important;
+  transform: revert !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-animation-override *,
+  .logo-animation-override svg *,
+  .logo-animation-override animate {
+    animation-duration: revert !important;
+    animation-iteration-count: revert !important;
+    transition-duration: revert !important;
+  }
+  
+  .logo-animation-override {
+    animation: logoPulse 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
+  }
+
+  .logo-animation-override svg {
+    animation: logoRotate 8s ease-in-out infinite;
   }
 }
 

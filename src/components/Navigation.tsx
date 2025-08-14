@@ -1,9 +1,10 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Logo from './Logo';
+import { gsap } from 'gsap';
 
 const WalletConnectButton = dynamic(
   () => import('./WalletConnectButton').then(mod => ({ default: mod.WalletConnectButton })),
@@ -25,6 +26,8 @@ interface NavigationProps {
 }
 
 export function Navigation({ variant = 'transparent', className = '', showWallet = true, showLaunchApp = true }: NavigationProps) {
+  const logoRef = useRef<HTMLDivElement>(null);
+  
   const baseClasses = "fixed top-0 left-0 right-0 z-50 h-14 transition-all duration-300 m-0 p-0";
   
   const variantClasses = {
@@ -32,6 +35,45 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
     dark: "bg-background/95 backdrop-blur-md",
     transparent: "bg-transparent"
   };
+
+  // GSAP Logo Animation - Professional breathe effect
+  useEffect(() => {
+    if (!logoRef.current) return;
+
+    const logoElement = logoRef.current;
+    
+    // Subtle breathing effect - professional and calming
+    const tl = gsap.timeline({ repeat: -1, yoyo: true });
+    
+    tl.to(logoElement, {
+      scale: 1.05,
+      filter: 'drop-shadow(0 0 12px rgba(155, 93, 229, 0.4))',
+      duration: 3,
+      ease: 'sine.inOut'
+    });
+
+    // Professional hover enhancement
+    const hoverTl = gsap.timeline({ paused: true });
+    hoverTl.to(logoElement, {
+      scale: 1.1,
+      filter: 'drop-shadow(0 0 20px rgba(155, 93, 229, 0.6))',
+      duration: 0.3,
+      ease: 'power2.out'
+    });
+
+    const handleMouseEnter = () => hoverTl.play();
+    const handleMouseLeave = () => hoverTl.reverse();
+
+    logoElement.addEventListener('mouseenter', handleMouseEnter);
+    logoElement.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      tl.kill();
+      hoverTl.kill();
+      logoElement.removeEventListener('mouseenter', handleMouseEnter);
+      logoElement.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   return (
     <nav 
@@ -46,13 +88,31 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
       <div className="simple-nav-container">
         {/* LEFT SIDE */}
         <div className="nav-left-simple">
-          <Logo 
-            variant="icon" 
-            size={48} 
-            className="flex-shrink-0"
-          />
+          <div 
+            ref={logoRef}
+            className="logo-animation-gsap"
+            style={{
+              transformStyle: 'preserve-3d'
+            }}
+          >
+            <Logo 
+              variant="icon" 
+              size={48} 
+              animated={false}
+              className="flex-shrink-0"
+            />
+          </div>
           <div className="nav-brand hidden sm:block">
-            <div className="font-bold text-2xl gradient-text">Yield Delta</div>
+            <div 
+              className="font-bold gradient-text"
+              style={{ 
+                fontSize: '2rem',
+                lineHeight: '1.2',
+                fontWeight: '800'
+              }}
+            >
+              Yield Delta
+            </div>
           </div>
         </div>
 

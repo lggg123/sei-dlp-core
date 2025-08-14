@@ -175,13 +175,30 @@ export const useVaultStore = create<VaultState>()(
         }
         
         if (state.riskFilter) {
-          // Map risk levels based on APY ranges (this is a simple example)
-          const riskMapping = (apy: number) => {
-            if (apy < 15) return 'Low'
-            if (apy < 25) return 'Medium'
+          // Map risk levels based on APY ranges with strategy adjustments
+          const riskMapping = (apy: number, strategy: string) => {
+            const apyPercentage = apy * 100; // Convert decimal to percentage
+            
+            // Strategy-based risk adjustments
+            const strategyRiskModifier = {
+              'stable_max': -5,          // Stablecoin strategies are less risky
+              'concentrated_liquidity': 5, // Concentrated liquidity has impermanent loss risk
+              'arbitrage': 3,            // Arbitrage has execution risk
+              'yield_farming': 2,        // Standard farming risk
+              'hedge': 0,                // Hedge strategies are balanced
+              'sei_hypergrowth': 8,      // High growth = high risk
+              'blue_chip': -2,           // Blue chip assets are safer
+              'delta_neutral': -3        // Delta neutral strategies reduce market risk
+            };
+            
+            const modifier = strategyRiskModifier[strategy as keyof typeof strategyRiskModifier] || 0;
+            const adjustedApy = apyPercentage + modifier;
+            
+            if (adjustedApy < 15) return 'Low'
+            if (adjustedApy < 25) return 'Medium'
             return 'High'
           }
-          filtered = filtered.filter((vault) => riskMapping(vault.apy) === state.riskFilter)
+          filtered = filtered.filter((vault) => riskMapping(vault.apy, vault.strategy) === state.riskFilter)
         }
         
         // Apply sorting

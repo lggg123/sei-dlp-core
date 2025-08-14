@@ -38,9 +38,26 @@ const formatCurrency = (amount: number) => {
   return `${amount.toFixed(0)}`
 }
 
-const getRiskLevel = (apy: number): 'Low' | 'Medium' | 'High' => {
-  if (apy < 15) return 'Low'
-  if (apy < 25) return 'Medium'
+const getRiskLevel = (apy: number, strategy?: string): 'Low' | 'Medium' | 'High' => {
+  const apyPercentage = apy * 100; // Convert decimal to percentage
+  
+  // Strategy-based risk adjustments
+  const strategyRiskModifier = {
+    'stable_max': -5,          // Stablecoin strategies are less risky
+    'concentrated_liquidity': 5, // Concentrated liquidity has impermanent loss risk
+    'arbitrage': 3,            // Arbitrage has execution risk
+    'yield_farming': 2,        // Standard farming risk
+    'hedge': 0,                // Hedge strategies are balanced
+    'sei_hypergrowth': 8,      // High growth = high risk
+    'blue_chip': -2,           // Blue chip assets are safer
+    'delta_neutral': -3        // Delta neutral strategies reduce market risk
+  };
+  
+  const modifier = strategy ? (strategyRiskModifier[strategy as keyof typeof strategyRiskModifier] || 0) : 0;
+  const adjustedApy = apyPercentage + modifier;
+  
+  if (adjustedApy < 15) return 'Low'
+  if (adjustedApy < 25) return 'Medium'
   return 'High'
 }
 
@@ -110,7 +127,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   }
 
   const vaultColor = getVaultColor(vault.strategy);
-  const riskLevel = getRiskLevel(vault.apy);
+  const riskLevel = getRiskLevel(vault.apy, vault.strategy);
   const isValidAmount = depositAmount && parseFloat(depositAmount) > 0;
 
   const handleDeposit = () => {
