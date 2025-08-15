@@ -183,7 +183,8 @@ const chatScrollbarStyles = `
     .ai-chat-status {
       font-size: 10px !important;
       line-height: 1.3 !important;
-      padding: 0 8px !important;
+      padding: 4px 12px !important;
+      border-radius: 10px !important;
     }
   }
 
@@ -459,11 +460,11 @@ export default function AIChat({
   const getStatusText = () => {
     switch (agentStatus) {
       case 'online':
-        return 'AI Agent Online'
+        return 'Ready to help'
       case 'offline':
-        return 'AI Agent Offline (Using Fallback)'
+        return 'Limited mode'
       default:
-        return 'Checking AI Agent...'
+        return 'Connecting...'
     }
   }
 
@@ -475,11 +476,11 @@ export default function AIChat({
       <div 
         className={`ai-chat-override flex flex-col rounded-xl ${className}`}
         style={{
-          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(16, 24, 32, 0.98) 50%, rgba(0, 0, 0, 0.95) 100%)',
-          backdropFilter: 'blur(20px)',
-          border: 'none',
-          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 245, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-          borderRadius: '20px',
+          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.92) 0%, rgba(16, 24, 32, 0.95) 30%, rgba(8, 16, 24, 0.96) 70%, rgba(0, 0, 0, 0.92) 100%)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 32px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 245, 212, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 20px rgba(0, 245, 212, 0.05)',
+          borderRadius: '24px',
           overflow: 'hidden',
           position: 'relative',
           width: '100%',
@@ -488,14 +489,15 @@ export default function AIChat({
       >
       {/* Header */}
       <div 
-        className="flex items-center justify-between p-4"
+        className="flex items-center justify-between p-5"
         style={{
-          borderBottom: '1px solid rgba(0, 245, 212, 0.3)',
-          background: 'linear-gradient(135deg, rgba(0, 245, 212, 0.1) 0%, rgba(155, 93, 229, 0.05) 100%)'
+          borderBottom: '1px solid rgba(0, 245, 212, 0.25)',
+          background: 'linear-gradient(135deg, rgba(0, 245, 212, 0.12) 0%, rgba(155, 93, 229, 0.08) 50%, rgba(0, 245, 212, 0.06) 100%)',
+          backdropFilter: 'blur(12px)'
         }}
       >
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <div className="relative flex items-center justify-center">
             <Bot 
               className={`w-6 h-6 transition-all duration-300 ${agentStatus === 'online' ? 'ai-avatar' : ''}`}
               style={{ color: '#00f5d4' }}
@@ -504,9 +506,9 @@ export default function AIChat({
               {getStatusIcon()}
             </div>
           </div>
-          <div>
+          <div className="flex flex-col justify-center">
             <h3 
-              className="font-bold tracking-tight"
+              className="font-bold tracking-tight leading-none"
               style={{ 
                 color: '#ffffff',
                 fontSize: '17px',
@@ -515,10 +517,11 @@ export default function AIChat({
                 background: 'linear-gradient(135deg, #ffffff 0%, #00f5d4 100%)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
+                WebkitTextFillColor: 'transparent',
+                lineHeight: '1'
               }}
             >
-              Liqui AI Assistant
+              Liqui Assistant
             </h3>
             <p 
               className="text-xs font-medium"
@@ -526,7 +529,8 @@ export default function AIChat({
                 color: 'rgba(255, 255, 255, 0.8)',
                 fontSize: '12px',
                 fontWeight: '500',
-                marginTop: '2px'
+                marginTop: '4px',
+                lineHeight: '1'
               }}
             >
               {getStatusText()}
@@ -554,11 +558,12 @@ export default function AIChat({
       {/* Messages */}
       <div 
         ref={chatContainerRef}
-        className="ai-chat-messages flex-1 overflow-y-auto max-h-96 p-4 space-y-4"
+        className="ai-chat-messages flex-1 overflow-y-auto max-h-96 p-5 space-y-5"
         style={{
-          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(16, 24, 32, 0.4) 50%, rgba(0, 0, 0, 0.2) 100%)',
+          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(16, 24, 32, 0.3) 30%, rgba(8, 16, 24, 0.35) 70%, rgba(0, 0, 0, 0.15) 100%)',
           scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(0, 245, 212, 0.3) rgba(0, 0, 0, 0.2)'
+          scrollbarColor: 'rgba(0, 245, 212, 0.4) rgba(0, 0, 0, 0.3)',
+          paddingTop: '24px'
         }}
         role="log"
         aria-live="polite"
@@ -601,45 +606,50 @@ export default function AIChat({
                   {message.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
                 <div 
-                  className="message-bubble rounded-lg px-4 py-2"
+                  className="message-bubble px-4 py-3"
                   style={{
                   background: message.sender === 'user' 
                     ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(29, 78, 216, 0.45) 100%)'
                     : message.metadata?.error
                       ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(185, 28, 28, 0.2) 100%)'
-                      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                      : index === 0 
+                        ? 'linear-gradient(135deg, rgba(0, 245, 212, 0.15) 0%, rgba(155, 93, 229, 0.1) 100%)'
+                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%)',
                   border: message.sender === 'user' 
                     ? '1px solid rgba(59, 130, 246, 0.6)'
                     : message.metadata?.error
                       ? '1px solid rgba(239, 68, 68, 0.4)'
-                      : '1px solid rgba(255, 255, 255, 0.2)',
-                  color: message.sender === 'user' 
-                    ? '#ffffff'
-                    : message.metadata?.error
-                      ? '#fecaca'
-                      : '#ffffff',
+                      : index === 0
+                        ? '1px solid rgba(0, 245, 212, 0.4)'
+                        : '1px solid rgba(255, 255, 255, 0.25)',
+                  color: '#ffffff',
                   boxShadow: message.sender === 'user' 
                     ? '0 4px 15px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.1)'
                     : message.metadata?.error
                       ? '0 4px 12px rgba(239, 68, 68, 0.2)'
-                      : '0 4px 12px rgba(0, 0, 0, 0.3)',
-                  backdropFilter: 'blur(12px)' // Enhanced blur for better readability
+                      : index === 0
+                        ? '0 6px 20px rgba(0, 245, 212, 0.2), 0 0 30px rgba(0, 245, 212, 0.1)'
+                        : '0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1)',
+                  backdropFilter: 'blur(16px)',
+                  borderRadius: '16px'
                 }}>
                   <p 
                     className="text-sm leading-relaxed"
                     style={{ 
                       color: '#ffffff !important',
                       fontSize: '14px',
-                      lineHeight: '1.65',
-                      fontWeight: message.sender === 'user' ? '500' : '400',
+                      lineHeight: '1.7',
+                      fontWeight: message.sender === 'user' ? '500' : index === 0 ? '500' : '400',
                       letterSpacing: '0.01em',
                       wordSpacing: '0.02em',
-                      textShadow: message.sender === 'user' ? '0 1px 3px rgba(0, 0, 0, 0.4)' : '0 1px 2px rgba(0, 0, 0, 0.2)', // Better text clarity for all messages
+                      textShadow: message.sender === 'user' || index === 0 ? '0 1px 3px rgba(0, 0, 0, 0.4)' : '0 1px 2px rgba(0, 0, 0, 0.2)',
                       textRendering: 'optimizeLegibility',
-                      WebkitFontSmoothing: 'antialiased'
+                      WebkitFontSmoothing: 'antialiased',
+                      margin: 0,
+                      padding: index === 0 ? '4px 0' : '0'
                     }}
                   >
-                    {message.content}
+                    {index === 0 ? `🎉 ${message.content}` : message.content}
                   </p>
                   {message.confidence !== undefined && message.sender === 'ai' && !message.metadata?.error && (
                     <div 
@@ -674,7 +684,8 @@ export default function AIChat({
                         style={{
                           color: message.confidence > 0.8 ? '#00f5d4' : message.confidence > 0.6 ? '#fbbf24' : '#f59e0b',
                           fontSize: '11px',
-                          fontWeight: '600'
+                          fontWeight: '600',
+                          marginRight: '8px'
                         }}
                       >
                         {Math.round(message.confidence * 100)}% confident
@@ -752,12 +763,13 @@ export default function AIChat({
                 <Bot className="w-4 h-4" />
               </div>
               <div 
-                className="message-bubble rounded-lg px-4 py-3"
+                className="message-bubble px-4 py-3"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(10px)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(16px)',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '16px'
                 }}
               >
                 {isTyping ? (
@@ -787,13 +799,14 @@ export default function AIChat({
 
       {/* Input */}
       <div 
-        className="p-4"
+        className="px-6 py-5"
         style={{
-          borderTop: '1px solid rgba(0, 245, 212, 0.3)',
-          background: 'linear-gradient(135deg, rgba(0, 245, 212, 0.05) 0%, rgba(155, 93, 229, 0.03) 100%)'
+          borderTop: '1px solid rgba(0, 245, 212, 0.25)',
+          background: 'linear-gradient(135deg, rgba(0, 245, 212, 0.08) 0%, rgba(155, 93, 229, 0.06) 50%, rgba(0, 245, 212, 0.04) 100%)',
+          backdropFilter: 'blur(12px)'
         }}
       >
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <input
             ref={inputRef}
             type="text"
@@ -802,25 +815,30 @@ export default function AIChat({
             onKeyDown={handleKeyDown}
             onFocus={(e) => {
               handleInputFocus();
-              e.target.style.borderColor = 'rgba(0, 245, 212, 0.5)';
-              e.target.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%)';
-              e.target.style.boxShadow = '0 0 20px rgba(0, 245, 212, 0.2)';
+              e.target.style.borderColor = 'rgba(0, 245, 212, 0.6)';
+              e.target.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%)';
+              e.target.style.boxShadow = '0 0 25px rgba(0, 245, 212, 0.3), 0 4px 15px rgba(0, 0, 0, 0.2)';
             }}
             onBlur={(e) => {
               handleInputBlur();
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              e.target.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%)';
-              e.target.style.boxShadow = 'none';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+              e.target.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.06) 100%)';
+              e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08)';
             }}
             placeholder="Ask about vault optimization, rebalancing, predictions..."
-            className={`ai-chat-input flex-1 rounded-lg px-4 py-2 transition-all duration-300 ${isInputFocused ? 'input-focused' : ''}`}
+            className={`ai-chat-input flex-1 rounded-lg px-4 py-3 transition-all duration-300 ${isInputFocused ? 'input-focused' : ''}`}
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%) !important',
-              border: '1px solid rgba(255, 255, 255, 0.2) !important',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.06) 100%) !important',
+              border: '1px solid rgba(255, 255, 255, 0.25) !important',
               color: '#ffffff !important',
               fontSize: '14px !important',
-              backdropFilter: 'blur(10px)',
-              outline: 'none'
+              fontWeight: '400',
+              letterSpacing: '0.01em',
+              backdropFilter: 'blur(16px)',
+              outline: 'none',
+              minHeight: '48px',
+              borderRadius: '14px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
             }}
             disabled={isLoading}
             aria-label="Chat input"
@@ -829,15 +847,18 @@ export default function AIChat({
           <button
             onClick={sendMessage}
             disabled={!inputMessage.trim() || isLoading}
-            className="send-button flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-white disabled:cursor-not-allowed"
+            className="send-button flex-shrink-0 w-12 h-12 flex items-center justify-center text-white disabled:cursor-not-allowed"
             style={{
               background: !inputMessage.trim() || isLoading 
                 ? 'linear-gradient(135deg, rgba(107, 114, 128, 0.5) 0%, rgba(75, 85, 99, 0.6) 100%)'
                 : 'linear-gradient(135deg, #00f5d4 0%, #10b981 50%, #0891b2 100%)',
               boxShadow: !inputMessage.trim() || isLoading 
-                ? 'none'
-                : '0 4px 15px rgba(0, 245, 212, 0.4)',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
+                ? '0 2px 6px rgba(0, 0, 0, 0.15)'
+                : '0 6px 20px rgba(0, 245, 212, 0.4), 0 0 25px rgba(0, 245, 212, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '14px',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
             aria-label={isLoading ? 'Sending message...' : 'Send message'}
           >
@@ -850,33 +871,44 @@ export default function AIChat({
         </div>
         <div 
           id="chat-input-help"
-          className="mt-2 text-xs ai-chat-status"
+          className="mt-3 text-xs ai-chat-status"
           style={{ 
-            color: 'rgba(255, 255, 255, 0.5) !important',
+            color: 'rgba(255, 255, 255, 0.6) !important',
             fontSize: '11px',
-            lineHeight: '1.4',
+            lineHeight: '1.5',
             wordBreak: 'break-word',
             overflow: 'hidden',
             maxWidth: '100%',
             whiteSpace: 'normal',
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '4px',
+            gap: '6px',
             alignItems: 'center',
-            paddingLeft: '4px', // Fix text cutoff on left side
-            paddingRight: '4px' // Ensure right side spacing as well
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: '6px',
+            paddingBottom: '6px',
+            background: 'linear-gradient(135deg, rgba(0, 245, 212, 0.08) 0%, rgba(155, 93, 229, 0.05) 100%)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
           }}
           role="status"
           aria-live="polite"
         >
           <span>Press Enter to send</span>
           <span aria-hidden="true">•</span>
-          <span>Chain ID: 713715 (SEI)</span>
-          <span aria-hidden="true">•</span>
-          {agentStatus === 'online' ? (
-            <span style={{ color: '#00f5d4' }} aria-label="AI Agent status: Connected">AI Agent Connected</span>
-          ) : (
-            <span style={{ color: '#fbbf24' }} aria-label="AI Agent status: Using fallback mode">Using Fallback Mode</span>
+          <span>SEI Network</span>
+          {agentStatus !== 'unknown' && (
+            <>
+              <span aria-hidden="true">•</span>
+              {agentStatus === 'online' ? (
+                <span style={{ color: '#00f5d4' }} aria-label="Assistant status: Ready">Ready</span>
+              ) : (
+                <span style={{ color: '#fbbf24' }} aria-label="Assistant status: Limited features">Limited features</span>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -41,7 +41,7 @@ export function SeiWalletModal({ isOpen, onClose }: SeiWalletModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md wallet-modal-override">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center">
             Connect to SEI Ecosystem

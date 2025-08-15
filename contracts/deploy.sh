@@ -15,7 +15,7 @@ echo ""
 
 # Deploy contracts
 echo "🔧 Deploying contracts..."
-forge script script/Deploy.s.sol --rpc-url $RPC_URL --broadcast --slow
+forge script script/Deploy.s.sol:DeployScript --rpc-url $RPC_URL --broadcast --slow --tc DeployScript
 
 if [ $? -eq 0 ]; then
     echo "✅ Deployment successful!"
@@ -31,7 +31,7 @@ if [ $? -eq 0 ]; then
     echo "1. Copy deployed contract addresses to your .env file"
     echo "2. Import test user private keys into MetaMask (devnet only!)"
     echo "3. Test deposit/withdrawal functionality with funded users"
-    echo "4. Run: forge script script/VerifyTestUsers.s.sol --rpc-url $RPC_URL"
+    echo "4. Run: forge script script/VerifyTestUsers.s.sol:VerifyTestUsersScript --rpc-url $RPC_URL --tc VerifyTestUsersScript"
     echo ""
     
     echo "🎯 Ready for frontend testing!"

@@ -2853,3 +2853,87 @@ body:has(.deposit-modal-container) [class*="container"] {
   min-width: 0 !important;
   box-sizing: border-box !important;
 }
+
+/* Wallet Modal CSS Override Fixes */
+.wallet-modal-override {
+  /* Use explicit RGBA colors instead of problematic CSS variables */
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.wallet-modal-override [data-radix-dialog-content] {
+  background-color: rgba(30, 41, 59, 0.98) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Enhanced text contrast and visibility */
+.wallet-modal-override h1,
+.wallet-modal-override h2,
+.wallet-modal-override h3,
+.wallet-modal-override .text-xl {
+  color: rgba(248, 250, 252, 0.95) !important;
+  font-weight: 600 !important;
+}
+
+.wallet-modal-override .text-sm,
+.wallet-modal-override .text-xs,
+.wallet-modal-override span {
+  color: rgba(203, 213, 225, 0.9) !important;
+}
+
+.wallet-modal-override .text-muted-foreground {
+  color: rgba(148, 163, 184, 0.8) !important;
+}
+
+/* Card styling fixes with better contrast */
+.wallet-modal-override .bg-card,
+.wallet-modal-override [class*="card"] {
+  background-color: rgba(51, 65, 85, 0.8) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+.wallet-modal-override .hover\:bg-secondary\/50:hover {
+  background-color: rgba(71, 85, 105, 0.6) !important;
+}
+
+/* Button styling improvements */
+.wallet-modal-override button {
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  background-color: rgba(51, 65, 85, 0.9) !important;
+  color: rgba(248, 250, 252, 0.95) !important;
+}
+
+.wallet-modal-override button:hover {
+  background-color: rgba(71, 85, 105, 0.9) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+}
+
+/* Status indicators with better visibility */
+.wallet-modal-override .bg-green-500 {
+  background-color: rgb(34, 197, 94) !important;
+}
+
+.wallet-modal-override .bg-yellow-500 {
+  background-color: rgb(234, 179, 8) !important;
+}
+
+.wallet-modal-override .text-green-600 {
+  color: rgb(34, 197, 94) !important;
+}
+
+/* Error styling */
+.wallet-modal-override .border-destructive\/50 {
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+.wallet-modal-override .bg-destructive\/10 {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+.wallet-modal-override .text-destructive {
+  color: rgb(239, 68, 68) !important;
+}

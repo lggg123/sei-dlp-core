@@ -1,0 +1,109 @@
+{
+  "networks": {
+    "sei-devnet": {
+      "chainId": 713715,
+      "rpcUrl": "https://evm-rpc-arctic-1.sei-apis.com",
+      "name": "SEI Devnet (Arctic)",
+      "blockExplorer": "https://seitrace.com",
+      "nativeCurrency": {
+        "name": "SEI",
+        "symbol": "SEI",
+        "decimals": 18
+      }
+    },
+    "sei-mainnet": {
+      "chainId": 1329,
+      "rpcUrl": "https://evm-rpc.sei-apis.com",
+      "name": "SEI Mainnet",
+      "blockExplorer": "https://seitrace.com",
+      "nativeCurrency": {
+        "name": "SEI",
+        "symbol": "SEI",
+        "decimals": 18
+      }
+    }
+  },
+  "contracts": {
+    "deployment-targets": {
+      "script/Deploy.s.sol": "DeployScript",
+      "script/SimpleDeploy.s.sol": "SimpleDeployScript",
+      "script/VerifyTestUsers.s.sol": "VerifyTestUsersScript",
+      "script/FundTestUser.s.sol": "FundTestUserScript"
+    },
+    "main-contracts": [
+      "SEIVault",
+      "VaultFactory", 
+      "AIOracle",
+      "StrategyVault"
+    ],
+    "strategy-contracts": [
+      "ConcentratedLiquidityVault",
+      "YieldFarmingVault",
+      "ArbitrageVault",
+      "HedgeVault",
+      "StableMaxVault",
+      "SeiHypergrowthVault",
+      "BlueChipVault",
+      "DeltaNeutralVault"
+    ],
+    "test-contracts": [
+      "MockERC20"
+    ]
+  },
+  "deployment-order": [
+    "MockERC20",
+    "AIOracle",
+    "VaultFactory",
+    "SEIVault",
+    "StrategyVault",
+    "ConcentratedLiquidityVault",
+    "YieldFarmingVault",
+    "ArbitrageVault",
+    "HedgeVault",
+    "StableMaxVault",
+    "SeiHypergrowthVault",
+    "BlueChipVault",
+    "DeltaNeutralVault"
+  ],
+  "test-users": {
+    "user1": {
+      "address": "0x2222222222222222222222222222222222222222",
+      "type": "Balanced Portfolio",
+      "tokens": {
+        "SEI": "10000000000000000000000",
+        "USDC": "10000000000000000000000",
+        "USDT": "5000000000000000000000",
+        "ETH": "100000000000000000000",
+        "BTC": "5000000000000000000",
+        "ATOM": "1000000000000000000000",
+        "DAI": "5000000000000000000000"
+      }
+    },
+    "user2": {
+      "address": "0x3333333333333333333333333333333333333333",
+      "type": "Conservative Portfolio",
+      "tokens": {
+        "SEI": "5000000000000000000000",
+        "USDC": "5000000000000000000000",
+        "USDT": "2000000000000000000000",
+        "ETH": "25000000000000000000",
+        "BTC": "1000000000000000000",
+        "ATOM": "500000000000000000000",
+        "DAI": "3000000000000000000000"
+      }
+    },
+    "user3": {
+      "address": "0x4444444444444444444444444444444444444444",
+      "type": "Whale Portfolio",
+      "tokens": {
+        "SEI": "100000000000000000000000",
+        "USDC": "50000000000000000000000",
+        "USDT": "25000000000000000000000",
+        "ETH": "500000000000000000000",
+        "BTC": "20000000000000000000",
+        "ATOM": "10000000000000000000000",
+        "DAI": "30000000000000000000000"
+      }
+    }
+  }
+}
