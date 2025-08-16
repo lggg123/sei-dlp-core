@@ -37,7 +37,7 @@ pnpm install && pnpm dev
     --chain-id 713715 \
     --constructor-args $(cast abi-encode "constructor(...)")
 
-todo list: we need to add these pages now as well for proper market analysis
+todo list: we need to add these pages now as well for proper market analysis and also elizaos liqui fixes. the AMMManager I believe is an error which i will check and also we eventually want to use supabase database than the database we are using now looks like the postgresurl should work but it doesnt last time i tried.
 
 localhost:3000/market
 localhost:3000/vaults/deploy
