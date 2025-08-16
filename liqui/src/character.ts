@@ -11,23 +11,18 @@ export const character: Character = {
   
   // SEI DLP-specific plugins following your cross-component flow
   plugins: [
+    // Bootstrap plugin for core functionality - REQUIRED
+    '@elizaos/plugin-bootstrap',
+    
     // AI providers based on your environment
     ...(process.env.ANTHROPIC_API_KEY?.trim() ? ['@elizaos/plugin-anthropic'] : []),
     ...(process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ? ['@elizaos/plugin-google-genai'] : []),
     ...(process.env.OPENAI_API_KEY?.trim() ? ['@elizaos/plugin-openai'] : []),
-    
-    // Bootstrap plugin for core functionality
-    '@elizaos/plugin-bootstrap',
-    
-    // Supabase adapter for production database
-    '@elizaos/adapter-supabase',
   ],
   
   settings: {
     secrets: [
-      'SUPABASE_URL',
-      'SUPABASE_ANON_KEY', 
-      'SUPABASE_SERVICE_ROLE_KEY', // Required for adapter
+      'POSTGRES_URL', // PostgreSQL connection string for ElizaOS
       'SEI_RPC_URL',
       'ANTHROPIC_API_KEY',
       'GOOGLE_GENERATIVE_AI_API_KEY'

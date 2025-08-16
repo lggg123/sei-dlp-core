@@ -109,20 +109,20 @@ export async function POST(request: NextRequest) {
  * Get current market data for symbols
  */
 async function getCurrentMarketData(symbols: string[]) {
-  // Mock market data - replace with actual DEX/CEX API calls
+  // Bull market data - synchronized with deployed smart contracts at $0.50 SEI
   const baseData = {
     'SEI-USDC': {
       symbol: 'SEI-USDC',
-      price: 0.485,
-      change24h: 0.087,
-      changePercent24h: 21.83,
-      volume24h: 15678234,
-      volumeUSD24h: 7603583,
-      high24h: 0.512,
-      low24h: 0.398,
-      marketCap: 485000000,
-      circulatingSupply: 1000000000,
-      totalSupply: 10000000000,
+      price: 0.50, // FIXED: Match smart contract price exactly
+      change24h: 0.10, // Bull market: +$0.10 gain today
+      changePercent24h: 25.0, // Bull market: +25% gain (was +20% base + 5% additional)
+      volume24h: 1000000, // Match contract: 1M SEI volume
+      volumeUSD24h: 500000, // $500K USD volume at $0.50
+      high24h: 0.52, // Bull market high
+      low24h: 0.40, // Previous low before bull run  
+      marketCap: 500000000, // $500M at $0.50 per token
+      circulatingSupply: 1000000000, // 1B SEI circulating
+      totalSupply: 10000000000, // 10B SEI total supply
       liquidity: {
         totalLocked: 125000000,
         sei: 257732474,
@@ -138,17 +138,47 @@ async function getCurrentMarketData(symbols: string[]) {
     },
     'ATOM-SEI': {
       symbol: 'ATOM-SEI',
-      price: 14.25,
-      change24h: -0.125,
-      changePercent24h: -0.87,
-      volume24h: 8934567,
-      volumeUSD24h: 4334234,
-      high24h: 14.78,
-      low24h: 13.89,
+      price: 8.00, // Match smart contract ATOM price
+      change24h: 0.50, // Bull market: +$0.50 gain
+      changePercent24h: 6.67, // Bull market: +6.67% gain
+      volume24h: 10000, // Match contract volumes
+      volumeUSD24h: 80000, // $80K volume at $8.00
+      high24h: 8.25,
+      low24h: 7.50,
       liquidity: {
-        totalLocked: 85000000,
-        atom: 5964912,
-        sei: 175257732
+        totalLocked: 85000000, // $850K TVL
+        atom: 106250, // 850K / 8 = 106,250 ATOM
+        sei: 1700000 // 850K / 0.5 = 1.7M SEI
+      }
+    },
+    'WETH-SEI': {
+      symbol: 'WETH-SEI',
+      price: 2500.00, // Match smart contract ETH price
+      change24h: 150.00, // Bull market: +$150 gain
+      changePercent24h: 6.38, // Bull market: +6.38% gain
+      volume24h: 1000, // Match contract volumes
+      volumeUSD24h: 2500000, // $2.5M volume
+      high24h: 2550.00,
+      low24h: 2350.00,
+      liquidity: {
+        totalLocked: 2100000, // $2.1M TVL
+        weth: 840, // 2.1M / 2500 = 840 ETH
+        sei: 4200000 // 2.1M / 0.5 = 4.2M SEI
+      }
+    },
+    'OSMO-SEI': {
+      symbol: 'OSMO-SEI',
+      price: 1.20, // OSMO price
+      change24h: 0.08, // Bull market gain
+      changePercent24h: 7.14, // +7.14% gain
+      volume24h: 50000,
+      volumeUSD24h: 60000,
+      high24h: 1.25,
+      low24h: 1.10,
+      liquidity: {
+        totalLocked: 500000,
+        osmo: 416667, // 500K / 1.20
+        sei: 1000000 // 500K / 0.50
       }
     }
   }
@@ -173,7 +203,14 @@ async function getHistoricalMarketData(symbols: string[], timeframe: string, lim
     timeframe,
     data: Array.from({ length: limit }, (_, i) => {
       const timestamp = new Date(now.getTime() - (i * timeframeMs))
-      const basePrice = symbol === 'SEI-USDC' ? 0.485 : 14.25
+      // Use exact contract prices for historical data
+      const basePrices: { [key: string]: number } = {
+        'SEI-USDC': 0.50,   // $0.50 SEI
+        'ATOM-SEI': 8.00,   // $8.00 ATOM  
+        'WETH-SEI': 2500.00, // $2,500 ETH
+        'OSMO-SEI': 1.20     // $1.20 OSMO
+      }
+      const basePrice = basePrices[symbol] || 1.00
       
       // Generate realistic price movements
       const volatility = 0.02

@@ -13,7 +13,7 @@ import {
   Service,
   type State,
   logger,
-} from '@elizaos/core';
+} from '@elizaos/core'; 
 import { z } from 'zod';
 import { createUIMessageRoute } from './ui-message-handler.js';
 
@@ -185,15 +185,15 @@ export class StarterService extends Service {
 }
 
 const plugin: Plugin = {
-  name: 'starter',
-  description: 'A starter plugin for Eliza',
-  // Set lowest priority so real models take precedence
-  priority: -1000,
+  name: 'liqui-sei-dlp',
+  description: 'SEI DLP Agent Plugin for yield-delta integration',
+  // Set normal priority to allow real AI models to take precedence
+  priority: 0,
   config: {
     EXAMPLE_PLUGIN_VARIABLE: process.env.EXAMPLE_PLUGIN_VARIABLE,
   },
   async init(config: Record<string, string>) {
-    logger.info('*** Initializing starter plugin ***');
+    logger.info('*** Initializing SEI DLP plugin ***');
     try {
       const validatedConfig = await configSchema.parseAsync(config);
 
@@ -210,27 +210,7 @@ const plugin: Plugin = {
       throw error;
     }
   },
-  models: {
-    [ModelType.TEXT_SMALL]: async (
-      _runtime,
-      { prompt, stopSequences = [] }: GenerateTextParams
-    ) => {
-      return 'Never gonna give you up, never gonna let you down, never gonna run around and desert you...';
-    },
-    [ModelType.TEXT_LARGE]: async (
-      _runtime,
-      {
-        prompt,
-        stopSequences = [],
-        maxTokens = 8192,
-        temperature = 0.7,
-        frequencyPenalty = 0.7,
-        presencePenalty = 0.7,
-      }: GenerateTextParams
-    ) => {
-      return 'Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you...';
-    },
-  },
+  // Remove mock models to allow real AI models to work
   routes: [
     {
       name: 'helloworld',
