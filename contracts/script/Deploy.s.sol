@@ -38,8 +38,8 @@ contract DeployScript is Script {
         // Verify we're deploying to SEI network
         require(block.chainid == SEI_CHAIN_ID, "Must deploy to SEI network");
         
-        // Hardcoded devnet private key (for SEI devnet only, safe for testing)
-        uint256 deployerPrivateKey = 0x123456789abcdef123456789abcdef123456789abcdef123456789abcdef1234; // example key, replace as needed
+        // Use environment variable for private key
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
         
         console.log("Deploying to SEI Network (Chain ID: %s)", block.chainid);
@@ -61,6 +61,10 @@ contract DeployScript is Script {
         // 3. Deploy Vault Factory
         vaultFactory = deployVaultFactory(deployer, aiOracle);
         console.log("Vault Factory deployed at: %s", vaultFactory);
+        
+        // 3.1. Set creation fee to 0 for mock token testing
+        VaultFactory(vaultFactory).setCreationFee(0);
+        console.log("Vault Factory creation fee set to 0 for testing");
         
         // 4. Deploy SEI Vault
         seiVault = deploySEIVault(mockToken, deployer, deployer);
@@ -125,7 +129,7 @@ contract DeployScript is Script {
     }
     
     function deployVaultFactory(address owner, address oracle) internal returns (address) {
-        VaultFactory factory = new VaultFactory(owner, oracle);
+        VaultFactory factory = new VaultFactory(oracle, owner);
         return address(factory);
     }
     
@@ -152,7 +156,7 @@ contract DeployScript is Script {
             aiOracle: aiOracle
         });
         
-        address vault = factory.createVault{value: 0.1 ether}(params);
+        address vault = factory.createVault(params);
         
         return vault;
     }

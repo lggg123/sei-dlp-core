@@ -35,4 +35,17 @@ pnpm install && pnpm dev
   # 2. Verify deployment
   forge verify-contract <CONTRACT_ADDRESS> \
     --chain-id 713715 \
-    --constructor-args $(cast abi-encode "constructor(...)")w
+    --constructor-args $(cast abi-encode "constructor(...)")
+
+todo list: we need to add these pages now as well for proper market analysis
+
+localhost:3000/market
+localhost:3000/vaults/deploy
+
+Executing these trades in optimal order using SEI's fast finality. Monitor progress at:
+http://localhost:3001/portfolio/rebalance
+
+Confirm with "confirm rebalance" to execute these trades. 🚀
+
+Monitor live execution at:
+http://localhost:3001/portfolio/active-trades

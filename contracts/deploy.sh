@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # SEI DLP Devnet Deployment Script
