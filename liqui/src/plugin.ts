@@ -15,6 +15,7 @@ import {
   logger,
 } from '@elizaos/core';
 import { z } from 'zod';
+import { createUIMessageRoute } from './ui-message-handler.js';
 
 /**
  * Define the configuration schema for the plugin with the following properties:
@@ -240,6 +241,58 @@ const plugin: Plugin = {
         res.json({
           message: 'Hello World!',
         });
+      },
+    },
+    {
+      name: 'health',
+      path: '/health',
+      type: 'GET',
+      handler: async (_req: any, res: any) => {
+        // Health check endpoint for the main project to verify agent availability
+        res.json({
+          status: 'online',
+          service: 'eliza-liqui-agent',
+          capabilities: [
+            'vault_analysis',
+            'rebalance_recommendations', 
+            'market_predictions',
+            'sei_optimizations'
+          ],
+          chainId: 713715,
+          timestamp: new Date().toISOString()
+        });
+      },
+    },
+    {
+      name: 'chat',
+      path: '/api/chat',
+      type: 'POST',
+      handler: async (req: any, res: any, runtime: IAgentRuntime) => {
+        try {
+          // Validate request structure
+          const body = req.body;
+          if (!body || !body.content?.text || !body.user) {
+            return res.status(400).json({
+              success: false,
+              error: 'Invalid request format',
+              required: ['content.text', 'user'],
+              received: Object.keys(body || {})
+            });
+          }
+
+          // Create UI message handler for this runtime
+          const messageHandler = createUIMessageRoute(runtime);
+          
+          // Process the message through the UI message handler
+          await messageHandler(req, res);
+        } catch (error) {
+          logger.error('Chat route error:', error);
+          res.status(500).json({
+            success: false,
+            error: 'Internal server error',
+            details: error instanceof Error ? error.message : 'Unknown error'
+          });
+        }
       },
     },
   ],

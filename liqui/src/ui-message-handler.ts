@@ -5,7 +5,6 @@
 
 import { type Character, type Evaluator, type Memory, type Provider, type Action, type Handler, type IAgentRuntime, type State } from '@elizaos/core';
 import { apiClient } from './plugin-overrides.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface UIMessage {
   content: {
@@ -66,10 +65,10 @@ export class UIMessageHandler {
     try {
       // Create memory object for the message
       const memory: Memory = {
-        id: uuidv4() as `${string}-${string}-${string}-${string}-${string}`,
-        entityId: uuidv4() as `${string}-${string}-${string}-${string}-${string}`,
+        id: crypto.randomUUID() as `${string}-${string}-${string}-${string}-${string}`,
+        entityId: crypto.randomUUID() as `${string}-${string}-${string}-${string}-${string}`,
         agentId: this.runtime.agentId,
-        roomId: uuidv4() as `${string}-${string}-${string}-${string}-${string}`,
+        roomId: crypto.randomUUID() as `${string}-${string}-${string}-${string}-${string}`,
         content: {
           text: message.content.text,
           source: message.content.source || 'sei-dlp-dashboard',

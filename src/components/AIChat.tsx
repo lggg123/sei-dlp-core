@@ -309,10 +309,13 @@ export default function AIChat({
     const scrollToBottom = () => {
       if (messagesEndRef.current && chatContainerRef.current) {
         const chatContainer = chatContainerRef.current
-        const isNearBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 100
+        const isNearBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 50
         
-        // Only auto-scroll if user is near the bottom or it's a new message
-        if (isNearBottom || messages.length === 1) {
+        // Always auto-scroll for new messages, especially AI responses
+        const shouldScroll = isNearBottom || messages.length === 1 || 
+                           (messages.length > 0 && messages[messages.length - 1].sender === 'ai')
+        
+        if (shouldScroll) {
           messagesEndRef.current.scrollIntoView({ 
             behavior: 'smooth',
             block: 'end' 
@@ -322,7 +325,7 @@ export default function AIChat({
     }
 
     // Delay scroll to allow for message animation
-    const timeoutId = setTimeout(scrollToBottom, 100)
+    const timeoutId = setTimeout(scrollToBottom, 150)
     return () => clearTimeout(timeoutId)
   }, [messages])
 

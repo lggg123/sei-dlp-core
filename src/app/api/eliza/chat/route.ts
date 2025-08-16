@@ -65,7 +65,17 @@ async function callElizaAgent(data: z.infer<typeof ChatRequestSchema>) {
   const ELIZA_AGENT_URL = process.env.ELIZA_AGENT_URL || 'http://localhost:3000'
   
   try {
-    // Format message for Eliza
+    // First check if the agent is reachable
+    const healthCheck = await fetch(`${ELIZA_AGENT_URL}/health`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(3000) // 3 second timeout for health check
+    })
+    
+    if (!healthCheck.ok) {
+      throw new Error(`Eliza agent health check failed: ${healthCheck.status}`)
+    }
+
+    // Format message for Eliza (correct UIMessage format)
     const elizaMessage = {
       content: {
         text: data.message,
@@ -90,7 +100,7 @@ async function callElizaAgent(data: z.infer<typeof ChatRequestSchema>) {
         'X-Source': 'sei-dlp-dashboard'
       },
       body: JSON.stringify(elizaMessage),
-      signal: AbortSignal.timeout(10000) // 10 second timeout
+      signal: AbortSignal.timeout(15000) // 15 second timeout for AI processing
     })
 
     if (!response.ok) {
@@ -157,7 +167,7 @@ function generateFallbackResponse(message: string, vaultAddress?: string): strin
     return `💰 Vault APY depends on fee capture efficiency, range tightness, and rebalancing frequency. Concentrated liquidity can achieve 15-25% APY in optimal conditions on SEI.`
   }
   
-  return `🤖 I'm a SEI DLP AI assistant specializing in vault optimization. Ask me about rebalancing, range predictions, gas costs, or APY optimization. The main AI agent at localhost:3000 provides more detailed analysis.`
+  return `🤖 I'm a SEI DLP AI assistant running in fallback mode. I can help with basic vault optimization questions. For advanced AI analysis, please ensure the Eliza agent is running at localhost:3000 or set the ELIZA_AGENT_URL environment variable.`
 }
 
 /**
@@ -170,7 +180,7 @@ export async function GET() {
   try {
     const response = await fetch(`${ELIZA_AGENT_URL}/health`, {
       method: 'GET',
-      signal: AbortSignal.timeout(5000)
+      signal: AbortSignal.timeout(3000) // Reduced timeout for faster fallback
     })
     
     return NextResponse.json({
@@ -183,6 +193,7 @@ export async function GET() {
         'market_predictions',
         'sei_optimizations'
       ],
+      fallbackMode: !response.ok,
       timestamp: new Date().toISOString()
     })
   } catch (error) {
@@ -190,7 +201,14 @@ export async function GET() {
       success: false,
       agentStatus: 'offline',
       agentUrl: ELIZA_AGENT_URL,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : 'Connection failed',
+      fallbackMode: true,
+      fallbackCapabilities: [
+        'basic_vault_questions',
+        'rebalancing_guidance',
+        'gas_cost_info',
+        'apy_calculations'
+      ],
       timestamp: new Date().toISOString()
     })
   }
