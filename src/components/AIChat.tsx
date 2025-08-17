@@ -143,7 +143,7 @@ const chatScrollbarStyles = `
     }
 
     .chat-message {
-      margin-bottom: 12px;
+      margin-bottom: 18px;
     }
 
     .message-bubble {
@@ -298,6 +298,7 @@ export default function AIChat({
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [agentStatus, setAgentStatus] = useState<'online' | 'offline' | 'unknown'>('unknown')
+  const [userId, setUserId] = useState<string | null>(null)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -337,9 +338,19 @@ export default function AIChat({
     return () => clearInterval(interval)
   }, [])
 
+  // Get or create user ID on mount
+  useEffect(() => {
+    let currentUserId = localStorage.getItem('liqui-chat-user-id');
+    if (!currentUserId) {
+      currentUserId = crypto.randomUUID();
+      localStorage.setItem('liqui-chat-user-id', currentUserId);
+    }
+    setUserId(currentUserId);
+  }, []);
+
   const checkAgentStatus = async () => {
     try {
-      const response = await fetch('/api/eliza/chat')
+      const response = await fetch('/api/chat')
       const data = await response.json()
       setAgentStatus(data.agentStatus || 'offline')
     } catch (error) {
@@ -349,7 +360,7 @@ export default function AIChat({
   }
 
   const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return
+    if (!inputMessage.trim() || isLoading || !userId) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -367,19 +378,25 @@ export default function AIChat({
     await new Promise(resolve => setTimeout(resolve, 800))
 
     try {
-      const response = await fetch('/api/eliza/chat', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage.content,
-          vaultAddress,
+          content: {
+            text: userMessage.content,
+            source: 'sei-dlp-dashboard'
+          },
+          user: userId,
+          room: userId,
           context: {
             ...context,
-            currentPage: 'vaults'
-          },
-          chainId: 713715
+            vaultAddress,
+            currentPage: 'vaults',
+            timestamp: new Date().toISOString(),
+            chainId: 713715
+          }
         })
       })
 
@@ -561,7 +578,7 @@ export default function AIChat({
       {/* Messages */}
       <div 
         ref={chatContainerRef}
-        className="ai-chat-messages flex-1 overflow-y-auto max-h-96 p-5 space-y-5"
+        className="ai-chat-messages flex-1 overflow-y-auto max-h-96 p-5 space-y-8"
         style={{
           background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(16, 24, 32, 0.3) 30%, rgba(8, 16, 24, 0.35) 70%, rgba(0, 0, 0, 0.15) 100%)',
           scrollbarWidth: 'thin',

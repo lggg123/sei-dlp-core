@@ -1,4 +1,5 @@
 import { logger, type IAgentRuntime, type Project, type ProjectAgent } from '@elizaos/core';
+import bootstrapPlugin from '@elizaos/plugin-bootstrap';
 import starterPlugin from './plugin.ts';
 import seiYieldDeltaPlugin from '../node_modules/@elizaos/plugin-sei-yield-delta/src/index.ts';
 import { character } from './character.ts';
@@ -33,6 +34,7 @@ export const projectAgent: ProjectAgent = {
     initCharacter();
   },
   plugins: [
+    bootstrapPlugin,
     starterPlugin,
     seiYieldDeltaPlugin,
   ].filter(Boolean), // SEI DLP plugin without Supabase adapter

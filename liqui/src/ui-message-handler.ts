@@ -3,7 +3,7 @@
  * Handles messages from the Next.js UI and processes them through Eliza
  */
 
-import { type Character, type Evaluator, type Memory, type Provider, type Action, type Handler, type IAgentRuntime, type State } from '@elizaos/core';
+import { type Character, type Evaluator, type Memory, type Provider, type Action, type Handler, type IAgentRuntime, type State, type Content } from '@elizaos/core';
 import { apiClient } from './plugin-overrides.js';
 
 export interface UIMessage {
@@ -291,12 +291,14 @@ export class UIMessageHandler {
   private async generateCharacterResponse(memory: Memory, state: State): Promise<string> {
     try {
       // Use the runtime's message handler to get an AI-generated response
-      const response = await this.runtime.messageHandlers[0].handler(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const runtime = this.runtime as any;
+      const response = await runtime.messageHandlers.handler(
         this.runtime,
         memory,
         state,
         { isCharacterResponse: true },
-        async (content) => {
+        async (content: Content) => {
           // This callback is called when the AI generates a response
           console.log('AI generated response:', content.text);
         }
@@ -316,8 +318,8 @@ export class UIMessageHandler {
           const response = await fetch(`${apiUrl}/api/market/data?symbols=SEI-USDC`);
           const data = await response.json();
           
-          if (data.success && data.data && data.data[0]) {
-            const seiData = data.data[0];
+          if (data.success && data.data && data.data) {
+            const seiData = data.data;
             const price = seiData.price;
             const change = seiData.change24h;
             const changePercent = seiData.changePercent24h;
