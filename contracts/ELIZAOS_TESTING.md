@@ -106,9 +106,9 @@ echo "1" | ./deploy-enhanced.sh
 - SEI Vault: `0x454CDB15fc808147B549915527FC1CdfC5cE8185`
 
 **Test Users with Funded Mock Tokens:**
-- User1 (Balanced): `0x2222222222222222222222222222222222222222`
-- User2 (Conservative): `0x3333333333333333333333333333333333333333`
-- User3 (Whale): `0x4444444444444444444444444444444444444444`
+- User1 (Balanced): `0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc`
+- User2 (Conservative): `0x90F79bf6EB2c4f870365E785982E1f101E93b906`
+- User3 (Whale): `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65`
 
 ## > ElizaOS Agent Integration
 

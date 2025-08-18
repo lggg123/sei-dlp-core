@@ -17,6 +17,9 @@ import {
 import { z } from 'zod';
 import { createUIMessageRoute } from './ui-message-handler.js';
 
+// Global message handler instance to maintain conversation memory across requests
+let globalUIMessageHandler: any = null;
+
 /**
  * Define the configuration schema for the plugin with the following properties:
  *
@@ -260,11 +263,13 @@ const plugin: Plugin = {
             });
           }
 
-          // Create UI message handler for this runtime
-          const messageHandler = createUIMessageRoute(runtime);
+          // Use singleton UI message handler to maintain conversation memory
+          if (!globalUIMessageHandler) {
+            globalUIMessageHandler = createUIMessageRoute(runtime);
+          }
           
-          // Process the message through the UI message handler
-          await messageHandler(req, res);
+          // Process the message through the persistent UI message handler
+          await globalUIMessageHandler(req, res);
         } catch (error) {
           logger.error('Chat route error:', error);
           res.status(500).json({

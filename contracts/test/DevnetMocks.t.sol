@@ -49,8 +49,8 @@ contract DevnetMocks is Test {
     
     // Test accounts
     address public owner = address(0x1111111111111111111111111111111111111111);
-    address public user1 = address(0x2222222222222222222222222222222222222222);
-    address public user2 = address(0x3333333333333333333333333333333333333333);
+    address public user1 = address(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC);
+    address public user2 = address(0x90F79bf6EB2c4f870365E785982E1f101E93b906);
     address public aiSigner = address(0x7777777777777777777777777777777777777777);
     
     event DevnetMockSetup(string indexed setup, address indexed contractAddress);

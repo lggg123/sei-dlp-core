@@ -350,7 +350,7 @@ export default function AIChat({
 
   const checkAgentStatus = async () => {
     try {
-      const response = await fetch('/api/chat')
+      const response = await fetch('/api/eliza/chat')
       const data = await response.json()
       setAgentStatus(data.agentStatus || 'offline')
     } catch (error) {
@@ -378,25 +378,22 @@ export default function AIChat({
     await new Promise(resolve => setTimeout(resolve, 800))
 
     try {
-      const response = await fetch('/api/chat', {
+      // Send request in the format expected by the eliza route
+      const response = await fetch('/api/eliza/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content: {
-            text: userMessage.content,
-            source: 'sei-dlp-dashboard'
-          },
-          user: userId,
-          room: userId,
+          message: userMessage.content,
+          ...(vaultAddress && vaultAddress.match(/^0x[a-fA-F0-9]{40}$/) ? { vaultAddress } : {}),
           context: {
             ...context,
-            vaultAddress,
             currentPage: 'vaults',
-            timestamp: new Date().toISOString(),
-            chainId: 713715
-          }
+            vaultData: context.vaultData,
+            userPreferences: context.userPreferences
+          },
+          chainId: 713715
         })
       })
 
@@ -423,6 +420,8 @@ export default function AIChat({
         // Update agent status based on response
         if (data.data.metadata?.processingSource === 'eliza-agent') {
           setAgentStatus('online')
+        } else if (data.data.metadata?.processingSource === 'ui-fallback') {
+          setAgentStatus('offline')
         }
       } else {
         throw new Error(data.error || 'Failed to get AI response')
@@ -432,7 +431,7 @@ export default function AIChat({
       
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again or check if the AI agent is running on localhost:3000.`,
+        content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}. The AI agent may be offline - I'm running in fallback mode with basic responses.`,
         sender: 'ai',
         timestamp: new Date(),
         confidence: 0,

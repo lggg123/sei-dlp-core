@@ -11,8 +11,9 @@ export const character: Character = {
   
   // SEI DLP-specific plugins following your cross-component flow
   plugins: [
-    // Bootstrap plugin for core functionality - REQUIRED
-    '@elizaos/plugin-bootstrap',
+    // CORE REQUIRED PLUGINS
+    '@elizaos/plugin-bootstrap',  // Core functionality
+    '@elizaos/plugin-sql',        // Database/world management - REQUIRED for proper operation
     
     // AI providers based on your environment
     ...(process.env.ANTHROPIC_API_KEY?.trim() ? ['@elizaos/plugin-anthropic'] : []),

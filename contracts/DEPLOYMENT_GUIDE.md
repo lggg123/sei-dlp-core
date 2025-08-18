@@ -117,15 +117,15 @@ forge script script/VerifyTestUsers.s.sol:VerifyTestUsersScript \
 ## Test Users
 
 ### User1 (Balanced Portfolio)
-- **Address**: `0x2222222222222222222222222222222222222222`
+- **Address**: `0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc`
 - **Tokens**: 10K SEI, 10K USDC, 5K USDT, 100 ETH, 5 BTC, 1K ATOM, 5K DAI
 
 ### User2 (Conservative Portfolio)  
-- **Address**: `0x3333333333333333333333333333333333333333`
+- **Address**: `0x90F79bf6EB2c4f870365E785982E1f101E93b906`
 - **Tokens**: 5K SEI, 5K USDC, 2K USDT, 25 ETH, 1 BTC, 500 ATOM, 3K DAI
 
 ### User3 (Whale Portfolio)
-- **Address**: `0x4444444444444444444444444444444444444444` 
+- **Address**: `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65` 
 - **Tokens**: 100K SEI, 50K USDC, 25K USDT, 500 ETH, 20 BTC, 10K ATOM, 30K DAI
 
 ## SEI-Specific Optimizations

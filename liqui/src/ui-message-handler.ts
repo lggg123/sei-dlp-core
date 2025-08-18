@@ -3,7 +3,7 @@
  * Handles messages from the Next.js UI and processes them through Eliza
  */
 
-import { type Character, type Evaluator, type Memory, type Provider, type Action, type Handler, type IAgentRuntime, type State, type Content } from '@elizaos/core';
+import { type Character, type Evaluator, type Memory, type Provider, type Action, type Handler, type IAgentRuntime, type State, type Content, type Room, type Entity, ChannelType, type UUID } from '@elizaos/core';
 import { apiClient } from './plugin-overrides.js';
 
 export interface UIMessage {
@@ -67,26 +67,40 @@ export class UIMessageHandler {
     if (!roomId) {
       roomId = crypto.randomUUID();
       this.roomCache.set(user, roomId);
-      
-      // Note: Room creation will be handled by the runtime's memory system
-      console.log(`Generated room ID ${roomId} for user: ${user}`);
+      console.log(`Generated room ${roomId} for user: ${user}`);
     }
     
     return roomId as `${string}-${string}-${string}-${string}-${string}`;
   }
 
   /**
-   * Get or create an entity ID for a user
+   * Get or create an entity ID for a user and establish connection with room
    */
-  private async getOrCreateEntityId(user: string): Promise<`${string}-${string}-${string}-${string}-${string}`> {
+  private async getOrCreateEntityId(user: string, roomId: UUID): Promise<`${string}-${string}-${string}-${string}-${string}`> {
     let entityId = this.entityCache.get(user);
     
     if (!entityId) {
       entityId = crypto.randomUUID();
       this.entityCache.set(user, entityId);
       
-      // Note: Entity creation will be handled by the runtime's memory system
-      console.log(`Generated entity ID ${entityId} for user: ${user}`);
+      // Create the entity properly using ElizaOS runtime methods
+      try {
+        // Use the correct ElizaOS method to ensure connection exists
+        await this.runtime.ensureConnection({
+          entityId: entityId as UUID,
+          userId: entityId as UUID, // userId should be same as entityId for user entities
+          roomId: roomId,
+          userName: user,
+          name: user,
+          source: 'sei-dlp-dashboard',
+          type: ChannelType.DM,
+          worldId: '00000000-0000-0000-0000-000000000000' as UUID,
+          serverId: '00000000-0000-0000-0000-000000000000' as UUID // Add server ID
+        });
+        console.log(`Created/ensured entity ${entityId} for user: ${user}`);
+      } catch (error) {
+        console.warn(`Failed to create entity ${entityId}:`, error);
+      }
     }
     
     return entityId as `${string}-${string}-${string}-${string}-${string}`;
@@ -101,9 +115,18 @@ export class UIMessageHandler {
     try {
       // Get or create proper room and entity IDs for this user
       const roomId = await this.getOrCreateRoomId(message.user);
-      const entityId = await this.getOrCreateEntityId(message.user);
+      const entityId = await this.getOrCreateEntityId(message.user, roomId);
       
-      // Note: Room and participant connections will be handled automatically by the runtime
+      // Ensure the participant is properly connected to the room
+      try {
+        await this.runtime.ensureParticipantInRoom(entityId, roomId);
+        console.log(`Ensured participant ${entityId} is in room ${roomId}`);
+      } catch (error) {
+        console.warn(`Failed to link participant to room:`, error);
+      }
+      
+      console.log(`Memory prepared for room ${roomId} and entity ${entityId}`);
+      
       
       // Create memory object for the message
       const memory: Memory = {
@@ -208,7 +231,7 @@ export class UIMessageHandler {
       confidence = Math.min(0.95, confidence + 0.1); // Higher confidence with AI engine
     } else {
       // Use Eliza's character-based response generation
-      responseText = await this.generateCharacterResponse(memory, state);
+      responseText = await this.generateCharacterResponse(memory);
     }
 
     return {
@@ -288,63 +311,78 @@ export class UIMessageHandler {
   /**
    * Generate character-based response using Eliza's AI models
    */
-  private async generateCharacterResponse(memory: Memory, state: State): Promise<string> {
+  private async generateCharacterResponse(memory: Memory): Promise<string> {
     try {
-      // Use the runtime's message handler to get an AI-generated response
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const runtime = this.runtime as any;
-      const response = await runtime.messageHandlers.handler(
-        this.runtime,
-        memory,
-        state,
-        { isCharacterResponse: true },
-        async (content: Content) => {
-          // This callback is called when the AI generates a response
-          console.log('AI generated response:', content.text);
-        }
-      );
-
-      if (response && response.text) {
-        return response.text;
-      }
-
-      // If no response from AI, check for price-related queries and fetch real data
-      const messageText = (memory.content as ExtendedMemoryContent).text?.toLowerCase() || '';
+      // For now, use intelligent fallback responses
+      // TODO: Integrate with Eliza's model API once properly configured
+      console.log('Using character-based fallback response generation');
       
-      if (messageText.includes('price') && messageText.includes('sei')) {
-        try {
-          // Fetch real SEI price data from the frontend API
-          const apiUrl = process.env.MAIN_PROJECT_API || 'http://localhost:3001';
-          const response = await fetch(`${apiUrl}/api/market/data?symbols=SEI-USDC`);
-          const data = await response.json();
-          
-          if (data.success && data.data && data.data) {
-            const seiData = data.data;
-            const price = seiData.price;
-            const change = seiData.change24h;
-            const changePercent = seiData.changePercent24h;
-            
-            return `🎯 Current SEI price: $${price.toFixed(2)} USD. 24h change: ${change >= 0 ? '+' : ''}$${change.toFixed(3)} (${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%). SEI's 400ms finality makes it perfect for active DLP strategies!`;
-          }
-        } catch (error) {
-          console.warn('Failed to fetch real market data:', error);
-        }
-      }
-
-      // Fallback to default SEI DLP specialist response
-      return `🤖 I'm Liqui, your SEI DLP specialist! I can help with vault optimization, rebalancing strategies, yield predictions, and risk assessment. What specific aspect of your liquidity position would you like to explore?`;
+      const messageText = (memory.content as ExtendedMemoryContent).text?.toLowerCase() || '';
+      return this.generateIntelligentFallback(messageText, memory);
+      
     } catch (error) {
       console.error('Error generating character response:', error);
-      
-      // Enhanced fallback with real market data if available
-      const messageText = (memory.content as ExtendedMemoryContent).text?.toLowerCase() || '';
-      
-      if (messageText.includes('price') && messageText.includes('sei')) {
-        return `💰 I can help you check SEI prices and market data! Our system integrates with real-time APIs to provide accurate pricing for your DLP strategies.`;
-      }
-      
       return `⚡ SEI's 400ms finality is perfect for active liquidity management! How can I help optimize your yield strategies today?`;
     }
+  }
+
+  /**
+   * Generate intelligent fallback responses based on message content with improved context awareness
+   */
+  private generateIntelligentFallback(messageText: string, memory: Memory): string {
+    const vaultAddress = (memory.content as ExtendedMemoryContent).metadata?.vaultAddress;
+    
+    // Check for follow-up questions or clarifications first (better UX)
+    if (messageText.includes('specifically') || messageText.includes('answer that') || messageText.includes('asked about')) {
+      if (messageText.includes('benefit') || messageText.includes('sei')) {
+        return `🔍 You're right - let me be specific about SEI benefits: **Speed**: 400ms finality vs 12+ seconds on Ethereum, **Cost**: $0.15 vs $20+ gas fees, **Efficiency**: parallel processing enables better price discovery, **Yield**: typically 15-30% higher returns due to active management being profitable. Want details on any specific aspect?`;
+      }
+    }
+
+    // Enhanced SEI benefits responses
+    if (messageText.includes('benefit') && messageText.includes('sei')) {
+      return `💡 SEI's key benefits for DLP: 1) **400ms finality** = faster rebalancing, 2) **~$0.15 gas** = profitable micro-adjustments, 3) **Parallel execution** = better DEX performance, 4) **Built-in orderbook** = deeper liquidity. These advantages typically result in 15-30% higher yields compared to Ethereum!`;
+    }
+
+    if (messageText.includes('sei') && (messageText.includes('chain') || messageText.includes('blockchain') || messageText.includes('architecture'))) {
+      return `📊 SEI's blockchain architecture is perfect for liquidity provision! The 400ms block time means you can react to market changes almost instantly, while the low gas costs (~$0.15) make frequent rebalancing profitable. This combination allows for more active strategies and better capital efficiency than slower, expensive chains.`;
+    }
+
+    // Price queries
+    if (messageText.includes('price') && messageText.includes('sei')) {
+      return `💰 Current SEI prices are available in the dashboard! SEI's unique architecture with 400ms finality and ~$0.15 transaction costs makes it ideal for active liquidity strategies. Would you like me to help analyze your vault performance?`;
+    }
+
+    // Rebalancing queries
+    if (messageText.includes('rebalance') || messageText.includes('rebalancing')) {
+      return `⚡ Rebalancing on SEI is incredibly cost-effective! With ~$0.15 gas costs, you can rebalance frequently without eating into profits. I recommend rebalancing when utilization drops below 60% or when price moves beyond your active range. ${vaultAddress ? `For vault ${vaultAddress.slice(0, 8)}..., ` : ''}check the dashboard for current metrics!`;
+    }
+
+    // Vault-specific queries
+    if (vaultAddress) {
+      return `🎯 Analyzing vault ${vaultAddress.slice(0, 8)}... on SEI! This vault benefits from SEI's lightning-fast 400ms finality. Check the dashboard for detailed metrics like TVL, APY, and impermanent loss. Need help optimizing your position or exploring rebalancing strategies?`;
+    }
+
+    // Yield/APY queries
+    if (messageText.includes('yield') || messageText.includes('apy') || messageText.includes('return')) {
+      return `📈 SEI DLP yields are typically 15-30% higher than Ethereum due to low gas costs enabling active management! With rebalancing costs at just ~$0.15, you can capture more fees and minimize IL. Check the vaults dashboard for current opportunities!`;
+    }
+
+    // General greeting or help
+    if (messageText.includes('hello') || messageText.includes('hi') || messageText.includes('help')) {
+      return `👋 Hello! I'm Liqui, your SEI DLP AI assistant! I specialize in vault optimization, rebalancing strategies, and yield maximization on SEI's lightning-fast blockchain. SEI's 400ms finality and ~$0.15 gas costs make it perfect for active liquidity provision. How can I help optimize your strategy today?`;
+    }
+
+    // Default response with variation to reduce repetition
+    const defaultResponses = [
+      `🤖 I'm Liqui, your SEI DLP specialist! I can help with vault analysis, rebalancing strategies, yield optimization, and risk assessment. SEI's 400ms finality makes it perfect for active liquidity management. What would you like to explore?`,
+      `🔄 I can help with more specific details about SEI DLP strategies! Feel free to ask about vault analysis, rebalancing optimization, yield calculations, or risk management. What specific aspect would you like to explore further?`,
+      `⚡ Ready to help optimize your SEI DLP experience! I specialize in yield strategies, vault performance, and rebalancing recommendations. SEI's low gas costs make active management profitable. How can I assist you?`
+    ];
+    
+    // Use a simple rotation based on message length to add variety
+    const responseIndex = messageText.length % defaultResponses.length;
+    return defaultResponses[responseIndex];
   }
 
   /**

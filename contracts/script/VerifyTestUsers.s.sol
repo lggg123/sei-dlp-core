@@ -12,9 +12,9 @@ interface IERC20 {
 
 contract VerifyTestUsersScript is Script {
     // Test user addresses
-    address constant USER1 = address(0x2222222222222222222222222222222222222222);
-    address constant USER2 = address(0x3333333333333333333333333333333333333333);
-    address constant USER3 = address(0x4444444444444444444444444444444444444444);
+    address constant USER1 = address(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC);
+    address constant USER2 = address(0x90F79bf6EB2c4f870365E785982E1f101E93b906);
+    address constant USER3 = address(0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65);
     
     function run() external view {
         console.log("=== TEST USER BALANCE VERIFICATION ===");

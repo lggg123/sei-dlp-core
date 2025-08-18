@@ -8,7 +8,7 @@ The deployment scripts now include comprehensive test user funding to enable rea
 ### Pre-funded Test Users
 After deployment, these addresses will have tokens for testing:
 
-#### User1 (Balanced Portfolio) - `0x2222222222222222222222222222222222222222`
+#### User1 (Balanced Portfolio) - `0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc`
 - **SEI**: 10,000 tokens
 - **USDC**: 10,000 tokens  
 - **USDT**: 5,000 tokens
@@ -17,7 +17,7 @@ After deployment, these addresses will have tokens for testing:
 - **ATOM**: 1,000 tokens
 - **DAI**: 5,000 tokens
 
-#### User2 (Conservative Portfolio) - `0x3333333333333333333333333333333333333333`
+#### User2 (Conservative Portfolio) - `0x90F79bf6EB2c4f870365E785982E1f101E93b906`
 - **SEI**: 5,000 tokens
 - **USDC**: 5,000 tokens
 - **USDT**: 2,000 tokens
@@ -26,7 +26,7 @@ After deployment, these addresses will have tokens for testing:
 - **ATOM**: 500 tokens
 - **DAI**: 3,000 tokens
 
-#### User3 (Whale Portfolio) - `0x4444444444444444444444444444444444444444`
+#### User3 (Whale Portfolio) - `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65`
 - **SEI**: 100,000 tokens
 - **USDC**: 50,000 tokens
 - **USDT**: 25,000 tokens

@@ -245,9 +245,9 @@ contract DeployScript is Script {
 
     function setupTestUsers(address sei, address usdc, address usdt, address eth, address btc, address atom, address dai) internal {
         // Test user addresses (deterministic for consistent testing)
-        address user1 = address(0x2222222222222222222222222222222222222222); // Primary test user
-        address user2 = address(0x3333333333333333333333333333333333333333); // Secondary test user
-        address user3 = address(0x4444444444444444444444444444444444444444); // Whale test user
+        address user1 = address(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC); // Primary test user
+        address user2 = address(0x90F79bf6EB2c4f870365E785982E1f101E93b906); // Secondary test user
+        address user3 = address(0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65); // Whale test user
         
         console.log("\n=== FUNDING TEST USERS ===");
         
@@ -311,9 +311,9 @@ contract DeployScript is Script {
         console.log("- Blue Chip Vault: %s", blueChipVault);
         console.log("- Delta Neutral Vault: %s", deltaNeutralVault);
         console.log("\nTest Users:");
-        console.log("- User1 (Balanced): 0x2222222222222222222222222222222222222222");
-        console.log("- User2 (Conservative): 0x3333333333333333333333333333333333333333");
-        console.log("- User3 (Whale): 0x4444444444444444444444444444444444444444");
+        console.log("- User1 (Balanced): 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC");
+        console.log("- User2 (Conservative): 0x90F79bf6EB2c4f870365E785982E1f101E93b906");
+        console.log("- User3 (Whale): 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65");
         console.log("\nConfiguration:");
         console.log("- Parallel Execution: Enabled");
         console.log("- Finality Optimization: Enabled");
