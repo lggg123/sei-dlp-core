@@ -81,7 +81,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     <SeiGlobalWalletProvider>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider initialChain={713715} showRecentTransactions={false}>
+          <RainbowKitProvider initialChain={1328} showRecentTransactions={false}>
             {children}
           </RainbowKitProvider>
         </QueryClientProvider>

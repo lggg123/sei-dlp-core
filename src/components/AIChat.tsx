@@ -393,7 +393,7 @@ export default function AIChat({
             vaultData: context.vaultData,
             userPreferences: context.userPreferences
           },
-          chainId: 713715
+          chainId: 1328
         })
       })
 

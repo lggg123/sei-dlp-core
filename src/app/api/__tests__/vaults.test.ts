@@ -12,7 +12,7 @@ describe('/api/vaults', () => {
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
       expect(data.data).toHaveLength(8) // 7 existing + 1 delta neutral
-      expect(data.chainId).toBe(713715)
+      expect(data.chainId).toBe(1328)
 
       // Verify delta neutral vault exists
       const deltaNeutralVault = data.data.find((vault: Vault) => vault.strategy === 'delta_neutral')
@@ -90,7 +90,7 @@ describe('/api/vaults', () => {
         tickSpacing: expect.any(Number),
         tvl: expect.any(Number),
         apy: expect.any(Number),
-        chainId: 713715,
+        chainId: 1328,
         active: expect.any(Boolean),
         performance: expect.objectContaining({
           totalReturn: expect.any(Number),
@@ -110,7 +110,7 @@ describe('/api/vaults', () => {
       tokenB: 'USDC',
       fee: 0.003,
       tickSpacing: 60,
-      chainId: 713715
+      chainId: 1328
     }
 
     it('should create a new vault with valid data', async () => {

@@ -10,7 +10,7 @@ export async function GET() {
     version: '1.0.0',
     description: 'RESTful API for SEI Dynamic Liquidity Protocol with AI-powered optimization',
     baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
-    chainId: 713715,
+    chainId: 1328,
     chain: 'SEI Network',
     
     authentication: {
@@ -44,7 +44,7 @@ export async function GET() {
             timestamp: 'string',
             version: 'string',
             chain: 'string',
-            chainId: 713715,
+            chainId: 1328,
             services: 'object'
           },
           example: {
@@ -52,7 +52,7 @@ export async function GET() {
             timestamp: '2024-01-23T15:30:00Z',
             version: '1.0.0',
             chain: 'SEI',
-            chainId: 713715,
+            chainId: 1328,
             services: {
               api: 'operational',
               ai_engine: 'operational',
@@ -75,7 +75,7 @@ export async function GET() {
             success: 'boolean',
             data: 'Vault[]',
             count: 'number',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -88,13 +88,13 @@ export async function GET() {
             tokenB: 'string (required)',
             fee: 'number (required)',
             tickSpacing: 'number (required)',
-            chainId: 713715
+            chainId: 1328
           },
           response: {
             success: 'boolean',
             data: 'Vault',
             message: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -106,7 +106,7 @@ export async function GET() {
           response: {
             success: 'boolean',
             data: 'VaultDetails',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -125,7 +125,7 @@ export async function GET() {
             success: 'boolean',
             data: 'Vault',
             message: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -138,7 +138,7 @@ export async function GET() {
             success: 'boolean',
             message: 'string',
             address: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         }
       },
@@ -155,13 +155,13 @@ export async function GET() {
               liquidity: 'number (required)'
             },
             timeframe: '1h | 4h | 1d | 7d | 30d (default: 1d)',
-            chainId: 713715
+            chainId: 1328
           },
           response: {
             success: 'boolean',
             data: 'AIPrediction',
             timestamp: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -177,13 +177,13 @@ export async function GET() {
               maxGasPrice: 'number (optional)',
               deadline: 'number (Unix timestamp, optional)'
             },
-            chainId: 713715
+            chainId: 1328
           },
           response: {
             success: 'boolean',
             data: 'RebalanceResult',
             timestamp: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         }
       },
@@ -199,7 +199,7 @@ export async function GET() {
             success: 'boolean',
             data: 'MarketData[]',
             timestamp: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -209,14 +209,14 @@ export async function GET() {
             symbols: 'string[] (required)',
             timeframe: '1m | 5m | 15m | 1h | 4h | 1d (default: 1h)',
             limit: 'number (default: 100, max: 1000)',
-            chainId: 713715
+            chainId: 1328
           },
           response: {
             success: 'boolean',
             data: 'HistoricalMarketData[]',
             metadata: 'object',
             timestamp: 'string',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -230,7 +230,7 @@ export async function GET() {
             success: 'boolean',
             data: 'ArbitrageOpportunity[]',
             scan: 'object',
-            chainId: 713715
+            chainId: 1328
           }
         },
 
@@ -241,13 +241,13 @@ export async function GET() {
             minProfitThreshold: 'number (default: 0.005)',
             maxSlippage: 'number (default: 0.01)',
             exchanges: 'string[] (optional)',
-            chainId: 713715
+            chainId: 1328
           },
           response: {
             success: 'boolean',
             data: 'ArbitrageOpportunity[]',
             scan: 'object',
-            chainId: 713715
+            chainId: 1328
           }
         }
       }
@@ -264,7 +264,7 @@ export async function GET() {
         tickSpacing: 'number',
         tvl: 'number (USD)',
         apy: 'number (annual percentage yield)',
-        chainId: 713715,
+        chainId: 1328,
         active: 'boolean',
         performance: 'VaultPerformance',
         position: 'VaultPosition (optional)',
@@ -313,7 +313,7 @@ export async function GET() {
     },
 
     seiSpecific: {
-      chainId: 713715,
+      chainId: 1328,
       features: [
         'Fast finality (400ms)',
         'Parallel execution',
@@ -346,7 +346,7 @@ export async function GET() {
             tokenB: 'USDC',
             fee: 0.003,
             tickSpacing: 60,
-            chainId: 713715
+            chainId: 1328
           }
         }
       },
@@ -368,7 +368,7 @@ export async function GET() {
               liquidity: 125000000
             },
             timeframe: '1d',
-            chainId: 713715
+            chainId: 1328
           }
         }
       }

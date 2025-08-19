@@ -6,7 +6,7 @@ const MarketDataRequestSchema = z.object({
   symbols: z.array(z.string()).min(1, 'At least one symbol required'),
   timeframe: z.enum(['1m', '5m', '15m', '1h', '4h', '1d']).default('1h'),
   limit: z.number().int().min(1).max(1000).default(100),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)').optional()
+  chainId: z.number().refine(id => id === 1328, 'Must be SEI chain (1328)').optional()
 })
 
 /**
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: marketData,
       timestamp: new Date().toISOString(),
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to fetch market data',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
         symbols: validatedData.symbols
       },
       timestamp: new Date().toISOString(),
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to fetch historical market data',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )

@@ -13,7 +13,7 @@ const RebalanceRequestSchema = z.object({
     maxGasPrice: z.number().positive().optional(),
     deadline: z.number().int().positive().optional() // Unix timestamp
   }).optional(),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI devnet (713715)')
+  chainId: z.number().refine(id => id === 1328, 'Must be SEI testnet (1328)')
 })
 
 /**
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: result,
       timestamp: new Date().toISOString(),
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to execute rebalance operation',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )

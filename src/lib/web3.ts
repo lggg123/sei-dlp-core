@@ -30,16 +30,16 @@ export const seiDevnet = defineChain({
   testnet: true
 })
 
-// SEI Testnet (Arctic-1) - avoid for DeFi compliance
+// SEI Testnet (Atlantic-2) - Updated for testing
 export const seiTestnet = defineChain({
-  id: 13289,
-  name: 'SEI Arctic',
+  id: 1328,
+  name: 'SEI Atlantic-2',
   nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://evm-rpc-arctic-1.sei-apis.com'] }
+    default: { http: ['https://evm-rpc-testnet.sei-apis.com'] }
   },
   blockExplorers: {
-    default: { name: 'SeiTrace Arctic', url: 'https://seitrace.com/?chain=arctic-1' }
+    default: { name: 'SeiTrace Testnet', url: 'https://seitrace.com/atlantic-2' }
   },
   testnet: true
 })

@@ -24,11 +24,13 @@ cbor_metadata = true
 # SEI Network Configuration
 [rpc_endpoints]
 sei_devnet = "https://evm-rpc-arctic-1.sei-apis.com"
+sei_testnet = "https://evm-rpc-testnet.sei-apis.com"
 sei_mainnet = "https://evm-rpc.sei-apis.com"
 
 # Contract verification settings for SEI networks
 [etherscan]
 sei_devnet = { key = "dummy", url = "https://seitrace.com/arctic-1/api" }
+sei_testnet = { key = "dummy", url = "https://seitrace.com/atlantic-2/api" }
 sei_mainnet = { key = "dummy", url = "https://seitrace.com/pacific-1/api" }
 
 # Test configuration

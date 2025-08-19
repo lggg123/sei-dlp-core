@@ -241,7 +241,7 @@ const plugin: Plugin = {
             'market_predictions',
             'sei_optimizations'
           ],
-          chainId: 713715,
+          chainId: 1328,
           timestamp: new Date().toISOString()
         });
       },

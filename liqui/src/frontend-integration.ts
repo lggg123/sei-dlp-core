@@ -119,7 +119,7 @@ export class FrontendBridge {
         body: JSON.stringify({
           operation,
           timestamp: new Date().toISOString(),
-          chainId: 713715
+          chainId: 1328
         })
       });
 

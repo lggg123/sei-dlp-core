@@ -259,15 +259,45 @@ export const useDepositToVault = (options?: {
   const addNotification = useAppStore((state) => state.addNotification)
 
   return useMutation({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    mutationFn: async (_params: { vaultAddress: string; amount: string }) => {
-      // This would integrate with your smart contract
-      // For now, simulating the deposit
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ success: true, txHash: '0x...' })
-        }, 2000)
-      })
+    mutationFn: async (params: { vaultAddress: string; amount: string }) => {
+      try {
+        // Check if window.ethereum is available
+        if (!window.ethereum) {
+          throw new Error('MetaMask not installed')
+        }
+
+        const provider = window.ethereum
+        const accounts = await provider.request({ method: 'eth_requestAccounts' })
+        
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No wallet connected')
+        }
+
+        // Check if on correct network (SEI testnet = 1328)
+        const chainId = await provider.request({ method: 'eth_chainId' })
+        if (parseInt(chainId, 16) !== 1328) {
+          throw new Error('Please switch to SEI testnet (Chain ID: 1328)')
+        }
+
+        // Convert SEI amount to wei (18 decimals)
+        const amountInWei = (parseFloat(params.amount) * Math.pow(10, 18)).toString(16)
+
+        // Send transaction to vault contract
+        const txHash = await provider.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: accounts[0],
+            to: params.vaultAddress,
+            value: `0x${amountInWei}`,
+            gas: '0x5208', // 21000 gas limit
+          }],
+        })
+
+        return { success: true, txHash }
+      } catch (error) {
+        console.error('Deposit transaction failed:', error)
+        throw error
+      }
     },
     onSuccess: (data, variables) => {
       // Invalidate relevant queries
@@ -277,7 +307,7 @@ export const useDepositToVault = (options?: {
       addNotification({
         type: 'success',
         title: 'Deposit Successful',
-        message: `Successfully deposited ${variables.amount} tokens`,
+        message: `Successfully deposited ${variables.amount} SEI`,
       })
 
       if (options?.onSuccess) {

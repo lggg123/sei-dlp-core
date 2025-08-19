@@ -10,7 +10,7 @@ const VaultSchema = z.object({
   tokenB: z.string(),
   fee: z.number().min(0),
   tickSpacing: z.number().min(1),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI devnet (713715)')
+  chainId: z.number().refine(id => id === 1328, 'Must be SEI testnet (1328)')
 })
 
 const CreateVaultSchema = VaultSchema.omit({ address: true })
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     // Bull market vault data - synchronized with deployed smart contracts
     const vaults = [
       {
-        address: '0x454cdb15fc808147b549915527fc1cdfc5ce8185', // Deployed SEI Vault
+        address: '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE', // Concentrated Liquidity Vault (testnet)
         name: 'SEI-USDC Concentrated LP',
         strategy: 'concentrated_liquidity',
         tokenA: 'SEI',
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 1250000, // Bull market: $1.25M TVL
         apy: 0.125,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.087,
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0x7bef7f4803390bdffe629b352d1d6d13a4a2b751', // Vault Factory address
+        address: '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6', // Yield Farming Vault (testnet)
         name: 'ATOM-SEI Yield Farm',
         strategy: 'yield_farming',
         tokenA: 'ATOM',
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 850000, // Bull market: $850K TVL
         apy: 0.189,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.112,
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0xfe1f6ad530cc04f935f215a822efdea665a7ce23', // AI Oracle address
+        address: '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1', // Arbitrage Vault (testnet)
         name: 'ETH-USDT Arbitrage Bot',
         strategy: 'arbitrage',
         tokenA: 'ETH',
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 10,
         tvl: 2100000, // Bull market: $2.1M TVL
         apy: 0.267,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.156,
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0xb00d53a9738fcdef6844f33f3f5d71cf57438030', // Mock SEI Token address
+        address: '0xCB15AFA183347934DeEbb0F442263f50021EFC01', // Hedge Vault (testnet)
         name: 'BTC-SEI Hedge Strategy',
         strategy: 'hedge',
         tokenA: 'BTC',
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 200,
         tvl: 3400000, // Bull market: $3.4M TVL
         apy: 0.089,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.045,
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0x7890123456789012345678901234567890123456',
+        address: '0x34C0aA990D6e0D099325D7491136BA35FBcdFb38', // Stable Max Vault (testnet)
         name: 'Stable Max Yield Vault',
         strategy: 'stable_max',
         tokenA: 'USDC',
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 1,
         tvl: 8500000,
         apy: 0.045,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.022,
@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0x8901234567890123456789012345678901234567',
+        address: '0x6C0e4d44bcdf6f922637e041FdA4b7c1Fe5667E6', // SEI Hypergrowth Vault (testnet)
         name: 'SEI Hypergrowth Vault',
         strategy: 'sei_hypergrowth',
         tokenA: 'SEI',
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 200,
         tvl: 1800000,
         apy: 0.420,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.324,
@@ -150,7 +150,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0x9012345678901234567890123456789012345678',
+        address: '0x271115bA107A8F883DE36Eaf3a1CC41a4C5E1a56', // Blue Chip Vault (testnet)
         name: 'Blue Chip DeFi Vault',
         strategy: 'blue_chip',
         tokenA: 'BTC',
@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 4200000,
         apy: 0.156,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.098,
@@ -169,7 +169,7 @@ export async function GET(request: NextRequest) {
         }
       },
       {
-        address: '0xa123456789012345678901234567890123456789',
+        address: '0xaE6F27Fdf2D15c067A0Ebc256CE05A317B671B81', // Delta Neutral Vault (testnet)
         name: 'Delta Neutral LP Vault',
         strategy: 'delta_neutral',
         tokenA: 'ETH',
@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
         tickSpacing: 60,
         tvl: 3100000,
         apy: 0.155,
-        chainId: 713715,
+        chainId: 1328,
         active: true,
         performance: {
           totalReturn: 0.098,
@@ -210,7 +210,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: filteredVaults,
       count: filteredVaults.length,
-      chainId: 713715
+      chainId: 1328
     })
   } catch (error) {
     console.error('Error fetching vaults:', error)
@@ -218,7 +218,7 @@ export async function GET(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to fetch vaults',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )
@@ -233,11 +233,11 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateVaultSchema.parse(body)
     
     // SEI-specific validation
-    if (validatedData.chainId !== 713715) {
+    if (validatedData.chainId !== 1328) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Invalid chain ID - must be SEI devnet (713715)' 
+          error: 'Invalid chain ID - must be SEI testnet (1328)' 
         },
         { status: 400 }
       )
@@ -264,7 +264,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: newVault,
       message: 'Vault created successfully',
-      chainId: 713715
+      chainId: 1328
     }, { status: 201 })
 
   } catch (error) {
@@ -284,7 +284,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to create vault',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )

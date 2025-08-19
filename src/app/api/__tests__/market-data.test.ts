@@ -12,7 +12,7 @@ describe('/api/market/data', () => {
       expect(data.success).toBe(true)
       expect(Array.isArray(data.data)).toBe(true)
       expect(data.data.length).toBeGreaterThan(0)
-      expect(data.chainId).toBe(713715)
+      expect(data.chainId).toBe(1328)
     })
 
     it('should return market data for specific symbols', async () => {
@@ -92,7 +92,7 @@ describe('/api/market/data', () => {
       symbols: ['SEI-USDC', 'ATOM-SEI'],
       timeframe: '1h' as const,
       limit: 100,
-      chainId: 713715
+      chainId: 1328
     }
 
     it('should return historical market data', async () => {
@@ -109,7 +109,7 @@ describe('/api/market/data', () => {
       expect(data.success).toBe(true)
       expect(Array.isArray(data.data)).toBe(true)
       expect(data.data.length).toBe(2)
-      expect(data.chainId).toBe(713715)
+      expect(data.chainId).toBe(1328)
     })
 
     it('should return historical data with correct structure', async () => {

@@ -11,7 +11,7 @@ describe('/api/ai/predict', () => {
       liquidity: 125000000
     },
     timeframe: '1d' as const,
-    chainId: 713715
+    chainId: 1328
   }
 
   describe('POST', () => {
@@ -27,7 +27,7 @@ describe('/api/ai/predict', () => {
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(data.chainId).toBe(713715)
+      expect(data.chainId).toBe(1328)
       expect(data.data).toBeDefined()
       expect(data.data.vaultAddress).toBe(validPredictionData.vaultAddress)
     })

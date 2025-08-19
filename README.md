@@ -38,14 +38,3 @@ pnpm install && pnpm dev
     --constructor-args $(cast abi-encode "constructor(...)")
 
 todo list: we need to add these pages now as well for proper market analysis and also elizaos liqui fixes. the AMMManager I believe is an error which i will check and also we eventually want to use supabase database than the database we are using now looks like the postgresurl should work but it doesnt last time i tried.
-
-localhost:3000/market
-localhost:3000/vaults/deploy
-
-Executing these trades in optimal order using SEI's fast finality. Monitor progress at:
-http://localhost:3001/portfolio/rebalance
-
-Confirm with "confirm rebalance" to execute these trades. 🚀
-
-Monitor live execution at:
-http://localhost:3001/portfolio/active-trades

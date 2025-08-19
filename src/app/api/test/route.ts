@@ -22,7 +22,7 @@ export async function GET() {
       ],
       chainInfo: {
         name: 'SEI Network',
-        chainId: 713715,
+        chainId: 1328,
         blockTime: '400ms',
         features: ['Fast finality', 'Parallel execution', 'Low gas costs']
       }

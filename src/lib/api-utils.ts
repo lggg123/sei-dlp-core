@@ -5,9 +5,9 @@ const rateLimitMap = new Map<string, { count: number; lastReset: number }>()
 
 // SEI Chain configuration
 export const SEI_CONFIG = {
-  CHAIN_ID: 713715,
-  RPC_URL: 'https://evm-rpc.sei-apis.com',
-  EXPLORER_URL: 'https://seitrace.com',
+  CHAIN_ID: 1328,
+  RPC_URL: 'https://evm-rpc-testnet.sei-apis.com',
+  EXPLORER_URL: 'https://seitrace.com/atlantic-2',
   BLOCK_TIME: 400, // 400ms
   NATIVE_TOKEN: 'SEI',
   DECIMALS: 18

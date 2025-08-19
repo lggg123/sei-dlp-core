@@ -8,7 +8,7 @@ const ArbitrageScanSchema = z.object({
   minProfitThreshold: z.number().min(0).default(0.005), // 0.5% minimum profit
   maxSlippage: z.number().min(0).max(1).default(0.01), // 1% max slippage
   exchanges: z.array(z.string()).optional(),
-  chainId: z.number().refine(id => id === 713715, 'Must be SEI chain (713715)')
+  chainId: z.number().refine(id => id === 1328, 'Must be SEI chain (1328)')
 })
 
 /**
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
         exchangesScanned: ['DragonSwap', 'SeiSwap', 'AstroPort', 'WhiteWhale'],
         scanTime: new Date().toISOString()
       },
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to scan arbitrage opportunities',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
         scanTime: new Date().toISOString(),
         aiEnhanced: true
       },
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to scan arbitrage opportunities',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )

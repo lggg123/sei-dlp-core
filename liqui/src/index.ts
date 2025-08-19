@@ -10,7 +10,7 @@ import { pluginOverrides, shouldUseAPIIntegration } from './plugin-overrides.ts'
 const initCharacter = async (runtime: IAgentRuntime) => {
   logger.info('Initializing SEI DLP Liqui character');
   logger.info(`Name: ${character.name}`);
-  logger.info('SEI Chain ID: 713715');
+  logger.info('SEI Chain ID: 1328');
   logger.info('Optimized for 400ms finality');
   
   // Architectural alignment status

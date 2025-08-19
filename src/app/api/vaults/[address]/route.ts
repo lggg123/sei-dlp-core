@@ -44,7 +44,7 @@ export async function GET(
       tickSpacing: 60,
       tvl: 1250000,
       apy: 0.125,
-      chainId: 713715,
+      chainId: 1328,
       active: true,
       createdAt: '2024-01-15T10:30:00Z',
       lastRebalance: '2024-01-23T14:22:00Z',
@@ -92,7 +92,7 @@ export async function GET(
     return NextResponse.json({
       success: true,
       data: vault,
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -101,7 +101,7 @@ export async function GET(
       { 
         success: false, 
         error: 'Failed to fetch vault details',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )
@@ -135,14 +135,14 @@ export async function PATCH(
       address,
       ...validatedData,
       updatedAt: new Date().toISOString(),
-      chainId: 713715
+      chainId: 1328
     }
 
     return NextResponse.json({
       success: true,
       data: updatedVault,
       message: 'Vault updated successfully',
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -162,7 +162,7 @@ export async function PATCH(
       { 
         success: false, 
         error: 'Failed to update vault',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )
@@ -194,7 +194,7 @@ export async function DELETE(
       success: true,
       message: 'Vault deleted successfully',
       address,
-      chainId: 713715
+      chainId: 1328
     })
 
   } catch (error) {
@@ -203,7 +203,7 @@ export async function DELETE(
       { 
         success: false, 
         error: 'Failed to delete vault',
-        chainId: 713715
+        chainId: 1328
       },
       { status: 500 }
     )

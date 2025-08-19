@@ -12,7 +12,7 @@ export interface SeiConnection {
  * Make sure to import '@sei-js/sei-global-wallet/eip6963' in your app
  */
 export async function connectSeiWallet(
-  evmChainId: number = 713715
+  evmChainId: number = 1328
 ): Promise<SeiConnection> {
   try {
     if (typeof window === 'undefined') {
@@ -59,12 +59,12 @@ export function getSeiChainConfig(evmChainId: number) {
         restEndpoint: 'https://rest-devnet.sei-apis.com',
         name: 'SEI Devnet'
       }
-    case 13289: // SEI Testnet (avoid for DeFi compliance)
+    case 1328: // SEI Testnet (Atlantic-2)
       return {
-        chainId: 'arctic-1',
-        rpcEndpoint: 'https://rpc-arctic-1.sei-apis.com',
-        restEndpoint: 'https://rest-arctic-1.sei-apis.com',
-        name: 'SEI Arctic'
+        chainId: 'atlantic-2',
+        rpcEndpoint: 'https://rpc-testnet.sei-apis.com',
+        restEndpoint: 'https://rest-testnet.sei-apis.com',
+        name: 'SEI Atlantic-2'
       }
     default:
       throw new Error(`Unsupported SEI chain ID: ${evmChainId}`)

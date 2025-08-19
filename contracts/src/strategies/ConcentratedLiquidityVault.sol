@@ -11,7 +11,7 @@ import "../../lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol"
 contract ConcentratedLiquidityVault is IStrategyVault, ERC20, Ownable, ReentrancyGuard {
     using ECDSA for bytes32;
 
-    uint256 public constant SEI_CHAIN_ID = 713715;
+    uint256 public constant SEI_CHAIN_ID = 1328;
 
     VaultInfo public vaultInfo;
     Position public currentPosition;

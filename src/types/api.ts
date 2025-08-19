@@ -1,7 +1,7 @@
 // SEI DLP API Type Definitions
 
 export interface SeiChainConfig {
-  readonly CHAIN_ID: 713715
+  readonly CHAIN_ID: 1328
   readonly RPC_URL: string
   readonly EXPLORER_URL: string
   readonly BLOCK_TIME: number
@@ -16,7 +16,7 @@ export interface ApiResponse<T = unknown> {
   details?: Record<string, unknown>
   metadata?: Record<string, unknown>
   timestamp: string
-  chainId: 713715
+  chainId: 1328
 }
 
 export interface PaginationParams {
@@ -105,7 +105,7 @@ export interface Vault {
   tickSpacing: number
   tvl: number
   apy: number
-  chainId: 713715
+  chainId: 1328
   active: boolean
   createdAt: string
   lastRebalance?: string
@@ -123,7 +123,7 @@ export interface CreateVaultRequest {
   tokenB: string
   fee: number
   tickSpacing: number
-  chainId: 713715
+  chainId: 1328
 }
 
 export interface UpdateVaultRequest {
@@ -243,7 +243,7 @@ export interface PredictionRequest {
     liquidity: number
   }
   timeframe: '1h' | '4h' | '1d' | '7d' | '30d'
-  chainId: 713715
+  chainId: 1328
 }
 
 // Rebalancing Types
@@ -257,7 +257,7 @@ export interface RebalanceRequest {
     maxGasPrice?: number
     deadline?: number
   }
-  chainId: 713715
+  chainId: 1328
 }
 
 export interface RebalanceRecommendation {
@@ -354,7 +354,7 @@ export interface ArbitrageScanRequest {
   minProfitThreshold: number
   maxSlippage: number
   exchanges?: string[]
-  chainId: 713715
+  chainId: 1328
 }
 
 // System Health Types
@@ -376,7 +376,7 @@ export interface ApiError {
   error: string
   details?: Record<string, unknown>
   timestamp: string
-  chainId: 713715
+  chainId: 1328
 }
 
 // Rate Limiting Types

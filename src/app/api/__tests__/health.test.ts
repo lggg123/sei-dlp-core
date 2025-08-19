@@ -31,7 +31,7 @@ describe('/api/health', () => {
         status: 'healthy',
         version: '1.0.0',
         chain: 'SEI',
-        chainId: 713715,
+        chainId: 1328,
         services: expect.any(Object)
       })
       expect(data.timestamp).toBeDefined()
@@ -52,7 +52,7 @@ describe('/api/health', () => {
       const response = await GET()
       const data = await response.json()
 
-      expect(data.chainId).toBe(713715)
+      expect(data.chainId).toBe(1328)
       expect(data.chain).toBe('SEI')
     })
   })

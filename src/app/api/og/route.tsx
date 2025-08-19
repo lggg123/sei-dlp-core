@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
                 color: '#9b5de5',
               }}
             >
-              Chain ID: 713715
+              Chain ID: 1328
             </div>
           </div>
           

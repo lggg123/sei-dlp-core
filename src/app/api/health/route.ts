@@ -11,7 +11,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       version: '1.0.0',
       chain: 'SEI',
-      chainId: 713715,
+      chainId: 1328,
       services: {
         api: 'operational',
         ai_engine: 'operational',

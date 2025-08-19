@@ -272,7 +272,7 @@ export class UIMessageHandler {
         volatility: 0.25,
         liquidity: 5000000,
         timeframe: '1d',
-        chain_id: metadata.chainId || 713715
+        chain_id: metadata.chainId || 1328
       });
     } else if (messageText.includes('rebalance')) {
       // Route to rebalance analysis
@@ -470,7 +470,7 @@ export class UIMessageHandler {
     }
     
     if (messageText.includes('vault') && message.context.vaultAddress) {
-      return `🎯 I'm analyzing vault ${message.context.vaultAddress.slice(0, 8)}... on SEI Chain 713715. Check the dashboard for current metrics or ask me specific questions about optimization strategies.`;
+      return `🎯 I'm analyzing vault ${message.context.vaultAddress.slice(0, 8)}... on SEI Chain 1328. Check the dashboard for current metrics or ask me specific questions about optimization strategies.`;
     }
     
     return `🤖 I'm Liqui, your SEI DLP AI assistant. I specialize in vault optimization, yield strategies, and rebalancing recommendations. The main dashboard has detailed analytics, or you can ask me specific questions about your positions.`;

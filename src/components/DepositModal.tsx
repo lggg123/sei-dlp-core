@@ -584,9 +584,9 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                           margin: '0'
                         }}
                       />
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xl font-bold opacity-80">USD</span>
+                      <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xl font-bold opacity-80">SEI</span>
                     </div>
-                    <div className="text-sm opacity-60 mt-2">Balance: $12,450.00</div>
+                    <div className="text-sm opacity-60 mt-2">Balance: 14.83 SEI</div>
                   </div>
 
                   {/* Arrow */}
@@ -627,7 +627,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                         opacity: '0.9'
                       }}>{vault.name} Shares</div>
                     </div>
-                    <div className="text-sm opacity-60 mt-2">Rate: 1 USD = 0.95 shares</div>
+                    <div className="text-sm opacity-60 mt-2">Rate: 1 SEI = 0.95 shares</div>
                   </div>
 
                 </div>
@@ -649,7 +649,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                   gap: '16px'
                 }}
                 className="lg:grid-cols-4">
-                  {[100, 500, 1000, 5000].map((amount) => (
+                  {[1, 5, 10, 14.83].map((amount) => (
                     <button
                       key={amount}
                       onClick={() => setDepositAmount(amount.toString())}
@@ -684,7 +684,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                         fontWeight: '700',
                         marginBottom: '4px'
                       }}>
-                        ${amount.toLocaleString()}
+                        {amount} SEI
                       </div>
                       <div style={{
                         color: '#ffffff',

@@ -25,7 +25,7 @@ describe('Python AI Engine Integration', () => {
       volume_24h: 1000000,
       liquidity: 500000,
       timeframe: '1d',
-      chain_id: 713715
+      chain_id: 1328
     };
 
     const response = await fetch(`${aiEngineUrl}/predict/optimal-range`, {
