@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
 import { Address, Abi } from 'viem';
@@ -106,8 +107,13 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-xl">
-        <h1 className="text-2xl font-bold mb-2">SEI DLP Vault Dashboard</h1>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-xl relative">
+        <Link href="/dashboard" passHref>
+          <button className="absolute top-4 left-4 bg-white text-blue-600 px-3 py-1 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors">
+            &larr; Back to Dashboard
+          </button>
+        </Link>
+        <h1 className="text-2xl font-bold mb-2 text-center">SEI DLP Vault Dashboard</h1>
         <p className="text-blue-100">Manage your AI-driven liquidity positions</p>
       </div>
 

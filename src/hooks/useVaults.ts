@@ -1,6 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useVaultStore, VaultData } from '@/stores/vaultStore'
 import { useAppStore } from '@/stores/appStore'
+import { useWriteContract, useTransaction } from 'wagmi'
+import { parseUnits } from 'viem'
+import SEIVault from '@/../contracts/out/SEIVault.sol/SEIVault.json'
 
 interface VaultResponse {
   success: boolean
@@ -251,82 +254,77 @@ export const useUserPositions = (walletAddress: string) => {
 }
 
 // Deposit to vault
-export const useDepositToVault = (options?: {
-  onSuccess?: (data: { success: boolean; txHash: string } | unknown) => void;
-  onError?: (error: Error | unknown) => void;
-}) => {
+export const useDepositToVault = (vaultAddress: string) => {
+  const { data: hash, error, isPending, writeContract, isSuccess, isError } = useWriteContract()
   const queryClient = useQueryClient()
   const addNotification = useAppStore((state) => state.addNotification)
 
-  return useMutation({
-    mutationFn: async (params: { vaultAddress: string; amount: string }) => {
-      try {
-        // Check if window.ethereum is available
-        if (!window.ethereum) {
-          throw new Error('MetaMask not installed')
-        }
+  const deposit = async (amount: string): Promise<string> => {
+    const amountInWei = parseUnits(amount, 18)
 
-        const provider = window.ethereum
-        const accounts = await provider.request({ method: 'eth_requestAccounts' })
-        
-        if (!accounts || accounts.length === 0) {
-          throw new Error('No wallet connected')
-        }
+    try {
+      return new Promise((resolve, reject) => {
+        writeContract({
+          address: `0x${vaultAddress.startsWith('0x') ? vaultAddress.slice(2) : vaultAddress}`,
+          abi: SEIVault.abi,
+          functionName: 'deposit',
+          args: [amountInWei],
+        }, {
+          onSuccess: (hash) => {
+            // The transaction has been sent, now we wait for it to be mined
+            addNotification({
+              type: 'info',
+              title: 'Transaction Sent',
+              message: `Transaction sent with hash: ${hash}. Waiting for confirmation...`,
+            })
 
-        // Check if on correct network (SEI testnet = 1328)
-        const chainId = await provider.request({ method: 'eth_chainId' })
-        if (parseInt(chainId, 16) !== 1328) {
-          throw new Error('Please switch to SEI testnet (Chain ID: 1328)')
-        }
+            // Update the UI after a short delay to allow the transaction to be mined
+            setTimeout(() => {
+              queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.detail(vaultAddress) })
+              queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
+              addNotification({
+                type: 'success',
+                title: 'Deposit Successful',
+                message: `Successfully deposited. Transaction hash: ${hash}`,
+              })
+            }, 5000) // 5 seconds delay
 
-        // Convert SEI amount to wei (18 decimals)
-        const amountInWei = (parseFloat(params.amount) * Math.pow(10, 18)).toString(16)
+            // Resolve with the transaction hash
+            resolve(hash)
+          },
+          onError: (err) => {
+            // Suppress MetaMask account change warning
+            if (err.message.includes('eth_accounts') && err.message.includes('unexpectedly updated accounts')) {
+              console.warn('MetaMask account change warning (suppressed):', err.message)
+              return
+            }
 
-        // Send transaction to vault contract
-        const txHash = await provider.request({
-          method: 'eth_sendTransaction',
-          params: [{
-            from: accounts[0],
-            to: params.vaultAddress,
-            value: `0x${amountInWei}`,
-            gas: '0x5208', // 21000 gas limit
-          }],
+            addNotification({
+              type: 'error',
+              title: 'Deposit Failed',
+              message: err.message,
+            })
+            reject(err)
+          },
         })
-
-        return { success: true, txHash }
-      } catch (error) {
-        console.error('Deposit transaction failed:', error)
-        throw error
-      }
-    },
-    onSuccess: (data, variables) => {
-      // Invalidate relevant queries
-      queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.detail(variables.vaultAddress) })
-      queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
-      
-      addNotification({
-        type: 'success',
-        title: 'Deposit Successful',
-        message: `Successfully deposited ${variables.amount} SEI`,
       })
-
-      if (options?.onSuccess) {
-        options.onSuccess(data)
+    } catch (err) {
+      // Handle any synchronous errors
+      if (err instanceof Error && err.message.includes('eth_accounts') && err.message.includes('unexpectedly updated accounts')) {
+        console.warn('MetaMask account change warning (suppressed):', err.message)
+        return Promise.reject(err)
       }
-    },
-    onError: (error) => {
-      const errorMessage = error instanceof Error ? error.message : 'Deposit failed'
+
       addNotification({
         type: 'error',
         title: 'Deposit Failed',
-        message: errorMessage,
+        message: err instanceof Error ? err.message : 'Unknown error occurred',
       })
+      throw err
+    }
+  }
 
-      if (options?.onError) {
-        options.onError(error)
-      }
-    },
-  })
+  return { deposit, hash, error, isPending, isSuccess, isError }
 }
 
 // Withdraw from vault

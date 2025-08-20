@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, ArrowRight, Info, Shield, TrendingUp, Coins, Vault, DollarSign, Percent, CheckCircle2, Zap } from 'lucide-react';
 import { useDepositToVault } from '@/hooks/useVaults';
+import { useRouter } from 'next/navigation';
 
 interface VaultData {
   address: string;
@@ -77,23 +78,13 @@ const getVaultColor = (strategy: string) => {
 
 export default function DepositModal({ vault, isOpen, onClose, onSuccess }: DepositModalProps) {
   const [depositAmount, setDepositAmount] = useState('');
+  const [transactionStatus, setTransactionStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [walletBalance, setWalletBalance] = useState(14.83); // Initial balance
+  const router = useRouter();
 
-  const mutationOptions = React.useMemo(() => ({
-    onSuccess: (data: { txHash?: string } | unknown) => {
-      setDepositAmount('');
-      if (onSuccess && (data as { txHash?: string })?.txHash) {
-        onSuccess((data as { txHash: string }).txHash);
-      }
-      onClose(); // Close modal on success
-    },
-    onError: (error: Error | unknown) => {
-      console.error('[DepositModal] Deposit mutation error:', error);
-      // Here you could set an error state to show in the UI
-      // For now, we just log it. The modal remains open for the user to retry.
-    },
-  }), [onSuccess, onClose]);
-
-  const depositMutation = useDepositToVault(mutationOptions);
+  const depositMutation = useDepositToVault(vault?.address || '');
 
   // Add effect to track when the modal should be opening + handle body scroll
   useEffect(() => {
@@ -112,7 +103,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       document.body.style.position = '';
       document.body.style.width = '';
     }
-    
+
     // Cleanup on unmount
     return () => {
       document.body.style.overflow = '';
@@ -130,7 +121,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const riskLevel = getRiskLevel(vault.apy, vault.strategy);
   const isValidAmount = depositAmount && parseFloat(depositAmount) > 0;
 
-  const handleDeposit = () => {
+  const handleDeposit = async () => {
     if (!isValidAmount || !vault) return;
 
     console.log('[DepositModal] Initiating deposit via mutation:', {
@@ -138,14 +129,70 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       vaultAddress: vault.address,
     });
 
-    depositMutation.mutate({
-      vaultAddress: vault.address,
-      amount: depositAmount,
-    });
+    // Reset transaction state
+    setTransactionStatus('pending');
+    setTransactionHash(null);
+    setErrorMessage(null);
+
+    try {
+      const depositAmountFloat = parseFloat(depositAmount);
+
+      // Validate deposit amount against wallet balance
+      if (depositAmountFloat > walletBalance) {
+        throw new Error('Insufficient balance for this deposit');
+      }
+
+      // Call deposit and wait for it to complete
+      const hash = await depositMutation.deposit(depositAmount);
+      setTransactionHash(hash);
+      setTransactionStatus('success');
+
+      // Update wallet balance after successful deposit
+      setWalletBalance(prevBalance => prevBalance - depositAmountFloat);
+
+      // Call onSuccess callback with the transaction hash
+      onSuccess(hash);
+
+      // Reset deposit amount but keep modal open to show success
+      setDepositAmount('');
+
+      // Give user time to see the success message before redirecting
+      setTimeout(() => {
+        // Redirect to vault details page after successful deposit
+        if (vault) {
+          router.push(`/vault?address=${vault.address}&tab=overview`);
+        }
+        // Close the modal
+        handleClose();
+      }, 3000);
+    } catch (error) {
+      console.error('[DepositModal] Deposit mutation error:', error);
+
+      // Handle specific error cases
+      if (error instanceof Error) {
+        if (error.message.includes('user rejected transaction')) {
+          setErrorMessage('Transaction was rejected by the user');
+        } else if (error.message.includes('insufficient funds')) {
+          setErrorMessage('Insufficient funds for this transaction');
+        } else if (error.message.includes('Insufficient balance')) {
+          setErrorMessage('Your wallet balance is too low for this deposit');
+        } else {
+          setErrorMessage(error.message);
+        }
+      } else {
+        setErrorMessage('Unknown error occurred');
+      }
+
+      setTransactionStatus('error');
+      // Modal remains open for the user to see the error and retry
+    }
   };
 
   const handleClose = () => {
     setDepositAmount('');
+    setTransactionStatus('idle');
+    setTransactionHash(null);
+    setErrorMessage(null);
     onClose();
   };
   
@@ -586,7 +633,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                       />
                       <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xl font-bold opacity-80">SEI</span>
                     </div>
-                    <div className="text-sm opacity-60 mt-2">Balance: 14.83 SEI</div>
+                    <div className="text-sm opacity-60 mt-2">Balance: {walletBalance.toFixed(2)} SEI</div>
                   </div>
 
                   {/* Arrow */}
@@ -810,9 +857,70 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
             </div>
           </div>
 
+          {/* Transaction Status Section */}
+          {(transactionStatus === 'pending' || transactionStatus === 'success' || transactionStatus === 'error') && (
+            <div style={{
+              padding: '1rem 1.5rem',
+              background: 'rgba(0, 0, 0, 0.3)',
+              backdropFilter: 'blur(8px)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              margin: '1rem 0 0 0',
+              borderRadius: '12px 12px 0 0',
+            }}>
+              {transactionStatus === 'pending' && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                }}>
+                  <Loader2 style={{ width: '20px', height: '20px' }} className="animate-spin" />
+                  <span>Transaction is being processed...</span>
+                </div>
+              )}
+
+              {transactionStatus === 'success' && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: '#22c55e',
+                  fontWeight: '600',
+                }}>
+                  <CheckCircle2 style={{ width: '20px', height: '20px' }} />
+                  <span>Transaction successful!</span>
+                  {transactionHash && (
+                    <span style={{ fontSize: '0.875rem', opacity: '0.8', marginLeft: '0.5rem' }}>
+                      Hash: {transactionHash.substring(0, 6)}...{transactionHash.substring(transactionHash.length - 4)}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {transactionStatus === 'error' && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: '#ef4444',
+                  fontWeight: '600',
+                }}>
+                  <Info style={{ width: '20px', height: '20px' }} />
+                  <span>Transaction failed</span>
+                  {errorMessage && (
+                    <span style={{ fontSize: '0.875rem', opacity: '0.8', marginLeft: '0.5rem' }}>
+                      {errorMessage}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Fixed Action Buttons at Bottom */}
-          <div 
-            style={{ 
+          <div
+            style={{
               flexShrink: 0, // Don't shrink
               padding: '1rem 1.5rem 1.5rem 1.5rem', // Bottom and side padding
               background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 80%, transparent 100%)',
@@ -821,14 +929,14 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
               borderRadius: '0 0 24px 24px'
             }}
           >
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '16px' 
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '16px'
             }}>
               <button
                 onClick={handleClose}
-                disabled={depositMutation.isPending}
+                disabled={depositMutation.isPending || transactionStatus === 'pending'}
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -849,11 +957,11 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                Cancel
+                {transactionStatus === 'success' ? 'Close' : 'Cancel'}
               </button>
               <button
-                onClick={handleDeposit}
-                disabled={!isValidAmount || depositMutation.isPending}
+                onClick={transactionStatus === 'success' ? handleClose : handleDeposit}
+                disabled={!isValidAmount || depositMutation.isPending || transactionStatus === 'pending'}
                 style={{
                   background: `linear-gradient(135deg, ${vaultColor} 0%, ${vaultColor}dd 100%)`,
                   border: 'none',
@@ -878,10 +986,20 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                {depositMutation.isPending ? (
+                {depositMutation.isPending || transactionStatus === 'pending' ? (
                   <>
                     <Loader2 style={{ width: '20px', height: '20px' }} className="animate-spin" />
-                    Processing...
+                    {transactionStatus === 'pending' ? 'Processing...' : 'Deposit Now'}
+                  </>
+                ) : transactionStatus === 'success' ? (
+                  <>
+                    <CheckCircle2 style={{ width: '20px', height: '20px', color: '#22c55e' }} />
+                    Success!
+                  </>
+                ) : transactionStatus === 'error' ? (
+                  <>
+                    <Info style={{ width: '20px', height: '20px', color: '#ef4444' }} />
+                    Error
                   </>
                 ) : (
                   'Deposit Now'
