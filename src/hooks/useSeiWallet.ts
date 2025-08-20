@@ -22,8 +22,12 @@ interface SeiWalletState {
 
 export function useSeiWallet() {
   const [mounted, setMounted] = useState(false)
-  const { isConnected: isEvmConnected } = useAccount()
+  // Use selective destructuring to avoid unnecessary re-renders
+  const account = useAccount()
   const chainId = useChainId()
+  
+  // Cache the connection status to prevent excessive polling
+  const isEvmConnected = account.isConnected
   
   useEffect(() => {
     setMounted(true)

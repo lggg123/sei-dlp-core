@@ -5,13 +5,36 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Button } from '@/components/ui/button'
 import { SeiWalletModal } from './SeiWalletModal'
 import { useSeiWallet } from '@/hooks/useSeiWallet'
+import { useBalance, useAccount } from 'wagmi'
+import { formatEther } from 'viem'
 
 export function WalletConnectButton() {
   const [showSeiModal, setShowSeiModal] = useState(false)
   const { isSeiConnected, isFullyConnected, mounted } = useSeiWallet()
   const [fallbackMode, setFallbackMode] = useState(false)
-  // Enhanced debug logging for visibility issues
+  const [lastLogTime, setLastLogTime] = useState(0)
+  
+  // Get wallet address and balance for SEI testnet
+  const { address, isConnected } = useAccount()
+  const { data: balance, isLoading: balanceLoading } = useBalance({
+    address,
+    chainId: 1328, // SEI Atlantic-2 testnet
+    query: {
+      enabled: !!address && isConnected,
+      refetchInterval: 30000, // 30 seconds
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 20000, // 20 seconds stale time
+    }
+  })
+  
+  // Enhanced debug logging with debouncing to prevent spam
   React.useEffect(() => {
+    const now = Date.now()
+    // Only log every 5 seconds to prevent console spam
+    if (now - lastLogTime < 5000) return
+    
+    setLastLogTime(now)
     console.log('[WalletConnectButton] State:', { 
       mounted, 
       fallbackMode, 
@@ -20,20 +43,12 @@ export function WalletConnectButton() {
       timestamp: new Date().toISOString()
     })
     
-    // Debug DOM visibility
+    // Debug DOM visibility (only when needed)
     const walletContainers = document.querySelectorAll('.wallet-container-override')
-    console.log('[WalletConnectButton] Found wallet containers:', walletContainers.length)
-    walletContainers.forEach((container, index) => {
-      const styles = window.getComputedStyle(container)
-      console.log(`[WalletConnectButton] Container ${index}:`, {
-        display: styles.display,
-        visibility: styles.visibility,
-        opacity: styles.opacity,
-        zIndex: styles.zIndex,
-        position: styles.position
-      })
-    })
-  }, [mounted, fallbackMode, isSeiConnected, isFullyConnected])
+    if (walletContainers.length > 1) {
+      console.warn('[WalletConnectButton] Multiple wallet containers detected:', walletContainers.length)
+    }
+  }, [mounted, fallbackMode, isSeiConnected, isFullyConnected, lastLogTime])
 
   // Reduced fallback timeout for better UX
   React.useEffect(() => {
@@ -181,9 +196,11 @@ export function WalletConnectButton() {
                       className="btn-cyber relative"
                     >
                       {account.displayName}
-                      {account.displayBalance
-                        ? ` (${account.displayBalance})`
-                        : ''}
+                      {balance && !balanceLoading
+                        ? ` (${parseFloat(formatEther(balance.value)).toFixed(2)} SEI)`
+                        : balanceLoading
+                        ? ' (Loading...)'
+                        : ' (0.00 SEI)'}
                       {/* Connection status indicator */}
                       {isFullyConnected && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />

@@ -1,11 +1,28 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Pre-calculated static positions to avoid hydration mismatch
+const STATIC_DATA_POINTS = [
+    { top: 20, left: 85 }, // i=0: 20 + sin(0) * 25 = 20, 50 + cos(0) * 35 = 85
+    { top: 41.65, left: 67.5 }, // i=1: 20 + sin(π/3) * 25 ≈ 41.65, 50 + cos(π/3) * 35 ≈ 67.5
+    { top: 41.65, left: 32.5 }, // i=2: 20 + sin(2π/3) * 25 ≈ 41.65, 50 + cos(2π/3) * 35 ≈ 32.5
+    { top: 20, left: 15 }, // i=3: 20 + sin(π) * 25 = 20, 50 + cos(π) * 35 = 15
+    { top: -1.65, left: 32.5 }, // i=4: 20 + sin(4π/3) * 25 ≈ -1.65, 50 + cos(4π/3) * 35 ≈ 32.5
+    { top: -1.65, left: 67.5 } // i=5: 20 + sin(5π/3) * 25 ≈ -1.65, 50 + cos(5π/3) * 35 ≈ 67.5
+];
+
+// Pre-calculated line endpoints to avoid hydration mismatch
+const STATIC_LINE_ENDPOINTS = [
+    { x2: 260, y2: 160 }, // i=0: 160 + cos(0) * 100 = 260, 160 + sin(0) * 100 = 160
+    { x2: 110, y2: 73.2 }, // i=1: 160 + cos(2π/3) * 100 = 110, 160 + sin(2π/3) * 100 = 246.8
+    { x2: 110, y2: 246.8 } // i=2: 160 + cos(4π/3) * 100 = 110, 160 + sin(4π/3) * 100 = 73.2
+];
 
 const features = [
     {
@@ -35,6 +52,11 @@ export default function FeatureHighlight() {
     const containerRef = useRef<HTMLDivElement>(null);
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
     const centerImageRef = useRef<HTMLDivElement>(null);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -191,44 +213,46 @@ export default function FeatureHighlight() {
                                     <div className="absolute inset-12 rounded-full border border-accent/40 animate-spin" style={{ animationDuration: '4s' }} />
                                 </div>
 
-                                {/* Floating Data Points */}
-                                {[0, 1, 2, 3, 4, 5].map((i) => (
+                                {/* Floating Data Points - Only render on client to avoid hydration mismatch */}
+                                {isMounted && STATIC_DATA_POINTS.map((point, i) => (
                                     <div
                                         key={i}
                                         className="absolute w-4 h-4 rounded-full animate-ping"
                                         style={{
                                             background: `${features[i % 3].color}`,
-                                            top: `${20 + Math.sin(i * Math.PI / 3) * 25}%`,
-                                            left: `${50 + Math.cos(i * Math.PI / 3) * 35}%`,
+                                            top: `${point.top}%`,
+                                            left: `${point.left}%`,
                                             animationDelay: `${i * 0.5}s`,
                                             animationDuration: '3s'
                                         }}
                                     />
                                 ))}
 
-                                {/* Connecting Lines */}
-                                <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 320 320">
-                                    <defs>
-                                        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" stopColor="#00f5d4" stopOpacity="0.8"/>
-                                            <stop offset="50%" stopColor="#9b5de5" stopOpacity="0.6"/>
-                                            <stop offset="100%" stopColor="#ff206e" stopOpacity="0.8"/>
-                                        </linearGradient>
-                                    </defs>
-                                    {[0, 1, 2].map((i) => (
-                                        <line
-                                            key={i}
-                                            x1="160"
-                                            y1="160"
-                                            x2={160 + Math.cos(i * Math.PI * 2 / 3) * 100}
-                                            y2={160 + Math.sin(i * Math.PI * 2 / 3) * 100}
-                                            stroke="url(#lineGradient)"
-                                            strokeWidth="2"
-                                            className="animate-pulse"
-                                            style={{ animationDelay: `${i * 0.5}s` }}
-                                        />
-                                    ))}
-                                </svg>
+                                {/* Connecting Lines - Only render on client to avoid hydration mismatch */}
+                                {isMounted && (
+                                    <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 320 320">
+                                        <defs>
+                                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stopColor="#00f5d4" stopOpacity="0.8"/>
+                                                <stop offset="50%" stopColor="#9b5de5" stopOpacity="0.6"/>
+                                                <stop offset="100%" stopColor="#ff206e" stopOpacity="0.8"/>
+                                            </linearGradient>
+                                        </defs>
+                                        {STATIC_LINE_ENDPOINTS.map((endpoint, i) => (
+                                            <line
+                                                key={i}
+                                                x1="160"
+                                                y1="160"
+                                                x2={endpoint.x2}
+                                                y2={endpoint.y2}
+                                                stroke="url(#lineGradient)"
+                                                strokeWidth="2"
+                                                className="animate-pulse"
+                                                style={{ animationDelay: `${i * 0.5}s` }}
+                                            />
+                                        ))}
+                                    </svg>
+                                )}
                             </div>
                         </div>
                     </div>

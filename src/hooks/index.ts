@@ -14,4 +14,5 @@ export * from './useLocalStorage'
 
 // Existing hooks
 export * from './useSeiWallet'
+export * from './useWalletConnection'
 export * from './use-mobile'

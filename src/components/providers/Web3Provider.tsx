@@ -18,29 +18,40 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 1000 * 60 * 30, // 30 minutes
+        staleTime: 1000 * 60 * 10, // 10 minutes - longer to reduce provider requests
+        gcTime: 1000 * 60 * 60, // 60 minutes - longer garbage collection
         retry: (failureCount, error) => {
-          // Don't retry on 4xx errors
-          if (error instanceof Error && error.message.includes('4')) {
+          // Don't retry on 4xx errors or wallet-related errors
+          if (error instanceof Error && (
+            error.message.includes('4') ||
+            error.message.includes('MetaMask') ||
+            error.message.includes('eth_accounts') ||
+            error.message.includes('wallet')
+          )) {
             return false
           }
-          return failureCount < 3
+          return failureCount < 2 // Reduce retries to minimize provider calls
         },
-        retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: true,
-        refetchOnMount: true,
+        retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 45000), // Longer delays
+        refetchOnWindowFocus: false, // CRITICAL: Prevent focus-based refetch
+        refetchOnReconnect: false, // CRITICAL: Prevent reconnect-based refetch
+        refetchOnMount: false, // CRITICAL: Prevent mount-based refetch
+        refetchInterval: false, // CRITICAL: Disable automatic refetch intervals
       },
       mutations: {
         retry: (failureCount, error) => {
-          // Don't retry mutations on client errors
-          if (error instanceof Error && error.message.includes('4')) {
+          // Don't retry mutations on client errors or wallet errors
+          if (error instanceof Error && (
+            error.message.includes('4') ||
+            error.message.includes('MetaMask') ||
+            error.message.includes('eth_accounts') ||
+            error.message.includes('wallet')
+          )) {
             return false
           }
-          return failureCount < 2
+          return failureCount < 1 // Single retry only
         },
-        retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+        retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 45000),
       },
     },
   })
@@ -72,20 +83,29 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     setMounted(true)
   }, [])
 
-  // Don't render providers until mounted to prevent double initialization
-  if (!mounted) {
-    return null
-  }
-
+  // Always provide QueryClientProvider and WagmiProvider to prevent hook errors
+  // Only conditionally render RainbowKit and SEI providers after mounting
   return (
-    <SeiGlobalWalletProvider>
+    <QueryClientProvider client={queryClient}>
       <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider initialChain={1328} showRecentTransactions={false}>
+        {!mounted ? (
+          // Return a skeleton while mounting to prevent layout shift
+          <div className="min-h-screen">
             {children}
+          </div>
+        ) : (
+          <RainbowKitProvider 
+            initialChain={1328} 
+            showRecentTransactions={false}
+            // Prevent account switching issues
+            modalSize="compact"
+          >
+            <SeiGlobalWalletProvider>
+              {children}
+            </SeiGlobalWalletProvider>
           </RainbowKitProvider>
-        </QueryClientProvider>
+        )}
       </WagmiProvider>
-    </SeiGlobalWalletProvider>
+    </QueryClientProvider>
   )
 }

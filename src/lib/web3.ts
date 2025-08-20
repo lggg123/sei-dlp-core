@@ -46,11 +46,23 @@ export const seiTestnet = defineChain({
 
 // Singleton pattern to prevent multiple config instantiation
 let configInstance: ReturnType<typeof getDefaultConfig> | null = null
+let isCreatingConfig = false
 
 function createConfig() {
+  // Prevent race conditions during config creation
+  if (isCreatingConfig) {
+    // Wait for existing creation to complete
+    while (!configInstance && isCreatingConfig) {
+      // Busy wait for a short time
+    }
+    return configInstance!
+  }
+
   if (configInstance) {
     return configInstance
   }
+
+  isCreatingConfig = true
 
   const projectId = process.env.NEXT_PUBLIC_WC_ID
   
@@ -72,8 +84,14 @@ function createConfig() {
     batch: {
       multicall: false,
     },
+    // CRITICAL: Eliminate aggressive polling that causes MetaMask eth_accounts errors
+    pollingInterval: 120000, // 2 minutes - very conservative to prevent conflicts
+    // Additional config to prevent MetaMask provider conflicts
+    syncConnectedChain: false, // Prevents automatic chain switching conflicts
+    multiInjectedProviderDiscovery: false, // Prevents conflicts between multiple wallets
   })
 
+  isCreatingConfig = false
   return configInstance
 }
 

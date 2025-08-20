@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useVaultStore, VaultData } from '@/stores/vaultStore'
 import { useAppStore } from '@/stores/appStore'
-import { useWriteContract, useTransaction } from 'wagmi'
+import { useWriteContract, useAccount } from 'wagmi'
 import { parseUnits } from 'viem'
 import SEIVault from '@/../contracts/out/SEIVault.sol/SEIVault.json'
 
@@ -119,16 +119,24 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
         }
       }
     },
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: typeof window !== 'undefined' ? 60 * 1000 : false, // Only refetch on client
+    staleTime: 5 * 60 * 1000, // 5 minutes - much longer to reduce requests
+    refetchInterval: false, // CRITICAL: Disable automatic refetch to prevent provider conflicts
+    refetchOnWindowFocus: false, // CRITICAL: Prevent focus-based refetch
+    refetchOnReconnect: false, // CRITICAL: Prevent reconnect-based refetch
+    refetchOnMount: true, // Only refetch on mount
     retry: (failureCount, error) => {
-      // Don't retry on 4xx errors or if offline
-      if (error instanceof Error && (error.message.includes('4') || !navigator.onLine)) {
+      // Don't retry on 4xx errors, wallet errors, or if offline
+      if (error instanceof Error && (
+        error.message.includes('4') || 
+        error.message.includes('MetaMask') ||
+        error.message.includes('eth_accounts') ||
+        !navigator.onLine
+      )) {
         return false
       }
-      return failureCount < 3
+      return failureCount < 2 // Reduced retries
     },
-    enabled: true, // Allow on both client and server temporarily for debugging
+    enabled: typeof window !== 'undefined', // Only enable on client side
   })
 }
 
@@ -158,14 +166,20 @@ export const useVault = (address: string) => {
       return result.data
     },
     enabled: !!address && typeof window !== 'undefined',
-    staleTime: 15 * 1000, // 15 seconds
-    refetchInterval: typeof window !== 'undefined' ? 30 * 1000 : false, // 30 seconds
+    staleTime: 3 * 60 * 1000, // 3 minutes - longer stale time
+    refetchInterval: false, // CRITICAL: Disable automatic refetch
+    refetchOnWindowFocus: false, // CRITICAL: Prevent focus-based refetch  
+    refetchOnReconnect: false, // CRITICAL: Prevent reconnect-based refetch
     retry: (failureCount, error) => {
-      // Don't retry on 4xx errors
-      if (error instanceof Error && error.message.includes('4')) {
+      // Don't retry on 4xx errors or wallet errors
+      if (error instanceof Error && (
+        error.message.includes('4') ||
+        error.message.includes('MetaMask') ||
+        error.message.includes('eth_accounts')
+      )) {
         return false
       }
-      return failureCount < 3
+      return failureCount < 2 // Reduced retries
     },
   })
 }
@@ -255,76 +269,102 @@ export const useUserPositions = (walletAddress: string) => {
 
 // Deposit to vault
 export const useDepositToVault = (vaultAddress: string) => {
-  const { data: hash, error, isPending, writeContract, isSuccess, isError } = useWriteContract()
+  const { writeContract, data: hash, error, isPending, isSuccess, isError } = useWriteContract()
+  const { address } = useAccount()
   const queryClient = useQueryClient()
   const addNotification = useAppStore((state) => state.addNotification)
 
   const deposit = async (amount: string): Promise<string> => {
+    if (!address) {
+      throw new Error('Wallet not connected')
+    }
+
+    if (!vaultAddress) {
+      throw new Error('Vault address not provided')
+    }
+
+    // Enhanced validation for SEI testnet vault addresses
+    const validTestnetVaults = [
+      '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE',
+      '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6', 
+      '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1',
+      '0xCB15AFA183347934DeEbb0F442263f50021EFC01',
+      '0x34C0aA990D6e0D099325D7491136BA35FBcdFb38',
+      '0x6C0e4d44bcdf6f922637e041FdA4b7c1Fe5667E6',
+      '0x271115bA107A8F883DE36Eaf3a1CC41a4C5E1a56',
+      '0xaE6F27Fdf2D15c067A0Ebc256CE05A317B671B81'
+    ]
+
+    const normalizedVaultAddress = vaultAddress.toLowerCase()
+    const isValidTestnetVault = validTestnetVaults.some(addr => addr.toLowerCase() === normalizedVaultAddress)
+
+    if (!isValidTestnetVault) {
+      console.error('[useDepositToVault] Invalid vault address for testnet:', vaultAddress)
+      throw new Error(`Vault address ${vaultAddress} is not deployed on SEI Atlantic-2 testnet (Chain ID 1328). Please use a valid testnet vault address.`)
+    }
+
     const amountInWei = parseUnits(amount, 18)
 
     try {
-      return new Promise((resolve, reject) => {
-        writeContract({
-          address: `0x${vaultAddress.startsWith('0x') ? vaultAddress.slice(2) : vaultAddress}`,
-          abi: SEIVault.abi,
-          functionName: 'deposit',
-          args: [amountInWei],
-        }, {
-          onSuccess: (hash) => {
-            // The transaction has been sent, now we wait for it to be mined
-            addNotification({
-              type: 'info',
-              title: 'Transaction Sent',
-              message: `Transaction sent with hash: ${hash}. Waiting for confirmation...`,
-            })
-
-            // Update the UI after a short delay to allow the transaction to be mined
-            setTimeout(() => {
-              queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.detail(vaultAddress) })
-              queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
-              addNotification({
-                type: 'success',
-                title: 'Deposit Successful',
-                message: `Successfully deposited. Transaction hash: ${hash}`,
-              })
-            }, 5000) // 5 seconds delay
-
-            // Resolve with the transaction hash
-            resolve(hash)
-          },
-          onError: (err) => {
-            // Suppress MetaMask account change warning
-            if (err.message.includes('eth_accounts') && err.message.includes('unexpectedly updated accounts')) {
-              console.warn('MetaMask account change warning (suppressed):', err.message)
-              return
-            }
-
-            addNotification({
-              type: 'error',
-              title: 'Deposit Failed',
-              message: err.message,
-            })
-            reject(err)
-          },
-        })
+      console.log('[useDepositToVault] Initiating deposit with validated address:', {
+        vaultAddress,
+        amount,
+        amountInWei: amountInWei.toString(),
+        userAddress: address
       })
+
+      // Call writeContract - this triggers the transaction
+      // Note: This contract expects ERC20 token approval, not native SEI
+      writeContract({
+        address: vaultAddress.startsWith('0x') ? vaultAddress as `0x${string}` : `0x${vaultAddress}` as `0x${string}`,
+        abi: SEIVault.abi,
+        functionName: 'seiOptimizedDeposit',
+        args: [amountInWei, address],
+        // No value parameter - this contract uses transferFrom for ERC20 tokens
+      })
+
+      // The writeContract function returns void, but the hook will update with the hash
+      // We return a resolved Promise immediately since the actual transaction handling
+      // is done through the wagmi hooks (isSuccess, isError, etc.)
+      return Promise.resolve('pending')
     } catch (err) {
       // Handle any synchronous errors
-      if (err instanceof Error && err.message.includes('eth_accounts') && err.message.includes('unexpectedly updated accounts')) {
-        console.warn('MetaMask account change warning (suppressed):', err.message)
-        return Promise.reject(err)
+      console.error('Deposit error:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+      
+      // Enhanced error messaging for common issues
+      let userFriendlyMessage = errorMessage
+      if (errorMessage.includes('execution reverted')) {
+        userFriendlyMessage = 'Transaction failed: Contract execution reverted. Please check your balance and try again.'
+      } else if (errorMessage.includes('insufficient funds')) {
+        userFriendlyMessage = 'Insufficient funds for this transaction including gas fees.'
+      } else if (errorMessage.includes('user rejected')) {
+        userFriendlyMessage = 'Transaction was rejected. Please try again.'
       }
-
+      
       addNotification({
         type: 'error',
         title: 'Deposit Failed',
-        message: err instanceof Error ? err.message : 'Unknown error occurred',
+        message: userFriendlyMessage,
       })
       throw err
     }
   }
 
-  return { deposit, hash, error, isPending, isSuccess, isError }
+  // Handle success and error states through effects in the component
+  return { 
+    deposit, 
+    hash, 
+    error, 
+    isPending, 
+    isSuccess, 
+    isError,
+    // Add helper to invalidate queries when needed
+    invalidateQueries: () => {
+      queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.detail(vaultAddress) })
+      queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
+    }
+  }
 }
 
 // Withdraw from vault

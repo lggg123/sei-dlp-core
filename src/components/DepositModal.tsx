@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Loader2, ArrowRight, Info, Shield, TrendingUp, Coins, Vault, DollarSign, Percent, CheckCircle2, Zap } from 'lucide-react';
 import { useDepositToVault } from '@/hooks/useVaults';
 import { useRouter } from 'next/navigation';
+import { useAccount, useBalance } from 'wagmi';
+import { formatEther } from 'viem';
 
 interface VaultData {
   address: string;
@@ -81,10 +83,113 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const [transactionStatus, setTransactionStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [walletBalance, setWalletBalance] = useState(14.83); // Initial balance
+  // Get actual wallet connection and balance
+  const { address, isConnected } = useAccount();
+  const { data: balance, refetch: refetchBalance } = useBalance({
+    address,
+    chainId: 1328, // SEI Atlantic-2 testnet
+    // Prevent aggressive polling during transactions to avoid MetaMask conflicts
+    query: {
+      enabled: !!address && isConnected && transactionStatus !== 'pending',
+      refetchInterval: transactionStatus === 'pending' ? false : 30000, // 30s when not pending
+      refetchOnWindowFocus: false, // Prevent focus-triggered refetch
+      refetchOnReconnect: false, // Prevent reconnect-triggered refetch
+      staleTime: 20000, // 20 seconds stale time
+    }
+  });
+  
+  // Calculate wallet balance from actual wallet data
+  // Preserve balance during transaction to prevent "0" display
+  const [preservedBalance, setPreservedBalance] = useState(0);
+  
+  const currentBalance = balance ? parseFloat(formatEther(balance.value)) : 0;
+  
+  // Update preserved balance when we have a valid balance and not during transaction
+  useEffect(() => {
+    if (currentBalance > 0 && transactionStatus !== 'pending') {
+      setPreservedBalance(currentBalance);
+    }
+  }, [currentBalance, transactionStatus]);
+  
+  // Use preserved balance during transactions to prevent showing 0
+  const walletBalance = transactionStatus === 'pending' && preservedBalance > 0 
+    ? preservedBalance 
+    : currentBalance;
   const router = useRouter();
 
   const depositMutation = useDepositToVault(vault?.address || '');
+  
+  // Define handleClose function early to avoid hoisting issues
+  const handleClose = useCallback(() => {
+    setDepositAmount('');
+    setTransactionStatus('idle');
+    setTransactionHash(null);
+    setErrorMessage(null);
+    onClose();
+  }, [onClose]);
+
+  // Watch for transaction pending state
+  useEffect(() => {
+    if (depositMutation.isPending && transactionStatus !== 'pending') {
+      console.log('[DepositModal] Transaction pending...');
+      setTransactionStatus('pending');
+      setTransactionHash(null);
+      setErrorMessage(null);
+    }
+  }, [depositMutation.isPending, transactionStatus]);
+
+  // Watch for transaction success
+  useEffect(() => {
+    if (depositMutation.isSuccess && depositMutation.hash && transactionStatus !== 'success') {
+      console.log('[DepositModal] Transaction successful:', depositMutation.hash);
+      setTransactionHash(depositMutation.hash);
+      setTransactionStatus('success');
+      
+      // Invalidate queries and show success notification
+      depositMutation.invalidateQueries();
+      onSuccess(depositMutation.hash);
+      
+      // Reset deposit amount but keep modal open to show success
+      setDepositAmount('');
+
+      // CRITICAL: Refetch balance after successful transaction with delay
+      setTimeout(() => {
+        refetchBalance();
+      }, 2000); // Wait 2 seconds for blockchain state to update
+
+      // Give user time to see the success message before redirecting
+      setTimeout(() => {
+        if (vault) {
+          router.push(`/vault?address=${vault.address}&tab=overview`);
+        }
+        handleClose();
+      }, 3000);
+    }
+  }, [depositMutation.isSuccess, depositMutation.hash, transactionStatus, vault, router, onSuccess, handleClose, refetchBalance]);
+
+  // Watch for transaction errors
+  useEffect(() => {
+    if (depositMutation.isError && depositMutation.error && transactionStatus !== 'error') {
+      console.error('[DepositModal] Transaction failed:', depositMutation.error);
+      
+      // Handle specific error cases
+      const error = depositMutation.error;
+      let errorMessage = 'Unknown error occurred';
+      
+      if (error.message.includes('user rejected transaction')) {
+        errorMessage = 'Transaction was rejected by the user';
+      } else if (error.message.includes('insufficient funds')) {
+        errorMessage = 'Insufficient funds for this transaction';
+      } else if (error.message.includes('Insufficient balance')) {
+        errorMessage = 'Your wallet balance is too low for this deposit';
+      } else {
+        errorMessage = error.message;
+      }
+      
+      setErrorMessage(errorMessage);
+      setTransactionStatus('error');
+    }
+  }, [depositMutation.isError, depositMutation.error, transactionStatus]);
 
   // Add effect to track when the modal should be opening + handle body scroll
   useEffect(() => {
@@ -122,12 +227,40 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const isValidAmount = depositAmount && parseFloat(depositAmount) > 0;
 
   const handleDeposit = async () => {
+    // Check wallet connection first
+    if (!isConnected || !address) {
+      setErrorMessage('Please connect your wallet to continue');
+      return;
+    }
+    
     if (!isValidAmount || !vault) return;
 
-    console.log('[DepositModal] Initiating deposit via mutation:', {
+    console.log('[DepositModal] Initiating deposit:', {
       amount: depositAmount,
       vaultAddress: vault.address,
     });
+
+    // Critical validation: Check if vault address is valid for testnet
+    const validTestnetVaults = [
+      '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE',
+      '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6', 
+      '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1',
+      '0xCB15AFA183347934DeEbb0F442263f50021EFC01',
+      '0x34C0aA990D6e0D099325D7491136BA35FBcdFb38',
+      '0x6C0e4d44bcdf6f922637e041FdA4b7c1Fe5667E6',
+      '0x271115bA107A8F883DE36Eaf3a1CC41a4C5E1a56',
+      '0xaE6F27Fdf2D15c067A0Ebc256CE05A317B671B81'
+    ]
+
+    const isValidTestnetVault = validTestnetVaults.some(addr => 
+      addr.toLowerCase() === vault.address.toLowerCase()
+    )
+
+    if (!isValidTestnetVault) {
+      setErrorMessage(`Critical Error: Vault address ${vault.address} is not deployed on SEI Atlantic-2 testnet (Chain ID 1328). This vault may be deployed on devnet (Chain ID 713715). Please contact support or use a valid testnet vault.`);
+      setTransactionStatus('error');
+      return;
+    }
 
     // Reset transaction state
     setTransactionStatus('pending');
@@ -142,58 +275,32 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         throw new Error('Insufficient balance for this deposit');
       }
 
-      // Call deposit and wait for it to complete
-      const hash = await depositMutation.deposit(depositAmount);
-      setTransactionHash(hash);
-      setTransactionStatus('success');
-
-      // Update wallet balance after successful deposit
-      setWalletBalance(prevBalance => prevBalance - depositAmountFloat);
-
-      // Call onSuccess callback with the transaction hash
-      onSuccess(hash);
-
-      // Reset deposit amount but keep modal open to show success
-      setDepositAmount('');
-
-      // Give user time to see the success message before redirecting
-      setTimeout(() => {
-        // Redirect to vault details page after successful deposit
-        if (vault) {
-          router.push(`/vault?address=${vault.address}&tab=overview`);
-        }
-        // Close the modal
-        handleClose();
-      }, 3000);
+      // Call deposit - this will trigger the writeContract hook
+      // The actual success/error handling is done via useEffect watching the hook states
+      await depositMutation.deposit(depositAmount);
+      
+      console.log('[DepositModal] Transaction initiated, waiting for blockchain confirmation');
     } catch (error) {
-      console.error('[DepositModal] Deposit mutation error:', error);
-
-      // Handle specific error cases
+      console.error('[DepositModal] Deposit initiation error:', error);
+      
+      // Handle immediate errors (validation, wallet issues, etc.)
       if (error instanceof Error) {
-        if (error.message.includes('user rejected transaction')) {
-          setErrorMessage('Transaction was rejected by the user');
-        } else if (error.message.includes('insufficient funds')) {
-          setErrorMessage('Insufficient funds for this transaction');
-        } else if (error.message.includes('Insufficient balance')) {
-          setErrorMessage('Your wallet balance is too low for this deposit');
-        } else {
-          setErrorMessage(error.message);
+        // Enhanced error handling for contract issues
+        let userFriendlyMessage = error.message;
+        
+        if (error.message.includes('not deployed on SEI Atlantic-2 testnet')) {
+          userFriendlyMessage = 'This vault is not available on the current network. Please select a different vault or switch networks.';
+        } else if (error.message.includes('execution reverted')) {
+          userFriendlyMessage = 'Transaction failed: The contract rejected this transaction. This may be due to insufficient token approval or contract restrictions.';
         }
+        
+        setErrorMessage(userFriendlyMessage);
       } else {
-        setErrorMessage('Unknown error occurred');
+        setErrorMessage('Failed to initiate transaction');
       }
-
+      
       setTransactionStatus('error');
-      // Modal remains open for the user to see the error and retry
     }
-  };
-
-  const handleClose = () => {
-    setDepositAmount('');
-    setTransactionStatus('idle');
-    setTransactionHash(null);
-    setErrorMessage(null);
-    onClose();
   };
   
   return (
@@ -743,6 +850,36 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Contract Limitation Warning */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.08))',
+                border: '1px solid rgba(255, 193, 7, 0.3)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '16px',
+                padding: '16px',
+                marginBottom: '16px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <Info style={{ width: '20px', height: '20px', color: '#ffc107' }} />
+                  <span style={{ 
+                    fontSize: '1rem', 
+                    fontWeight: '700', 
+                    color: '#ffffff',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                  }}>Important Notice</span>
+                </div>
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  lineHeight: '1.5',
+                  margin: '0'
+                }}>
+                  This vault currently requires ERC20 token deposits, not native SEI. If you're trying to deposit native SEI, 
+                  you'll need to wrap it first or use a different vault that accepts native deposits. 
+                  Transaction may fail if the vault address is not deployed on the current testnet.
+                </p>
               </div>
 
               {/* Enhanced Yield Display */}
