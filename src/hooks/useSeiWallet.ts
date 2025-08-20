@@ -61,7 +61,7 @@ export function useSeiWallet() {
       if (chainId === 1329) {
         cosmosChainId = 'pacific-1' // mainnet
       } else if (chainId === 1328) {
-        cosmosChainId = 'devnet-1' // devnet (for DeFi compliance)
+        cosmosChainId = 'atlantic-2' // testnet
       } else {
         cosmosChainId = 'arctic-1' // testnet fallback
       }

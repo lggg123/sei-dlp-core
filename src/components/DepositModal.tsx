@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Loader2, ArrowRight, Info, Shield, TrendingUp, Coins, Vault, DollarSign, Percent, CheckCircle2, Zap } from 'lucide-react';
-import { useDepositToVault } from '@/hooks/useVaults';
+import { useEnhancedVaultDeposit } from '@/hooks/useEnhancedVaultDeposit';
+import { 
+  getTokenRequirementText, 
+  getPrimaryDepositToken
+} from '@/utils/tokenUtils';
 import { useRouter } from 'next/navigation';
-import { useAccount, useBalance } from 'wagmi';
-import { formatEther } from 'viem';
+import { useAccount } from 'wagmi';
 
 interface VaultData {
   address: string;
@@ -83,41 +86,49 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const [transactionStatus, setTransactionStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // Get actual wallet connection and balance
+  // Get actual wallet connection
   const { address, isConnected } = useAccount();
-  const { data: balance, refetch: refetchBalance } = useBalance({
-    address,
-    chainId: 1328, // SEI Atlantic-2 testnet
-    // Prevent aggressive polling during transactions to avoid MetaMask conflicts
-    query: {
-      enabled: !!address && isConnected && transactionStatus !== 'pending',
-      refetchInterval: transactionStatus === 'pending' ? false : 30000, // 30s when not pending
-      refetchOnWindowFocus: false, // Prevent focus-triggered refetch
-      refetchOnReconnect: false, // Prevent reconnect-triggered refetch
-      staleTime: 20000, // 20 seconds stale time
-    }
-  });
   
-  // Calculate wallet balance from actual wallet data
-  // Preserve balance during transaction to prevent "0" display
-  const [preservedBalance, setPreservedBalance] = useState(0);
-  
-  const currentBalance = balance ? parseFloat(formatEther(balance.value)) : 0;
-  
-  // Update preserved balance when we have a valid balance and not during transaction
-  useEffect(() => {
-    if (currentBalance > 0 && transactionStatus !== 'pending') {
-      setPreservedBalance(currentBalance);
-    }
-  }, [currentBalance, transactionStatus]);
-  
-  // Use preserved balance during transactions to prevent showing 0
-  const walletBalance = transactionStatus === 'pending' && preservedBalance > 0 
-    ? preservedBalance 
-    : currentBalance;
   const router = useRouter();
+  
+  // State for selected deposit token
+  const [selectedToken, setSelectedToken] = useState<string>('');
 
-  const depositMutation = useDepositToVault(vault?.address || '');
+  // Only create deposit mutation if vault has valid data
+  const vaultData = vault && vault.address && vault.tokenA && vault.tokenB && vault.strategy ? {
+    address: vault.address,
+    tokenA: vault.tokenA,
+    tokenB: vault.tokenB,
+    strategy: vault.strategy,
+    name: vault.name
+  } : {
+    // Fallback data to prevent errors when vault is null/incomplete
+    address: '',
+    tokenA: 'SEI',
+    tokenB: 'USDC',
+    strategy: 'stable_max',
+    name: 'Default Vault'
+  };
+  
+  const depositMutation = useEnhancedVaultDeposit(vaultData);
+  
+  // Enhanced balance information available through depositMutation.userBalance
+  
+  // Get deposit info and token requirements (after hooks are initialized)
+  const depositInfo = vault ? depositMutation.getDepositInfo() : null;
+  // Token requirements are included in depositInfo - only call when vault exists and has valid data
+  const primaryToken = (vault && vault.tokenA && vault.tokenB && vault.strategy) ? getPrimaryDepositToken(vault) : null;
+  const requirementText = (vault && vault.tokenA && vault.tokenB && vault.strategy) ? getTokenRequirementText(vault) : 'Token requirements unavailable';
+  
+  // Get current user balance for the primary deposit token
+  const currentUserBalance = depositInfo ? depositInfo.userBalance : { amount: 0, formatted: '0', isLoading: false };
+  
+  // Update selected token when vault changes
+  useEffect(() => {
+    if (primaryToken && !selectedToken) {
+      setSelectedToken(primaryToken.symbol);
+    }
+  }, [primaryToken, selectedToken]);
   
   // Define handleClose function early to avoid hoisting issues
   const handleClose = useCallback(() => {
@@ -154,7 +165,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
 
       // CRITICAL: Refetch balance after successful transaction with delay
       setTimeout(() => {
-        refetchBalance();
+        depositMutation.userBalance.refetch();
       }, 2000); // Wait 2 seconds for blockchain state to update
 
       // Give user time to see the success message before redirecting
@@ -165,7 +176,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
         handleClose();
       }, 3000);
     }
-  }, [depositMutation.isSuccess, depositMutation.hash, transactionStatus, vault, router, onSuccess, handleClose, refetchBalance]);
+  }, [depositMutation.isSuccess, depositMutation.hash, transactionStatus, vault, router, onSuccess, handleClose, depositMutation.userBalance]);
 
   // Watch for transaction errors
   useEffect(() => {
@@ -226,6 +237,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const riskLevel = getRiskLevel(vault.apy, vault.strategy);
   const isValidAmount = depositAmount && parseFloat(depositAmount) > 0;
 
+  // Enhanced handleDeposit function
   const handleDeposit = async () => {
     // Check wallet connection first
     if (!isConnected || !address) {
@@ -233,34 +245,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       return;
     }
     
-    if (!isValidAmount || !vault) return;
-
-    console.log('[DepositModal] Initiating deposit:', {
-      amount: depositAmount,
-      vaultAddress: vault.address,
-    });
-
-    // Critical validation: Check if vault address is valid for testnet
-    const validTestnetVaults = [
-      '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE',
-      '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6', 
-      '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1',
-      '0xCB15AFA183347934DeEbb0F442263f50021EFC01',
-      '0x34C0aA990D6e0D099325D7491136BA35FBcdFb38',
-      '0x6C0e4d44bcdf6f922637e041FdA4b7c1Fe5667E6',
-      '0x271115bA107A8F883DE36Eaf3a1CC41a4C5E1a56',
-      '0xaE6F27Fdf2D15c067A0Ebc256CE05A317B671B81'
-    ]
-
-    const isValidTestnetVault = validTestnetVaults.some(addr => 
-      addr.toLowerCase() === vault.address.toLowerCase()
-    )
-
-    if (!isValidTestnetVault) {
-      setErrorMessage(`Critical Error: Vault address ${vault.address} is not deployed on SEI Atlantic-2 testnet (Chain ID 1328). This vault may be deployed on devnet (Chain ID 713715). Please contact support or use a valid testnet vault.`);
-      setTransactionStatus('error');
-      return;
-    }
+    if (!isValidAmount || !vault || !selectedToken) return;
 
     // Reset transaction state
     setTransactionStatus('pending');
@@ -268,16 +253,30 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
     setErrorMessage(null);
 
     try {
-      const depositAmountFloat = parseFloat(depositAmount);
+      // Validate the deposit using enhanced validation
+      const validation = depositMutation.validateDeposit({
+        amount: depositAmount,
+        tokenSymbol: selectedToken,
+        vaultAddress: vault.address,
+        recipient: address
+      });
 
-      // Validate deposit amount against wallet balance
-      if (depositAmountFloat > walletBalance) {
-        throw new Error('Insufficient balance for this deposit');
+      if (!validation.isValid) {
+        throw new Error(validation.error);
       }
 
-      // Call deposit - this will trigger the writeContract hook
-      // The actual success/error handling is done via useEffect watching the hook states
-      await depositMutation.deposit(depositAmount);
+      // Show warnings if any
+      if (validation.warnings && validation.warnings.length > 0) {
+        console.warn('[DepositModal] Deposit warnings:', validation.warnings);
+      }
+
+      // Execute the deposit
+      await depositMutation.deposit({
+        amount: depositAmount,
+        tokenSymbol: selectedToken,
+        vaultAddress: vault.address,
+        recipient: address
+      });
       
       console.log('[DepositModal] Transaction initiated, waiting for blockchain confirmation');
     } catch (error) {
@@ -285,13 +284,14 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       
       // Handle immediate errors (validation, wallet issues, etc.)
       if (error instanceof Error) {
-        // Enhanced error handling for contract issues
         let userFriendlyMessage = error.message;
         
-        if (error.message.includes('not deployed on SEI Atlantic-2 testnet')) {
-          userFriendlyMessage = 'This vault is not available on the current network. Please select a different vault or switch networks.';
-        } else if (error.message.includes('execution reverted')) {
-          userFriendlyMessage = 'Transaction failed: The contract rejected this transaction. This may be due to insufficient token approval or contract restrictions.';
+        if (error.message.includes('user rejected transaction')) {
+          userFriendlyMessage = 'Transaction was rejected by the user';
+        } else if (error.message.includes('insufficient funds')) {
+          userFriendlyMessage = 'Insufficient funds for this transaction';
+        } else if (error.message.includes('Insufficient balance')) {
+          userFriendlyMessage = 'Your wallet balance is too low for this deposit';
         }
         
         setErrorMessage(userFriendlyMessage);
@@ -738,9 +738,9 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                           margin: '0'
                         }}
                       />
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xl font-bold opacity-80">SEI</span>
+                      <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xl font-bold opacity-80">{selectedToken || primaryToken?.symbol || 'SEI'}</span>
                     </div>
-                    <div className="text-sm opacity-60 mt-2">Balance: {walletBalance.toFixed(2)} SEI</div>
+                    <div className="text-sm opacity-60 mt-2">Balance: {currentUserBalance.amount.toFixed(4)} {selectedToken || 'SEI'}</div>
                   </div>
 
                   {/* Arrow */}
@@ -838,7 +838,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                         fontWeight: '700',
                         marginBottom: '4px'
                       }}>
-                        {amount} SEI
+                        {amount} {selectedToken || primaryToken?.symbol || 'SEI'}
                       </div>
                       <div style={{
                         color: '#ffffff',
@@ -874,11 +874,29 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                   fontSize: '0.875rem',
                   color: 'rgba(255, 255, 255, 0.9)',
                   lineHeight: '1.5',
+                  margin: '0 0 12px 0'
+                }}>
+                  <strong>Token Requirements:</strong> {requirementText}
+                </p>
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  lineHeight: '1.5',
+                  margin: '0 0 12px 0'
+                }}>
+                  <strong>Your Balance:</strong> {currentUserBalance.amount.toFixed(4)} {primaryToken?.symbol || 'tokens'} 
+                  {currentUserBalance.isLoading && ' (Loading...)'}
+                </p>
+                <p style={{
+                  fontSize: '0.8rem',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  lineHeight: '1.4',
                   margin: '0'
                 }}>
-                  This vault currently requires ERC20 token deposits, not native SEI. If you're trying to deposit native SEI, 
-                  you'll need to wrap it first or use a different vault that accepts native deposits. 
-                  Transaction may fail if the vault address is not deployed on the current testnet.
+                  {primaryToken?.isNative 
+                    ? 'This vault accepts native SEI deposits directly from your wallet.' 
+                    : `This vault requires ${primaryToken?.symbol} tokens. Make sure you have sufficient ${primaryToken?.symbol} balance and approve token spending before depositing.`
+                  }
                 </p>
               </div>
 

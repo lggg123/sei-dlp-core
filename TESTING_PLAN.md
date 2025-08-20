@@ -11,34 +11,32 @@ This comprehensive testing plan outlines the steps to test the deposit and withd
 - MetaMask browser extension
 - Access to SEI Devnet (Chain ID: 713715)
 
-### 1.2 Deploy Contracts
-```bash
-cd contracts
-./deploy-enhanced.sh  # Select option 1: Full deployment
+### 1.2 Testnet Vault Addresses (Chain ID: 1328)
+Current deployed vault addresses on SEI Atlantic-2 testnet:
+```
+SEI-USDC Concentrated LP: 0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE
+ATOM-SEI Yield Farm: 0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6
+ETH-USDT Arbitrage Bot: 0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1
+BTC-SEI Hedge Strategy: 0xCB15AFA183347934DeEbb0F442263f50021EFC01
+Stable Max Yield Vault: 0x34C0aA990D6e0D099325D7491136BA35FBcdFb38
+SEI Hypergrowth Vault: 0x6C0e4d44bcdf6f922637e041FdA4b7c1Fe5667E6
+Blue Chip DeFi Vault: 0x271115bA107A8F883DE36Eaf3a1CC41a4C5E1a56
+Delta Neutral LP Vault: 0xaE6F27Fdf2D15c067A0Ebc256CE05A317B671B81
 ```
 
 ### 1.3 Update Environment Variables
 Create/update `.env.local` file in the project root:
 ```env
-NEXT_PUBLIC_SEI_CHAIN_ID=713715
-NEXT_PUBLIC_RPC_URL=https://evm-rpc-arctic-1.sei-apis.com
-NEXT_PUBLIC_VAULT_ADDRESS=0x454cdb15fc808147b549915527fc1cdfc5ce8185
-NEXT_PUBLIC_TOKEN_SEI=0xb00d53a9738fcdef6844f33f3f5d71cf57438030
-NEXT_PUBLIC_TOKEN_USDC=0xb09a77e50f970a501a6cf96532753b2f3f6bcde0
-NEXT_PUBLIC_TOKEN_USDT=0x13f991ac97ef04cc0288a96a82aa808fb1966574
-NEXT_PUBLIC_TOKEN_ETH=0x80641cae989b52868e924115a7ffc2d231033555
-NEXT_PUBLIC_TOKEN_BTC=0x84b2440238dc8c938d0d1e88d8b973a43a86c450
-# Add other token addresses as needed
+NEXT_PUBLIC_SEI_CHAIN_ID=1328
+NEXT_PUBLIC_RPC_URL=https://evm-rpc-atlantic-2.sei-apis.com
+NEXT_PUBLIC_VAULT_ADDRESS=0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE
 ```
-### Other Contracts
-Vault Factory: 0x7bef7f4803390bdffe629b352d1d6d13a4a2b751
-AI Oracle: 0xfe1f6ad530cc04f935f215a822efdea665a7ce23
 
 ### 1.4 Configure MetaMask
-1. Add SEI Devnet network:
-   - Network Name: SEI Devnet
-   - RPC URL: https://evm-rpc-arctic-1.sei-apis.com
-   - Chain ID: 713715
+1. Add SEI Atlantic-2 testnet network:
+   - Network Name: SEI Atlantic-2 Testnet
+   - RPC URL: https://evm-rpc-atlantic-2.sei-apis.com
+   - Chain ID: 1328
    - Currency Symbol: SEI
 
 2. Import test user private keys (for testing only):
