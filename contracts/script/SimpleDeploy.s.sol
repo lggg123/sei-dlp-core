@@ -13,7 +13,7 @@ contract SimpleDeployScript is Script {
     
     // Deployment addresses (will be set during deployment)
     address public mockToken;
-    address public seiVault;
+    address payable public seiVault;
     address public vaultFactory;
     address public aiOracle;
     address public strategyVault;
@@ -42,7 +42,7 @@ contract SimpleDeployScript is Script {
         console.log("Vault Factory deployed at: %s", vaultFactory);
         
         // 4. Deploy SEI Vault
-        seiVault = deploySEIVault(mockToken, deployer, deployer);
+        seiVault = payable(deploySEIVault(mockToken, deployer, deployer));
         console.log("SEI Vault deployed at: %s", seiVault);
         
         // 5. Configure AI Oracle with deployed contracts

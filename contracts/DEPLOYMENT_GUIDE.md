@@ -1,6 +1,14 @@
 # SEI DLP Smart Contract Deployment Guide
 
-This guide provides comprehensive instructions for deploying SEI DLP smart contracts to SEI Devnet with proper contract targeting.
+✅ **DEPLOYMENT COMPLETED** - Fixed contracts successfully deployed to SEI Atlantic-2 testnet.
+
+**Deployed Addresses:**
+- **Native SEI Vault**: `0xAC64527866CCfA796Fa87A257B3f927179a895e6`
+- **ERC20 USDC Vault**: `0xcF796aEDcC293db74829e77df7c26F482c9dBEC0`
+- **AI Oracle**: `0x4199f86F3Bd73cF6ae5E89C8E28863d4B12fb18E`
+- **Vault Factory**: `0x37b8E91705bc42d5489Dae84b00B87356342B267`
+
+This guide provides comprehensive instructions for deploying SEI DLP smart contracts to SEI testnet with proper contract targeting.
 
 ## Problem Solved
 

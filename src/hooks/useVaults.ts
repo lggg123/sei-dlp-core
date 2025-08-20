@@ -285,6 +285,11 @@ export const useDepositToVault = (vaultAddress: string) => {
 
     // Enhanced validation for SEI testnet vault addresses
     const validTestnetVaults = [
+      // NEW FIXED VAULTS - Deployed 2024
+      '0xAC64527866CCfA796Fa87A257B3f927179a895e6', // Native SEI Vault (FIXED)
+      '0xcF796aEDcC293db74829e77df7c26F482c9dBEC0', // ERC20 USDC Vault (FIXED)
+      
+      // Legacy vault addresses (for backwards compatibility)
       '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE',
       '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6', 
       '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1',

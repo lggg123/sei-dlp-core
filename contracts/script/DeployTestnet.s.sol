@@ -20,7 +20,7 @@ contract DeployTestnetScript is Script {
     uint256 constant SEI_TESTNET_CHAIN_ID = 1328;
     
     // Deployment addresses (will be set during deployment)
-    address public seiVault;
+    address payable public seiVault;
     address public vaultFactory;
     address public aiOracle;
     address public strategyVault;
@@ -60,7 +60,7 @@ contract DeployTestnetScript is Script {
         console.log("Vault Factory deployed at: %s", vaultFactory);
         
         // 4. Deploy SEI Vault
-        seiVault = deploySEIVault(sei, deployer, deployer);
+        seiVault = payable(deploySEIVault(sei, deployer, deployer));
         console.log("SEI Vault deployed at: %s", seiVault);
         
         // 5. Deploy Strategy Vault through Factory

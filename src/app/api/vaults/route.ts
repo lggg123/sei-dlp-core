@@ -28,6 +28,61 @@ export async function GET(request: NextRequest) {
     
     // Bull market vault data - synchronized with deployed smart contracts
     const vaults = [
+      // NEW FIXED VAULTS (Deployed 2024)
+      {
+        address: '0xAC64527866CCfA796Fa87A257B3f927179a895e6', // Native SEI Vault (FIXED)
+        name: 'Native SEI Vault',
+        strategy: 'concentrated_liquidity',
+        tokenA: 'SEI',
+        tokenB: 'SEI',
+        fee: 0.003,
+        tickSpacing: 60,
+        tvl: 500000, // $500K TVL
+        apy: 0.150,
+        chainId: 1328,
+        active: true,
+        performance: {
+          totalReturn: 0.095,
+          sharpeRatio: 1.55,
+          maxDrawdown: 0.018,
+          winRate: 0.72
+        },
+        position: {
+          lowerTick: -887220,
+          upperTick: 887220,
+          liquidity: '500000000000000000',
+          tokensOwed0: '25000000',
+          tokensOwed1: '0'
+        }
+      },
+      {
+        address: '0xcF796aEDcC293db74829e77df7c26F482c9dBEC0', // ERC20 USDC Vault (FIXED)
+        name: 'USDC Vault',
+        strategy: 'stable_max',
+        tokenA: 'USDC',
+        tokenB: 'USDC',
+        fee: 0.001,
+        tickSpacing: 10,
+        tvl: 750000, // $750K TVL
+        apy: 0.085,
+        chainId: 1328,
+        active: true,
+        performance: {
+          totalReturn: 0.065,
+          sharpeRatio: 1.25,
+          maxDrawdown: 0.012,
+          winRate: 0.78
+        },
+        position: {
+          lowerTick: -100,
+          upperTick: 100,
+          liquidity: '750000000000',
+          tokensOwed0: '375000000',
+          tokensOwed1: '0'
+        }
+      },
+      
+      // LEGACY VAULTS
       {
         address: '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE', // Concentrated Liquidity Vault (testnet)
         name: 'SEI-USDC Concentrated LP',

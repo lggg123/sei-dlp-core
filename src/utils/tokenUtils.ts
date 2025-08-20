@@ -24,7 +24,7 @@ export interface VaultData {
   strategy: string;
 }
 
-// SEI testnet token addresses
+// SEI testnet token addresses (SEI Atlantic-2 Testnet)
 export const SEI_TESTNET_TOKENS: Record<string, TokenInfo> = {
   SEI: {
     symbol: 'SEI',
@@ -35,7 +35,7 @@ export const SEI_TESTNET_TOKENS: Record<string, TokenInfo> = {
   USDC: {
     symbol: 'USDC',
     name: 'USD Coin',
-    address: '0xD2D6BE5E318d5D4B3A03aFf4b7FfDA3d3f3a2a2a', // Mock USDC address for testnet
+    address: '0x647Dc1B1BFb17171326c12A2dcd8464E871F097B', // NEW: Deployed Mock USDC
     decimals: 6,
     isNative: false
   },
@@ -80,10 +80,12 @@ export const SEI_TESTNET_TOKENS: Record<string, TokenInfo> = {
  * Validate vault data structure and token symbols
  */
 export function validateVaultData(vaultData: any): { isValid: boolean; errors: string[] } {
+  console.log('🔍 [validateVaultData] Starting validation for vaultData:', vaultData);
   const errors: string[] = [];
   
   if (!vaultData) {
     errors.push('Vault data is null or undefined');
+    console.error('❌ [validateVaultData] Validation failed: Vault data is null or undefined');
     return { isValid: false, errors };
   }
   
@@ -120,6 +122,12 @@ export function validateVaultData(vaultData: any): { isValid: boolean; errors: s
     }
   }
   
+  if (errors.length > 0) {
+    console.error('❌ [validateVaultData] Validation failed with errors:', errors);
+  } else {
+    console.log('✅ [validateVaultData] Validation successful');
+  }
+  
   return { isValid: errors.length === 0, errors };
 }
 
@@ -151,11 +159,12 @@ export function getVaultTokenRequirements(vaultData: {
   tokenB: string;
   strategy: string;
 }): VaultTokenRequirements {
+  console.log('🔍 [getVaultTokenRequirements] Determining requirements for vault:', vaultData);
   // Validate vault data first
   const validation = validateVaultData(vaultData);
   if (!validation.isValid) {
     const errorMessage = `Invalid vault data: ${validation.errors.join(', ')}`;
-    console.error('[tokenUtils]', errorMessage, { vaultData });
+    console.error('❌ [getVaultTokenRequirements] Validation failed:', errorMessage, { vaultData });
     throw new Error(errorMessage);
   }
   
@@ -187,12 +196,15 @@ export function getVaultTokenRequirements(vaultData: {
     'stable_max'
   ].includes(vaultData.strategy);
 
-  return {
+  const requirements = {
     primaryToken: primaryTokenInfo,
     secondaryToken: secondaryTokenInfo,
     requiresBothTokens,
-    supportsNativeSEI
+    supportsNativeSEI,
   };
+
+  console.log('✅ [getVaultTokenRequirements] Determined requirements:', requirements);
+  return requirements;
 }
 
 /**
@@ -201,6 +213,7 @@ export function getVaultTokenRequirements(vaultData: {
 export function vaultAcceptsNativeSEI(vaultData: {
   tokenA: string;
   tokenB: string;
+  address?: string;
 }): boolean {
   // Handle invalid vault data gracefully
   if (!vaultData || !vaultData.tokenA || !vaultData.tokenB) {
@@ -211,7 +224,25 @@ export function vaultAcceptsNativeSEI(vaultData: {
   const tokenAUpper = vaultData.tokenA.trim().toUpperCase();
   const tokenBUpper = vaultData.tokenB.trim().toUpperCase();
   
-  return tokenAUpper === 'SEI' || tokenBUpper === 'SEI';
+  // Check if either token is SEI (native)
+  const hasSEIToken = tokenAUpper === 'SEI' || tokenBUpper === 'SEI';
+  
+  // Additional check: some vaults might be configured for native SEI even with other tokens
+  // This can be determined by checking if tokenA is set to address(0) in the contract
+  return hasSEIToken;
+}
+
+/**
+ * Determine if a vault is configured for native SEI (token0 == address(0))
+ */
+export function isNativeSEIVault(vaultData: {
+  tokenA: string;
+  tokenB: string;
+  strategy: string;
+}): boolean {
+  // Check if the primary token is SEI and the strategy suggests native support
+  const primaryToken = getPrimaryDepositToken(vaultData);
+  return primaryToken.isNative && primaryToken.symbol === 'SEI';
 }
 
 /**

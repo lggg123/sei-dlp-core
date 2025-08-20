@@ -1,5 +1,16 @@
 {
   "networks": {
+    "sei-testnet": {
+      "chainId": 1328,
+      "rpcUrl": "https://evm-rpc-testnet.sei-apis.com",
+      "name": "SEI Atlantic-2 Testnet",
+      "blockExplorer": "https://seitrace.com",
+      "nativeCurrency": {
+        "name": "SEI",
+        "symbol": "SEI",
+        "decimals": 18
+      }
+    },
     "sei-devnet": {
       "chainId": 713715,
       "rpcUrl": "https://evm-rpc-arctic-1.sei-apis.com",
@@ -26,6 +37,7 @@
   "contracts": {
     "deployment-targets": {
       "script/Deploy.s.sol": "DeployScript",
+      "script/DeployFixed.s.sol": "DeployFixedScript",
       "script/SimpleDeploy.s.sol": "SimpleDeployScript",
       "script/VerifyTestUsers.s.sol": "VerifyTestUsersScript",
       "script/FundTestUser.s.sol": "FundTestUserScript"

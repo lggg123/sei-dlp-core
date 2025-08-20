@@ -206,14 +206,16 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   useEffect(() => {
     if (isOpen) {
       if (vault) {
+        console.log('✅ [DepositModal] Modal opened for vault:', vault.name);
         // Lock body scroll on mobile
         document.body.style.overflow = 'hidden';
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
       } else {
-        console.error('[DepositModal] ERROR: Modal is open but vault is null!');
+        console.error('❌ [DepositModal] ERROR: Modal is open but vault is null!');
       }
     } else {
+      console.log('🛑 [DepositModal] Modal closed');
       // Unlock body scroll
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -241,13 +243,29 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const handleDeposit = async () => {
     // Check wallet connection first
     if (!isConnected || !address) {
+      console.warn('🔒 [DepositModal] Wallet not connected, aborting deposit');
       setErrorMessage('Please connect your wallet to continue');
       return;
     }
     
-    if (!isValidAmount || !vault || !selectedToken) return;
+    console.log('▶️ [DepositModal] handleDeposit initiated', {
+      depositAmount,
+      selectedToken,
+      isValidAmount,
+      vaultName: vault?.name,
+    });
+
+    if (!isValidAmount || !vault || !selectedToken) {
+      console.warn('⚠️ [DepositModal] Invalid deposit params, aborting', {
+        isValidAmount,
+        vault: !!vault,
+        selectedToken: !!selectedToken,
+      });
+      return;
+    }
 
     // Reset transaction state
+    console.log('🔄 [DepositModal] Resetting transaction state to pending');
     setTransactionStatus('pending');
     setTransactionHash(null);
     setErrorMessage(null);

@@ -61,7 +61,7 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         address _aiModel
     ) ERC20(_name, _symbol) Ownable(_owner) {
         require(block.chainid == SEI_CHAIN_ID, "Invalid SEI chain");
-        require(_asset != address(0), "Invalid asset");
+        // Note: _asset can be address(0) for native SEI vaults
         require(_owner != address(0), "Invalid owner");
         require(_aiModel != address(0), "Invalid AI model");
         
@@ -87,7 +87,7 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
     }
     
     function totalAssets() public view returns (uint256) {
-        return IERC20(vaultInfo.token0).balanceOf(address(this));
+        return _getTotalAssetBalance();
     }
     
     /**
@@ -124,30 +124,46 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
     /**
      * @dev SEI-optimized deposit with parallel execution support
      * @notice Optimized for SEI's 400ms finality with gas optimizations
+     * @param amount The amount to deposit (for ERC20) or should match msg.value (for native SEI)
+     * @param recipient The address to receive vault shares
      */
     function seiOptimizedDeposit(
         uint256 amount,
         address recipient
-    ) public nonReentrant onlySEI returns (uint256 shares) {
-        require(amount > 0, "Deposit amount must be greater than 0");
+    ) public payable nonReentrant onlySEI returns (uint256 shares) {
         require(recipient != address(0), "Invalid recipient");
+        
+        uint256 actualAmount;
+        
+        // Determine if this is a native SEI deposit or ERC20 deposit
+        if (vaultInfo.token0 == address(0)) {
+            // Native SEI deposit
+            require(msg.value > 0, "Must send SEI with transaction");
+            require(amount == msg.value, "Amount must match msg.value for native SEI");
+            actualAmount = msg.value;
+        } else {
+            // ERC20 token deposit
+            require(amount > 0, "Deposit amount must be greater than 0");
+            require(msg.value == 0, "Do not send SEI for ERC20 deposits");
+            actualAmount = amount;
+            
+            // Transfer ERC20 tokens from sender
+            IERC20(vaultInfo.token0).transferFrom(msg.sender, address(this), amount);
+        }
         
         // Cache values to reduce SLOAD operations (gas optimization for SEI)
         uint256 currentSupply = totalSupply();
-        uint256 totalAssetBalance = IERC20(vaultInfo.token0).balanceOf(address(this));
+        uint256 totalAssetBalance = _getTotalAssetBalance();
         
         // Calculate shares with optimized logic
         if (currentSupply == 0) {
-            shares = amount;
+            shares = actualAmount;
         } else {
             // Use unchecked for gas optimization on SEI (safe due to previous checks)
             unchecked {
-                shares = (amount * currentSupply) / totalAssetBalance;
+                shares = (actualAmount * currentSupply) / totalAssetBalance;
             }
         }
-        
-        // Transfer tokens first (fail fast pattern)
-        IERC20(vaultInfo.token0).transferFrom(msg.sender, address(this), amount);
         
         // Mint shares
         _mint(recipient, shares);
@@ -155,11 +171,11 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         // Batch update vault info to reduce SSTORE operations
         unchecked {
             vaultInfo.totalSupply = currentSupply + shares;
-            vaultInfo.totalValueLocked = totalAssetBalance + amount;
+            vaultInfo.totalValueLocked = totalAssetBalance + actualAmount;
         }
         
         // Emit optimized event for SEI parallel execution
-        emit SEIOptimizedDeposit(recipient, amount, shares, block.timestamp);
+        emit SEIOptimizedDeposit(recipient, actualAmount, shares, block.timestamp);
         
         // Optional: Emit parallel execution status only when enabled
         if (parallelExecutionEnabled) {
@@ -167,6 +183,19 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         }
         
         return shares;
+    }
+    
+    /**
+     * @dev Helper function to get total asset balance (native SEI or ERC20)
+     */
+    function _getTotalAssetBalance() internal view returns (uint256) {
+        if (vaultInfo.token0 == address(0)) {
+            // Native SEI balance
+            return address(this).balance;
+        } else {
+            // ERC20 token balance
+            return IERC20(vaultInfo.token0).balanceOf(address(this));
+        }
     }
     
     /**
@@ -179,21 +208,30 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
     ) public nonReentrant onlySEI returns (uint256 assets) {
         require(shares > 0, "Withdraw amount must be greater than 0");
         require(balanceOf(owner) >= shares, "Insufficient shares");
+        require(msg.sender == owner || allowance(owner, msg.sender) >= shares, "Insufficient allowance");
         
         // Calculate assets to return
         uint256 currentSupply = totalSupply();
-        uint256 totalAssetBalance = totalAssets();
+        uint256 totalAssetBalance = _getTotalAssetBalance();
         assets = (shares * totalAssetBalance) / currentSupply;
         
         // Burn shares
         _burn(owner, shares);
         
-        // Transfer assets
-        IERC20(vaultInfo.token0).transfer(recipient, assets);
+        // Transfer assets (native SEI or ERC20)
+        if (vaultInfo.token0 == address(0)) {
+            // Native SEI transfer
+            require(address(this).balance >= assets, "Insufficient contract balance");
+            (bool success, ) = recipient.call{value: assets}("");
+            require(success, "Native SEI transfer failed");
+        } else {
+            // ERC20 token transfer
+            IERC20(vaultInfo.token0).transfer(recipient, assets);
+        }
         
         // Update vault info
         vaultInfo.totalSupply = totalSupply();
-        vaultInfo.totalValueLocked = totalAssets();
+        vaultInfo.totalValueLocked = _getTotalAssetBalance();
         
         emit SEIOptimizedWithdraw(recipient, assets, shares, block.timestamp);
         
@@ -263,6 +301,23 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         return lastFinalityOptimization;
     }
     
+    /**
+     * @dev Receive function to accept native SEI deposits
+     */
+    receive() external payable {
+        // Only accept SEI if this is a native SEI vault
+        require(vaultInfo.token0 == address(0), "This vault does not accept native SEI");
+        // Note: Direct receives should use seiOptimizedDeposit for proper share calculation
+        // This is just to prevent accidental SEI sends from reverting
+    }
+    
+    /**
+     * @dev Fallback function
+     */
+    fallback() external payable {
+        revert("Use seiOptimizedDeposit function for deposits");
+    }
+
     // Internal functions
     function _executeRebalance(AIRebalanceParams calldata params) internal {
         currentPosition.tickLower = params.newTickLower;

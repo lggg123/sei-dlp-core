@@ -21,7 +21,7 @@ contract DeployScript is Script {
     
     // Deployment addresses (will be set during deployment)
     address public mockToken;
-    address public seiVault;
+    address payable public seiVault;
     address public vaultFactory;
     address public aiOracle;
     address public strategyVault;
@@ -67,7 +67,7 @@ contract DeployScript is Script {
         console.log("Vault Factory creation fee set to 0 for testing");
         
         // 4. Deploy SEI Vault
-        seiVault = deploySEIVault(mockToken, deployer, deployer);
+        seiVault = payable(deploySEIVault(mockToken, deployer, deployer));
         console.log("SEI Vault deployed at: %s", seiVault);
         
         // 5. Deploy Strategy Vault through Factory
