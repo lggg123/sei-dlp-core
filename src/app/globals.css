@@ -821,6 +821,45 @@ nav .nav-left-simple {
   flex-shrink: 0;
 }
 
+/* Center - App Navigation Links */
+nav .nav-center-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+nav .nav-center-links a {
+  position: relative;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+}
+
+nav .nav-center-links a:hover {
+  color: hsl(var(--primary));
+  transform: translateY(-1px);
+}
+
+nav .nav-center-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary)) 50%, transparent);
+  transition: width 0.3s ease;
+}
+
+nav .nav-center-links a:hover::after {
+  width: 100%;
+}
+
 /* Brand text styling */
 nav .nav-brand {
   display: flex;
@@ -971,6 +1010,10 @@ nav .mobile-menu-btn:hover {
   
   nav .nav-brand {
     display: none;
+  }
+  
+  nav .nav-center-links {
+    display: none; /* Hide center links on mobile */
   }
   
   nav .btn-cyber {

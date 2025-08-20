@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Logo from './Logo';
 import { gsap } from 'gsap';
+import { Menu, X } from 'lucide-react';
 
 const WalletConnectButton = dynamic(
   () => import('./WalletConnectButton').then(mod => ({ default: mod.WalletConnectButton })),
@@ -27,6 +28,7 @@ interface NavigationProps {
 
 export function Navigation({ variant = 'transparent', className = '', showWallet = true, showLaunchApp = true }: NavigationProps) {
   const logoRef = useRef<HTMLDivElement>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const baseClasses = "fixed top-0 left-0 right-0 z-50 h-14 transition-all duration-300 m-0 p-0";
   
@@ -116,6 +118,42 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
           </div>
         </div>
 
+        {/* CENTER - App Navigation Links (only show when inside app) */}
+        {!showLaunchApp && (
+          <div className="nav-center-links hidden md:flex items-center space-x-6">
+            <Link 
+              href="/vaults"
+              className="text-foreground hover:text-primary transition-colors no-underline font-medium"
+            >
+              Vaults
+            </Link>
+            <Link
+              href="/market"
+              className="text-foreground hover:text-primary transition-colors no-underline font-medium"
+            >
+              Market
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-foreground hover:text-primary transition-colors no-underline font-medium"
+            >
+              Portfolio
+            </Link>
+            <Link
+              href="/portfolio/rebalance"
+              className="text-foreground hover:text-primary transition-colors no-underline font-medium"
+            >
+              Rebalance
+            </Link>
+            <Link
+              href="/vaults/deploy"
+              className="text-foreground hover:text-primary transition-colors no-underline font-medium"
+            >
+              Deploy
+            </Link>
+          </div>
+        )}
+
         {/* RIGHT SIDE */}
         <div className="nav-right-simple">
           {showLaunchApp && (
@@ -139,8 +177,66 @@ export function Navigation({ variant = 'transparent', className = '', showWallet
               <WalletConnectButton />
             </div>
           )}
+          
+          {/* Mobile Menu Button (only show when inside app) */}
+          {!showLaunchApp && (
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden text-foreground hover:text-primary ml-2"
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          )}
         </div>
       </div>
+      
+      {/* Mobile Menu Overlay */}
+      {!showLaunchApp && mobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border shadow-lg">
+          <div className="flex flex-col space-y-4 p-4">
+            <Link 
+              href="/vaults"
+              className="text-foreground hover:text-primary transition-colors font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Vaults
+            </Link>
+            <Link
+              href="/market"
+              className="text-foreground hover:text-primary transition-colors font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Market
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-foreground hover:text-primary transition-colors font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Portfolio
+            </Link>
+            <Link
+              href="/portfolio/rebalance"
+              className="text-foreground hover:text-primary transition-colors font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Rebalance
+            </Link>
+            <Link
+              href="/vaults/deploy"
+              className="text-foreground hover:text-primary transition-colors font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Deploy Vault
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

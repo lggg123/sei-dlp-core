@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
+import Navigation from '@/components/Navigation';
 import { Rocket, Settings, DollarSign, Shield, TrendingUp, AlertTriangle, CheckCircle, Code, Zap } from 'lucide-react';
 
 interface VaultConfig {
@@ -66,8 +67,11 @@ const DeployVaultPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      {/* Navigation */}
+      <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
+      
       {/* Header */}
-      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl">
+      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl" style={{ marginTop: '3.5rem' }}>
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-400 rounded-xl flex items-center justify-center">

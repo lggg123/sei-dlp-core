@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
+import Navigation from '@/components/Navigation';
 import { BarChart3, TrendingUp, AlertTriangle, Zap, Clock, CheckCircle, DollarSign, ArrowRight, RefreshCw } from 'lucide-react';
 
 interface RebalanceAction {
@@ -108,8 +109,11 @@ const RebalancePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      {/* Navigation */}
+      <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
+      
       {/* Header */}
-      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl">
+      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl" style={{ marginTop: '3.5rem' }}>
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">

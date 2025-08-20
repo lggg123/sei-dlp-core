@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
+import Navigation from '@/components/Navigation';
 import { TrendingUp, PieChart, DollarSign, Activity, Plus, ArrowRight, Wallet, BarChart3, Settings, Bell } from 'lucide-react';
 import CustomerVaultDashboard from '@/components/CustomerVaultDashboard';
 import Link from 'next/link';
@@ -97,8 +98,11 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      {/* Navigation */}
+      <Navigation variant="dark" showWallet={true} showLaunchApp={false} />
+      
       {/* Header */}
-      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl sticky top-0 z-50">
+      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl sticky z-50" style={{ top: '3.5rem' }}>
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
