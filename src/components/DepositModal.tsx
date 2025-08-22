@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Loader2, ArrowRight, Info, Shield, TrendingUp, Coins, Vault, DollarSign, Percent, CheckCircle2, Zap } from 'lucide-react';
 import { useEnhancedVaultDeposit } from '@/hooks/useEnhancedVaultDeposit';
 import { 
@@ -86,68 +86,120 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const [transactionStatus, setTransactionStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [pendingTimeout, setPendingTimeout] = useState<NodeJS.Timeout | null>(null);
   // Get actual wallet connection
   const { address, isConnected } = useAccount();
+  
+  // Debug wallet connection
+  useEffect(() => {
+    console.log('🔗 [DepositModal] Wallet connection status:', {
+      address,
+      isConnected,
+      addressType: typeof address
+    });
+  }, [address, isConnected]);
   
   const router = useRouter();
   
   // State for selected deposit token
   const [selectedToken, setSelectedToken] = useState<string>('');
 
-  // Only create deposit mutation if vault has valid data
-  const vaultData = vault && vault.address && vault.tokenA && vault.tokenB && vault.strategy ? {
-    address: vault.address,
-    tokenA: vault.tokenA,
-    tokenB: vault.tokenB,
-    strategy: vault.strategy,
-    name: vault.name
-  } : {
-    // Fallback data to prevent errors when vault is null/incomplete
+  // Memoize vault data to prevent unnecessary re-creations and re-renders
+  const vaultData = useMemo(() => {
+    // Only use real vault data, no fallback to prevent hydration issues
+    if (vault && vault.address && vault.tokenA && vault.tokenB && vault.strategy) {
+      console.log('✅ [DepositModal] Using real vault data:', vault);
+      return {
+        address: vault.address,
+        tokenA: vault.tokenA,
+        tokenB: vault.tokenB,
+        strategy: vault.strategy,
+        name: vault.name
+      };
+    }
+    
+    // Return null if no valid vault - component will not render
+    console.log('❌ [DepositModal] No valid vault data available');
+    return null;
+  }, [vault?.address, vault?.tokenA, vault?.tokenB, vault?.strategy, vault?.name]);
+  
+  const depositMutation = useEnhancedVaultDeposit(vaultData || {
     address: '',
-    tokenA: 'SEI',
+    tokenA: 'SEI', 
     tokenB: 'USDC',
     strategy: 'stable_max',
     name: 'Default Vault'
-  };
+  });
   
-  const depositMutation = useEnhancedVaultDeposit(vaultData);
-  
-  // Enhanced balance information available through depositMutation.userBalance
-  
-  // Get deposit info and token requirements (after hooks are initialized)
-  const depositInfo = vault ? depositMutation.getDepositInfo() : null;
-  // Token requirements are included in depositInfo - only call when vault exists and has valid data
-  const primaryToken = (vault && vault.tokenA && vault.tokenB && vault.strategy) ? getPrimaryDepositToken(vault) : null;
-  const requirementText = (vault && vault.tokenA && vault.tokenB && vault.strategy) ? getTokenRequirementText(vault) : 'Token requirements unavailable';
+  // Memoize computed values to prevent excessive re-computations
+  const depositInfo = useMemo(() => {
+    return vault ? depositMutation.getDepositInfo() : null;
+  }, [vault, depositMutation.getDepositInfo]);
+
+  const primaryToken = useMemo(() => {
+    return (vault && vault.tokenA && vault.tokenB && vault.strategy) ? getPrimaryDepositToken(vault) : null;
+  }, [vault?.tokenA, vault?.tokenB, vault?.strategy]);
+
+  const requirementText = useMemo(() => {
+    return (vault && vault.tokenA && vault.tokenB && vault.strategy) ? getTokenRequirementText(vault) : 'Token requirements unavailable';
+  }, [vault?.tokenA, vault?.tokenB, vault?.strategy]);
   
   // Get current user balance for the primary deposit token
   const currentUserBalance = depositInfo ? depositInfo.userBalance : { amount: 0, formatted: '0', isLoading: false };
   
-  // Update selected token when vault changes
+  // Update selected token when vault changes - optimize to prevent excessive calls
   useEffect(() => {
-    if (primaryToken && !selectedToken) {
+    if (primaryToken?.symbol && !selectedToken) {
+      console.log('🔧 [DepositModal] Setting selected token to:', primaryToken.symbol);
       setSelectedToken(primaryToken.symbol);
     }
-  }, [primaryToken, selectedToken]);
+  }, [primaryToken?.symbol, selectedToken]);
   
   // Define handleClose function early to avoid hoisting issues
   const handleClose = useCallback(() => {
+    // Clear any pending timeouts
+    if (pendingTimeout) {
+      clearTimeout(pendingTimeout);
+      setPendingTimeout(null);
+    }
+    
+    // Reset wagmi transaction state
+    console.log('🔄 [DepositModal] Resetting transaction state on close');
+    depositMutation.reset();
+    
     setDepositAmount('');
     setTransactionStatus('idle');
     setTransactionHash(null);
     setErrorMessage(null);
     onClose();
-  }, [onClose]);
+  }, [onClose, pendingTimeout, depositMutation]);
 
-  // Watch for transaction pending state
+  // Watch for transaction pending state - prevent infinite loops and add timeout
   useEffect(() => {
     if (depositMutation.isPending && transactionStatus !== 'pending') {
-      console.log('[DepositModal] Transaction pending...');
+      console.log('⏳ [DepositModal] Transaction pending state detected');
       setTransactionStatus('pending');
       setTransactionHash(null);
       setErrorMessage(null);
+
+      // Set a timeout to prevent getting stuck in pending state
+      const timeout = setTimeout(() => {
+        console.warn('⚠️ [DepositModal] Transaction timeout - resetting to idle state');
+        
+        // Reset wagmi state on timeout
+        depositMutation.reset();
+        
+        setTransactionStatus('error');
+        setErrorMessage('Transaction timed out. Please try again.');
+      }, 60000); // 60 seconds timeout
+
+      setPendingTimeout(timeout);
+    } else if (!depositMutation.isPending && pendingTimeout) {
+      // Clear timeout if transaction is no longer pending
+      clearTimeout(pendingTimeout);
+      setPendingTimeout(null);
     }
-  }, [depositMutation.isPending, transactionStatus]);
+  }, [depositMutation.isPending, transactionStatus, pendingTimeout]);
 
   // Watch for transaction success
   useEffect(() => {
@@ -206,13 +258,23 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   useEffect(() => {
     if (isOpen) {
       if (vault) {
-        console.log('✅ [DepositModal] Modal opened for vault:', vault.name);
+        console.log('✅ [DepositModal] Modal opened for vault:', {
+          name: vault.name,
+          address: vault.address,
+          strategy: vault.strategy,
+          tokenA: vault.tokenA,
+          tokenB: vault.tokenB
+        });
         // Lock body scroll on mobile
         document.body.style.overflow = 'hidden';
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
       } else {
-        console.error('❌ [DepositModal] ERROR: Modal is open but vault is null!');
+        console.error('❌ [DepositModal] ERROR: Modal is open but vault is null!', {
+          isOpen,
+          vault: vault,
+          vaultType: typeof vault
+        });
       }
     } else {
       console.log('🛑 [DepositModal] Modal closed');
@@ -227,11 +289,22 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
+      // Clear timeout on unmount
+      if (pendingTimeout) {
+        clearTimeout(pendingTimeout);
+      }
     };
-  }, [isOpen, vault]);
+  }, [isOpen, vault, pendingTimeout]);
 
   // Don't render if vault is null or modal is not open
-  if (!isOpen || !vault) {
+  if (!isOpen || !vault || !vault.address || !vaultData) {
+    console.log('🚫 [DepositModal] Not rendering:', {
+      isOpen,
+      hasVault: !!vault,
+      vaultAddress: vault?.address,
+      vaultName: vault?.name,
+      hasVaultData: !!vaultData
+    });
     return null;
   }
 
@@ -266,6 +339,10 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
 
     // Reset transaction state
     console.log('🔄 [DepositModal] Resetting transaction state to pending');
+    
+    // Clear any previous wagmi state
+    depositMutation.reset();
+    
     setTransactionStatus('pending');
     setTransactionHash(null);
     setErrorMessage(null);

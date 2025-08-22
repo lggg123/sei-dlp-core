@@ -1,17 +1,17 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Button } from '@/components/ui/button'
-import { SeiWalletModal } from './SeiWalletModal'
-import { useSeiWallet } from '@/hooks/useSeiWallet'
 import { useBalance, useAccount } from 'wagmi'
 import { formatEther } from 'viem'
 
 export function WalletConnectButton() {
-  const [showSeiModal, setShowSeiModal] = useState(false)
-  const { isSeiConnected, isFullyConnected, mounted } = useSeiWallet()
-  const [fallbackMode, setFallbackMode] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   const [lastLogTime, setLastLogTime] = useState(0)
   
   // Get wallet address and balance for SEI testnet
@@ -31,39 +31,28 @@ export function WalletConnectButton() {
   // Enhanced debug logging with debouncing to prevent spam
   React.useEffect(() => {
     const now = Date.now()
-    // Only log every 5 seconds to prevent console spam
     if (now - lastLogTime < 5000) return
     
     setLastLogTime(now)
     console.log('[WalletConnectButton] State:', { 
-      mounted, 
-      fallbackMode, 
-      isSeiConnected, 
-      isFullyConnected,
+      mounted,
+      isWalletConnected: isConnected,
+      walletAddress: address,
       timestamp: new Date().toISOString()
     })
     
-    // Debug DOM visibility (only when needed)
-    const walletContainers = document.querySelectorAll('.wallet-container-override')
-    if (walletContainers.length > 1) {
-      console.warn('[WalletConnectButton] Multiple wallet containers detected:', walletContainers.length)
+    if (typeof window !== 'undefined' && window.ethereum) {
+      console.log('[WalletConnectButton] Ethereum provider detected:', {
+        isMetaMask: window.ethereum.isMetaMask,
+        chainId: window.ethereum.chainId,
+        selectedAddress: window.ethereum.selectedAddress
+      });
     }
-  }, [mounted, fallbackMode, isSeiConnected, isFullyConnected, lastLogTime])
+  }, [mounted, lastLogTime, isConnected, address])
 
-  // Reduced fallback timeout for better UX
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!mounted) {
-        console.log('[WalletConnectButton] Activating fallback mode after timeout')
-        setFallbackMode(true)
-      }
-    }, 3000) // Reduced from 5s to 3s
 
-    return () => clearTimeout(timer)
-  }, [mounted])
-
-  // Always show a button to ensure visibility - even during loading
-  if (!mounted && !fallbackMode) {
+  // Show loading state while mounting
+  if (!mounted) {
     return (
       <div className="wallet-container-override">
         <Button 
@@ -77,29 +66,10 @@ export function WalletConnectButton() {
     )
   }
 
-  // Enhanced fallback mode with better error handling
-  if (fallbackMode) {
-    return (
-      <div className="wallet-container-override">
-        <Button 
-          className="btn-cyber"
-          onClick={() => {
-            console.log('[WalletConnectButton] Fallback mode - attempting wallet connection')
-            // More user-friendly fallback
-            const retry = window.confirm('Wallet connection is having issues. Would you like to refresh the page to try again?')
-            if (retry) {
-              window.location.reload()
-            }
-          }}
-        >
-          Connect Wallet
-        </Button>
-      </div>
-    )
-  }
 
   return (
     <>
+      
       <ConnectButton.Custom>
         {({
           account,
@@ -138,7 +108,14 @@ export function WalletConnectButton() {
                   if (!connected) {
                     return (
                       <Button 
-                        onClick={openConnectModal} 
+                        onClick={() => {
+                          console.log('[WalletConnectButton] Connect button clicked');
+                          try {
+                            openConnectModal();
+                          } catch (error) {
+                            console.error('[WalletConnectButton] Error opening connect modal:', error);
+                          }
+                        }} 
                         className="btn-cyber"
                         type="button"
                       >
@@ -202,19 +179,9 @@ export function WalletConnectButton() {
                         ? ' (Loading...)'
                         : ' (0.00 SEI)'}
                       {/* Connection status indicator */}
-                      {isFullyConnected && (
+                      {isConnected && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
                       )}
-                    </Button>
-
-                    {/* Sei Wallet Toggle */}
-                    <Button
-                      onClick={() => setShowSeiModal(true)}
-                      className={isSeiConnected ? "btn-cyber-secondary" : "btn-cyber-outline"}
-                      type="button"
-                      title="Connect Sei Cosmos wallet"
-                    >
-                      {isSeiConnected ? '🌕' : '🌑'}
                     </Button>
                   </div>
                 )
@@ -225,11 +192,6 @@ export function WalletConnectButton() {
         }}
       </ConnectButton.Custom>
 
-      {/* Sei Wallet Modal */}
-      <SeiWalletModal 
-        isOpen={showSeiModal} 
-        onClose={() => setShowSeiModal(false)} 
-      />
     </>
   )
 }

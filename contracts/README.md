@@ -23,9 +23,9 @@ contracts/
 
 ## Quick Start
 
-### Deploy to SEI Devnet
+### Deploy to SEI Testnet
 ```shell
-forge script script/Deploy.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com --broadcast
+forge script script/Deploy.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com --broadcast
 ```
 
 ### Run Tests
@@ -35,7 +35,7 @@ forge test
 
 ### Verify Test User Funding
 ```shell
-forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com
+forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com
 ```
 
 ## Features
@@ -43,7 +43,7 @@ forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-arctic-1.sei
 ### ✅ SEI Network Optimizations
 - **Parallel Execution**: Optimized for SEI's parallel transaction processing
 - **400ms Finality**: Leverages SEI's fast block times
-- **Chain Validation**: Ensures deployment only on SEI (Chain ID: 713715)
+- **Chain Validation**: Ensures deployment only on SEI (Chain ID: 1328)
 
 ### ✅ AI-Driven Strategies
 - **8 Strategy Vaults**: Concentrated liquidity, yield farming, arbitrage, etc.
@@ -55,7 +55,7 @@ forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-arctic-1.sei
 - **7 Mock Tokens**: SEI, USDC, USDT, ETH, BTC, ATOM, DAI
 - **Realistic Testing**: Enables full deposit/withdrawal workflow testing
 
-## Test Users (Devnet)
+## Test Users (Testnet)
 
 After deployment, these addresses have funded tokens for testing:
 
@@ -102,10 +102,10 @@ forge test --match-test testDeposit
 ### 2. Devnet Deployment
 ```shell
 # Deploy with test user funding
-forge script script/Deploy.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com --broadcast
+forge script script/Deploy.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com --broadcast
 
 # Verify deployment
-forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com
+forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com
 ```
 
 ### 3. Frontend Integration
@@ -130,7 +130,7 @@ cp deployment_output.txt ../src/.env
 - Reentrancy guards on all external calls
 
 ### ✅ SEI-Specific Validations
-- Chain ID verification (713715)
+- Chain ID verification (1328)
 - Block finality optimization
 - Parallel execution safety
 

@@ -36,7 +36,12 @@ export const seiTestnet = defineChain({
   name: 'SEI Atlantic-2',
   nativeCurrency: { name: 'SEI', symbol: 'SEI', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://evm-rpc-testnet.sei-apis.com'] }
+    default: { 
+      http: [
+        'https://evm-rpc-testnet.sei-apis.com',
+        'https://evm-rpc.arctic-1.seinetwork.io' // Backup RPC
+      ] 
+    }
   },
   blockExplorers: {
     default: { name: 'SeiTrace Testnet', url: 'https://seitrace.com/atlantic-2' }
@@ -66,6 +71,8 @@ function createConfig() {
 
   const projectId = process.env.NEXT_PUBLIC_WC_ID
   
+  console.log('[Web3Config] WalletConnect Project ID:', projectId ? `${projectId.substring(0, 8)}...` : 'NOT_SET');
+  
   if (!projectId || projectId === 'dummy-project-id' || projectId === 'your_walletconnect_project_id_here') {
     console.warn('⚠️ WalletConnect Project ID not set. Please add NEXT_PUBLIC_WC_ID to your .env.local file.')
     console.warn('Get your Project ID from: https://walletconnect.com/cloud')
@@ -74,21 +81,13 @@ function createConfig() {
   configInstance = getDefaultConfig({
     appName: 'SEI DLP',
     projectId: projectId || 'fallback-project-id',
-    chains: [seiDevnet, seiMainnet, seiTestnet],
+    chains: [seiTestnet, seiMainnet, seiDevnet],
     transports: {
       [seiDevnet.id]: http(),
       [seiMainnet.id]: http(),
       [seiTestnet.id]: http()
     },
-    ssr: true,
-    batch: {
-      multicall: false,
-    },
-    // CRITICAL: Eliminate aggressive polling that causes MetaMask eth_accounts errors
-    pollingInterval: 120000, // 2 minutes - very conservative to prevent conflicts
-    // Additional config to prevent MetaMask provider conflicts
-    syncConnectedChain: false, // Prevents automatic chain switching conflicts
-    multiInjectedProviderDiscovery: false, // Prevents conflicts between multiple wallets
+    ssr: true
   })
 
   isCreatingConfig = false

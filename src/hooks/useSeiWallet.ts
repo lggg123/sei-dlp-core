@@ -42,6 +42,7 @@ export function useSeiWallet() {
 
   const connectSeiWallet = async (walletType: SeiWalletType) => {
     try {
+      console.log('[useSeiWallet] Attempting to connect to:', walletType);
       setSeiWalletState(prev => ({ ...prev, error: null }))
 
       if (typeof window === 'undefined') {
@@ -79,7 +80,14 @@ export function useSeiWallet() {
           throw new Error('Wallet getOfflineSigner method not available')
         }
         const offlineSigner = wallet.getOfflineSigner(cosmosChainId)
+        
+        console.log('[useSeiWallet] Getting accounts from offline signer...');
         const accounts = await offlineSigner.getAccounts()
+        console.log('[useSeiWallet] Received accounts:', accounts);
+        
+        if (!accounts || !Array.isArray(accounts)) {
+          throw new Error('Failed to get accounts from wallet')
+        }
         
         setSeiWalletState({
           isConnected: true,
@@ -98,7 +106,14 @@ export function useSeiWallet() {
           throw new Error('Wallet getOfflineSigner method not available')
         }
         const offlineSigner = wallet.getOfflineSigner(cosmosChainId)
+        
+        console.log('[useSeiWallet] Getting accounts from offline signer...');
         const accounts = await offlineSigner.getAccounts()
+        console.log('[useSeiWallet] Received accounts:', accounts);
+        
+        if (!accounts || !Array.isArray(accounts)) {
+          throw new Error('Failed to get accounts from wallet')
+        }
         
         setSeiWalletState({
           isConnected: true,

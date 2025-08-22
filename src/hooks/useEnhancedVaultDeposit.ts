@@ -2,8 +2,8 @@
  * Enhanced vault deposit hook that supports both native SEI and ERC20 token deposits
  */
 
-import { useWriteContract, useAccount, useWaitForTransactionReceipt, useChainId } from 'wagmi';
-import { useEffect } from 'react';
+import { useWriteContract, useAccount, useWaitForTransactionReceipt, useChainId, useReadContract } from 'wagmi';
+import { useEffect, useMemo, useRef } from 'react';
 import { parseUnits, formatUnits } from 'viem';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAppStore } from '@/stores/appStore';
@@ -57,29 +57,66 @@ export function useEnhancedVaultDeposit(vaultData: {
   strategy: string;
   name: string;
 }) {
-  const { writeContract, data: hash, error, isPending, isSuccess, isError } = useWriteContract();
+  const { writeContract, data: hash, error, isPending, isSuccess, isError, reset } = useWriteContract({
+    mutation: {
+      onError: (error) => {
+        console.error('🚨 [writeContract] ERROR:', error);
+      },
+      onSuccess: (data) => {
+        console.log('✅ [writeContract] SUCCESS:', data);
+      },
+      onSettled: (data, error) => {
+        console.log('🏁 [writeContract] SETTLED:', { data, error });
+      }
+    }
+  });
   const { address: userAddress } = useAccount();
   const chainId = useChainId();
   const queryClient = useQueryClient();
   const addNotification = useAppStore((state) => state.addNotification);
+  
+  // Use ref to prevent multiple initializations
+  const initRef = useRef(false);
+  const lastVaultAddress = useRef('');
+  
+  // Only log when vault changes or first initialization
+  useEffect(() => {
+    if (!initRef.current || lastVaultAddress.current !== vaultData.address) {
+      console.log('🚀 [useEnhancedVaultDeposit] Hook initialized for vault:', {
+        name: vaultData.name,
+        address: vaultData.address,
+        strategy: vaultData.strategy,
+        tokenA: vaultData.tokenA,
+        tokenB: vaultData.tokenB,
+        isFirstInit: !initRef.current,
+        addressChanged: lastVaultAddress.current !== vaultData.address
+      });
+      
+      initRef.current = true;
+      lastVaultAddress.current = vaultData.address;
+    }
+  }, [vaultData.name, vaultData.address, vaultData.strategy, vaultData.tokenA, vaultData.tokenB]);
 
-  // Log hook initialization and vault data
-  console.log('🚀 [useEnhancedVaultDeposit] Hook initialized for vault:', {
-    name: vaultData.name,
-    address: vaultData.address,
-    strategy: vaultData.strategy,
-    tokenA: vaultData.tokenA,
-    tokenB: vaultData.tokenB,
-  });
-
-  // Log wallet and network status
-  console.log('🌐 [useEnhancedVaultDeposit] Wallet & Network Status:', {
-    userAddress,
-    chainId,
-    expectedChainId: 1328, // SEI Atlantic-2
-    isCorrectNetwork: chainId === 1328,
-    vaultAddress: vaultData.address
-  });
+  // Log wallet and network status (only when it changes)
+  const lastUserAddress = useRef('');
+  const lastChainId = useRef(0);
+  
+  useEffect(() => {
+    if (lastUserAddress.current !== userAddress || lastChainId.current !== chainId) {
+      console.log('🌐 [useEnhancedVaultDeposit] Wallet & Network Status:', {
+        userAddress,
+        chainId,
+        expectedChainId: 1328, // SEI Atlantic-2
+        isCorrectNetwork: chainId === 1328,
+        vaultAddress: vaultData.address,
+        userAddressChanged: lastUserAddress.current !== userAddress,
+        chainIdChanged: lastChainId.current !== chainId
+      });
+      
+      lastUserAddress.current = userAddress || '';
+      lastChainId.current = chainId;
+    }
+  }, [userAddress, chainId, vaultData.address]);
 
   // Add network warning
   if (chainId !== 1328) {
@@ -90,7 +127,8 @@ export function useEnhancedVaultDeposit(vaultData: {
                      chainId === 11155111 ? 'Sepolia' :
                      chainId === 713715 ? 'SEI Devnet (Arctic)' :
                      chainId === 1328 ? 'SEI Atlantic-2 Testnet' : 'Unknown',
-      requiredNetwork: 'SEI Atlantic-2 Testnet'
+      requiredNetwork: 'SEI Atlantic-2 Testnet',
+      action: 'Please switch to SEI Atlantic-2 testnet in your wallet'
     });
   }
 
@@ -154,34 +192,82 @@ export function useEnhancedVaultDeposit(vaultData: {
     }
   }, [isReceiptError, receiptError]);
 
-  // Enhanced logging for transaction states (current snapshot)
-  console.log('📊 [useEnhancedVaultDeposit] Current Transaction State:', {
-    hash,
-    isPending,
-    isSuccess,
-    isError,
-    isConfirming,
-    isConfirmed,
-    isReceiptError,
-    error: error?.message,
-    receiptError: receiptError?.message,
-    hasReceipt: !!receipt
-  });
+  // Enhanced logging for transaction states (only when state changes)
+  const lastTxState = useRef('');
+  
+  useEffect(() => {
+    const currentState = `${isPending}|${isSuccess}|${isError}|${!!hash}`;
+    if (lastTxState.current !== currentState) {
+      console.log('📊 [useEnhancedVaultDeposit] Transaction State Changed:', {
+        hash,
+        isPending,
+        isSuccess,
+        isError,
+        isConfirming,
+        isConfirmed,
+        isReceiptError,
+        error: error?.message,
+        receiptError: receiptError?.message,
+        hasReceipt: !!receipt
+      });
+      lastTxState.current = currentState;
+    }
+  }, [hash, isPending, isSuccess, isError, isConfirming, isConfirmed, isReceiptError, error, receiptError, receipt]);
 
-  // Validate vault data before using it
-  const hasValidVaultData = vaultData.address && vaultData.tokenA && vaultData.tokenB && vaultData.strategy;
+  // Memoize vault data validation to prevent unnecessary re-computations
+  const hasValidVaultData = useMemo(() => {
+    return !!(vaultData.address && vaultData.tokenA && vaultData.tokenB && vaultData.strategy);
+  }, [vaultData.address, vaultData.tokenA, vaultData.tokenB, vaultData.strategy]);
 
-  // Get token requirements for this vault - only if vault data is valid
-  const tokenRequirements = hasValidVaultData ? getVaultTokenRequirements(vaultData) : {
-    primaryToken: { symbol: 'SEI', name: 'SEI', decimals: 18, isNative: true },
-    secondaryToken: { symbol: 'USDC', name: 'USD Coin', decimals: 6, isNative: false, address: '0xD2D6BE5E318d5D4B3A03aFf4b7FfDA3d3f3a2a2a' },
-    requiresBothTokens: false,
-    supportsNativeSEI: true
-  };
-  const primaryToken = hasValidVaultData ? getPrimaryDepositToken(vaultData) : tokenRequirements.primaryToken;
+  // Memoize token requirements to prevent repeated calls to getVaultTokenRequirements
+  const tokenRequirements = useMemo(() => {
+    if (!hasValidVaultData) {
+      return {
+        primaryToken: { symbol: 'SEI', name: 'SEI', decimals: 18, isNative: true },
+        secondaryToken: { symbol: 'USDC', name: 'USD Coin', decimals: 6, isNative: false, address: '0xD2D6BE5E318d5D4B3A03aFf4b7FfDA3d3f3a2a2a' },
+        requiresBothTokens: false,
+        supportsNativeSEI: true
+      };
+    }
+    
+    console.log('🔍 [useEnhancedVaultDeposit] Computing token requirements for vault:', vaultData.name);
+    return getVaultTokenRequirements(vaultData);
+  }, [hasValidVaultData, vaultData.address, vaultData.tokenA, vaultData.tokenB, vaultData.strategy, vaultData.name]);
+
+  // Memoize primary token to prevent repeated calls to getPrimaryDepositToken
+  const primaryToken = useMemo(() => {
+    if (!hasValidVaultData) {
+      return tokenRequirements.primaryToken;
+    }
+    
+    console.log('🔍 [useEnhancedVaultDeposit] Computing primary deposit token for vault:', vaultData.name);
+    return getPrimaryDepositToken(vaultData);
+  }, [hasValidVaultData, tokenRequirements.primaryToken, vaultData.address, vaultData.tokenA, vaultData.tokenB, vaultData.strategy, vaultData.name]);
   
   // Get user's balance for the primary token
   const userBalance = useTokenBalance(primaryToken.symbol);
+  
+  // Test contract accessibility by reading a simple view function
+  const { data: contractName, error: contractError } = useReadContract({
+    address: vaultData.address as `0x${string}`,
+    abi: SEIVault.abi,
+    functionName: 'name',
+    query: {
+      enabled: !!vaultData.address && vaultData.address.length === 42
+    }
+  });
+  
+  // Log contract accessibility
+  useEffect(() => {
+    if (vaultData.address) {
+      console.log('🔗 [Contract Test] Contract accessibility:', {
+        contractAddress: vaultData.address,
+        contractName: contractName,
+        contractError: contractError?.message,
+        isAccessible: !!contractName && !contractError
+      });
+    }
+  }, [vaultData.address, contractName, contractError]);
 
   // Log token requirements and user balance
   console.log('ℹ️ [useEnhancedVaultDeposit] Token Info:', {
@@ -409,6 +495,10 @@ export function useEnhancedVaultDeposit(vaultData: {
     }
     console.log('✅ [deposit] Validation passed');
 
+    // Reset any previous transaction state
+    console.log('🔄 [deposit] Resetting previous transaction state...');
+    reset();
+
     const tokenInfo = primaryToken;
     const amountInWei = parseUnits(params.amount, tokenInfo.decimals);
     const recipient = params.recipient || userAddress;
@@ -424,6 +514,35 @@ export function useEnhancedVaultDeposit(vaultData: {
     });
 
     try {
+      // Pre-write validation - ensure wallet is connected and on correct chain
+      if (!userAddress) {
+        console.error('❌ [deposit] User address not available');
+        throw new Error('Wallet not connected properly');
+      }
+      
+      if (chainId !== 1328) {
+        console.error('❌ [deposit] Wrong network:', { currentChainId: chainId, expectedChainId: 1328 });
+        throw new Error('Please switch to SEI Atlantic-2 testnet (Chain ID 1328)');
+      }
+      
+      console.log('✅ [deposit] Pre-write validation passed:', {
+        userAddress,
+        chainId,
+        vaultAddress: params.vaultAddress
+      });
+      
+      // Debug ABI availability
+      console.log('🔍 [deposit] ABI Debug:', {
+        abiLength: SEIVault.abi.length,
+        hasSeiOptimizedDeposit: SEIVault.abi.some(item => 
+          item.type === 'function' && item.name === 'seiOptimizedDeposit'
+        ),
+        availableFunctions: SEIVault.abi
+          .filter(item => item.type === 'function')
+          .map(item => item.name)
+          .slice(0, 5) // Show first 5 functions
+      });
+      
       // Determine if this is a native SEI vault or ERC20 vault
       const isNativeVault = isNativeSEIVault(vaultData);
       
@@ -444,15 +563,79 @@ export function useEnhancedVaultDeposit(vaultData: {
           value: amountInWei.toString()
         });
         
-        writeContract({
-          address: params.vaultAddress as `0x${string}`,
-          abi: SEIVault.abi,
-          functionName: 'seiOptimizedDeposit',
-          args: [amountInWei, recipient as `0x${string}`],
-          value: amountInWei // Send SEI as value for native deposits
-        });
-        
-        console.log('✅ [deposit] Native SEI writeContract called');
+        try {
+          // Add a small delay to ensure wallet is ready
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          console.log('🚀 [deposit] About to call writeContract...');
+          console.log('🔍 [deposit] writeContract parameters:', {
+            address: params.vaultAddress,
+            functionName: 'seiOptimizedDeposit',
+            argsTypes: [typeof amountInWei, typeof recipient],
+            args: [amountInWei.toString(), recipient],
+            value: amountInWei.toString(),
+            userAddress,
+            chainId
+          });
+          
+          // Test if the contract address is valid
+          if (!params.vaultAddress || params.vaultAddress.length !== 42) {
+            throw new Error(`Invalid contract address: ${params.vaultAddress}`);
+          }
+          
+          // Check if wallet is actually connected
+          if (!userAddress || userAddress === '0x') {
+            throw new Error(`Invalid user address: ${userAddress}`);
+          }
+          
+          console.log('🔍 [deposit] Validation passed, proceeding with writeContract...');
+          
+          // Call writeContract and wait a moment to see if state changes
+          writeContract({
+            address: params.vaultAddress as `0x${string}`,
+            abi: SEIVault.abi,
+            functionName: 'seiOptimizedDeposit',
+            args: [amountInWei, recipient as `0x${string}`],
+            value: amountInWei // Send SEI as value for native deposits
+          });
+          
+          console.log('✅ [deposit] writeContract function called');
+          
+          // Immediate state check
+          console.log('🔍 [deposit] Immediate state after writeContract:', {
+            isPending,
+            hash,
+            error: error?.message,
+            isSuccess,
+            isError
+          });
+          
+          // Wait and check if the state changed
+          setTimeout(() => {
+            console.log('🔍 [deposit] State check after 1s:', {
+              isPending,
+              hash,
+              error: error?.message,
+              isSuccess,
+              isError
+            });
+          }, 1000);
+          
+          // Another check after longer delay
+          setTimeout(() => {
+            console.log('🔍 [deposit] State check after 3s:', {
+              isPending,
+              hash,
+              error: error?.message,
+              isSuccess,
+              isError
+            });
+          }, 3000);
+          
+        } catch (writeError) {
+          console.error('❌ [deposit] writeContract failed:', writeError);
+          throw writeError;
+        }
       } else if (!tokenInfo.isNative && !isNativeVault) {
         // ERC20 token deposit to an ERC20 vault - requires prior approval
         console.log('🏦 [deposit] Executing ERC20 deposit (requires approval)');
@@ -463,15 +646,20 @@ export function useEnhancedVaultDeposit(vaultData: {
           value: '0'
         });
         
-        writeContract({
-          address: params.vaultAddress as `0x${string}`,
-          abi: SEIVault.abi,
-          functionName: 'seiOptimizedDeposit',
-          args: [amountInWei, recipient as `0x${string}`]
-          // No value for ERC20 deposits
-        });
-        
-        console.log('✅ [deposit] ERC20 writeContract called');
+        try {
+          const result = writeContract({
+            address: params.vaultAddress as `0x${string}`,
+            abi: SEIVault.abi,
+            functionName: 'seiOptimizedDeposit',
+            args: [amountInWei, recipient as `0x${string}`]
+            // No value for ERC20 deposits
+          });
+          
+          console.log('✅ [deposit] ERC20 writeContract called, result:', result);
+        } catch (writeError) {
+          console.error('❌ [deposit] writeContract failed:', writeError);
+          throw writeError;
+        }
       } else {
         // Mismatched vault and token types
         const errorMsg = isNativeVault 
@@ -524,6 +712,7 @@ export function useEnhancedVaultDeposit(vaultData: {
     deposit,
     approveToken,
     validateDeposit,
+    reset,
     
     // Deposit info
     getDepositInfo,

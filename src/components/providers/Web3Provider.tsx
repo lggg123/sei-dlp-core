@@ -6,7 +6,6 @@ if (typeof window === 'undefined') {
   (global as any).indexedDB = { open: () => ({}) }
 }
 import '@rainbow-me/rainbowkit/styles.css'
-import { SeiGlobalWalletProvider } from './SeiGlobalWalletProvider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
@@ -81,6 +80,9 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
   useEffect(() => {
     setMounted(true)
+    console.log('[Web3Provider] Mounted, config:', {
+      chains: config.chains?.map(c => ({ id: c.id, name: c.name }))
+    });
   }, [])
 
   // Always provide QueryClientProvider and WagmiProvider to prevent hook errors
@@ -96,13 +98,14 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         ) : (
           <RainbowKitProvider 
             initialChain={1328} 
-            showRecentTransactions={false}
-            // Prevent account switching issues
-            modalSize="compact"
+            showRecentTransactions={true}
+            modalSize="wide"
+            appInfo={{
+              appName: 'SEI DLP',
+              learnMoreUrl: 'https://rainbowkit.com',
+            }}
           >
-            <SeiGlobalWalletProvider>
-              {children}
-            </SeiGlobalWalletProvider>
+            {children}
           </RainbowKitProvider>
         )}
       </WagmiProvider>

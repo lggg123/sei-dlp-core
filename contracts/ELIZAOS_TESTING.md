@@ -79,7 +79,7 @@ getPerformanceMetrics()
 ### **Step 1: Deploy Testing Infrastructure**
 ```bash
 # Deploy the testing contracts
-forge script script/DeployTesting.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com --private-key $PRIVATE_KEY --broadcast --legacy
+forge script script/DeployTesting.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com --private-key $PRIVATE_KEY --broadcast --legacy
 ```
 
 ### **Step 2: Initialize Market Conditions**
@@ -314,7 +314,7 @@ Your agent can now learn and optimize its strategies before deployment to mainne
 
 ### **✅ Successfully Deployed Testing Infrastructure**
 
-**SEI Devnet (Chain ID: 713715) - Testing Environment Active**
+**SEI Testnet (Chain ID: 1328) - Testing Environment Active**
 
 | Contract | Address | Status | Description |
 |----------|---------|--------|-------------|
@@ -328,7 +328,7 @@ Your agent can now learn and optimize its strategies before deployment to mainne
 | Component | Status | URL/Details |
 |-----------|--------|-------------|
 | **Liqui Agent** | 🟢 Running | http://localhost:3000 |
-| **Agent ID** | `e4dbb1f5-58d2-0dcf-8a6a-91ebaa6c20ed` | Active on SEI Chain 713715 |
+| **Agent ID** | `e4dbb1f5-58d2-0dcf-8a6a-91ebaa6c20ed` | Active on SEI Chain 1328 |
 | **Capabilities** | Portfolio Rebalancing, Market Analysis | Uses yield-delta plugin |
 | **Strategy Types** | Conservative, Balanced, Aggressive | 3 strategies available |
 
@@ -471,7 +471,7 @@ cd ../liqui && bun dev
 ### **If Contracts Not Working:**
 ```bash
 # Verify deployment
-cast call 0xB00d53a9738FcDeF6844f33F3F5D71Cf57438030 "getPrice(address)" 0xa91D3Cb1aaC967870280881a9a02D9767141942d --rpc-url https://evm-rpc-arctic-1.sei-apis.com
+cast call 0xB00d53a9738FcDeF6844f33F3F5D71Cf57438030 "getPrice(address)" 0xa91D3Cb1aaC967870280881a9a02D9767141942d --rpc-url https://evm-rpc-testnet.sei-apis.com
 
 # Redeploy if needed  
 forge script script/DeployTesting.s.sol:DeployTestingScript --broadcast --legacy

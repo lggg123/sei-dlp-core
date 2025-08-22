@@ -2,6 +2,7 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Web3Provider } from '@/components/providers/Web3Provider'
+import NetworkSwitcher from '@/components/NetworkSwitcher'
 
 const inter = Inter({ subsets: ['latin'] })
 // Metadata for SEO and social sharing
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* Client-side web3 and query providers */}
         <Web3Provider>
+          <NetworkSwitcher />
           {children}
         </Web3Provider>
       </body>

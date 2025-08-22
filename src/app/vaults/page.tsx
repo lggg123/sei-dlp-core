@@ -205,6 +205,22 @@ export default function VaultsPage() {
         return;
       }
       
+      if (!vault.address) {
+        console.error('[Deposit] ERROR: Vault has no address!', vault);
+        return;
+      }
+      
+      // Validate all required vault properties
+      if (!vault.tokenA || !vault.tokenB || !vault.strategy) {
+        console.error('[Deposit] ERROR: Vault missing required properties!', {
+          tokenA: vault.tokenA,
+          tokenB: vault.tokenB,
+          strategy: vault.strategy,
+          vault
+        });
+        return;
+      }
+      
       // Set both store state and local state
       setSelectedVault(vault)
       setDepositVault(vault)
@@ -216,8 +232,21 @@ export default function VaultsPage() {
       
       // Force a re-render to check if the state persists
       setTimeout(() => {
-        console.log('[Deposit] Modal state after 100ms - checking current state');
+        console.log('[Deposit] Modal state after 100ms:', {
+          showDepositModal,
+          depositVault: depositVault?.name,
+          vaultAddress: depositVault?.address
+        });
       }, 100);
+      
+      // Also check state after React has had time to update
+      setTimeout(() => {
+        console.log('[Deposit] Final state check after 500ms:', {
+          showDepositModal,
+          depositVault: depositVault?.name,
+          selectedVault: selectedVault?.name
+        });
+      }, 500);
     } catch (error) {
       console.error('Deposit error:', error)
     }

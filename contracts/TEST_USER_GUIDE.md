@@ -1,7 +1,7 @@
 # Test User Funding Guide
 
 ## Overview
-The deployment scripts now include comprehensive test user funding to enable realistic testing of deposit/withdrawal functionality on SEI devnet.
+The deployment scripts now include comprehensive test user funding to enable realistic testing of deposit/withdrawal functionality on SEI testnet.
 
 ## Test Users
 
@@ -40,31 +40,31 @@ After deployment, these addresses will have tokens for testing:
 ### Deploy with Test User Funding
 ```bash
 cd contracts
-forge script script/Deploy.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com --broadcast
+forge script script/Deploy.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com --broadcast
 ```
 
 ### Verify Test User Balances
 ```bash
-forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com
+forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com
 ```
 
 ### Fund Additional Test Users
 ```bash
 # Edit FundTestUser.s.sol to set token addresses and custom user address
-forge script script/FundTestUser.s.sol --rpc-url https://evm-rpc-arctic-1.sei-apis.com --broadcast
+forge script script/FundTestUser.s.sol --rpc-url https://evm-rpc-testnet.sei-apis.com --broadcast
 ```
 
 ## Frontend Integration
 
 ### Using Test Users in MetaMask
 1. Import any of the test user private keys into MetaMask
-2. Connect to SEI devnet (Chain ID: 713715)
+2. Connect to SEI testnet (Chain ID: 1328)
 3. Use the funded tokens to test deposits/withdrawals
 
 ### Environment Variables
 Update your `.env` file with deployed contract addresses:
 ```env
-NEXT_PUBLIC_SEI_CHAIN_ID=713715
+NEXT_PUBLIC_SEI_CHAIN_ID=1328
 NEXT_PUBLIC_VAULT_ADDRESS=<deployed_vault_address>
 NEXT_PUBLIC_TOKEN_SEI=<deployed_sei_token_address>
 NEXT_PUBLIC_TOKEN_USDC=<deployed_usdc_token_address>
@@ -96,21 +96,21 @@ NEXT_PUBLIC_TOKEN_USDC=<deployed_usdc_token_address>
 ### Insufficient Balance Errors
 - Check if deployment completed successfully
 - Verify you're using the correct test user address
-- Confirm you're connected to SEI devnet (Chain ID: 713715)
+- Confirm you're connected to SEI testnet (Chain ID: 1328)
 
 ### Transaction Failures
-- Ensure gas limit is sufficient for SEI devnet
+- Ensure gas limit is sufficient for SEI testnet
 - Check if contracts are properly deployed
 - Verify token allowances are set correctly
 
 ### Frontend Connection Issues
-- Confirm RPC URL is correct: `https://evm-rpc-arctic-1.sei-apis.com`
+- Confirm RPC URL is correct: `https://evm-rpc-testnet.sei-apis.com`
 - Check that contract addresses in `.env` match deployment output
-- Verify MetaMask is connected to SEI devnet
+- Verify MetaMask is connected to SEI testnet
 
 ## Security Notes
 - These are test tokens with no real value
-- Private keys are for devnet testing only
+- Private keys are for testnet testing only
 - Never use these addresses or keys on mainnet
 - Test users have deterministic addresses for consistent testing
 

@@ -39,33 +39,33 @@ cd contracts
 
 # Full deployment with proper contract targeting
 forge script script/Deploy.s.sol:DeployScript \
-    --rpc-url https://evm-rpc-arctic-1.sei-apis.com \
+    --rpc-url https://evm-rpc-testnet.sei-apis.com \
     --broadcast \
     --slow \
     --tc DeployScript \
-    --chain-id 713715
+    --chain-id 1328
 
 # Simple deployment
 forge script script/SimpleDeploy.s.sol:SimpleDeployScript \
-    --rpc-url https://evm-rpc-arctic-1.sei-apis.com \
+    --rpc-url https://evm-rpc-testnet.sei-apis.com \
     --broadcast \
     --slow \
     --tc SimpleDeployScript \
-    --chain-id 713715
+    --chain-id 1328
 
 # Verify test users
 forge script script/VerifyTestUsers.s.sol:VerifyTestUsersScript \
-    --rpc-url https://evm-rpc-arctic-1.sei-apis.com \
+    --rpc-url https://evm-rpc-testnet.sei-apis.com \
     --tc VerifyTestUsersScript \
-    --chain-id 713715
+    --chain-id 1328
 ```
 
 ## Network Configuration
 
-### SEI Devnet (Arctic)
-- **Chain ID**: 713715
-- **RPC URL**: https://evm-rpc-arctic-1.sei-apis.com
-- **Block Explorer**: https://seitrace.com
+### SEI Testnet (Atlantic-2)
+- **Chain ID**: 1328
+- **RPC URL**: https://evm-rpc-testnet.sei-apis.com
+- **Block Explorer**: https://seitrace.com/atlantic-2
 - **Finality**: ~400ms
 
 ### SEI Mainnet
@@ -148,7 +148,7 @@ forge script script/VerifyTestUsers.s.sol:VerifyTestUsersScript \
 - Fast execution patterns
 
 ### Chain Validation
-- Mandatory SEI chain ID validation (713715 for devnet)
+- Mandatory SEI chain ID validation (1328 for testnet)
 - Prevents deployment on wrong networks
 
 ## Troubleshooting
@@ -164,12 +164,12 @@ forge script script/Deploy.s.sol:DeployScript --rpc-url $RPC_URL --broadcast --t
 ```
 
 ### "Invalid chain" Error
-**Solution**: Ensure you're deploying to SEI Devnet (Chain ID: 713715)
+**Solution**: Ensure you're deploying to SEI Testnet (Chain ID: 1328)
 ```bash
 # Check current network
-cast chain-id --rpc-url https://evm-rpc-arctic-1.sei-apis.com
+cast chain-id --rpc-url https://evm-rpc-testnet.sei-apis.com
 
-# Should return: 713715
+# Should return: 1328
 ```
 
 ### Gas Issues
@@ -187,7 +187,7 @@ forge script script/Deploy.s.sol:DeployScript \
 ### Deployment Verification
 ```bash
 # Check deployed contracts
-cast code $CONTRACT_ADDRESS --rpc-url https://evm-rpc-arctic-1.sei-apis.com
+cast code $CONTRACT_ADDRESS --rpc-url https://evm-rpc-testnet.sei-apis.com
 
 # Verify test user balances
 ./deploy-enhanced.sh  # Choose option 3
@@ -232,7 +232,7 @@ cast code $CONTRACT_ADDRESS --rpc-url https://evm-rpc-arctic-1.sei-apis.com
 
 For deployment issues:
 1. Check the deployment logs for specific error messages
-2. Verify network connectivity to SEI Devnet
+2. Verify network connectivity to SEI Testnet
 3. Ensure sufficient SEI tokens for gas fees
 4. Review contract dependencies and imports
 
