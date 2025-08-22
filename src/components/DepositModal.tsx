@@ -86,6 +86,8 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const [transactionStatus, setTransactionStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Demo simulation flag - controlled by environment variable
+  const [isDemoMode] = useState(process.env.NEXT_PUBLIC_DEMO_MODE === 'true');
   // Get actual wallet connection
   const { address, isConnected } = useAccount();
   
@@ -239,7 +241,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
   const riskLevel = getRiskLevel(vault.apy, vault.strategy);
   const isValidAmount = depositAmount && parseFloat(depositAmount) > 0;
 
-  // Enhanced handleDeposit function
+  // Enhanced handleDeposit function with demo simulation
   const handleDeposit = async () => {
     // Check wallet connection first
     if (!isConnected || !address) {
@@ -253,6 +255,7 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
       selectedToken,
       isValidAmount,
       vaultName: vault?.name,
+      isDemoMode
     });
 
     if (!isValidAmount || !vault || !selectedToken) {
@@ -271,6 +274,43 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
     setErrorMessage(null);
 
     try {
+      if (isDemoMode) {
+        // DEMO MODE: Simulate successful transaction
+        console.log('🎭 [DepositModal] Demo mode: Simulating successful deposit');
+        
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Generate fake transaction hash
+        const fakeHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+        setTransactionHash(fakeHash);
+        setTransactionStatus('success');
+        
+        // Show success notification
+        onSuccess(fakeHash);
+        
+        // Reset deposit amount but keep modal open to show success
+        setDepositAmount('');
+
+        console.log('🎉 [DepositModal] Demo deposit completed successfully!', {
+          amount: depositAmount,
+          token: selectedToken,
+          vault: vault.name,
+          fakeHash
+        });
+
+        // Give user time to see the success message before redirecting
+        setTimeout(() => {
+          if (vault) {
+            router.push(`/vault?address=${vault.address}&tab=overview`);
+          }
+          handleClose();
+        }, 3000);
+        
+        return;
+      }
+
+      // REAL MODE: Use actual blockchain transaction (original code)
       // Validate the deposit using enhanced validation
       const validation = depositMutation.validateDeposit({
         amount: depositAmount,
@@ -663,6 +703,21 @@ export default function DepositModal({ vault, isOpen, onClose, onSuccess }: Depo
                     filter: 'drop-shadow(0 0 10px currentColor)'
                   }} />
                   Deposit to {vault.name}
+                  {isDemoMode && (
+                    <span style={{
+                      fontSize: '0.75rem',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      color: '#ffffff',
+                      padding: '4px 8px',
+                      borderRadius: '8px',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                      marginLeft: '8px'
+                    }}>
+                      DEMO MODE
+                    </span>
+                  )}
                   <Coins style={{ 
                     width: '24px', 
                     height: '24px', 

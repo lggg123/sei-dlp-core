@@ -6,9 +6,9 @@ import { NextResponse } from 'next/server'
  */
 export async function GET() {
   const documentation = {
-    title: 'SEI DLP Core API',
+    title: 'Yield Delta API',
     version: '1.0.0',
-    description: 'RESTful API for SEI Dynamic Liquidity Protocol with AI-powered optimization',
+    description: 'RESTful API for Yield Delta - AI-powered yield optimization platform',
     baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
     chainId: 1328,
     chain: 'SEI Network',

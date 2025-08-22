@@ -21,6 +21,11 @@ const RebalancePage = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showRecommendations, setShowRecommendations] = useState(true);
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
+  // Demo simulation state
+  const [isDemoMode] = useState(process.env.NEXT_PUBLIC_DEMO_MODE === 'true');
+  const [executionStatus, setExecutionStatus] = useState<'idle' | 'executing' | 'success' | 'error'>('idle');
+  const [executionProgress, setExecutionProgress] = useState(0);
+  const [executedTransactions, setExecutedTransactions] = useState<string[]>([]);
 
   const rebalanceActions: RebalanceAction[] = [
     {
@@ -84,8 +89,46 @@ const RebalancePage = () => {
     }
   };
 
-  const handleExecuteRebalance = () => {
-    // This would integrate with the smart contracts to execute trades
+  const handleExecuteRebalance = async () => {
+    if (isDemoMode) {
+      // DEMO MODE: Simulate rebalance execution
+      console.log('🎭 [RebalancePage] Demo mode: Simulating rebalance execution');
+      
+      setExecutionStatus('executing');
+      setExecutionProgress(0);
+      setExecutedTransactions([]);
+
+      // Simulate progressive execution of selected actions
+      for (let i = 0; i < selectedActions.length; i++) {
+        const action = rebalanceActions.find(a => a.id === selectedActions[i]);
+        if (!action) continue;
+
+        // Simulate transaction delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Generate fake transaction hash
+        const fakeHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+        
+        setExecutedTransactions(prev => [...prev, fakeHash]);
+        setExecutionProgress(((i + 1) / selectedActions.length) * 100);
+        
+        console.log(`🎉 [RebalancePage] Executed action ${i + 1}/${selectedActions.length}: ${action.action} ${action.amount} ${action.token}`);
+      }
+
+      // Mark as complete
+      setExecutionStatus('success');
+      
+      setTimeout(() => {
+        setExecutionStatus('idle');
+        setExecutionProgress(0);
+        setSelectedActions([]);
+        setExecutedTransactions([]);
+      }, 5000);
+      
+      return;
+    }
+
+    // REAL MODE: Use actual smart contract integration
     alert(`Executing ${selectedActions.length} rebalance actions...`);
   };
 
@@ -121,8 +164,13 @@ const RebalancePage = () => {
                 <BarChart3 className="w-6 h-6" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-3">
                   Portfolio Rebalancing
+                  {isDemoMode && (
+                    <span className="text-sm bg-green-500 text-white px-2 py-1 rounded-lg font-semibold">
+                      DEMO MODE
+                    </span>
+                  )}
                 </h1>
                 <p className="text-gray-400 mt-1">Optimize your yield using AI-powered analysis</p>
               </div>
@@ -293,11 +341,62 @@ const RebalancePage = () => {
 
             <button
               onClick={handleExecuteRebalance}
-              className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all text-lg flex items-center justify-center gap-2"
+              disabled={executionStatus === 'executing'}
+              className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Zap className="w-5 h-5" />
-              Execute Rebalance
+              {executionStatus === 'executing' ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Executing... ({Math.round(executionProgress)}%)
+                </>
+              ) : executionStatus === 'success' ? (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  Rebalance Complete!
+                </>
+              ) : (
+                <>
+                  <Zap className="w-5 h-5" />
+                  Execute Rebalance
+                </>
+              )}
             </button>
+
+            {/* Execution Progress */}
+            {executionStatus !== 'idle' && (
+              <div className="mt-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">
+                    {executionStatus === 'executing' ? 'Executing Rebalance...' : 
+                     executionStatus === 'success' ? 'Rebalance Completed!' : 
+                     'Execution Failed'}
+                  </span>
+                  <span className="text-sm text-gray-400">
+                    {Math.round(executionProgress)}%
+                  </span>
+                </div>
+                
+                {executionStatus === 'executing' && (
+                  <div className="w-full bg-gray-700 rounded-full h-2 mb-3">
+                    <div 
+                      className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${executionProgress}%` }}
+                    ></div>
+                  </div>
+                )}
+
+                {executedTransactions.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-xs text-gray-400 mb-2">Transaction Hashes:</div>
+                    {executedTransactions.map((hash, index) => (
+                      <div key={index} className="text-xs font-mono text-green-400 bg-green-400/10 p-2 rounded">
+                        Action {index + 1}: {hash.substring(0, 6)}...{hash.substring(hash.length - 4)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -1,0 +1,12 @@
+{
+  "index": "Introduction",
+  "getting-started": "Getting Started",
+  "features": "Core Features",
+  "api": "API Reference",
+  "smart-contracts": "Smart Contracts",
+  "ai-engine": "AI Engine", 
+  "demo-mode": "Demo Mode",
+  "deployment": "Deployment",
+  "troubleshooting": "Troubleshooting",
+  "contributing": "Contributing"
+}

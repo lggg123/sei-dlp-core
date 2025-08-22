@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
 import { Address, Abi } from 'viem';
+import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface CustomerVaultDashboardProps {
   vaultAddress: Address;
@@ -14,6 +15,10 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   const [depositAmount0, setDepositAmount0] = useState('');
   const [depositAmount1, setDepositAmount1] = useState('');
   const [withdrawShares, setWithdrawShares] = useState('');
+  // Demo simulation flag - controlled by environment variable
+  const [isDemoMode] = useState(process.env.NEXT_PUBLIC_DEMO_MODE === 'true');
+  const [withdrawalStatus, setWithdrawalStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
+  const [withdrawalHash, setWithdrawalHash] = useState<string | null>(null);
 
   // Read customer statistics
   const { data: customerStats } = useReadContract({
@@ -77,7 +82,45 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   const handleWithdraw = async (): Promise<void> => {
     if (!withdrawShares) return;
     
+    console.log('🏦 [CustomerVaultDashboard] Withdrawal initiated', {
+      withdrawShares,
+      isDemoMode,
+      vaultAddress
+    });
+
+    // Reset withdrawal state
+    setWithdrawalStatus('pending');
+    setWithdrawalHash(null);
+    
     try {
+      if (isDemoMode) {
+        // DEMO MODE: Simulate successful withdrawal
+        console.log('🎭 [CustomerVaultDashboard] Demo mode: Simulating successful withdrawal');
+        
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Generate fake transaction hash
+        const fakeHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+        setWithdrawalHash(fakeHash);
+        setWithdrawalStatus('success');
+        
+        console.log('🎉 [CustomerVaultDashboard] Demo withdrawal completed successfully!', {
+          shares: withdrawShares,
+          fakeHash
+        });
+
+        // Reset withdrawal amount after success
+        setTimeout(() => {
+          setWithdrawShares('');
+          setWithdrawalStatus('idle');
+          setWithdrawalHash(null);
+        }, 5000);
+        
+        return;
+      }
+
+      // REAL MODE: Use actual blockchain transaction
       withdraw({
         address: vaultAddress,
         abi: vaultABI,
@@ -89,6 +132,12 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
       });
     } catch (error) {
       console.error('Withdrawal failed:', error);
+      setWithdrawalStatus('error');
+      
+      // Reset error state after a delay
+      setTimeout(() => {
+        setWithdrawalStatus('idle');
+      }, 5000);
     }
   };
 
@@ -113,7 +162,14 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
             &larr; Back to Dashboard
           </button>
         </Link>
-        <h1 className="text-2xl font-bold mb-2 text-center">SEI DLP Vault Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-2 text-center">
+          SEI DLP Vault Dashboard
+          {isDemoMode && (
+            <span className="ml-3 text-sm bg-green-500 text-white px-2 py-1 rounded-lg font-semibold">
+              DEMO MODE
+            </span>
+          )}
+        </h1>
         <p className="text-blue-100">Manage your AI-driven liquidity positions</p>
       </div>
 
@@ -225,11 +281,62 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
         </div>
         <button
           onClick={handleWithdraw}
-          disabled={isWithdrawing || !withdrawShares || !canWithdraw}
-          className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          disabled={isWithdrawing || !withdrawShares || !canWithdraw || withdrawalStatus === 'pending'}
+          className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
-          {isWithdrawing ? 'Withdrawing...' : 'Withdraw Funds'}
+          {withdrawalStatus === 'pending' ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Processing Withdrawal...
+            </>
+          ) : withdrawalStatus === 'success' ? (
+            <>
+              <CheckCircle2 className="w-5 h-5" />
+              Withdrawal Successful!
+            </>
+          ) : withdrawalStatus === 'error' ? (
+            <>
+              <AlertCircle className="w-5 h-5" />
+              Withdrawal Failed
+            </>
+          ) : isWithdrawing ? (
+            'Withdrawing...'
+          ) : (
+            'Withdraw Funds'
+          )}
         </button>
+        
+        {/* Transaction Status */}
+        {withdrawalStatus !== 'idle' && (
+          <div className={`mt-3 p-3 rounded-lg ${
+            withdrawalStatus === 'success' ? 'bg-green-50 border border-green-200' :
+            withdrawalStatus === 'error' ? 'bg-red-50 border border-red-200' :
+            'bg-blue-50 border border-blue-200'
+          }`}>
+            <div className="flex items-center gap-2">
+              {withdrawalStatus === 'pending' && <Loader2 className="w-4 h-4 animate-spin text-blue-600" />}
+              {withdrawalStatus === 'success' && <CheckCircle2 className="w-4 h-4 text-green-600" />}
+              {withdrawalStatus === 'error' && <AlertCircle className="w-4 h-4 text-red-600" />}
+              
+              <span className={`text-sm font-medium ${
+                withdrawalStatus === 'success' ? 'text-green-800' :
+                withdrawalStatus === 'error' ? 'text-red-800' :
+                'text-blue-800'
+              }`}>
+                {withdrawalStatus === 'pending' && 'Transaction is being processed...'}
+                {withdrawalStatus === 'success' && `Withdrawal successful! ${withdrawShares} shares withdrawn.`}
+                {withdrawalStatus === 'error' && 'Transaction failed. Please try again.'}
+              </span>
+            </div>
+            
+            {withdrawalHash && withdrawalStatus === 'success' && (
+              <p className="text-xs text-green-600 mt-1 font-mono">
+                Transaction Hash: {withdrawalHash.substring(0, 6)}...{withdrawalHash.substring(withdrawalHash.length - 4)}
+              </p>
+            )}
+          </div>
+        )}
+        
         <p className="text-sm text-gray-500 mt-2">
           Note: 0.5% withdrawal fee applies
         </p>
