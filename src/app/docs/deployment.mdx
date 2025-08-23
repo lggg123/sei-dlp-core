@@ -1,0 +1,958 @@
+# Deployment
+
+Complete guide for deploying Yield Delta to production environments. From local staging to enterprise-scale deployments on SEI Network.
+
+## Overview
+
+Yield Delta consists of multiple services that work together:
+
+- **Frontend**: Next.js application
+- **API**: Next.js API routes  
+- **AI Engine**: Python FastAPI service
+- **Liqui Agent**: ElizaOS AI chat service
+- **Smart Contracts**: Solidity contracts on SEI
+- **Database**: PostgreSQL for production data
+
+## Prerequisites
+
+### System Requirements
+
+**Minimum Production Setup**:
+- 4 CPU cores
+- 8GB RAM  
+- 100GB SSD storage
+- Docker & Docker Compose
+- SSL certificate for HTTPS
+
+**Recommended Production Setup**:
+- 8 CPU cores
+- 16GB RAM
+- 500GB SSD storage
+- Kubernetes cluster
+- Load balancer
+- Monitoring stack
+
+### Required Accounts & Keys
+
+```bash
+# Environment variables needed
+SEI_PRIVATE_KEY=0x...              # Deployer private key
+SEISCAN_API_KEY=your-api-key       # For contract verification
+OPENAI_API_KEY=sk-...              # For AI features
+DATABASE_URL=postgresql://...       # Production database
+REDIS_URL=redis://...              # For caching
+```
+
+## Environment Setup
+
+### Production Environment File
+
+Create `.env.production`:
+
+```bash
+# Application Configuration
+NODE_ENV=production
+NEXT_PUBLIC_APP_URL=https://app.yielddelta.com
+NEXT_PUBLIC_API_URL=https://api.yielddelta.com
+
+# SEI Network Configuration
+NEXT_PUBLIC_SEI_CHAIN_ID=1328
+NEXT_PUBLIC_SEI_RPC_URL=https://evm-rpc.sei-apis.com
+SEI_PRIVATE_KEY=0x...
+
+# Smart Contract Addresses (deployed)
+NEXT_PUBLIC_VAULT_FACTORY=0x742d35Cc2cF0532A53aa00E602FD6cf0b0eaa77C
+NEXT_PUBLIC_AI_ORACLE=0x1234567890123456789012345678901234567890
+NEXT_PUBLIC_POSITION_MANAGER=0x0987654321098765432109876543210987654321
+
+# Database Configuration
+DATABASE_URL=postgresql://user:pass@db.yielddelta.com:5432/yielddelta
+REDIS_URL=redis://cache.yielddelta.com:6379
+
+# AI Engine Configuration
+AI_ENGINE_URL=https://ai.yielddelta.com
+OPENAI_API_KEY=sk-...
+
+# Security
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=https://app.yielddelta.com
+
+# Monitoring
+SENTRY_DSN=https://...@sentry.io/...
+ANALYTICS_ID=G-...
+
+# Demo Mode (disable in production)
+NEXT_PUBLIC_DEMO_MODE=false
+```
+
+## Docker Deployment
+
+### Docker Compose Production
+
+```yaml
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  # Frontend Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.production
+    depends_on:
+      - database
+      - redis
+      - ai-engine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # AI Engine Service
+  ai-engine:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - MODEL_PATH=/app/models
+    env_file:
+      - .env.production
+    volumes:
+      - ./ai-engine/models:/app/models
+    depends_on:
+      - database
+      - redis
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2'
+
+  # ElizaOS Agent
+  liqui-agent:
+    build:
+      context: ./liqui
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env.production
+    depends_on:
+      - database
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: yielddelta
+      POSTGRES_USER: yielddelta
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/ssl/certs
+    depends_on:
+      - frontend
+      - ai-engine
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+### Production Dockerfile
+
+```dockerfile
+# Dockerfile.prod
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json bun.lockb ./
+
+# Install dependencies
+RUN npm install -g bun && bun install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build application
+RUN bun run build
+
+# Production image
+FROM node:18-alpine AS runner
+
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy built application
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["node", "server.js"]
+```
+
+### Nginx Configuration
+
+```nginx
+# nginx/nginx.conf
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream frontend {
+        server frontend:3000;
+    }
+    
+    upstream ai-engine {
+        server ai-engine:8000;
+    }
+
+    # Rate limiting
+    limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+    limit_req_zone $binary_remote_addr zone=ai:10m rate=5r/s;
+
+    server {
+        listen 80;
+        server_name app.yielddelta.com;
+        return 301 https://$server_name$request_uri;
+    }
+
+    server {
+        listen 443 ssl http2;
+        server_name app.yielddelta.com;
+
+        ssl_certificate /etc/ssl/certs/app.yielddelta.com.crt;
+        ssl_certificate_key /etc/ssl/certs/app.yielddelta.com.key;
+
+        # Frontend
+        location / {
+            proxy_pass http://frontend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # API routes
+        location /api/ {
+            limit_req zone=api burst=20 nodelay;
+            proxy_pass http://frontend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        # AI Engine
+        location /ai/ {
+            limit_req zone=ai burst=10 nodelay;
+            proxy_pass http://ai-engine/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        # WebSocket support
+        location /ws {
+            proxy_pass http://ai-engine;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+    }
+}
+```
+
+## Kubernetes Deployment
+
+### Namespace and ConfigMap
+
+```yaml
+# k8s/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: yielddelta
+
+---
+# k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: yielddelta-config
+  namespace: yielddelta
+data:
+  NODE_ENV: "production"
+  NEXT_PUBLIC_SEI_CHAIN_ID: "1328"
+  NEXT_PUBLIC_SEI_RPC_URL: "https://evm-rpc.sei-apis.com"
+  AI_ENGINE_URL: "http://ai-engine-service:8000"
+```
+
+### Database Deployment
+
+```yaml
+# k8s/database.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: yielddelta
+spec:
+  serviceName: postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_DB
+          value: "yielddelta"
+        - name: POSTGRES_USER
+          value: "yielddelta"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: password
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 100Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: yielddelta
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+```
+
+### Application Deployments
+
+```yaml
+# k8s/frontend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: yielddelta
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: yielddelta/frontend:latest
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: yielddelta-config
+        - secretRef:
+            name: yielddelta-secrets
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: yielddelta
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: ClusterIP
+
+---
+# k8s/ai-engine.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-engine
+  namespace: yielddelta
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-engine
+  template:
+    metadata:
+      labels:
+        app: ai-engine
+    spec:
+      containers:
+      - name: ai-engine
+        image: yielddelta/ai-engine:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: yielddelta-config
+        - secretRef:
+            name: yielddelta-secrets
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /app/models
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-storage-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-engine-service
+  namespace: yielddelta
+spec:
+  selector:
+    app: ai-engine
+  ports:
+  - port: 8000
+    targetPort: 8000
+```
+
+### Ingress Configuration
+
+```yaml
+# k8s/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yielddelta-ingress
+  namespace: yielddelta
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  tls:
+  - hosts:
+    - app.yielddelta.com
+    - api.yielddelta.com
+    secretName: yielddelta-tls
+  rules:
+  - host: app.yielddelta.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+  - host: api.yielddelta.com
+    http:
+      paths:
+      - path: /ai
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-engine-service
+            port:
+              number: 8000
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+```
+
+## Smart Contract Deployment
+
+### Deployment Script
+
+```bash
+#!/bin/bash
+# scripts/deploy-contracts.sh
+
+set -e
+
+echo "🚀 Deploying Yield Delta Smart Contracts to SEI Mainnet"
+
+# Check prerequisites
+if [ -z "$SEI_PRIVATE_KEY" ]; then
+    echo "❌ SEI_PRIVATE_KEY not set"
+    exit 1
+fi
+
+if [ -z "$SEISCAN_API_KEY" ]; then
+    echo "❌ SEISCAN_API_KEY not set"
+    exit 1
+fi
+
+# Deploy contracts
+echo "📋 Deploying contracts..."
+cd contracts
+
+# 1. Deploy Vault Factory
+echo "1️⃣ Deploying Vault Factory..."
+VAULT_FACTORY=$(forge script script/DeployFactory.s.sol \
+    --rpc-url https://evm-rpc.sei-apis.com \
+    --private-key $SEI_PRIVATE_KEY \
+    --broadcast \
+    --verify \
+    --etherscan-api-key $SEISCAN_API_KEY \
+    | grep "Deployed to:" | awk '{print $3}')
+
+echo "✅ Vault Factory deployed to: $VAULT_FACTORY"
+
+# 2. Deploy AI Oracle
+echo "2️⃣ Deploying AI Oracle..."
+AI_ORACLE=$(forge script script/DeployOracle.s.sol \
+    --rpc-url https://evm-rpc.sei-apis.com \
+    --private-key $SEI_PRIVATE_KEY \
+    --broadcast \
+    --verify \
+    --etherscan-api-key $SEISCAN_API_KEY \
+    | grep "Deployed to:" | awk '{print $3}')
+
+echo "✅ AI Oracle deployed to: $AI_ORACLE"
+
+# 3. Deploy Position Manager
+echo "3️⃣ Deploying Position Manager..."
+POSITION_MANAGER=$(forge script script/DeployPositionManager.s.sol \
+    --rpc-url https://evm-rpc.sei-apis.com \
+    --private-key $SEI_PRIVATE_KEY \
+    --broadcast \
+    --verify \
+    --etherscan-api-key $SEISCAN_API_KEY \
+    | grep "Deployed to:" | awk '{print $3}')
+
+echo "✅ Position Manager deployed to: $POSITION_MANAGER"
+
+# 4. Update environment file
+echo "📝 Updating environment configuration..."
+cat > ../contracts.env << EOF
+NEXT_PUBLIC_VAULT_FACTORY=$VAULT_FACTORY
+NEXT_PUBLIC_AI_ORACLE=$AI_ORACLE
+NEXT_PUBLIC_POSITION_MANAGER=$POSITION_MANAGER
+EOF
+
+echo "✅ Smart contracts deployed successfully!"
+echo "📄 Contract addresses saved to contracts.env"
+```
+
+## Monitoring & Observability
+
+### Prometheus Configuration
+
+```yaml
+# monitoring/prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'yielddelta-frontend'
+    static_configs:
+      - targets: ['frontend-service:3000']
+    metrics_path: /api/metrics
+
+  - job_name: 'yielddelta-ai-engine'
+    static_configs:
+      - targets: ['ai-engine-service:8000']
+    metrics_path: /metrics
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-service:5432']
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-service:6379']
+```
+
+### Grafana Dashboard
+
+```json
+{
+  "dashboard": {
+    "title": "Yield Delta Production Dashboard",
+    "panels": [
+      {
+        "title": "API Response Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "95th percentile"
+          }
+        ]
+      },
+      {
+        "title": "AI Prediction Accuracy",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "ai_prediction_accuracy_ratio",
+            "legendFormat": "Accuracy %"
+          }
+        ]
+      },
+      {
+        "title": "Active Vaults",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "vault_count_total",
+            "legendFormat": "Vaults"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Health Checks & Monitoring
+
+### Application Health Checks
+
+```typescript
+// src/app/api/health/route.ts
+export async function GET() {
+  const checks = await Promise.allSettled([
+    // Database connection
+    prisma.$queryRaw`SELECT 1`,
+    
+    // Redis connection
+    redis.ping(),
+    
+    // AI Engine status
+    fetch(`${process.env.AI_ENGINE_URL}/health`),
+    
+    // SEI Network connectivity
+    fetch(`${process.env.NEXT_PUBLIC_SEI_RPC_URL}`),
+  ]);
+
+  const status = checks.every(check => check.status === 'fulfilled');
+  
+  return Response.json({
+    status: status ? 'healthy' : 'unhealthy',
+    timestamp: new Date().toISOString(),
+    services: {
+      database: checks[0].status === 'fulfilled',
+      redis: checks[1].status === 'fulfilled',
+      ai_engine: checks[2].status === 'fulfilled',
+      sei_network: checks[3].status === 'fulfilled',
+    }
+  }, {
+    status: status ? 200 : 503
+  });
+}
+```
+
+### External Monitoring
+
+```bash
+# Uptime monitoring script
+#!/bin/bash
+# scripts/monitor.sh
+
+ENDPOINTS=(
+    "https://app.yielddelta.com/api/health"
+    "https://ai.yielddelta.com/health"
+)
+
+for endpoint in "${ENDPOINTS[@]}"; do
+    response=$(curl -s -o /dev/null -w "%{http_code}" $endpoint)
+    
+    if [ $response -eq 200 ]; then
+        echo "✅ $endpoint is healthy"
+    else
+        echo "❌ $endpoint returned $response"
+        # Send alert (Slack, PagerDuty, etc.)
+    fi
+done
+```
+
+## Backup & Recovery
+
+### Database Backup
+
+```bash
+#!/bin/bash
+# scripts/backup-db.sh
+
+DATE=$(date +"%Y%m%d_%H%M%S")
+BACKUP_FILE="yielddelta_backup_$DATE.sql"
+
+# Create backup
+pg_dump $DATABASE_URL > $BACKUP_FILE
+
+# Compress backup
+gzip $BACKUP_FILE
+
+# Upload to S3
+aws s3 cp $BACKUP_FILE.gz s3://yielddelta-backups/
+
+# Clean old local backups
+find . -name "yielddelta_backup_*.sql.gz" -mtime +7 -delete
+
+echo "✅ Database backup completed: $BACKUP_FILE.gz"
+```
+
+### Disaster Recovery
+
+```bash
+#!/bin/bash
+# scripts/restore-db.sh
+
+BACKUP_FILE=$1
+
+if [ -z "$BACKUP_FILE" ]; then
+    echo "Usage: $0 <backup_file>"
+    exit 1
+fi
+
+# Download from S3 if needed
+if [[ $BACKUP_FILE == s3://* ]]; then
+    aws s3 cp $BACKUP_FILE ./
+    BACKUP_FILE=$(basename $BACKUP_FILE)
+fi
+
+# Decompress if needed
+if [[ $BACKUP_FILE == *.gz ]]; then
+    gunzip $BACKUP_FILE
+    BACKUP_FILE=${BACKUP_FILE%.gz}
+fi
+
+# Restore database
+psql $DATABASE_URL < $BACKUP_FILE
+
+echo "✅ Database restored from $BACKUP_FILE"
+```
+
+## Scaling & Performance
+
+### Horizontal Pod Autoscaling
+
+```yaml
+# k8s/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+  namespace: yielddelta
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+```
+
+### CDN Configuration
+
+```typescript
+// next.config.ts - CDN optimization
+const nextConfig = {
+  images: {
+    domains: ['cdn.yielddelta.com'],
+    loader: 'custom',
+    loaderFile: './src/lib/cdn-loader.ts',
+  },
+  
+  // Enable static exports for CDN
+  output: 'export',
+  trailingSlash: true,
+  
+  // Asset optimization
+  compress: true,
+  poweredByHeader: false,
+  
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+};
+```
+
+## Security Hardening
+
+### Network Policies
+
+```yaml
+# k8s/network-policy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: yielddelta-network-policy
+  namespace: yielddelta
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 3000
+  egress:
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443  # HTTPS
+    - protocol: TCP
+      port: 5432  # PostgreSQL
+    - protocol: TCP
+      port: 6379  # Redis
+```
+
+### Security Headers
+
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // Security headers
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  
+  // CSP
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://evm-rpc.sei-apis.com;"
+  );
+  
+  return response;
+}
+```
+
+---
+
+*Production deployment ensures Yield Delta runs securely and efficiently at scale.*
