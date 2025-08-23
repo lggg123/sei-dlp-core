@@ -13,12 +13,24 @@ export default function DLPLanding() {
         <div className="min-h-screen bg-background relative overflow-x-hidden">
             <Navigation variant="transparent" showWallet={false} showLaunchApp={true} />
             <VerticalRays className="top-0 left-0 right-0" style={{ pointerEvents: 'none' }} />
-            <HeroSection />
-            <VaultShowcase />
-            <FeatureHighlight />
-            <AIWorkflow />
-            <PerformanceMetrics />
-            <CTASection />
+            <div id="hero">
+                <HeroSection />
+            </div>
+            <div id="vaults">
+                <VaultShowcase />
+            </div>
+            <div id="features">
+                <FeatureHighlight />
+            </div>
+            <div id="ai-workflow">
+                <AIWorkflow />
+            </div>
+            <div id="performance">
+                <PerformanceMetrics />
+            </div>
+            <div id="get-started">
+                <CTASection />
+            </div>
         </div>
     );
 }

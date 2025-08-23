@@ -133,6 +133,7 @@ export default function HeroSection() {
                         <Button
                             variant="outline"
                             className="text-2xl px-16 py-8 font-bold"
+                            onClick={() => window.location.href = '/docs'}
                             style={{
                                 borderColor: 'hsl(180 100% 48%)',
                                 color: 'hsl(180 100% 48%)',

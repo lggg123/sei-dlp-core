@@ -125,7 +125,7 @@ export default function FeatureHighlight() {
     }, []);
 
     return (
-    <section className="py-24 relative overflow-hidden" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
+    <section className="py-16 relative overflow-hidden" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
             {/* Animated Background */}
             <div className="absolute inset-0">
                 <div className="absolute inset-0 opacity-30">

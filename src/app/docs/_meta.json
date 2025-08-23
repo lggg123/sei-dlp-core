@@ -1,12 +1,11 @@
 {
   "index": "Introduction",
+  "demo-mode": "Demo Mode",
   "getting-started": "Getting Started",
   "features": "Core Features",
   "api": "API Reference",
   "smart-contracts": "Smart Contracts",
-  "ai-engine": "AI Engine", 
-  "demo-mode": "Demo Mode",
+  "ai-engine": "AI Engine",
   "deployment": "Deployment",
-  "troubleshooting": "Troubleshooting",
-  "contributing": "Contributing"
+  "troubleshooting": "Troubleshooting"
 }

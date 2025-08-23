@@ -4,7 +4,7 @@ import PerformanceCard from '@/components/PerformanceCard';
 
 export default function PerformanceMetrics() {
     return (
-        <section className="py-32 relative" style={{ paddingTop: '12rem', paddingBottom: '12rem' }}>
+        <section className="py-16 relative" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
             <div className="container mx-auto px-4">
                 <div className="text-center mb-20" style={{ marginBottom: '6rem' }}>
                     <h2 

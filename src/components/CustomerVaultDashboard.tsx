@@ -21,7 +21,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   const [withdrawalHash, setWithdrawalHash] = useState<string | null>(null);
 
   // Read customer statistics
-  const { data: customerStats } = useReadContract({
+  const { data: customerStats, error: customerStatsError } = useReadContract({
     address: vaultAddress,
     abi: vaultABI,
     functionName: 'getCustomerStats',
@@ -29,7 +29,18 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
     query: {
       enabled: !!address,
     },
-  }) as { data: readonly [bigint, bigint, bigint, bigint, bigint, bigint] | undefined };
+  }) as { data: readonly [bigint, bigint, bigint, bigint, bigint, bigint] | undefined, error: any };
+
+  // Demo fallback data when getCustomerStats is not available
+  const demoCustomerStats: readonly [bigint, bigint, bigint, bigint, bigint, bigint] | undefined = 
+    isDemoMode && customerStatsError ? [
+      BigInt('5000000000000000000'), // 5 SEIDLPE shares
+      BigInt('5400000000000000000'), // $5.40 share value (8% gain)
+      BigInt('5000000000000000000'), // $5.00 total deposited
+      BigInt('0'),                  // $0.00 total withdrawn
+      BigInt(Date.now() - 3600000), // Deposited 1 hour ago
+      BigInt('82800')               // 23 hours remaining (82,800 seconds)
+    ] : undefined;
 
   // Read vault information
   const { data: vaultInfo } = useReadContract({
@@ -49,16 +60,17 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   const { writeContract: deposit, isPending: isDepositing } = useWriteContract();
   const { writeContract: withdraw, isPending: isWithdrawing } = useWriteContract();
 
-  // Parse customer stats if available
+  // Parse customer stats if available (use demo data as fallback)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [shares, shareValue, totalDeposited, totalWithdrawn, _depositTime, lockTimeRemaining] = customerStats || [];
+  const [shares, shareValue, totalDeposited, totalWithdrawn, _depositTime, lockTimeRemaining] = 
+    customerStats || demoCustomerStats || [];
 
   // Calculate metrics
   const unrealizedGains = shareValue && totalDeposited && totalWithdrawn 
     ? Number(formatUnits(shareValue, 18)) - Number(formatUnits(totalDeposited, 18)) + Number(formatUnits(totalWithdrawn, 18))
     : 0;
 
-  const canWithdraw = lockTimeRemaining ? Number(lockTimeRemaining) === 0 : false;
+  const canWithdraw = isDemoMode ? true : lockTimeRemaining ? Number(lockTimeRemaining) === 0 : false;
 
   const handleDeposit = async (): Promise<void> => {
     if (!depositAmount0 || !depositAmount1) return;

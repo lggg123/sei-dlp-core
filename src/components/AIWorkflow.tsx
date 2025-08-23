@@ -106,12 +106,12 @@ export default function AIWorkflow() {
   return (
     <div 
       ref={containerRef} 
-      className="py-32 relative"
+      className="py-16 relative"
       style={{
-        paddingTop: '8rem',
-        paddingBottom: '8rem',
+        paddingTop: '4rem',
+        paddingBottom: '4rem',
         marginTop: '-2rem',
-        minHeight: '100vh',
+        minHeight: '70vh',
         overflow: 'visible',
         background: 'linear-gradient(180deg, rgba(20, 20, 30, 0.95) 0%, rgba(0, 245, 212, 0.08) 15%, rgba(155, 93, 229, 0.06) 40%, rgba(255, 32, 110, 0.08) 70%, rgba(20, 20, 30, 0.95) 100%)',
         position: 'relative'

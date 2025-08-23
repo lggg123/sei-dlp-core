@@ -1,6 +1,6 @@
 /* Hero Layout Styles - Component Module */
 .section {
-  min-height: 100vh !important;
+  min-height: 80vh !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;

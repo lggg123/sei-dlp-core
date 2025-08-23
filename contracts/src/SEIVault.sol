@@ -168,6 +168,12 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         // Mint shares
         _mint(recipient, shares);
         
+        // Track customer deposits for statistics
+        customerTotalDeposited[recipient] += actualAmount;
+        if (customerDepositTime[recipient] == 0) {
+            customerDepositTime[recipient] = block.timestamp;
+        }
+        
         // Batch update vault info to reduce SSTORE operations
         unchecked {
             vaultInfo.totalSupply = currentSupply + shares;
@@ -210,6 +216,12 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         require(balanceOf(owner) >= shares, "Insufficient shares");
         require(msg.sender == owner || allowance(owner, msg.sender) >= shares, "Insufficient allowance");
         
+        // Check lock period
+        uint256 depositTime = customerDepositTime[owner];
+        if (depositTime > 0) {
+            require(block.timestamp >= depositTime + LOCK_PERIOD, "Assets are locked for 24 hours after deposit");
+        }
+        
         // Calculate assets to return
         uint256 currentSupply = totalSupply();
         uint256 totalAssetBalance = _getTotalAssetBalance();
@@ -217,6 +229,9 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
         
         // Burn shares
         _burn(owner, shares);
+        
+        // Track customer withdrawals for statistics
+        customerTotalWithdrawn[owner] += assets;
         
         // Transfer assets (native SEI or ERC20)
         if (vaultInfo.token0 == address(0)) {
@@ -316,6 +331,65 @@ contract SEIVault is ISEIVault, ERC20, Ownable, ReentrancyGuard {
      */
     fallback() external payable {
         revert("Use seiOptimizedDeposit function for deposits");
+    }
+
+    // Customer tracking
+    struct CustomerStats {
+        uint256 shares;
+        uint256 shareValue;
+        uint256 totalDeposited;
+        uint256 totalWithdrawn;
+        uint256 depositTime;
+        uint256 lockTimeRemaining;
+    }
+    
+    mapping(address => uint256) public customerTotalDeposited;
+    mapping(address => uint256) public customerTotalWithdrawn;
+    mapping(address => uint256) public customerDepositTime;
+    uint256 public constant LOCK_PERIOD = 24 hours; // 24-hour lock period
+    
+    /**
+     * @dev Get customer statistics for dashboard display
+     * @param customer The customer address to get stats for
+     * @return shares Current shares owned by customer
+     * @return shareValue Current value of customer's shares
+     * @return totalDeposited Total amount deposited by customer
+     * @return totalWithdrawn Total amount withdrawn by customer
+     * @return depositTime Timestamp of customer's first deposit
+     * @return lockTimeRemaining Time remaining in lock period (0 if unlocked)
+     */
+    function getCustomerStats(address customer) external view returns (
+        uint256 shares,
+        uint256 shareValue,
+        uint256 totalDeposited,
+        uint256 totalWithdrawn,
+        uint256 depositTime,
+        uint256 lockTimeRemaining
+    ) {
+        shares = balanceOf(customer);
+        
+        // Calculate share value based on current exchange rate
+        if (shares > 0) {
+            uint256 currentSupply = totalSupply();
+            uint256 totalAssetBalance = _getTotalAssetBalance();
+            shareValue = currentSupply > 0 ? (shares * totalAssetBalance) / currentSupply : 0;
+        } else {
+            shareValue = 0;
+        }
+        
+        totalDeposited = customerTotalDeposited[customer];
+        totalWithdrawn = customerTotalWithdrawn[customer];
+        depositTime = customerDepositTime[customer];
+        
+        // Calculate lock time remaining
+        if (depositTime > 0) {
+            uint256 unlockTime = depositTime + LOCK_PERIOD;
+            lockTimeRemaining = block.timestamp < unlockTime ? unlockTime - block.timestamp : 0;
+        } else {
+            lockTimeRemaining = 0;
+        }
+        
+        return (shares, shareValue, totalDeposited, totalWithdrawn, depositTime, lockTimeRemaining);
     }
 
     // Internal functions
