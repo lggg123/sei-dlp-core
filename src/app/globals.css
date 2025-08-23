@@ -3,6 +3,70 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dashboard responsive grid fix - Tailwind v4 compatible */
+@layer components {
+  /* Ensure portfolio stats grid works correctly */
+  .dashboard-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    }
+  }
+  
+  /* Ensure position cards use stacked layout */
+  .dashboard-positions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  /* Ensure slate background colors work - Multiple fallbacks for compatibility */
+  .dashboard-card-bg {
+    background-color: rgba(30, 41, 59, 0.6) !important;
+    background-color: rgb(30 41 59 / 0.6) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(51, 65, 85, 0.5) !important;
+  }
+  
+  /* Force display properties for dashboard layout */
+  .dashboard-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+  
+  .dashboard-positions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  /* Responsive grid behavior */
+  @media screen and (min-width: 768px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+  
+  @media screen and (min-width: 1024px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    }
+  }
+}
+
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
@@ -13,6 +77,33 @@ html {
 
 /* 3. Your CSS variable definitions */
 :root {
+  --radius: 0.5rem;
+  
+  /* Custom CSS variables for dashboard */
+  --dashboard-card-bg: rgb(30 41 59 / 0.6);
+  --dashboard-hover-bg: rgb(51 65 85 / 0.5);
+  
+  /* Tailwind CSS variables */
+  --background: 0 0% 100%;
+  --foreground: 224 71.4% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 224 71.4% 4.1%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 220.9 39.3% 11%;
+  --primary-foreground: 210 20% 98%;
+  --primary-glow: 220 50% 60%;
+  --secondary: 220 14.3% 95.9%;
+  --secondary-foreground: 220.9 39.3% 11%;
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  --accent: 220 14.3% 95.9%;
+  --accent-foreground: 220.9 39.3% 11%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 224 71.4% 4.1%;
   --radius: 0.625rem;
   /* SEI DLP Light Theme - Cyber Minimalist */
   --background: 216 100% 4%;

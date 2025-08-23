@@ -167,8 +167,8 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-xl relative">
+    <div className="space-y-8">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-xl relative">
         <Link href="/dashboard" passHref>
           <button className="absolute top-4 left-4 bg-white text-blue-600 px-3 py-1 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors">
             &larr; Back to Dashboard
@@ -186,8 +186,8 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
       </div>
 
       {/* Portfolio Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold text-gray-700 mb-2">Your Shares</h3>
           <p className="text-3xl font-bold text-blue-600">
             {shares ? formatUnits(shares, 18) : '0'} SEIDLPE
@@ -197,7 +197,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold text-gray-700 mb-2">Total Deposited</h3>
           <p className="text-3xl font-bold text-green-600">
             ${totalDeposited ? Number(formatUnits(totalDeposited, 18)).toFixed(2) : '0.00'}
@@ -207,7 +207,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold text-gray-700 mb-2">Unrealized Gains</h3>
           <p className={`text-3xl font-bold ${unrealizedGains >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {unrealizedGains >= 0 ? '+' : ''}${unrealizedGains.toFixed(2)}
@@ -232,7 +232,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
       </div>
 
       {/* Deposit Section */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
         <h3 className="text-xl font-bold mb-4">Deposit Funds</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
@@ -273,7 +273,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
       </div>
 
       {/* Withdraw Section */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
         <h3 className="text-xl font-bold mb-4">Withdraw Funds</h3>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -355,7 +355,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
       </div>
 
       {/* Vault Information */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      <div className="bg-gray-50 p-8 rounded-lg">
         <h3 className="text-xl font-bold mb-4">Vault Information</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>

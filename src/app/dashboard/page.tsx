@@ -142,114 +142,152 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <section className="py-8 relative">
+        <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto">
         {/* Portfolio Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
-          {[
-            { 
-              label: 'Total Portfolio Value', 
-              value: formatCurrency(portfolioOverview.totalValue), 
-              change: `+${portfolioOverview.pnlPercent}%`, 
-              icon: Wallet, 
-              color: 'purple',
-              trend: 'up'
-            },
-            { 
-              label: 'Total P&L', 
-              value: formatCurrency(portfolioOverview.totalPnL), 
-              change: `+${portfolioOverview.pnlPercent}%`, 
-              icon: TrendingUp, 
-              color: 'green',
-              trend: 'up'
-            },
-            { 
-              label: 'Daily Yield', 
-              value: formatCurrency(portfolioOverview.dailyYield), 
-              change: '+5.2%', 
-              icon: DollarSign, 
-              color: 'blue',
-              trend: 'up'
-            },
-            { 
-              label: 'Active Positions', 
-              value: portfolioOverview.activePositions.toString(), 
-              change: '+1', 
-              icon: Activity, 
-              color: 'orange',
-              trend: 'up'
-            },
-            { 
-              label: 'Total Yield Earned', 
-              value: formatCurrency(portfolioOverview.totalYieldEarned), 
-              change: '+12.4%', 
-              icon: TrendingUp, 
-              color: 'pink',
-              trend: 'up'
-            },
-            { 
-              label: 'Avg APY', 
-              value: '18.3%', 
-              change: '+2.1%', 
-              icon: BarChart3, 
-              color: 'cyan',
-              trend: 'up'
-            }
-          ].map((stat, index) => (
-            <div key={index} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all">
-              <div className="flex items-center justify-between mb-4">
-                <stat.icon className={`w-8 h-8 text-${stat.color}-400`} />
-                <div className={`text-sm font-medium px-2 py-1 rounded-lg ${
-                  stat.trend === 'up' 
-                    ? `text-green-400 bg-green-400/10` 
-                    : `text-red-400 bg-red-400/10`
-                }`}>
-                  {stat.change}
+        <div className="space-y-4 mb-8">
+          {/* Main stats row */}
+          <div className="dashboard-stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4"
+               style={{ 
+                 display: 'grid', 
+                 gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+                 gap: '1rem'
+               }}>
+            {[
+              { 
+                label: 'Total Portfolio Value', 
+                value: formatCurrency(portfolioOverview.totalValue), 
+                change: `+${portfolioOverview.pnlPercent}%`, 
+                icon: Wallet, 
+                color: 'purple',
+                trend: 'up'
+              },
+              { 
+                label: 'Total P&L', 
+                value: formatCurrency(portfolioOverview.totalPnL), 
+                change: `+${portfolioOverview.pnlPercent}%`, 
+                icon: TrendingUp, 
+                color: 'green',
+                trend: 'up'
+              },
+              { 
+                label: 'Daily Yield', 
+                value: formatCurrency(portfolioOverview.dailyYield), 
+                change: '+5.2%', 
+                icon: DollarSign, 
+                color: 'blue',
+                trend: 'up'
+              },
+              { 
+                label: 'Active Positions', 
+                value: portfolioOverview.activePositions.toString(), 
+                change: '+1', 
+                icon: Activity, 
+                color: 'orange',
+                trend: 'up'
+              },
+              { 
+                label: 'Total Yield Earned', 
+                value: formatCurrency(portfolioOverview.totalYieldEarned), 
+                change: '+12.4%', 
+                icon: TrendingUp, 
+                color: 'pink',
+                trend: 'up'
+              },
+              { 
+                label: 'Avg APY', 
+                value: '18.3%', 
+                change: '+2.1%', 
+                icon: BarChart3, 
+                color: 'cyan',
+                trend: 'up'
+              }
+            ].map((stat, index) => (
+              <div 
+                key={index} 
+                className="dashboard-card-bg bg-slate-800/60 border border-slate-700/50 rounded-xl p-4 hover:bg-slate-700/50 transition-all backdrop-blur-3xl"
+                style={{ 
+                  backgroundColor: 'rgb(30 41 59 / 0.6)', 
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  border: '1px solid rgb(51 65 85 / 0.5)'
+                }}
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <stat.icon className={`w-5 h-5 text-${stat.color}-400 flex-shrink-0`} />
+                  <div className={`text-xs font-medium px-2 py-1 rounded ${
+                    stat.trend === 'up' 
+                      ? `text-green-400 bg-green-400/10` 
+                      : `text-red-400 bg-red-400/10`
+                  }`}>
+                    {stat.change}
+                  </div>
                 </div>
+                <div className="text-xl font-bold mb-1 text-white">{stat.value}</div>
+                <div className="text-slate-400 text-xs leading-tight">{stat.label}</div>
               </div>
-              <div className="text-2xl font-bold mb-1">{stat.value}</div>
-              <div className="text-gray-400 text-sm">{stat.label}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Main Dashboard Content */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-          <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+        <div 
+          className="dashboard-card-bg bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-3xl"
+          style={{ 
+            backgroundColor: 'rgb(30 41 59 / 0.6)', 
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: '1px solid rgb(51 65 85 / 0.5)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
             <Activity className="w-5 h-5 text-purple-400" />
             Your Positions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div className="dashboard-positions flex flex-col gap-4"
+               style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {vaultPositions.map((position) => (
               <Link href={`/dashboard/${position.address}`} key={position.address}>
-                <div className="p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer h-full flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <div className="font-semibold text-sm">{position.name}</div>
-                        <div className={`text-xs px-2 py-1 rounded-lg inline-block mt-1 ${getStrategyColor(position.strategy)}`}>
-                          {position.strategy.replace('_', ' ').toUpperCase()}
+                <div 
+                  className="bg-slate-700/30 border border-slate-600/30 rounded-xl p-4 hover:bg-slate-600/40 hover:border-slate-500/50 transition-all cursor-pointer"
+                  style={{
+                    backgroundColor: 'rgb(51 65 85 / 0.3)',
+                    border: '1px solid rgb(71 85 105 / 0.3)',
+                    borderRadius: '0.75rem',
+                    padding: '1rem'
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex-1">
+                          <div className="font-semibold text-white text-base">{position.name}</div>
+                          <div className={`text-xs px-2 py-1 rounded inline-block mt-1 ${getStrategyColor(position.strategy)}`}>
+                            {position.strategy.replace('_', ' ').toUpperCase()}
+                          </div>
                         </div>
+                        <ArrowRight className="w-5 h-5 text-slate-400" />
                       </div>
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div>
-                        <div className="text-gray-400 text-xs">Value</div>
-                        <div className="font-semibold">{formatCurrency(position.value)}</div>
-                      </div>
-                      <div>
-                        <div className="text-gray-400 text-xs">P&L</div>
-                        <div className={`font-semibold ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          +{formatCurrency(position.pnl)} ({position.pnlPercent}%)
+                      <div className="grid grid-cols-4 gap-4">
+                        <div>
+                          <div className="text-slate-400 text-xs mb-1">Value</div>
+                          <div className="font-semibold text-white">{formatCurrency(position.value)}</div>
                         </div>
-                      </div>
-                      <div>
-                        <div className="text-gray-400 text-xs">APY</div>
-                        <div className="font-semibold text-blue-400">{position.apy}%</div>
-                      </div>
-                      <div>
-                        <div className="text-gray-400 text-xs">Daily Yield</div>
-                        <div className="font-semibold text-green-400">{formatCurrency(position.dailyYield)}</div>
+                        <div>
+                          <div className="text-slate-400 text-xs mb-1">P&L</div>
+                          <div className={`font-semibold ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            +{formatCurrency(position.pnl)} ({position.pnlPercent}%)
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 text-xs mb-1">APY</div>
+                          <div className="font-semibold text-blue-400">{position.apy}%</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 text-xs mb-1">Daily Yield</div>
+                          <div className="font-semibold text-green-400">{formatCurrency(position.dailyYield)}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -257,7 +295,7 @@ const DashboardPage = () => {
               </Link>
             ))}
           </div>
-          <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-slate-600/30">
             <Link
               href="/vaults"
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all flex items-center justify-center gap-2"
@@ -269,35 +307,40 @@ const DashboardPage = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/dashboard/rebalance"
-            className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-400/20 text-white p-6 rounded-2xl hover:bg-gradient-to-r hover:from-yellow-500/20 hover:to-orange-500/20 transition-all text-left block group"
+            className="dashboard-card-bg bg-slate-800/60 border border-slate-700/50 text-white p-6 rounded-2xl hover:bg-slate-700/50 hover:border-slate-600/60 transition-all text-left block group backdrop-blur-3xl"
+            style={{ backgroundColor: 'rgb(30 41 59 / 0.6)', backdropFilter: 'blur(24px)' }}
           >
             <BarChart3 className="w-8 h-8 text-yellow-400 mb-3 group-hover:scale-110 transition-transform" />
-            <div className="font-semibold mb-1">Portfolio Rebalancing</div>
-            <div className="text-sm text-gray-400">Optimize your yield with AI-powered analysis</div>
+            <div className="font-semibold mb-1 text-white">Portfolio Rebalancing</div>
+            <div className="text-sm text-slate-400">Optimize your yield with AI-powered analysis</div>
           </Link>
 
           <Link
             href="/dashboard/active-trades"
-            className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-400/20 text-white p-6 rounded-2xl hover:bg-gradient-to-r hover:from-green-500/20 hover:to-blue-500/20 transition-all text-left block group"
+            className="dashboard-card-bg bg-slate-800/60 border border-slate-700/50 text-white p-6 rounded-2xl hover:bg-slate-700/50 hover:border-slate-600/60 transition-all text-left block group backdrop-blur-3xl"
+            style={{ backgroundColor: 'rgb(30 41 59 / 0.6)', backdropFilter: 'blur(24px)' }}
           >
             <Activity className="w-8 h-8 text-green-400 mb-3 group-hover:scale-110 transition-transform" />
-            <div className="font-semibold mb-1">Active Trades</div>
-            <div className="text-sm text-gray-400">Monitor your trades in real-time</div>
+            <div className="font-semibold mb-1 text-white">Active Trades</div>
+            <div className="text-sm text-slate-400">Monitor your trades in real-time</div>
           </Link>
 
           <Link
             href="/market"
-            className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-400/20 text-white p-6 rounded-2xl hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-pink-500/20 transition-all text-left block group"
+            className="dashboard-card-bg bg-slate-800/60 border border-slate-700/50 text-white p-6 rounded-2xl hover:bg-slate-700/50 hover:border-slate-600/60 transition-all text-left block group backdrop-blur-3xl"
+            style={{ backgroundColor: 'rgb(30 41 59 / 0.6)', backdropFilter: 'blur(24px)' }}
           >
             <TrendingUp className="w-8 h-8 text-purple-400 mb-3 group-hover:scale-110 transition-transform" />
-            <div className="font-semibold mb-1">Market Overview</div>
-            <div className="text-sm text-gray-400">Explore trading opportunities</div>
+            <div className="font-semibold mb-1 text-white">Market Overview</div>
+            <div className="text-sm text-slate-400">Explore trading opportunities</div>
           </Link>
         </div>
-      </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
