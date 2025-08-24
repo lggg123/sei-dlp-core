@@ -3,7 +3,7 @@ import { useVaultStore, VaultData } from '@/stores/vaultStore'
 import { useAppStore } from '@/stores/appStore'
 import { useWriteContract, useAccount } from 'wagmi'
 import { parseUnits } from 'viem'
-import SEIVault from '@contracts/out/SEIVault.sol/SEIVault.json'
+import SEIVault from '@/lib/abis/SEIVault'
 
 interface VaultResponse {
   success: boolean
