@@ -3,15 +3,15 @@ import Link from 'next/link';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
 import { Address, Abi } from 'viem';
-import { 
-  Loader2, 
-  CheckCircle2, 
-  AlertCircle, 
-  ArrowLeft, 
-  Wallet, 
-  TrendingUp, 
-  DollarSign, 
-  PlusCircle, 
+import {
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  ArrowLeft,
+  Wallet,
+  TrendingUp,
+  DollarSign,
+  PlusCircle,
   MinusCircle,
   Clock,
   Shield
@@ -41,13 +41,13 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
       try {
         const response = await fetch('/api/vaults');
         const result = await response.json();
-        
+
         if (result.success) {
           // Find the specific vault by address
-          const vault = result.data.find((v: any) => 
+          const vault = result.data.find((v: any) =>
             v.address.toLowerCase() === vaultAddress.toLowerCase()
           );
-          
+
           if (vault) {
             setVaultMetadata(vault);
           }
@@ -76,7 +76,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
   // Demo fallback data when getCustomerStats is not available - vault-specific data
   const getVaultSpecificDemoData = (): readonly [bigint, bigint, bigint, bigint, bigint, bigint] | undefined => {
     if (!isDemoMode) return undefined;
-    
+
     // Vault-specific demo data matching dashboard positions
     const vaultDemoData: { [key: string]: readonly [bigint, bigint, bigint, bigint, bigint, bigint] } = {
       // SEI-USDC Concentrated LP
@@ -116,7 +116,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
         BigInt('82800')                  // 23 hours remaining
       ]
     };
-    
+
     return vaultDemoData[vaultAddress.toLowerCase()] || [
       BigInt('5000000000000000000'),   // Default 5 SEI DLP shares
       BigInt('5400000000000000000'),   // Default $5.40 share value
@@ -149,19 +149,29 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
 
   // Parse customer stats if available (use demo data as fallback)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [shares, shareValue, totalDeposited, totalWithdrawn, _depositTime, lockTimeRemaining] = 
+  const [shares, shareValue, totalDeposited, totalWithdrawn, _depositTime, lockTimeRemaining] =
     customerStats || demoCustomerStats || [];
 
   // Calculate metrics
-  const unrealizedGains = shareValue && totalDeposited && totalWithdrawn 
-    ? Number(formatUnits(shareValue, 18)) - Number(formatUnits(totalDeposited, 18)) + Number(formatUnits(totalWithdrawn, 18))
-    : 0;
+  const shareValueNum = shareValue ? Number(formatUnits(shareValue, 18)) : 0;
+  const totalDepositedNum = totalDeposited ? Number(formatUnits(totalDeposited, 18)) : 0;
+  const totalWithdrawnNum = totalWithdrawn ? Number(formatUnits(totalWithdrawn, 18)) : 0;
+
+  console.log('Debug - Unrealized Gains Calculation:', {
+    shareValue: shareValueNum,
+    totalDeposited: totalDepositedNum,
+    totalWithdrawn: totalWithdrawnNum,
+    demoMode: isDemoMode,
+    vaultAddress: vaultAddress.toLowerCase()
+  });
+
+  const unrealizedGains = shareValueNum - totalDepositedNum + totalWithdrawnNum;
 
   const canWithdraw = isDemoMode ? true : lockTimeRemaining ? Number(lockTimeRemaining) === 0 : false;
 
   const handleDeposit = async (): Promise<void> => {
     if (!depositAmount0 || !depositAmount1) return;
-    
+
     try {
       deposit({
         address: vaultAddress,
@@ -180,7 +190,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
 
   const handleWithdraw = async (): Promise<void> => {
     if (!withdrawShares) return;
-    
+
     console.log('🏦 [CustomerVaultDashboard] Withdrawal initiated', {
       withdrawShares,
       isDemoMode,
@@ -190,20 +200,20 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
     // Reset withdrawal state
     setWithdrawalStatus('pending');
     setWithdrawalHash(null);
-    
+
     try {
       if (isDemoMode) {
         // DEMO MODE: Simulate successful withdrawal
         console.log('🎭 [CustomerVaultDashboard] Demo mode: Simulating successful withdrawal');
-        
+
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 2000));
-        
+
         // Generate fake transaction hash
         const fakeHash = `0x${Math.random().toString(16).substr(2, 64)}`;
         setWithdrawalHash(fakeHash);
         setWithdrawalStatus('success');
-        
+
         console.log('🎉 [CustomerVaultDashboard] Demo withdrawal completed successfully!', {
           shares: withdrawShares,
           fakeHash
@@ -215,7 +225,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
           setWithdrawalStatus('idle');
           setWithdrawalHash(null);
         }, 5000);
-        
+
         return;
       }
 
@@ -232,7 +242,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
     } catch (error) {
       console.error('Withdrawal failed:', error);
       setWithdrawalStatus('error');
-      
+
       // Reset error state after a delay
       setTimeout(() => {
         setWithdrawalStatus('idle');
@@ -242,11 +252,11 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
 
   const formatTimeRemaining = (seconds: number | bigint | undefined): string => {
     if (!seconds || Number(seconds) <= 0) return 'Available';
-    
+
     const secondsNum = Number(seconds);
     const hours = Math.floor(secondsNum / 3600);
     const minutes = Math.floor((secondsNum % 3600) / 60);
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}m remaining`;
     }
@@ -276,11 +286,11 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
             <ArrowLeft size={20} />
             Back to Dashboard
           </Link>
-          
+
           <h1 className={styles.headerTitle}>
             {vaultMetadata ? vaultMetadata.name : 'Vault Dashboard'}
           </h1>
-          
+
           <p className={styles.headerSubtitle}>
             {vaultMetadata ? (
               `${formatStrategyName(vaultMetadata.strategy)} • ${vaultMetadata.tokenA}-${vaultMetadata.tokenB} • ${(vaultMetadata.apy * 100).toFixed(1)}% APY`
@@ -288,7 +298,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
               'Manage your AI-driven liquidity positions with advanced analytics and real-time optimization'
             )}
           </p>
-          
+
           {isDemoMode && (
             <div className={styles.demoBadge}>
               <Shield size={16} />
@@ -507,7 +517,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
                 {withdrawalStatus === 'pending' && 'Transaction is being processed...'}
                 {withdrawalStatus === 'success' && `Withdrawal successful! ${withdrawShares} shares withdrawn.`}
                 {withdrawalStatus === 'error' && 'Transaction failed. Please try again.'}
-                
+
                 {withdrawalHash && withdrawalStatus === 'success' && (
                   <div style={{ marginTop: '0.5rem', fontSize: '0.75rem', fontFamily: 'monospace' }}>
                     Transaction Hash: {withdrawalHash.substring(0, 6)}...{withdrawalHash.substring(withdrawalHash.length - 4)}
@@ -558,7 +568,7 @@ const CustomerVaultDashboard: React.FC<CustomerVaultDashboardProps> = ({ vaultAd
             <div>
               <p className={styles.cardSubtitle}>Total Value Locked</p>
               <p className={styles.primaryValue} style={{ fontSize: '1.1rem' }}>
-                {vaultMetadata ? `$${(vaultMetadata.tvl / 1000).toFixed(0)}K` : 
+                {vaultMetadata ? `$${(vaultMetadata.tvl / 1000).toFixed(0)}K` :
                  vaultInfo?.totalValueLocked ? `$${Number(formatUnits(vaultInfo.totalValueLocked, 18)).toFixed(2)}` : '$0.00'}
               </p>
             </div>
