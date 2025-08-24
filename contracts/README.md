@@ -43,7 +43,7 @@ forge script script/VerifyTestUsers.s.sol --rpc-url https://evm-rpc-arctic-1.sei
 ### ✅ SEI Network Optimizations
 - **Parallel Execution**: Optimized for SEI's parallel transaction processing
 - **400ms Finality**: Leverages SEI's fast block times
-- **Chain Validation**: Ensures deployment only on SEI (Chain ID: 713715)
+- **Chain Validation**: Ensures deployment only on SEI (Chain ID: 1328)
 
 ### ✅ AI-Driven Strategies
 - **8 Strategy Vaults**: Concentrated liquidity, yield farming, arbitrage, etc.

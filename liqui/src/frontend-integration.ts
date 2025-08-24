@@ -216,7 +216,7 @@ export const frontendAwareCharacterUpdates = {
       {
         name: 'Liqui',
         content: {
-          text: '🚀 Opening SEI DLP Dashboard at localhost:3001 for detailed analytics. You can also continue chatting here for AI-powered insights. Both interfaces share the same vault data!',
+          text: '🚀 You can view detailed analytics on our dashboard: http://localhost:3001/vault?address=0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6&tab=analytics',
           actions: ['OPEN_DASHBOARD']
         },
       },
@@ -231,7 +231,7 @@ export const frontendAwareCharacterUpdates = {
       {
         name: 'Liqui',
         content: {
-          text: '💡 You have two powerful interfaces: Chat with me here (localhost:3000) for AI guidance, or use the visual dashboard (localhost:3001) for detailed analytics. Both sync automatically via our SEI DLP API!',
+          text: '💡 You have two powerful interfaces: Chat with me here for AI guidance, or use the visual dashboard: http://localhost:3001/vault?address=0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6&tab=analytics for detailed analytics. Both sync automatically via our SEI DLP API!',
         },
       },
     ]

@@ -40,7 +40,7 @@ class VaultAnalysisRequest(BaseModel):
     volatility: float
     liquidity: float
     timeframe: str = "1d"
-    chain_id: int = 713715
+    chain_id: int = 1328
 
 class MarketPredictionRequest(BaseModel):
     symbol: str
@@ -153,7 +153,7 @@ async def predict_optimal_range(request: VaultAnalysisRequest):
         expected_apr = 0.12 + (request.volume_24h / 1000000) * 0.05
         risk_score = volatility_factor * 0.6 + (1 - request.liquidity / 10000000) * 0.4
         
-        reasoning = f"Optimal range calculated for SEI Chain (713715) considering {request.volatility:.1%} volatility. Range provides {confidence:.1%} confidence with estimated {expected_apr:.1%} APR."
+        reasoning = f"Optimal range calculated for SEI Chain (1328) considering {request.volatility:.1%} volatility. Range provides {confidence:.1%} confidence with estimated {expected_apr:.1%} APR."
         
         return OptimalRangeResponse(
             lower_tick=lower_tick,
@@ -426,7 +426,7 @@ async def get_models_status():
             "risk_manager": "active", 
             "market_predictor": "active"
         },
-        "sei_chain_id": 713715,
+        "sei_chain_id": 1328,
         "supported_operations": [
             "optimal_range_prediction",
             "market_movement_prediction", 

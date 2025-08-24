@@ -79,8 +79,9 @@
   ],
   "test-users": {
     "user1": {
-      "address": "0x2222222222222222222222222222222222222222",
-      "type": "Balanced Portfolio",
+      "address": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+      "contractName": "User1",
+      "type": "Balanced Portfolio (Updated)",
       "tokens": {
         "SEI": "10000000000000000000000",
         "USDC": "10000000000000000000000",
@@ -92,8 +93,9 @@
       }
     },
     "user2": {
-      "address": "0x3333333333333333333333333333333333333333",
-      "type": "Conservative Portfolio",
+      "address": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+      "contractName": "User2",
+      "type": "Conservative Portfolio (Updated)",
       "tokens": {
         "SEI": "5000000000000000000000",
         "USDC": "5000000000000000000000",
@@ -105,8 +107,9 @@
       }
     },
     "user3": {
-      "address": "0x4444444444444444444444444444444444444444",
-      "type": "Whale Portfolio",
+      "address": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+      "contractName": "User3",
+      "type": "Whale Portfolio (Updated)",
       "tokens": {
         "SEI": "100000000000000000000000",
         "USDC": "50000000000000000000000",
@@ -115,6 +118,23 @@
         "BTC": "20000000000000000000",
         "ATOM": "10000000000000000000000",
         "DAI": "30000000000000000000000"
+      }
+    },
+    "legacy-users": {
+      "user1-legacy": {
+        "address": "0x2222222222222222222222222222222222222222",
+        "type": "Balanced Portfolio (Legacy)",
+        "status": "deprecated"
+      },
+      "user2-legacy": {
+        "address": "0x3333333333333333333333333333333333333333",
+        "type": "Conservative Portfolio (Legacy)",
+        "status": "deprecated"
+      },
+      "user3-legacy": {
+        "address": "0x4444444444444444444444444444444444444444",
+        "type": "Whale Portfolio (Legacy)",
+        "status": "deprecated"
       }
     }
   }
