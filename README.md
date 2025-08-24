@@ -16,9 +16,6 @@
 - ✅ **Engagement**: Production-ready UI with 3D visualizations
 - ✅ **AI Innovation**: ML-driven portfolio optimization at 400ms finality
 
-### **🎥 Demo Video Ready** 
-Complete demo mode implementation with realistic transaction simulations - perfect for competition video submissions!
-
 ---
 
 ## 🌊 **What is Yield Delta Core?**
@@ -54,7 +51,7 @@ Yield Delta Core combines machine learning with SEI's 400ms block finality to cr
 
 | Strategy | APY Range | Risk Level | AI Optimization |
 |----------|-----------|------------|-----------------|
-| **SEI Hypergrowth** | 15-25% | High | Growth token ML analysis |
+| **SEI Hypergrowth** | 15-42% | High | Growth token ML analysis |
 | **Delta Neutral** | 8-15% | Low | Market-neutral AI hedging |
 | **Concentrated Liquidity** | 12-30% | Medium | AI range optimization |
 | **Blue Chip** | 6-12% | Low | Large-cap stability AI |
@@ -68,15 +65,15 @@ Yield Delta Core combines machine learning with SEI's 400ms block finality to cr
 ## 🚀 **Quick Start**
 
 ### **Prerequisites**
-- Node.js 18+ and pnpm
+- Node.js 18+ and bun
 - SEI wallet (Compass, Keplr, or MetaMask)
 - Foundry (for smart contracts)
 
 ### **1. Clone & Install**
 ```bash
-git clone https://github.com/your-org/sei-dlp-core.git
+git clone https://github.com/yield-delta/sei-dlp-core.git
 cd sei-dlp-core
-pnpm install
+bun install
 ```
 
 ### **2. Environment Setup**
@@ -91,18 +88,22 @@ NEXT_PUBLIC_WC_ID=your_walletconnect_id      # WalletConnect
 
 ### **3. Start Development**
 ```bash
-pnpm dev
-```
-Visit `http://localhost:3000` to see the application.
-
-### **4. Smart Contract Deployment (SEI Atlantic Testnet)**
-```bash
+# First deploy smart contracts to testnet (SEI Atlantic Testnet)
 cd contracts
-forge script script/Deploy.s.sol \
+forge script script/DeployTestnet.s.sol \
   --rpc-url https://evm-rpc-testnet.sei-apis.com \
   --private-key $PRIVATE_KEY \
   --broadcast --verify
+
+# Alternatively, use provided shell scripts
+# ./deploy_testnet.sh
+
+# Then start AI Engine and frontend
+cd ../ai-engine && python api_bridge.py
+cd .. && cd liqui && bun dev
+cd .. && bun dev
 ```
+Visit `http://localhost:3001` to see the application.
 
 ---
 
@@ -114,23 +115,12 @@ forge script script/Deploy.s.sol \
 ```bash
 # Enable demo mode
 echo "NEXT_PUBLIC_DEMO_MODE=true" >> .env.local
-bun dev dev
+cd ai-engine
+python api_bridge.py
+cd .. && cd liqui
+bun dev
+cd .. && bun dev
 ```
-
-### **🎬 Demo Features Available**
-- ✅ **Vault Deposits**: Realistic transaction simulation with 2s processing
-- ✅ **AI Rebalancing**: Progressive execution with real-time progress bars  
-- ✅ **Withdrawals**: Complete withdrawal flow with transaction hashes
-- ✅ **Portfolio Analytics**: Live performance metrics and 3D visualizations
-- ✅ **ElizaOS Chat**: AI strategy discussions and explanations
-
-### **📋 5-Minute Demo Script**
-1. **[0-1min]** Overview + Navigate to vaults page
-2. **[1-2.5min]** Deposit 5 SEI into "SEI Hypergrowth Vault" 
-3. **[2.5-4min]** AI Rebalancing: Execute 3 optimization actions
-4. **[4-5min]** Withdrawal + Show portfolio dashboard
-
-**See [DEMO_MODE.md](./DEMO_MODE.md) for complete demo instructions.**
 
 ---
 
@@ -181,22 +171,27 @@ Market Data → Feature Engineering → ML Models → Strategy Optimization → 
 ## 🔧 **Development Commands**
 
 ```bash
+# Smart Contracts
+cd contracts/
+forge build           # Compile contracts
+forge test            # Run contract tests
+forge script script/DeployTestnet.s.sol --broadcast  # Deploy to testnet
+
+# AI Engine
+cd ../ai-engine/
+python -m pytest     # Run AI tests
+python api_bridge.py # Start AI API server
+
 # Frontend Development
+cd ../liqui/
 bun dev              # Start development server
 bun build            # Build for production
 bun test             # Run all tests
 bun test:component   # Component tests only
 
-# Smart Contracts
-cd contracts/
-forge build           # Compile contracts
-forge test            # Run contract tests
-forge script script/Deploy.s.sol --broadcast  # Deploy
-
-# AI Engine
-cd ai-engine/
-python -m pytest     # Run AI tests
-python api_bridge.py # Start AI API server
+# Main Frontend
+cd ..
+bun dev              # Start main frontend
 ```
 
 ---

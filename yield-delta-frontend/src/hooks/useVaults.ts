@@ -3,7 +3,7 @@ import { useVaultStore, VaultData } from '@/stores/vaultStore'
 import { useAppStore } from '@/stores/appStore'
 import { useWriteContract, useAccount } from 'wagmi'
 import { parseUnits } from 'viem'
-import SEIVault from '@/../contracts/out/SEIVault.sol/SEIVault.json'
+import SEIVault from '@contracts/out/SEIVault.sol/SEIVault.json'
 
 interface VaultResponse {
   success: boolean
@@ -43,54 +43,54 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
     queryKey: VAULT_QUERY_KEYS.list(filters || {}),
     queryFn: async (): Promise<VaultData[]> => {
       console.log('[useVaults] queryFn called - starting fetch');
-      
+
       // Only set loading in store if it's the client
       if (typeof window !== 'undefined') {
         setLoading(true)
       }
-      
+
       try {
         const params = new URLSearchParams()
         if (filters?.strategy) params.append('strategy', filters.strategy)
         if (filters?.active !== undefined) params.append('active', filters.active.toString())
-        
+
         const url = `/api/vaults?${params.toString()}`;
         console.log('[useVaults] Fetching from URL:', url);
-        
+
         const response = await fetch(url, {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
         })
-        
+
         console.log('[useVaults] Response received:', {
           status: response.status,
           statusText: response.statusText,
           ok: response.ok,
           headers: Object.fromEntries(response.headers.entries())
         });
-        
+
         if (!response.ok) {
           const errorText = await response.text()
           throw new Error(`Failed to fetch vaults: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`)
         }
-        
+
         const result: VaultResponse = await response.json()
         console.log('[useVaults] API response:', result);
-        
+
         if (!result.success) {
           throw new Error(result.error || 'Failed to fetch vaults')
         }
-        
+
         console.log('[useVaults] Successfully fetched', result.data.length, 'vaults');
-        
+
         // Update store with fetched data (only on client)
         if (typeof window !== 'undefined') {
           setVaults(result.data)
           setError(null)
         }
-        
+
         return result.data
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
@@ -100,7 +100,7 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
           stack: error instanceof Error ? error.stack : 'No stack',
           name: error instanceof Error ? error.name : 'Unknown error type'
         });
-        
+
         // Only update store and show notifications on client
         if (typeof window !== 'undefined') {
           setError(errorMessage)
@@ -110,7 +110,7 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
             message: errorMessage,
           })
         }
-        
+
         throw error
       } finally {
         // Only set loading in store if it's the client
@@ -127,7 +127,7 @@ export const useVaults = (filters?: { strategy?: string; active?: boolean }) => 
     retry: (failureCount, error) => {
       // Don't retry on 4xx errors, wallet errors, or if offline
       if (error instanceof Error && (
-        error.message.includes('4') || 
+        error.message.includes('4') ||
         error.message.includes('MetaMask') ||
         error.message.includes('eth_accounts') ||
         !navigator.onLine
@@ -151,24 +151,24 @@ export const useVault = (address: string) => {
           'Content-Type': 'application/json',
         },
       })
-      
+
       if (!response.ok) {
         const errorText = await response.text()
         throw new Error(`Failed to fetch vault: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`)
       }
-      
+
       const result = await response.json()
-      
+
       if (!result.success) {
         throw new Error(result.error || 'Failed to fetch vault')
       }
-      
+
       return result.data
     },
     enabled: !!address && typeof window !== 'undefined',
     staleTime: 3 * 60 * 1000, // 3 minutes - longer stale time
     refetchInterval: false, // CRITICAL: Disable automatic refetch
-    refetchOnWindowFocus: false, // CRITICAL: Prevent focus-based refetch  
+    refetchOnWindowFocus: false, // CRITICAL: Prevent focus-based refetch
     refetchOnReconnect: false, // CRITICAL: Prevent reconnect-based refetch
     retry: (failureCount, error) => {
       // Don't retry on 4xx errors or wallet errors
@@ -215,10 +215,10 @@ export const useCreateVault = () => {
     onSuccess: (newVault) => {
       // Update store
       addVault(newVault)
-      
+
       // Invalidate and refetch vault lists
       queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
-      
+
       // Success notification
       addNotification({
         type: 'success',
@@ -257,7 +257,7 @@ export const useUserPositions = (walletAddress: string) => {
           depositedAt: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days ago
         },
       ]
-      
+
       setUserPositions(positions)
       return positions
     },
@@ -288,10 +288,10 @@ export const useDepositToVault = (vaultAddress: string) => {
       // NEW FIXED VAULTS - Deployed 2024
       '0xAC64527866CCfA796Fa87A257B3f927179a895e6', // Native SEI Vault (FIXED)
       '0xcF796aEDcC293db74829e77df7c26F482c9dBEC0', // ERC20 USDC Vault (FIXED)
-      
+
       // Legacy vault addresses (for backwards compatibility)
       '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE',
-      '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6', 
+      '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6',
       '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1',
       '0xCB15AFA183347934DeEbb0F442263f50021EFC01',
       '0x34C0aA990D6e0D099325D7491136BA35FBcdFb38',
@@ -336,7 +336,7 @@ export const useDepositToVault = (vaultAddress: string) => {
       // Handle any synchronous errors
       console.error('Deposit error:', err)
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
-      
+
       // Enhanced error messaging for common issues
       let userFriendlyMessage = errorMessage
       if (errorMessage.includes('execution reverted')) {
@@ -346,7 +346,7 @@ export const useDepositToVault = (vaultAddress: string) => {
       } else if (errorMessage.includes('user rejected')) {
         userFriendlyMessage = 'Transaction was rejected. Please try again.'
       }
-      
+
       addNotification({
         type: 'error',
         title: 'Deposit Failed',
@@ -357,12 +357,12 @@ export const useDepositToVault = (vaultAddress: string) => {
   }
 
   // Handle success and error states through effects in the component
-  return { 
-    deposit, 
-    hash, 
-    error, 
-    isPending, 
-    isSuccess, 
+  return {
+    deposit,
+    hash,
+    error,
+    isPending,
+    isSuccess,
     isError,
     // Add helper to invalidate queries when needed
     invalidateQueries: () => {
@@ -392,7 +392,7 @@ export const useWithdrawFromVault = () => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.detail(variables.vaultAddress) })
       queryClient.invalidateQueries({ queryKey: VAULT_QUERY_KEYS.lists() })
-      
+
       addNotification({
         type: 'success',
         title: 'Withdrawal Successful',

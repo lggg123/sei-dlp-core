@@ -17,7 +17,7 @@ import {
   TokenInfo
 } from '@/utils/tokenUtils';
 import { useTokenBalance } from './useTokenBalance';
-import SEIVault from '@/../contracts/out/SEIVault.sol/SEIVault.json';
+import SEIVault from '@contracts/out/SEIVault.sol/SEIVault.json';
 
 // ERC20 ABI for approve function
 const ERC20_ABI = [
