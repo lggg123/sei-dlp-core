@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
         fee: 0.003,
         tickSpacing: 60,
         tvl: 850000, // Bull market: $850K TVL
-        apy: 0.189,
+        apy: 0.182,
         chainId: 1328,
         active: true,
         performance: {
