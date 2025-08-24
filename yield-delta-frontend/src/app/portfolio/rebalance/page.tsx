@@ -51,7 +51,7 @@ const RebalancePage = () => {
       currentPrice: 0.52,
       estimatedGas: 0.002,
       priority: 'high',
-      reason: 'ATOM-SEI pair showing 18.7% APY vs 12.4% current yield'
+      reason: 'ATOM-SEI pair showing 18.2% APY vs 12.4% current yield'
     },
     {
       id: '2',
