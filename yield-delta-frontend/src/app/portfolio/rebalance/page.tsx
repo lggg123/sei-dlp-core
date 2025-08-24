@@ -78,12 +78,12 @@ const RebalancePage = () => {
   ];
 
   const portfolioStats = {
-    totalValue: 12450.78,
-    unrealizedPnL: 856.32,
+    totalValue: 508020.00,
+    unrealizedPnL: 15240.60,
     dailyChange: 2.4,
-    gasEstimate: 0.006,
-    estimatedTime: '2-3 minutes',
-    potentialYieldIncrease: 4.2
+    gasEstimate: 0.15, // SEI gas cost
+    estimatedTime: '30-45 seconds', // SEI 400ms finality
+    potentialYieldIncrease: 7.4 // matches agent response
   };
 
   const handleAnalyze = () => {

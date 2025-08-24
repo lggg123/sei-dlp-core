@@ -20,14 +20,14 @@ interface VaultPosition {
 
 const DashboardPage = () => {
   
-  // Mock user portfolio data
+  // Mock user portfolio data (updated to match agent response)
   const portfolioOverview = {
-    totalValue: 14750.89,
-    totalPnL: 1250.34,
-    pnlPercent: 9.3,
-    dailyYield: 48.92,
-    activePositions: 4,
-    totalYieldEarned: 847.56
+    totalValue: 508020.00,
+    totalPnL: 46234.56,
+    pnlPercent: 10.0,
+    dailyYield: 348.65,
+    activePositions: 5,
+    totalYieldEarned: 12847.23
   };
 
   const vaultPositions: VaultPosition[] = [
@@ -35,41 +35,41 @@ const DashboardPage = () => {
       address: '0xf6A791e4773A60083AA29aaCCDc3bA5E900974fE',
       name: 'SEI-USDC Concentrated LP',
       strategy: 'concentrated_liquidity',
-      shares: 2450.0,
-      value: 6250.45,
-      apy: 12.4,
-      dailyYield: 21.24,
-      pnl: 450.78,
-      pnlPercent: 7.8
+      shares: 10156.0,
+      value: 4572.18, // 0.9% of total (SEI)
+      apy: 12.5,
+      dailyYield: 0.56,
+      pnl: -2247.82,
+      pnlPercent: -32.9 // needs rebalancing per agent
     },
     {
       address: '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6',
-      name: 'ATOM-SEI Yield Farm',
-      strategy: 'yield_farming',
-      shares: 1800.0,
-      value: 4150.32,
-      apy: 18.7,
-      dailyYield: 18.76,
-      pnl: 325.67,
-      pnlPercent: 8.5
+      name: 'ATOM_SEI Yield Farm',
+      strategy: 'yield_farm',
+      shares: 10160.40,
+      value: 10160.40, // 2.0% of total (USDC)
+      apy: 5.2,
+      dailyYield: 1.45,
+      pnl: -9685.60,
+      pnlPercent: -48.8 // needs rebalancing per agent
     },
     {
       address: '0x22Fc4c01FAcE783bD47A1eF2B6504213C85906a1',
       name: 'ETH-USDT Arbitrage Bot',
       strategy: 'arbitrage',
-      shares: 950.0,
-      value: 2890.12,
+      shares: 89.25,
+      value: 249945.84, // 49.2% of total (ETH)
       apy: 26.7,
-      dailyYield: 6.84,
-      pnl: 234.89,
-      pnlPercent: 8.8
+      dailyYield: 124.87,
+      pnl: +62950.84,
+      pnlPercent: +33.6 // over-allocated per agent
     },
     {
       address: '0xaE6F27Fdf2D15c067A0Ebc256CE05A317B671B81',
       name: 'Delta Neutral LP Vault',
       strategy: 'delta_neutral',
-      shares: 1200.0,
-      value: 1460.00,
+      shares: 3.31,
+      value: 225052.86, // 44.3% of total (BTC)
       apy: 15.5,
       dailyYield: 2.08,
       pnl: 239.00,
