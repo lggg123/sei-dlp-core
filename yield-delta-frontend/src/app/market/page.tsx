@@ -35,7 +35,7 @@ const MarketPage = () => {
       volume24h: 2400000,
       marketCap: 156000000,
       liquidity: 8900000,
-      apy: 12.4
+      apy: 12.5
     },
     {
       symbol: 'ATOM-SEI',
@@ -44,7 +44,7 @@ const MarketPage = () => {
       volume24h: 890000,
       marketCap: 34000000,
       liquidity: 4200000,
-      apy: 18.7
+      apy: 18.2
     },
     {
       symbol: 'ETH-SEI',
@@ -53,7 +53,7 @@ const MarketPage = () => {
       volume24h: 5600000,
       marketCap: 89000000,
       liquidity: 12000000,
-      apy: 15.3
+      apy: 26.7
     },
     {
       symbol: 'BTC-SEI',
@@ -62,7 +62,7 @@ const MarketPage = () => {
       volume24h: 8900000,
       marketCap: 178000000,
       liquidity: 15600000,
-      apy: 9.8
+      apy: 8.9
     }
   ];
 
@@ -296,10 +296,10 @@ const MarketPage = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
         <div ref={statsCardsRef} className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {[
-            { label: 'Total Volume 24h', value: '$18.2M', change: '+12.4%', icon: BarChart3, color: 'blue' },
+            { label: 'Total Volume 24h', value: '$17.8M', change: '+12.4%', icon: BarChart3, color: 'blue' },
             { label: 'Total Liquidity', value: '$40.7M', change: '+5.8%', icon: DollarSign, color: 'green' },
             { label: 'Active Pairs', value: '24', change: '+2', icon: Activity, color: 'purple' },
-            { label: 'Avg APY', value: '14.1%', change: '+0.8%', icon: TrendingUp, color: 'orange' }
+            { label: 'Avg APY', value: '16.6%', change: '+2.5%', icon: TrendingUp, color: 'orange' }
           ].map((stat, index) => (
             <div 
               key={index} 

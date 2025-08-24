@@ -45,44 +45,45 @@ const RebalancePage = () => {
       id: '1',
       action: 'move',
       fromVault: 'SEI-USDC LP',
-      toVault: 'ATOM-SEI LP',
+      toVault: 'ETH-USDT Arbitrage',
       token: 'SEI',
-      amount: 500,
+      amount: 2000,
       currentPrice: 0.52,
       estimatedGas: 0.002,
       priority: 'high',
-      reason: 'ATOM-SEI pair showing 18.2% APY vs 12.4% current yield'
+      reason: 'ETH-USDT arbitrage showing 26.7% APY vs 12.5% current yield'
     },
     {
       id: '2',
       action: 'sell',
-      fromVault: 'ETH-SEI LP',
+      fromVault: 'ETH-USDT Arbitrage',
       token: 'ETH',
-      amount: 0.5,
+      amount: 15.0,
       currentPrice: 2456.89,
       estimatedGas: 0.003,
       priority: 'medium',
-      reason: 'ETH exposure above target allocation (35% vs 25%)'
+      reason: 'ETH exposure above target allocation (49.2% vs 35%)'
     },
     {
       id: '3',
-      action: 'buy',
+      action: 'move',
+      fromVault: 'ATOM-SEI Yield Farm',
       toVault: 'Delta Neutral Vault',
       token: 'USDC',
-      amount: 1000,
+      amount: 5000,
       currentPrice: 1.00,
       estimatedGas: 0.001,
       priority: 'low',
-      reason: 'Increase stable exposure for market volatility hedge'
+      reason: 'Delta Neutral showing 15.5% APY vs 5.2% underperforming yield'
     }
   ];
 
   const portfolioStats = {
     totalValue: 508020.00,
-    unrealizedPnL: 15240.60,
-    dailyChange: 2.4,
+    unrealizedPnL: 46234.56,
+    dailyChange: 1.8,
     gasEstimate: 0.15, // SEI gas cost
-    estimatedTime: '30-45 seconds', // SEI 400ms finality
+    estimatedTime: '2-4 seconds', // SEI 400ms finality
     potentialYieldIncrease: 7.4 // matches agent response
   };
 
@@ -417,7 +418,7 @@ const RebalancePage = () => {
             { label: 'Unrealized P&L', value: `$${portfolioStats.unrealizedPnL.toLocaleString()}`, change: '+6.9%', color: '#10b981' },
             { label: 'Potential Yield ↑', value: `+${portfolioStats.potentialYieldIncrease}%`, change: 'APY', color: '#3b82f6' },
             { label: 'Gas Estimate', value: `${portfolioStats.gasEstimate} SEI`, change: '~$0.003', color: '#9b5de5' },
-            { label: 'Execution Time', value: portfolioStats.estimatedTime, change: 'Fast finality', color: '#f59e0b' }
+            { label: 'Execution Time', value: portfolioStats.estimatedTime, change: 'Lightning fast', color: '#f59e0b' }
           ].map((stat, index) => (
             <div 
               key={index} 
@@ -812,7 +813,7 @@ const RebalancePage = () => {
                 <ul className="space-y-3 text-gray-200 font-medium">
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-green-400" style={{ boxShadow: '0 0 8px rgba(34, 197, 94, 0.6)' }}></div>
-                    Trades will execute in optimal order using SEI's fast finality
+                    Trades will execute in optimal order using SEI's 400ms finality (12,500 TPS)
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-blue-400" style={{ boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)' }}></div>

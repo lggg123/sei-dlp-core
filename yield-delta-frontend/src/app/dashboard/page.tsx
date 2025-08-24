@@ -25,9 +25,9 @@ const DashboardPage = () => {
     totalValue: 508020.00,
     totalPnL: 46234.56,
     pnlPercent: 10.0,
-    dailyYield: 348.65,
-    activePositions: 5,
-    totalYieldEarned: 12847.23
+    dailyYield: 281.41,
+    activePositions: 4,
+    totalYieldEarned: 22847.23
   };
 
   const vaultPositions: VaultPosition[] = [
@@ -38,13 +38,13 @@ const DashboardPage = () => {
       shares: 10156.0,
       value: 4572.18, // 0.9% of total (SEI)
       apy: 12.5,
-      dailyYield: 0.56,
+      dailyYield: 1.56,
       pnl: -2247.82,
       pnlPercent: -32.9 // needs rebalancing per agent
     },
     {
       address: '0x6F4cF61bBf63dCe0094CA1fba25545f8c03cd8E6',
-      name: 'ATOM_SEI Yield Farm',
+      name: 'ATOM-SEI Yield Farm',
       strategy: 'yield_farm',
       shares: 10160.40,
       value: 10160.40, // 2.0% of total (USDC)
@@ -60,7 +60,7 @@ const DashboardPage = () => {
       shares: 89.25,
       value: 249945.84, // 49.2% of total (ETH)
       apy: 26.7,
-      dailyYield: 124.87,
+      dailyYield: 182.88,
       pnl: +62950.84,
       pnlPercent: +33.6 // over-allocated per agent
     },
@@ -71,7 +71,7 @@ const DashboardPage = () => {
       shares: 3.31,
       value: 225052.86, // 44.3% of total (BTC)
       apy: 15.5,
-      dailyYield: 2.08,
+      dailyYield: 95.52,
       pnl: 239.00,
       pnlPercent: 19.6
     }
