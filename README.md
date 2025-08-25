@@ -52,10 +52,10 @@ Yield Delta Core combines machine learning with SEI's 400ms block finality to cr
 | Strategy | APY Range | Risk Level | AI Optimization |
 |----------|-----------|------------|-----------------|
 | **SEI Hypergrowth** | 15-42% | High | Growth token ML analysis |
-| **Delta Neutral** | 8-15% | Low | Market-neutral AI hedging |
+| **Delta Neutral** | 8-16% | Low | Market-neutral AI hedging |
 | **Concentrated Liquidity** | 12-30% | Medium | AI range optimization |
 | **Blue Chip** | 6-12% | Low | Large-cap stability AI |
-| **Arbitrage** | 10-20% | Medium | Cross-DEX opportunity detection |
+| **Arbitrage** | 10-30% | Medium | Cross-DEX opportunity detection |
 | **Stable Max** | 4-8% | Very Low | Stablecoin yield optimization |
 | **Yield Farming** | 8-18% | Medium | Farm rotation AI |
 | **Hedge Vault** | 5-15% | Low | Risk-adjusted AI balancing |
@@ -83,7 +83,7 @@ cp .env.example .env.local
 # Add your configuration:
 NEXT_PUBLIC_DEMO_MODE=true                    # Enable demo mode
 NEXT_PUBLIC_SEI_CHAIN_ID=1328                # SEI Testnet
-NEXT_PUBLIC_WC_ID=your_walletconnect_id      # WalletConnect
+NEXT_PUBLIC_WC_ID=b0773f8609b00e0caeb50c05f85a20e8      # WalletConnect
 ```
 
 ### **3. Start Development**
@@ -104,23 +104,6 @@ cd .. && cd liqui && bun dev
 cd .. && bun dev
 ```
 Visit `http://localhost:3001` to see the application.
-
----
-
-## 🎥 **Demo Mode - Perfect for Competition Videos**
-
-**Full demo mode implementation** allows you to record perfect demonstration videos without blockchain complexity.
-
-### **📱 Quick Demo Setup**
-```bash
-# Enable demo mode
-echo "NEXT_PUBLIC_DEMO_MODE=true" >> .env.local
-cd ai-engine
-python api_bridge.py
-cd .. && cd liqui
-bun dev
-cd .. && bun dev
-```
 
 ---
 
@@ -233,7 +216,7 @@ This is an **open-source project** built for the SEI ecosystem. We welcome contr
 
 ### **Join the Community**
 - **Discord**: [Join SEI AI Builders](https://discord.gg/sei)
-- **Twitter**: [@YieldDeltaAI](https://twitter.com/yielddeltaai)
+- **Twitter**: [@YieldDelta](https://twitter.com/yielddelta)
 - **GitHub**: Star this repo and follow updates
 
 ---
@@ -243,8 +226,7 @@ This is an **open-source project** built for the SEI ecosystem. We welcome contr
 **SEI AI Accelathon Team**: Built by passionate DeFi developers for the SEI ecosystem
 
 - **GitHub Issues**: Bug reports and feature requests
-- **Documentation**: Complete guides in `/docs` folder  
-- **Demo Support**: See [DEMO_MODE.md](./DEMO_MODE.md) for video creation
+- **Documentation**: Complete guides in `yield-delta-frontend/src/app/docs` folder
 
 ---
 
