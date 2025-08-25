@@ -14,9 +14,9 @@ from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 class ChainId(str, Enum):
     """SEI Chain identifiers"""
-    SEI_MAINNET = "713715"
-    SEI_TESTNET = "713716" 
-    SEI_DEVNET = "713717"
+    SEI_MAINNET = "1329"
+    SEI_TESTNET = "1328" 
+    SEI_DEVNET = "713715"
 
 
 class AssetSymbol(str, Enum):

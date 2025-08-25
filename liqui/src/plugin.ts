@@ -13,8 +13,12 @@ import {
   Service,
   type State,
   logger,
-} from '@elizaos/core';
+} from '@elizaos/core'; 
 import { z } from 'zod';
+import { createUIMessageRoute } from './ui-message-handler.js';
+
+// Global message handler instance to maintain conversation memory across requests
+let globalUIMessageHandler: any = null;
 
 /**
  * Define the configuration schema for the plugin with the following properties:
@@ -184,15 +188,15 @@ export class StarterService extends Service {
 }
 
 const plugin: Plugin = {
-  name: 'starter',
-  description: 'A starter plugin for Eliza',
-  // Set lowest priority so real models take precedence
-  priority: -1000,
+  name: 'liqui-sei-dlp',
+  description: 'SEI DLP Agent Plugin for yield-delta integration',
+  // Set normal priority to allow real AI models to take precedence
+  priority: 0,
   config: {
     EXAMPLE_PLUGIN_VARIABLE: process.env.EXAMPLE_PLUGIN_VARIABLE,
   },
   async init(config: Record<string, string>) {
-    logger.info('*** Initializing starter plugin ***');
+    logger.info('*** Initializing SEI DLP plugin ***');
     try {
       const validatedConfig = await configSchema.parseAsync(config);
 
@@ -209,27 +213,7 @@ const plugin: Plugin = {
       throw error;
     }
   },
-  models: {
-    [ModelType.TEXT_SMALL]: async (
-      _runtime,
-      { prompt, stopSequences = [] }: GenerateTextParams
-    ) => {
-      return 'Never gonna give you up, never gonna let you down, never gonna run around and desert you...';
-    },
-    [ModelType.TEXT_LARGE]: async (
-      _runtime,
-      {
-        prompt,
-        stopSequences = [],
-        maxTokens = 8192,
-        temperature = 0.7,
-        frequencyPenalty = 0.7,
-        presencePenalty = 0.7,
-      }: GenerateTextParams
-    ) => {
-      return 'Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you...';
-    },
-  },
+  // Remove mock models to allow real AI models to work
   routes: [
     {
       name: 'helloworld',
@@ -240,6 +224,60 @@ const plugin: Plugin = {
         res.json({
           message: 'Hello World!',
         });
+      },
+    },
+    {
+      name: 'health',
+      path: '/health',
+      type: 'GET',
+      handler: async (_req: any, res: any) => {
+        // Health check endpoint for the main project to verify agent availability
+        res.json({
+          status: 'online',
+          service: 'eliza-liqui-agent',
+          capabilities: [
+            'vault_analysis',
+            'rebalance_recommendations', 
+            'market_predictions',
+            'sei_optimizations'
+          ],
+          chainId: 1328,
+          timestamp: new Date().toISOString()
+        });
+      },
+    },
+    {
+      name: 'chat',
+      path: '/api/chat',
+      type: 'POST',
+      handler: async (req: any, res: any, runtime: IAgentRuntime) => {
+        try {
+          // Validate request structure
+          const body = req.body;
+          if (!body || !body.content?.text || !body.user) {
+            return res.status(400).json({
+              success: false,
+              error: 'Invalid request format',
+              required: ['content.text', 'user'],
+              received: Object.keys(body || {})
+            });
+          }
+
+          // Use singleton UI message handler to maintain conversation memory
+          if (!globalUIMessageHandler) {
+            globalUIMessageHandler = createUIMessageRoute(runtime);
+          }
+          
+          // Process the message through the persistent UI message handler
+          await globalUIMessageHandler(req, res);
+        } catch (error) {
+          logger.error('Chat route error:', error);
+          res.status(500).json({
+            success: false,
+            error: 'Internal server error',
+            details: error instanceof Error ? error.message : 'Unknown error'
+          });
+        }
       },
     },
   ],

@@ -28,7 +28,7 @@ export class ApiClient {
         vaultAddress,
         strategy,
         parameters,
-        chainId: 713715
+        chainId: 1328
       })
     });
     
@@ -49,7 +49,7 @@ export class ApiClient {
         vaultAddress,
         marketData,
         timeframe,
-        chainId: 713715
+        chainId: 1328
       })
     });
     

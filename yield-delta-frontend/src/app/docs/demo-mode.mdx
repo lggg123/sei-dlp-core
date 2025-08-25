@@ -1,0 +1,243 @@
+# Demo Mode
+
+Experience Yield Delta risk-free with our comprehensive demo mode that simulates all blockchain interactions while providing realistic user experiences.
+
+## 🎭 Overview
+
+Demo mode allows you to test all platform features without spending real cryptocurrency or interacting with the blockchain. Perfect for:
+
+- **Demo Videos** - Record professional demonstrations
+- **User Training** - Onboard new users safely  
+- **Development** - Test features during development
+- **Strategy Testing** - Experiment with different approaches
+
+## 🚀 Quick Setup
+
+Enable demo mode with a single environment variable:
+
+```bash
+# Add to .env.local
+NEXT_PUBLIC_DEMO_MODE=true
+
+# Restart your development server
+bun dev
+```
+
+## ✨ Simulated Features
+
+### 💰 Deposit Simulation
+- **Location**: Vault deposit modal
+- **Process**: 
+  1. Enter deposit amount (e.g., 5 SEI)
+  2. Click "Deposit Now"
+  3. 2-second processing animation
+  4. Success message with fake transaction hash
+  5. Automatic redirect to vault overview
+
+```typescript
+// Example simulated deposit flow
+const handleDeposit = async () => {
+  if (isDemoMode) {
+    setStatus('pending');
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const fakeHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+    setTransactionHash(fakeHash);
+    setStatus('success');
+  }
+};
+```
+
+### 🏦 Withdrawal Simulation  
+- **Location**: Customer vault dashboard
+- **Process**:
+  1. Enter shares to withdraw
+  2. Click "Withdraw Funds"
+  3. Progressive status updates (pending → processing → success)
+  4. Transaction details with fake hash
+  5. Auto-reset after 5 seconds
+
+### 🤖 AI Rebalancing Simulation
+- **Location**: `/portfolio/rebalance`
+- **Process**:
+  1. View AI-generated recommendations
+  2. Select actions to execute (2-3 recommended)
+  3. Click "Execute Rebalance"
+  4. Watch real-time progress bar
+  5. See individual transaction completion
+  6. View final execution summary
+
+```typescript
+// Multi-step rebalancing simulation
+for (let i = 0; i < selectedActions.length; i++) {
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  const fakeHash = generateFakeHash();
+  setExecutedTransactions(prev => [...prev, fakeHash]);
+  setProgress(((i + 1) / selectedActions.length) * 100);
+}
+```
+
+## 🎬 Demo Video Script
+
+Here's a recommended flow for recording demonstrations:
+
+### 1. Introduction (30 seconds)
+- Show landing page with "DEMO MODE" indicator
+- Highlight key features: AI optimization, SEI speed, yield maximization
+
+### 2. Vault Deposit (45 seconds)
+- Navigate to vault page
+- Enter 5 SEI deposit amount
+- Show processing animation
+- Highlight success message and transaction hash
+- Point out realistic UX despite being simulated
+
+### 3. AI Rebalancing (60 seconds)
+- Navigate to `/portfolio/rebalance`
+- Show AI recommendations with reasoning
+- Select 2-3 actions (high and medium priority)
+- Execute rebalancing
+- Demonstrate real-time progress tracking
+- Show individual transaction hashes
+
+### 4. Withdrawal (30 seconds)
+- Go to vault dashboard
+- Enter shares amount to withdraw
+- Show status progression
+- Highlight transaction details
+
+### 5. Wrap-up (15 seconds)
+- Mention all features work in production
+- Direct viewers to try demo mode themselves
+
+## 🔧 Technical Implementation
+
+### Environment Detection
+```typescript
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+```
+
+### UI Indicators
+All demo pages show clear "DEMO MODE" badges:
+
+```tsx
+{isDemoMode && (
+  <span className="bg-green-500 text-white px-2 py-1 rounded-lg font-semibold text-sm">
+    DEMO MODE
+  </span>
+)}
+```
+
+### Transaction Simulation
+```typescript
+// Realistic fake transaction hash generation
+const generateFakeHash = () => {
+  return `0x${Math.random().toString(16).substr(2, 64)}`;
+};
+
+// Simulated network delays
+const simulateNetworkDelay = (ms = 2000) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+```
+
+## 📱 User Experience Features
+
+### Visual Feedback
+- ✅ Loading spinners and progress bars
+- ✅ Success animations with checkmarks  
+- ✅ Color-coded status indicators
+- ✅ Transaction hash display
+- ✅ Realistic timing (2-3 seconds per transaction)
+
+### Error Handling
+- ✅ Graceful fallbacks if demo mode fails
+- ✅ Clear error messages
+- ✅ Automatic state cleanup
+
+### Accessibility
+- ✅ Screen reader compatible
+- ✅ Keyboard navigation support
+- ✅ High contrast indicators
+- ✅ Clear loading states
+
+## 🔄 Switching Modes
+
+### Enable Demo Mode
+```bash
+# Set environment variable
+NEXT_PUBLIC_DEMO_MODE=true
+
+# Restart application
+bun dev
+```
+
+### Disable Demo Mode  
+```bash
+# Remove or set to false
+NEXT_PUBLIC_DEMO_MODE=false
+
+# Restart application  
+bun dev
+```
+
+### Production Considerations
+- Demo mode automatically disabled in production builds
+- Environment variable validation prevents accidental activation
+- Clear logging distinguishes demo vs real transactions
+
+## 🎯 Best Practices
+
+### For Demonstrations
+1. **Prepare amounts**: Use round numbers (5 SEI, 10 shares)
+2. **Highlight indicators**: Point out "DEMO MODE" badges
+3. **Explain value**: Mention this shows real functionality safely
+4. **Show progression**: Let users see the full transaction flow
+
+### For Development
+1. **Test thoroughly**: Ensure all simulated flows work correctly
+2. **Match real UX**: Keep timing and feedback realistic
+3. **Handle edge cases**: Account for network failures, etc.
+4. **Document changes**: Update this guide when adding features
+
+### For Training
+1. **Start with explanation**: Tell users it's safe to experiment
+2. **Encourage exploration**: Let them try different amounts/strategies
+3. **Compare to real mode**: Show similarities and differences
+4. **Provide next steps**: Guide them to real usage when ready
+
+## 🔍 Troubleshooting
+
+### Demo Mode Not Working
+```bash
+# Check environment variable
+echo $NEXT_PUBLIC_DEMO_MODE
+
+# Verify in browser console
+console.log(process.env.NEXT_PUBLIC_DEMO_MODE)
+
+# Restart development server
+bun dev
+```
+
+### Transactions Not Simulating
+- Verify demo mode indicators are visible
+- Check browser console for errors
+- Ensure latest code is deployed
+- Try hard refresh (Ctrl+F5)
+
+### Performance Issues
+- Demo mode should be as fast as real mode
+- Check for console errors or network requests
+- Verify setTimeout delays aren't too long
+- Consider reducing animation complexity
+
+## 📚 Related Documentation
+
+- [Getting Started](/docs/getting-started) - Set up development environment
+- [API Reference](/docs/api) - Understand real API endpoints  
+- [Features](/docs/features) - Learn about all platform capabilities
+- [Deployment](/docs/deployment) - Deploy to production
+
+---
+
+*Demo mode showcases the full power of Yield Delta in a safe, controlled environment.*

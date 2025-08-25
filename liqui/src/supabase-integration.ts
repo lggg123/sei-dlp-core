@@ -43,7 +43,7 @@ export const tableConfigurations = {
       token_a: 'text NOT NULL',
       token_b: 'text NOT NULL',
       fee_tier: 'integer NOT NULL',
-      chain_id: 'integer DEFAULT 713715',
+      chain_id: 'integer DEFAULT 1328',
       created_at: 'timestamp DEFAULT NOW()',
       updated_at: 'timestamp DEFAULT NOW()',
       active: 'boolean DEFAULT true'

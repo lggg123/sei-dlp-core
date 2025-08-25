@@ -1,0 +1,3678 @@
+/* 1. Tailwind's core layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dashboard responsive grid fix - Tailwind v4 compatible */
+@layer components {
+  /* Ensure portfolio stats grid works correctly */
+  .dashboard-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    }
+  }
+  
+  /* Ensure position cards use stacked layout */
+  .dashboard-positions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  /* Ensure slate background colors work - Multiple fallbacks for compatibility */
+  .dashboard-card-bg {
+    background-color: rgba(30, 41, 59, 0.6) !important;
+    background-color: rgb(30 41 59 / 0.6) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(51, 65, 85, 0.5) !important;
+  }
+  
+  /* Force display properties for dashboard layout */
+  .dashboard-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+  
+  .dashboard-positions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  /* Responsive grid behavior */
+  @media screen and (min-width: 768px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+  
+  @media screen and (min-width: 1024px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    }
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 2. Third‐party imports */
+@import "tw-animate-css";
+
+/* 3. Your CSS variable definitions */
+:root {
+  --radius: 0.5rem;
+  
+  /* Custom CSS variables for dashboard */
+  --dashboard-card-bg: rgb(30 41 59 / 0.6);
+  --dashboard-hover-bg: rgb(51 65 85 / 0.5);
+  
+  /* Tailwind CSS variables */
+  --background: 0 0% 100%;
+  --foreground: 224 71.4% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 224 71.4% 4.1%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 220.9 39.3% 11%;
+  --primary-foreground: 210 20% 98%;
+  --primary-glow: 220 50% 60%;
+  --secondary: 220 14.3% 95.9%;
+  --secondary-foreground: 220.9 39.3% 11%;
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  --accent: 220 14.3% 95.9%;
+  --accent-foreground: 220.9 39.3% 11%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 224 71.4% 4.1%;
+  --radius: 0.625rem;
+  /* SEI DLP Light Theme - Cyber Minimalist */
+  --background: 216 100% 4%;
+  --foreground: 180 100% 90%;
+  --card: 216 50% 8%;
+  --card-foreground: 180 100% 90%;
+  --primary: 180 100% 48%;
+  --primary-foreground: 216 100% 4%;
+  --secondary: 262 80% 60%;
+  --secondary-foreground: 216 100% 4%;
+  --accent: 326 100% 74%;
+  --accent-foreground: 216 100% 4%;
+  --muted: 216 30% 15%;
+  --muted-foreground: 180 20% 70%;
+  --border: 216 30% 18%;
+  --ring: 180 100% 48%;
+  --input: 216 30% 18%;
+  --destructive: 0 84% 60%;
+  --popover: 216 50% 8%;
+  --popover-foreground: 180 100% 90%;
+  
+  /* SEI DLP Cyber Theme Variables - Chain ID 713715 */
+  --primary-glow: 180 100% 70%;
+  --gradient-primary: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+  --gradient-vault: linear-gradient(135deg, hsl(216 50% 8%), hsl(216 30% 15%), hsl(216 30% 18%));
+  --glow-primary: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1);
+}
+
+.dark {
+  /* SEI DLP Dark Theme - Full Cyber */
+  --background: 216 100% 4%;
+  --foreground: 180 100% 90%;
+  --card: 216 50% 8%;
+  --card-foreground: 180 100% 90%;
+  --primary: 180 100% 70%;
+  --primary-foreground: 216 100% 4%;
+  --secondary: 262 80% 60%;
+  --secondary-foreground: 216 100% 4%;
+  --accent: 326 100% 74%;
+  --accent-foreground: 216 100% 4%;
+  --muted: 216 30% 15%;
+  --muted-foreground: 180 20% 70%;
+  --border: 216 30% 18%;
+  --ring: 180 100% 70%;
+  
+  /* SEI DLP Dark Cyber Overrides */
+  --primary-glow: 180 100% 85%;
+  --gradient-primary: linear-gradient(135deg, hsl(180 100% 70%), hsl(262 80% 60%));
+  --gradient-vault: linear-gradient(135deg, hsl(216 50% 8%), hsl(216 30% 15%), hsl(216 30% 18%));
+  --glow-primary: 0 0 20px hsl(180 100% 70% / 0.4), 0 0 40px hsl(180 100% 70% / 0.2);
+}
+
+/* 4. Base styles */
+@layer base {
+  /* Apply styled borders to UI components only, not layout elements */
+  .ui-component,
+  button,
+  input,
+  textarea,
+  select {
+    border-color: hsl(var(--border));
+  }
+  
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 25% 25%, hsl(var(--primary) / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(var(--secondary) / 0.1) 0%, transparent 50%);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+  
+  /* Hero section h1 styles - scoped to hero section only */
+  .hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+  }
+  
+  .hero-section h1 span {
+    color: unset;
+  }
+  
+  @media (min-width: 1024px) {
+    .hero-section h1 {
+      font-size: 4.5rem;
+    }
+  }
+}
+
+/* 6. Custom utilities */
+@layer utilities {
+  .text-sei-glow {
+    color: hsl(var(--primary-glow));
+    text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow));
+  }
+
+  .backdrop-blur-xl {
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  
+  /* Additional glow text utilities */
+  .text-primary-glow {
+    color: hsl(var(--primary-glow));
+    text-shadow: 0 0 8px hsl(var(--primary-glow)), 0 0 24px hsl(var(--primary-glow));
+    font-weight: 700;
+  }
+  
+  .text-secondary-glow {
+    color: hsl(var(--secondary));
+    text-shadow: 0 0 8px hsl(var(--secondary)), 0 0 24px hsl(var(--secondary));
+    font-weight: 700;
+  }
+  
+  .text-accent-glow {
+    color: hsl(var(--accent));
+    text-shadow: 0 0 8px hsl(var(--accent)), 0 0 24px hsl(var(--accent));
+    font-weight: 700;
+  }
+  
+  .text-cyan-glow {
+    color: #00f5d4;
+    text-shadow: 0 0 8px #00f5d4, 0 0 24px #00f5d4;
+    font-weight: 700;
+  }
+  
+  .text-purple-glow {
+    color: #9b5de5;
+    text-shadow: 0 0 8px #9b5de5, 0 0 24px #9b5de5;
+    font-weight: 700;
+  }
+  
+  .text-pink-glow {
+    color: #ff206e;
+    text-shadow: 0 0 8px #ff206e, 0 0 24px #ff206e;
+    font-weight: 700;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% { 
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+    }
+    50% { 
+      opacity: 0.7;
+      transform: scale(1.1);
+      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+    }
+  }
+  
+  /* Holo text animation for all titles */
+  .holo-text {
+    position: relative;
+    font-weight: 800;
+    display: inline-block;
+    color: transparent;
+    background: linear-gradient(45deg, #00f5d4, #9b5de5, #ff206e, #fbae3c, #00f5d4, #9b5de5);
+    background-size: 400% 400%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: holoGradientShift 3s ease-in-out infinite;
+    text-shadow: none;
+  }
+  
+  @keyframes holoGradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes streamFlow {
+    0% { 
+      transform: translateY(-100px); 
+      opacity: 0; 
+    }
+    50% { 
+      opacity: 1; 
+    }
+    100% { 
+      transform: translateY(100px); 
+      opacity: 0; 
+    }
+  }
+  
+  /* Cyber Button - Connect Wallet Button Style */
+  .btn-cyber {
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 300ms ease-in-out;
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+    color: hsl(216 100% 4%);
+    box-shadow: 0 0 20px hsl(180 100% 48% / 0.3), 0 0 40px hsl(180 100% 48% / 0.1);
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .btn-cyber:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px hsl(180 100% 48% / 0.4), 0 0 60px hsl(180 100% 48% / 0.2);
+    background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%));
+    color: hsl(216 100% 4%);
+  }
+
+  /* Error state button for wrong network */
+  .btn-cyber-error {
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 300ms ease-in-out;
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 72% 50%));
+    color: hsl(0 0% 98%);
+    box-shadow: 0 0 20px hsl(0 84% 60% / 0.3), 0 0 40px hsl(0 84% 60% / 0.1);
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .btn-cyber-error:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px hsl(0 84% 60% / 0.4), 0 0 60px hsl(0 84% 60% / 0.2);
+    background: linear-gradient(135deg, hsl(0 84% 65%), hsl(0 72% 55%));
+  }
+
+  /* Secondary button style for connected states */
+  .btn-cyber-secondary {
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 300ms ease-in-out;
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: hsl(180 100% 48%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+  }
+  
+  .btn-cyber-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: hsl(180 100% 48% / 0.5);
+    transform: scale(1.02);
+  }
+
+  /* Outline button style */
+  .btn-cyber-outline {
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 300ms ease-in-out;
+    font-size: 0.75rem;
+    background: transparent;
+    color: hsl(180 100% 48%);
+    border: 1px solid hsl(180 100% 48% / 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+    flex-shrink: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .btn-cyber-outline:hover {
+    background: hsl(180 100% 48% / 0.1);
+    border-color: hsl(180 100% 48%);
+    transform: scale(1.02);
+  }
+  
+  /* Hide scrollbars for better UX */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Responsive Vault Grid Container */
+  .vault-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 400px));
+    gap: 1.5rem;
+    justify-content: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .vault-grid-container {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 420px));
+      gap: 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .vault-grid-container {
+      grid-template-columns: repeat(auto-fit, minmax(380px, 420px));
+      gap: 2.5rem;
+    }
+  }
+  
+  /* Enhanced Button Styles for Better UX */
+  .btn-enhanced {
+    min-height: 48px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .btn-enhanced:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+  
+  .btn-enhanced:active {
+    transform: translateY(0) scale(0.98);
+  }
+  
+  /* Container Constraints */
+  .constrained-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .constrained-container {
+      padding: 0 2rem;
+    }
+  }
+
+  /* Enhanced Glass Card Styles */
+  .glass-card {
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    background: linear-gradient(135deg, 
+      rgba(8, 10, 23, 0.92) 0%,
+      rgba(16, 20, 40, 0.88) 50%,
+      rgba(8, 10, 23, 0.92) 100%
+    );
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.8),
+      0 8px 32px rgba(0, 245, 212, 0.15),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -2px 0 rgba(0, 245, 212, 0.1);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 1.5rem;
+  }
+  
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: linear-gradient(135deg, 
+      rgba(0, 245, 212, 0.6) 0%,
+      rgba(155, 93, 229, 0.4) 25%,
+      rgba(255, 32, 110, 0.4) 50%,
+      rgba(251, 174, 60, 0.4) 75%,
+      rgba(0, 245, 212, 0.6) 100%
+    );
+    border-radius: 24px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    animation: borderFlow 3s linear infinite;
+  }
+  
+  .glass-card:hover {
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background: linear-gradient(135deg, 
+      rgba(8, 10, 23, 0.95) 0%,
+      rgba(16, 20, 40, 0.92) 50%,
+      rgba(8, 10, 23, 0.95) 100%
+    );
+    box-shadow: 
+      0 30px 80px rgba(0, 0, 0, 0.9),
+      0 12px 48px rgba(0, 245, 212, 0.25),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 245, 212, 0.2);
+    transform: translateY(-4px);
+  }
+  
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, 
+      rgba(0, 245, 212, 0.1) 0%, 
+      transparent 70%
+    );
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .glass-card:hover::after {
+    opacity: 1;
+  }
+
+  /* Vault Detail Card Enhancement */
+  .vault-detail-card {
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    background: linear-gradient(135deg, 
+      rgba(8, 10, 23, 0.94) 0%,
+      rgba(16, 20, 40, 0.90) 30%,
+      rgba(24, 30, 60, 0.88) 70%,
+      rgba(8, 10, 23, 0.94) 100%
+    );
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 
+      0 16px 50px rgba(0, 0, 0, 0.85),
+      0 8px 32px rgba(0, 245, 212, 0.12),
+      inset 0 2px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 245, 212, 0.08);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 1.5rem;
+  }
+
+  .vault-detail-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 3px;
+    background: linear-gradient(135deg, 
+      rgba(0, 245, 212, 0.7) 0%,
+      rgba(155, 93, 229, 0.5) 20%,
+      rgba(255, 32, 110, 0.5) 40%,
+      rgba(251, 174, 60, 0.5) 60%,
+      rgba(155, 93, 229, 0.5) 80%,
+      rgba(0, 245, 212, 0.7) 100%
+    );
+    background-size: 300% 300%;
+    border-radius: 20px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    animation: borderFlow 4s ease-in-out infinite;
+  }
+
+  .vault-detail-card:hover {
+    backdrop-filter: blur(44px) saturate(220%);
+    -webkit-backdrop-filter: blur(44px) saturate(220%);
+    box-shadow: 
+      0 24px 70px rgba(0, 0, 0, 0.9),
+      0 12px 40px rgba(0, 245, 212, 0.2),
+      inset 0 2px 0 rgba(255, 255, 255, 0.25),
+      inset 0 -1px 0 rgba(0, 245, 212, 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Enhanced Glow Text Styles */
+  .text-enhanced-glow {
+    text-shadow: 0 0 20px currentColor, 0 4px 8px rgba(0,0,0,0.8);
+    filter: drop-shadow(0 0 8px currentColor);
+    font-weight: 700;
+  }
+
+  .text-vault-primary {
+    color: hsl(var(--primary-glow));
+    text-shadow: 0 0 20px hsl(var(--primary-glow)), 0 4px 8px rgba(0,0,0,0.8);
+    filter: drop-shadow(0 0 8px hsl(var(--primary-glow)));
+  }
+
+  /* Enhanced Button Styles */
+  .btn-vault-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
+    color: hsl(var(--primary-foreground));
+    border: 2px solid transparent;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1rem;
+    min-height: 48px;
+    padding: 12px 24px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 
+      0 8px 25px rgba(0,0,0,0.3),
+      0 0 35px hsl(var(--primary) / 0.4),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-vault-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+      0 12px 35px rgba(0,0,0,0.4),
+      0 0 50px hsl(var(--primary) / 0.6),
+      inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .btn-vault-secondary {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid hsl(var(--primary) / 0.5);
+    border-radius: 16px;
+    color: hsl(var(--primary));
+    font-weight: 600;
+    font-size: 1rem;
+    min-height: 48px;
+    padding: 12px 24px;
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.4);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+      0 6px 20px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-vault-secondary:hover {
+    background: hsl(var(--primary) / 0.1);
+    border-color: hsl(var(--primary));
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+      0 10px 30px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  /* Vault Solid Card - Professional solid backgrounds for 3D environments */
+  .vault-solid-card {
+    background: linear-gradient(135deg, 
+      hsl(var(--card)) 0%,
+      hsl(var(--card) / 0.95) 50%,
+      hsl(var(--card)) 100%
+    );
+    border: 2px solid hsl(var(--border));
+    border-radius: 16px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.4),
+      0 4px 16px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 1.5rem !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Override any default paddings for vault-solid-card children */
+  .vault-solid-card [data-slot="card-header"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .vault-solid-card [data-slot="card-content"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .vault-solid-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+      transparent 0%,
+      hsl(var(--primary) / 0.05) 50%,
+      transparent 100%
+    );
+    border-radius: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .vault-solid-card:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 
+      0 15px 40px rgba(0, 0, 0, 0.5),
+      0 6px 20px rgba(0, 0, 0, 0.3),
+      0 0 30px hsl(var(--primary) / 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .vault-solid-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Vault Solid Card Content Styles */
+  .vault-solid-card .vault-card-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Enhanced solid backgrounds for better contrast */
+  .vault-solid-card .bg-muted\/20 {
+    background: hsl(var(--muted) / 0.4) !important;
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  /* Border Flow Animation */
+  @keyframes borderFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Responsive improvements for vaults page */
+  @media (max-width: 768px) {
+    .vault-solid-card {
+      min-height: 160px;
+      padding: 1.25rem !important;
+    }
+    
+    .btn-vault-primary,
+    .btn-vault-secondary {
+      min-height: 48px;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      max-width: 180px !important;
+    }
+
+    /* Better spacing for mobile vault cards */
+    .vault-grid-mobile {
+      gap: 1.5rem !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .vault-solid-card {
+      min-height: 140px;
+      padding: 1rem !important;
+    }
+    
+    .btn-cyber {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      min-width: 110px;
+    }
+
+    .btn-vault-primary,
+    .btn-vault-secondary {
+      min-height: 44px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      max-width: 130px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .vault-solid-card {
+      min-height: 120px;
+      padding: 0.875rem !important;
+    }
+
+    .btn-vault-primary,
+    .btn-vault-secondary {
+      min-height: 42px;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      max-width: 120px !important;
+    }
+  }
+}
+
+/* Essential Navigation & Wallet Styling */
+.wallet-container-override {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+/* Force right-side positioning for navigation buttons */
+.flex.items-center.gap-4.ml-auto {
+  margin-left: auto !important;
+  justify-content: flex-end !important;
+}
+
+/* Clean link styling - remove default underlines */
+nav a {
+  text-decoration: none !important;
+}
+
+nav a:hover {
+  text-decoration: none !important;
+}
+
+nav a:visited {
+  text-decoration: none !important;
+}
+
+nav a:active {
+  text-decoration: none !important;
+}
+
+/* CRITICAL: Enhanced Navigation Isolation and Z-Index */
+nav {
+  z-index: 99999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  isolation: isolate !important;
+}
+
+/* OLD NAV-LAUNCH-BTN CSS REMOVED - USING BTN-CYBER NOW */
+
+/* CRITICAL: Remove any body/html spacing that affects navigation */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* NUCLEAR NAVIGATION LAYOUT SOLUTION */
+nav {
+  margin: 0 !important;
+  padding: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  position: fixed !important;
+}
+
+/* ========================================
+   CONSOLIDATED NAVIGATION SYSTEM
+   Clean, single-source CSS for navigation
+   ======================================== */
+
+/* Main navigation container */
+nav .simple-nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 3.5rem;
+  padding: 0 1rem;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Left side - Logo and brand */
+nav .nav-left-simple {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Center - App Navigation Links */
+nav .nav-center-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+nav .nav-center-links a {
+  position: relative;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+}
+
+nav .nav-center-links a:hover {
+  color: hsl(var(--primary));
+  transform: translateY(-1px);
+}
+
+nav .nav-center-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary)) 50%, transparent);
+  transition: width 0.3s ease;
+}
+
+nav .nav-center-links a:hover::after {
+  width: 100%;
+}
+
+/* Brand text styling */
+nav .nav-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+/* Right side - Action buttons */
+nav .nav-right-simple {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Wallet container */
+nav .wallet-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Launch App Button - Clean cyber styling */
+nav .btn-cyber {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-width: 120px !important; /* Override cyberCompact class */
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+  color: hsl(216 100% 4%);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+  box-shadow: 
+    0 0 20px hsl(180 100% 48% / 0.3), 
+    0 0 40px hsl(180 100% 48% / 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+nav .btn-cyber:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(262 80% 62%));
+  box-shadow: 
+    0 0 30px hsl(180 100% 48% / 0.4), 
+    0 0 60px hsl(180 100% 48% / 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+nav .btn-cyber:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 150ms;
+}
+
+/* Gradient text styling for company name */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(180 100% 48%), hsl(262 80% 60%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease-in-out infinite;
+  
+  /* Fallback for browsers that don't support background-clip: text */
+  color: hsl(180 100% 48%);
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .gradient-text {
+    color: transparent;
+  }
+}
+
+/* AI Chat Button Animations */
+@keyframes aiChatGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: blur(8px);
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: blur(12px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes aiChatBorderSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes aiChatPulse {
+  0%, 100% {
+    transform: translate(-2px, -2px) scale(1);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.4);
+  }
+  50% {
+    transform: translate(-2px, -2px) scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 255, 0, 1), 0 0 60px rgba(0, 255, 0, 0.6);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Mobile menu button (if needed) */
+nav .mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: hsl(var(--foreground));
+  transition: color 0.2s;
+}
+
+nav .mobile-menu-btn:hover {
+  color: hsl(var(--primary));
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  nav .simple-nav-container {
+    padding: 0 0.75rem;
+  }
+  
+  nav .nav-brand {
+    display: none;
+  }
+  
+  nav .nav-center-links {
+    display: none; /* Hide center links on mobile */
+  }
+  
+  nav .btn-cyber {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  nav .simple-nav-container {
+    padding: 0 0.5rem;
+  }
+  
+  nav .nav-right-simple {
+    gap: 0.5rem;
+  }
+  
+  nav .btn-cyber {
+    padding: 0.5rem 1rem;
+    min-width: 100px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Ensure hamburger menu is hidden on desktop */
+@media (min-width: 768px) {
+  nav button[class*="md:hidden"] {
+    display: none;
+  }
+}
+
+/* CRITICAL: Wallet Container Right-Side Positioning */
+.wallet-container-override {
+  position: relative !important;
+  z-index: 99999 !important;
+  isolation: isolate !important;
+  margin-left: auto !important;
+}
+
+/* CRITICAL: Fix Content Overlapping Navigation */
+.min-h-screen {
+  padding-top: 3.5rem !important;
+}
+
+/* CRITICAL: Specific Page Layout Fixes */
+.vault-page,
+[class*="min-h-screen"] {
+  padding-top: 3.5rem !important;
+}
+
+/* CRITICAL: Prevent wallet styles from affecting main page containers */
+.vault-page .container,
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .max-w-6xl,
+.vault-page .max-w-5xl {
+  max-width: 72rem !important; /* 6xl = 72rem */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  position: relative !important;
+  transform: none !important;
+}
+
+.vault-page .container {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .vault-page .container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Vault Page Root Container Isolation */
+.vault-page-container-isolated {
+  width: 100vw !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+/* Ensure vault page content is properly centered */
+.vault-page-container-isolated .relative.z-10 {
+  width: 100% !important;
+  max-width: none !important;
+  position: relative !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+.vault-page-container-isolated .container.mx-auto.max-w-6xl {
+  width: 100% !important;
+  max-width: 72rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+/* Force reset any potential layout corruption */
+.vault-page-container-isolated,
+.vault-page-container-isolated * {
+  contain: none !important;
+  isolation: auto !important;
+}
+
+.vault-page-container-isolated .vault-detail-header-card-optimized {
+  width: 100% !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+
+/* Ensure main content containers are not affected */
+.vault-page-container-isolated * {
+  max-width: initial;
+}
+
+.vault-page-container-isolated .container,
+.vault-page-container-isolated .max-w-6xl,
+.vault-page-container-isolated .max-w-5xl {
+  max-width: 72rem !important;
+}
+
+
+
+
+
+
+
+
+
+/* Vault Detail Page Specific Overrides - Enhanced Priority & Mobile Support */
+.vault-deposit-enhanced,
+.vault-deposit-enhanced-v2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  overflow: hidden;
+}
+
+.vault-deposit-button-wrapper {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+}
+
+.vault-detail-header-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Enhanced button shine animation */
+.vault-deposit-enhanced-v2:hover .button-shine {
+  left: 100% !important;
+  transition: left 0.6s ease !important;
+}
+
+.button-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Vault Page Enhanced Metrics Grid */
+.vault-metrics-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.vault-metric-primary:hover,
+.vault-metric-secondary:hover,
+.vault-metric-wide:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5), 
+    0 0 80px rgba(155, 93, 229, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Tab Navigation Enhancement - Vault Page */
+.tabs-container-enhanced {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  margin-bottom: 2rem;
+  height: 4.5rem;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  position: relative;
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(25px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.tab-trigger-custom:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 
+    0 8px 25px rgba(155, 93, 229, 0.4), 
+    0 0 35px rgba(155, 93, 229, 0.25) !important;
+}
+
+/* Enhanced Mobile Responsiveness - Vault Detail Page */
+@media (max-width: 768px) {
+  .vault-deposit-button-wrapper {
+    position: static;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    z-index: 100;
+  }
+
+  .vault-deposit-enhanced-v2 {
+    width: 100% !important;
+    max-width: 280px !important;
+    height: 52px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .vault-header-content {
+    margin-right: 0 !important;
+    text-align: center;
+  }
+
+  .vault-main-title {
+    font-size: 2.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .vault-subtitle {
+    font-size: 1.125rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .vault-badges {
+    justify-content: center !important;
+  }
+
+  .vault-metrics-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .vault-metric-primary,
+  .vault-metric-wide {
+    grid-column: span 1 !important;
+  }
+
+  .tabs-container-enhanced {
+    height: 4rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tab-trigger-custom {
+    font-size: 0.9rem !important;
+    height: 3.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .vault-detail-header-card {
+    padding: 1.5rem !important;
+    border-radius: 20px !important;
+  }
+
+  .vault-main-title {
+    font-size: 2rem !important;
+  }
+
+  .vault-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .vault-deposit-enhanced-v2 {
+    height: 48px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .vault-metrics-grid {
+    gap: 0.75rem !important;
+  }
+
+  .vault-metric-primary,
+  .vault-metric-secondary,
+  .vault-metric-wide {
+    padding: 1.25rem !important;
+    border-radius: 16px !important;
+  }
+
+  .tabs-container-enhanced {
+    height: 3.5rem;
+    padding: 0.25rem;
+  }
+
+  .tab-trigger-custom {
+    font-size: 0.8rem !important;
+    height: 3rem !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+/* Tablet Responsiveness */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .vault-deposit-enhanced-v2 {
+    width: 160px !important;
+    height: 52px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .vault-header-content {
+    margin-right: 180px !important;
+  }
+
+  .vault-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-width: 600px !important;
+  }
+
+  .vault-metric-primary {
+    grid-column: span 2 !important;
+  }
+}
+
+/* Performance optimizations */
+.vault-detail-header-card,
+.vault-metric-primary,
+.vault-metric-secondary,
+.vault-metric-wide {
+  will-change: transform;
+}
+
+/* Accessibility improvements */
+.vault-deposit-enhanced-v2:focus {
+  outline: 2px solid rgba(155, 93, 229, 0.8);
+  outline-offset: 2px;
+}
+
+.tab-trigger-custom:focus {
+  outline: 2px solid rgba(155, 93, 229, 0.8);
+  outline-offset: 2px;
+  border-radius: 0.75rem;
+}
+
+.tab-trigger-custom {
+  height: 4rem;
+  font-size: 1.125rem;
+  font-weight: 900;
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Risk Badge Enhancement */
+.risk-badge-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 8px 20px;
+  cursor: default;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 700;
+  min-width: 90px;
+  height: 32px;
+}
+
+/* Tab Navigation Link Underline Fixes */
+.tab-trigger-custom,
+.tab-trigger-compact {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+}
+
+.tab-trigger-custom:hover,
+.tab-trigger-compact:hover,
+.tab-trigger-custom:focus,
+.tab-trigger-compact:focus,
+.tab-trigger-custom:active,
+.tab-trigger-compact:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+}
+
+
+/* Global Link Reset - Prevent unwanted underlines */
+a, Link, button {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+}
+
+a:hover, a:focus, a:active, a:visited,
+Link:hover, Link:focus, Link:active, Link:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+}
+
+/* Specific fix for Tabs component underlines */
+[data-radix-tabs-trigger],
+[role="tab"],
+.tabs-trigger {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+[data-radix-tabs-trigger]:hover,
+[data-radix-tabs-trigger]:focus,
+[data-radix-tabs-trigger]:active,
+[role="tab"]:hover,
+[role="tab"]:focus,
+[role="tab"]:active,
+.tabs-trigger:hover,
+.tabs-trigger:focus,
+.tabs-trigger:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* ==========================================
+   ULTRA-COMPACT VAULT STYLING SYSTEM V3
+   Maximum content density with visual hierarchy
+   ========================================== */
+
+/* Ultra-Compact Tab System */
+.tabs-container-compact {
+  container-type: inline-size;
+}
+
+@container (max-width: 768px) {
+  .tabs-container-compact {
+    height: 2.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding: 0.1875rem !important;
+  }
+  
+  .tab-trigger-compact {
+    height: 2.125rem !important;
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+  }
+}
+
+@container (max-width: 480px) {
+  .tabs-container-compact {
+    height: 2.25rem !important;
+    padding: 0.125rem !important;
+    margin-bottom: 0.375rem !important;
+  }
+  
+  .tab-trigger-compact {
+    height: 2rem !important;
+    font-size: 0.625rem !important;
+    letter-spacing: 0.25px !important;
+  }
+}
+
+/* Ultra-Compact Metrics Grid */
+.vault-metrics-ultra-compact {
+  container-type: inline-size;
+}
+
+@container (max-width: 768px) {
+  .vault-metrics-ultra-compact {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  
+  .vault-metric-primary-compact {
+    grid-column: span 2 !important;
+    min-height: 75px !important;
+  }
+  
+  .vault-metric-wide-compact {
+    grid-column: span 2 !important;
+    min-height: 55px !important;
+  }
+}
+
+@container (max-width: 480px) {
+  .vault-metrics-ultra-compact {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+  
+  .vault-metric-primary-compact,
+  .vault-metric-secondary-compact,
+  .vault-metric-wide-compact {
+    grid-column: span 1 !important;
+    min-height: 65px !important;
+  }
+}
+
+/* Ultra-Compact Header */
+.vault-detail-header-card-ultra-compact {
+  container-type: inline-size;
+}
+
+@container (max-width: 768px) {
+  .vault-detail-header-card-ultra-compact {
+    min-height: 140px !important;
+    padding: 0.875rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-header-content {
+    margin-right: 100px !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-deposit-button-wrapper {
+    top: 0.625rem !important;
+    right: 0.625rem !important;
+  }
+}
+
+@container (max-width: 480px) {
+  .vault-detail-header-card-ultra-compact {
+    min-height: 120px !important;
+    padding: 0.75rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-header-content {
+    margin-right: 85px !important;
+    margin-bottom: 0.375rem !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-main-title {
+    font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  }
+  
+  .vault-detail-header-card-ultra-compact .vault-subtitle {
+    font-size: clamp(0.75rem, 1.75vw, 0.875rem) !important;
+  }
+}
+
+/* Performance Optimizations for Compact Elements */
+.tab-trigger-compact,
+.vault-metric-primary-compact,
+.vault-metric-secondary-compact,
+.vault-metric-wide-compact {
+  will-change: transform;
+  contain: layout style paint;
+  backface-visibility: hidden;
+}
+
+.tab-trigger-compact:hover {
+  transform: scale(1.005) !important;
+}
+
+.vault-metric-primary-compact:hover,
+.vault-metric-secondary-compact:hover,
+.vault-metric-wide-compact:hover {
+  transform: translateY(-1px) scale(1.01);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Motion Reduction for Compact UI */
+@media (prefers-reduced-motion: reduce) {
+  .tab-trigger-compact,
+  .vault-metric-primary-compact,
+  .vault-metric-secondary-compact,
+  .vault-metric-wide-compact {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  .tab-trigger-compact:hover,
+  .vault-metric-primary-compact:hover,
+  .vault-metric-secondary-compact:hover,
+  .vault-metric-wide-compact:hover {
+    transform: none !important;
+  }
+}
+
+/* Force button spacing in vault cards */
+.vault-action-buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 2rem !important;
+  margin-top: 2rem !important;
+}
+
+.vault-action-buttons > * {
+  flex-shrink: 0 !important;
+  min-width: 176px !important;
+  width: 176px !important;
+}
+
+/* Enhanced Header Size Controls - Fixed Priority System */
+.vault-main-title {
+  font-size: clamp(1.75rem, 5vw, 2.75rem) !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  margin-bottom: clamp(0.375rem, 1.5vw, 0.75rem) !important;
+}
+
+.vault-subtitle {
+  font-size: clamp(0.875rem, 2vw, 1.125rem) !important;
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+}
+
+
+/* Enhanced spacing for better visual hierarchy */
+.vault-page-spacing {
+  padding-top: 3.5rem; /* Matched to navigation height (56px) for tighter spacing */
+  min-height: calc(100vh - 3.5rem);
+}
+
+/* Responsive spacing adjustments for optimal navigation-to-content flow */
+@media (max-width: 768px) {
+  .vault-page-spacing {
+    padding-top: 3.25rem; /* 52px for tablet - slightly tighter */
+  }
+}
+
+@media (max-width: 480px) {
+  .vault-page-spacing {
+    padding-top: 3rem; /* 48px for mobile */
+  }
+}
+
+
+
+/* Enhanced Visual Hierarchy - Improved Contrast & Spacing */
+.vault-detail-header-card-optimized {
+  position: relative !important;
+  z-index: 10 !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 40px rgba(0, 245, 212, 0.08) !important;
+}
+
+/* Enhanced Tabs Visual Hierarchy */
+.tabs-container-compact {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(25px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.6),
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+}
+
+/* Performance & Accessibility Enhancements */
+.tab-trigger-compact:focus-visible,
+.vault-deposit-enhanced-v2:focus-visible {
+  outline: 3px solid rgba(0, 245, 212, 0.6) !important;
+  outline-offset: 3px !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Enhanced Glow Effects for Better Visual Feedback */
+.vault-metric-primary-compact:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.35),
+    0 0 40px var(--primary-glow, #00f5d4) !important;
+}
+
+.vault-metric-secondary-compact:hover,
+.vault-metric-wide-compact:hover {
+  transform: translateY(-2px) scale(1.015) !important;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Mobile-First Responsive Enhancements */
+@media (max-width: 640px) {
+  .vault-main-title {
+    font-size: clamp(1.5rem, 6vw, 2rem) !important;
+    text-align: center !important;
+  }
+  
+  .vault-subtitle {
+    font-size: clamp(0.75rem, 3vw, 1rem) !important;
+    text-align: center !important;
+  }
+  
+  .vault-detail-header-card-optimized {
+    padding: clamp(0.75rem, 3vw, 1rem) !important;
+    min-height: clamp(120px, 25vw, 160px) !important;
+  }
+  
+  nav {
+    height: 3.5rem !important;
+    min-height: 3.5rem !important;
+  }
+}
+
+/* High DPI & Retina Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .vault-main-title,
+  .vault-subtitle {
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+}
+
+
+/* Enhanced Visual Hierarchy - Improved Content Hierarchy */
+.card-title {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.3 !important;
+}
+
+.card-content {
+  line-height: 1.6 !important;
+  font-size: 0.95rem !important;
+}
+
+/* Enhanced Badge Styling for Better Contrast */
+.risk-badge-custom {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 0 20px currentColor,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset !important;
+  border: 2px solid currentColor !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.75px !important;
+}
+
+/* Improved Button States for Better User Feedback */
+.btn-enhanced:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(0, 245, 212, 0.3) !important;
+}
+
+.btn-enhanced:active {
+  transform: translateY(-1px) scale(1.02) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Enhanced Card Hover Effects */
+.vault-solid-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(0, 245, 212, 0.15),
+    0 0 0 2px rgba(255, 255, 255, 0.2) inset !important;
+  border-color: rgba(0, 245, 212, 0.4) !important;
+}
+
+/* Improved Loading States */
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Enhanced Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(0, 245, 212, 0.6), rgba(155, 93, 229, 0.6));
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(0, 245, 212, 0.8), rgba(155, 93, 229, 0.8));
+}
+
+/* Enhanced Focus States for Accessibility */
+*:focus-visible {
+  outline: 2px solid rgba(0, 245, 212, 0.8) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+/* Dark Mode Optimizations */
+@media (prefers-color-scheme: dark) {
+  .vault-solid-card {
+    background: linear-gradient(135deg, 
+      rgba(8, 10, 23, 0.95) 0%,
+      rgba(16, 20, 40, 0.9) 50%,
+      rgba(8, 10, 23, 0.95) 100%
+    ) !important;
+    border: 2px solid rgba(255, 255, 255, 0.15) !important;
+  }
+}
+
+/* Cross-Browser Compatibility Fixes */
+/* Firefox backdrop-filter fallback */
+@-moz-document url-prefix() {
+  .vault-detail-header-card-optimized,
+  .tabs-container-compact,
+  .vault-solid-card {
+    background: rgba(8, 10, 23, 0.92) !important;
+  }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-appearance: none) {
+  .vault-deposit-enhanced-v2 {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  .tab-trigger-compact {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+}
+
+/* Enhanced Responsive Design - Container Queries */
+@container (max-width: 600px) {
+  .vault-metrics-optimized {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  .vault-metric-primary-compact,
+  .vault-metric-secondary-compact,
+  .vault-metric-wide-compact {
+    grid-column: span 1 !important;
+    min-height: 70px !important;
+    padding: 0.75rem !important;
+  }
+}
+
+@container (max-width: 400px) {
+  .vault-deposit-enhanced-v2 {
+    width: 140px !important;
+    height: 44px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .tabs-container-compact {
+    height: 2.25rem !important;
+    padding: 0.125rem !important;
+  }
+  
+  .tab-trigger-compact {
+    height: 2rem !important;
+    font-size: 0.65rem !important;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .vault-deposit-enhanced-v2,
+  .tab-trigger-compact,
+  .btn-enhanced {
+    min-height: 48px !important;
+    min-width: 48px !important;
+  }
+  
+  .vault-solid-card:hover,
+  .btn-enhanced:hover,
+  .tab-trigger-compact:hover {
+    transform: none !important;
+  }
+  
+  .vault-solid-card:active,
+  .btn-enhanced:active,
+  .tab-trigger-compact:active {
+    transform: scale(0.98) !important;
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* Landscape Mobile Optimization */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .vault-detail-header-card-optimized {
+    min-height: 100px !important;
+    padding: 0.75rem !important;
+  }
+  
+  .vault-main-title {
+    font-size: clamp(1.25rem, 4vw, 1.75rem) !important;
+  }
+  
+  nav {
+    height: 3rem !important;
+    min-height: 3rem !important;
+  }
+}
+
+/* Large Screen Optimizations */
+@media (min-width: 1440px) {
+  .vault-detail-header-card-optimized {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+  }
+  
+  .vault-metrics-optimized {
+    max-width: 1000px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Ultra-wide Screen Support */
+@media (min-width: 2560px) {
+  .vault-main-title {
+    font-size: 3.5rem !important;
+  }
+  
+  .vault-subtitle {
+    font-size: 1.5rem !important;
+  }
+  
+  .container {
+    max-width: 1600px !important;
+  }
+}
+
+
+
+
+/* Vault Page Specific Elements */
+.vault-page a,
+.vault-page Link,
+.vault-page button,
+.vault-page [data-radix-tabs-trigger],
+.vault-page [role="tab"],
+.vault-page .tab-trigger-compact,
+.vault-page .tabs-trigger {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.vault-page a:hover, .vault-page a:focus, .vault-page a:active,
+.vault-page Link:hover, .vault-page Link:focus, .vault-page Link:active,
+.vault-page button:hover, .vault-page button:focus, .vault-page button:active,
+.vault-page [data-radix-tabs-trigger]:hover, .vault-page [data-radix-tabs-trigger]:focus,
+.vault-page [role="tab"]:hover, .vault-page [role="tab"]:focus,
+.vault-page .tab-trigger-compact:hover, .vault-page .tab-trigger-compact:focus,
+.vault-page .tabs-trigger:hover, .vault-page .tabs-trigger:focus {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-underline-offset: initial !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Override any default browser styling for links */
+* {
+  -webkit-text-decoration-skip: none !important;
+  text-decoration-skip: none !important;
+  text-decoration-skip-ink: none !important;
+}
+
+/* VAULT PAGE SPECIFIC FIXES - Final Override Layer */
+/* Remove any potential white underlines from browser defaults */
+.vault-page *[href],
+.vault-page a,
+.vault-page Link,
+.vault-page [role="link"] {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .vault-solid-card:hover,
+  .btn-enhanced:hover,
+  .tab-trigger-compact:hover {
+    transform: none !important;
+  }
+}
+
+/* Logo Animation Override - Force animations to work */
+nav .logo-animation-override,
+nav .logo-animation-override *,
+nav .logo-animation-override svg,
+nav .logo-animation-override svg *,
+.vault-page nav .logo-animation-override,
+.vault-page nav .logo-animation-override *,
+.vault-page nav .logo-animation-override svg,
+.vault-page nav .logo-animation-override svg * {
+  animation-duration: revert !important;
+  animation-iteration-count: revert !important;
+  transition-duration: revert !important;
+  transform: revert !important;
+}
+
+/* CSS-based logo animations as fallback */
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(155, 93, 229, 0.3)); }
+  50% { filter: drop-shadow(0 0 15px rgba(155, 93, 229, 0.8)); }
+}
+
+@keyframes logoRotate {
+  0% { transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) scale(1); }
+  25% { transform: perspective(1000px) rotateX(15deg) rotateY(-5deg) scale(1.05); }
+  50% { transform: perspective(1000px) rotateX(5deg) rotateY(-15deg) scale(1); }
+  75% { transform: perspective(1000px) rotateX(15deg) rotateY(-5deg) scale(1.05); }
+  100% { transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) scale(1); }
+}
+
+/* Apply animations with highest specificity */
+nav .logo-animation-override,
+.vault-page nav .logo-animation-override {
+  animation: logoPulse 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite !important;
+  transform: revert !important;
+}
+
+nav .logo-animation-override svg,
+.vault-page nav .logo-animation-override svg {
+  animation: logoRotate 8s ease-in-out infinite !important;
+  transform: revert !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-animation-override *,
+  .logo-animation-override svg *,
+  .logo-animation-override animate {
+    animation-duration: revert !important;
+    animation-iteration-count: revert !important;
+    transition-duration: revert !important;
+  }
+  
+  .logo-animation-override {
+    animation: logoPulse 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
+  }
+
+  .logo-animation-override svg {
+    animation: logoRotate 8s ease-in-out infinite;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .vault-detail-header-card-optimized,
+  .vault-solid-card,
+  .tabs-container-compact {
+    border: 3px solid #ffffff !important;
+    background: #000000 !important;
+  }
+  
+  .vault-main-title,
+  .vault-subtitle,
+  .tab-trigger-compact {
+    color: #ffffff !important;
+    text-shadow: none !important;
+  }
+  
+  .vault-deposit-enhanced-v2 {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .vault-detail-header-card-optimized,
+  .vault-solid-card {
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    color: #000000 !important;
+  }
+  
+  .vault-deposit-enhanced-v2,
+  .tab-trigger-compact {
+    display: none !important;
+  }
+}
+
+
+
+/* VAULT PAGE SPECIFIC OVERRIDES - Enhanced Priority CSS Fixes V2 */
+.vault-page .max-w-5xl {
+  max-width: 64rem !important; /* Force 5xl = 64rem instead of 6xl = 72rem */
+}
+
+/* TabsList Width Override - Force Custom Width */
+.vault-page [data-slot="tabs-list"] {
+  width: min(100%, 60rem) !important;
+  max-width: 60rem !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+/* CRITICAL BACK BUTTON SPACING FIX - Maximum Priority Override */
+.vault-page .mb-4,
+.vault-page .mb-4:not([style*="margin-bottom"]),
+.vault-page button.mb-4,
+.vault-page .Button.mb-4 {
+  margin-bottom: 1rem !important; /* Force 16px spacing - mb-4 = 1rem */
+}
+
+/* Back Button Container Spacing Override */
+.vault-page .mb-12 {
+  margin-bottom: 3rem !important; /* 12 * 0.25rem = 3rem */
+}
+
+/* HEADER CARD TO TABS CONNECTION FIX */
+.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: 0.5rem !important; /* 8px bottom margin */
+}
+
+/* TABS CONTAINER SPACING FIX - Seamless Connection */
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"] {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important; /* Small gap after tabs */
+}
+
+/* WIDTH ALIGNMENT FIXES - Ensure All Content Matches Header Width */
+.vault-page .container.mx-auto.max-w-5xl,
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"],
+.vault-page [data-slot="tabs-content"] {
+  max-width: 64rem !important; /* max-w-5xl = 64rem */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* TAB CONTENT WIDTH AND SPACING FIXES */
+.vault-page [data-slot="tabs-content"] .grid {
+  max-width: 60rem !important; /* Match tabs list width */
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* FORCE REMOVE ANY CONFLICTING MARGINS FROM SHADCN COMPONENTS */
+.vault-page .ui-component,
+.vault-page [data-radix-tabs-list] {
+  margin-top: 0 !important;
+}
+
+/* ADDITIONAL BUTTON SPACING REINFORCEMENT */
+.vault-page button[class*="mb-"],
+.vault-page .Button[class*="mb-"] {
+  margin-bottom: 1rem !important;
+}
+
+/* Container Content Centering Override */
+.vault-page .container.mx-auto.max-w-5xl {
+  max-width: 64rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+}
+
+
+
+/* =================================================================
+   BULLETPROOF CSS OVERRIDE FIXES - VAULT PAGE SPACING & ALIGNMENT
+   High-specificity rules with !important to defeat any conflicting CSS
+   ================================================================= */
+
+/* CRITICAL FIX 1: Back Button Spacing - Force 16px margin-bottom */
+.vault-page .mb-4,
+.vault-page button.mb-4,
+.vault-page .Button.mb-4,
+.vault-page [class*="mb-4"],
+.vault-page .vault-page .mb-4,
+div.vault-page button.mb-4,
+html body div.vault-page button.mb-4 {
+  margin-bottom: 1rem !important; /* Force 16px spacing */
+}
+
+/* CRITICAL FIX 2: Header Card Bottom Margin - Force 8px for seamless tab connection */
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .vault-detail-header-card-optimized[style],
+div.vault-page .vault-detail-header-card-optimized,
+html body div.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: 0.5rem !important; /* Force 8px bottom margin */
+}
+
+/* CRITICAL FIX 3: Tab Container - Remove top margin for seamless connection */
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"],
+.vault-page .TabsList,
+.vault-page [role="tablist"],
+div.vault-page .tabs-container-compact,
+html body div.vault-page .tabs-container-compact {
+  margin-top: 0 !important; /* Force no top margin */
+  margin-bottom: 0.5rem !important; /* Add small bottom margin */
+}
+
+/* CRITICAL FIX 4: Width Alignment - Force consistent max-width across all containers */
+.vault-page .container.mx-auto.max-w-5xl,
+.vault-page .vault-detail-header-card-optimized,
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"],
+.vault-page [data-slot="tabs-content"],
+div.vault-page .container.mx-auto.max-w-5xl,
+html body div.vault-page .container.mx-auto.max-w-5xl {
+  max-width: 64rem !important; /* Force max-w-5xl = 64rem consistency */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* CRITICAL FIX 5: Tab Content Width - Force consistent inner content width */
+.vault-page [data-slot="tabs-content"] .grid,
+.vault-page .TabsContent .grid,
+div.vault-page [data-slot="tabs-content"] .grid {
+  max-width: 60rem !important; /* Match tabs list width */
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* NUCLEAR OPTION: Ultra-high specificity overrides for stubborn elements */
+html body main div.vault-page button.mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+html body main div.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: 0.5rem !important;
+}
+
+html body main div.vault-page .tabs-container-compact {
+  margin-top: 0 !important;
+}
+
+/* Force container centering with maximum specificity */
+html body main div.vault-page .container.mx-auto.max-w-5xl {
+  max-width: 64rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Additional reinforcement for tab list styling */
+.vault-page .TabsList[style*="margin"] {
+  margin-top: 0 !important;
+}
+
+/* Backup specificity for inline styles that might override */
+.vault-page [style*="marginBottom"] .mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+.vault-page [style*="marginTop"] .tabs-container-compact {
+  margin-top: 0 !important;
+}
+
+/* ==========================================
+   NUCLEAR OPTION: MAXIMUM SPECIFICITY CSS OVERRIDES
+   Ultra-high specificity rules to force visual fixes
+   ========================================== */
+
+/* NUCLEAR FIX 1: Width Alignment - Force all containers to match header width */
+html body main div.vault-page-container-isolated div.container.mx-auto[style*="max-w"] div[data-slot="tabs"] [data-slot="tabs-list"],
+html body main div.vault-page div.container.mx-auto div[data-slot="tabs"] [data-slot="tabs-list"],
+html body div.vault-page div[data-slot="tabs"] [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs-list"],
+body div.vault-page .tabs-container-compact,
+body div.vault-page div[class*="tabs-container-compact"] {
+  max-width: 64rem !important; /* Match header card width exactly */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* NUCLEAR FIX 2: Force tabs content to match header width */
+html body main div.vault-page div[data-slot="tabs-content"],
+html body div.vault-page [data-slot="tabs-content"],
+body div.vault-page [data-slot="tabs-content"] {
+  max-width: 64rem !important; /* Match header instead of 60rem */
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 3: Force tabs content grid to match header width */
+html body main div.vault-page [data-slot="tabs-content"] div.grid,
+html body div.vault-page [data-slot="tabs-content"] > div.grid,
+body div.vault-page [data-slot="tabs-content"] .grid {
+  max-width: 64rem !important; /* Change from 60rem to match header */
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* NUCLEAR FIX 4: Remove Radix UI Tabs gap that creates spacing */
+html body main div.vault-page div[data-slot="tabs"],
+html body div.vault-page [data-slot="tabs"],
+body div.vault-page [data-slot="tabs"] {
+  gap: 0 !important; /* Remove default gap-2 (0.5rem) from Tabs component */
+  row-gap: 0 !important;
+  column-gap: 0 !important;
+}
+
+/* NUCLEAR FIX 5: Force zero margin on tabs list - ultimate specificity */
+html body main div.vault-page div[data-slot="tabs"] [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs"] > [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs-list"],
+body div.vault-page .tabs-container-compact,
+body div.vault-page div[class*="tabs-container-compact"],
+.vault-page .tabs-container-compact[style*="margin"],
+.vault-page [data-slot="tabs-list"][style*="margin"] {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+  padding-top: 0 !important;
+  transform: translateY(0) !important; /* Prevent any transform spacing */
+}
+
+/* NUCLEAR FIX 6: Force header card exact bottom margin for seamless connection */
+html body main div.vault-page div.vault-detail-header-card-optimized,
+html body div.vault-page .vault-detail-header-card-optimized,
+body div.vault-page .vault-detail-header-card-optimized,
+.vault-page .vault-detail-header-card-optimized[style*="margin"] {
+  margin-bottom: 0 !important; /* ZERO gap for seamless connection */
+  padding-bottom: 0 !important;
+  border-bottom-left-radius: 8px !important; /* Reduce bottom radius for connection */
+  border-bottom-right-radius: 8px !important;
+}
+
+/* NUCLEAR FIX 7: Force tabs container exact top positioning */
+html body main div.vault-page [data-slot="tabs-list"],
+body div.vault-page .tabs-container-compact,
+.vault-page .tabs-container-compact[style*="border-radius"] {
+  border-top-left-radius: 8px !important; /* Reduce top radius for connection */
+  border-top-right-radius: 8px !important;
+  margin-top: -2px !important; /* Slight overlap for seamless visual connection */
+}
+
+/* NUCLEAR FIX 8: Override any Tailwind utility classes with maximum specificity */
+.vault-page .mb-4[class*="mb-"],
+.vault-page button[class*="mb-4"],
+.vault-page .Button[class*="mb-4"] {
+  margin-bottom: 1rem !important;
+}
+
+.vault-page .grid[class*="grid-cols-"],
+.vault-page div[class*="grid"][class*="gap-"] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 9: CSS Custom Properties Override */
+html body div.vault-page {
+  --tabs-container-max-width: 64rem !important;
+  --tabs-content-max-width: 64rem !important;
+  --header-tabs-gap: 0px !important;
+}
+
+/* Apply custom properties */
+.vault-page .tabs-container-compact,
+.vault-page [data-slot="tabs-list"] {
+  max-width: var(--tabs-container-max-width) !important;
+}
+
+.vault-page [data-slot="tabs-content"],
+.vault-page [data-slot="tabs-content"] .grid {
+  max-width: var(--tabs-content-max-width) !important;
+}
+
+/* NUCLEAR FIX 10: JavaScript Inline Style Override Protection */
+.vault-page [style*="maxWidth: \"60rem\""],
+.vault-page [style*="max-width: 60rem"],
+.vault-page [style*="maxWidth:60rem"] {
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="margin:"] .tabs-container-compact,
+.vault-page [style*="marginTop:"] [data-slot="tabs-list"] {
+  margin-top: 0 !important;
+}
+
+/* NUCLEAR FIX 11: Attribute-based selectors for maximum coverage */
+.vault-page div[data-slot="tabs"][class*="flex"][class*="gap-2"] {
+  gap: 0 !important;
+}
+
+.vault-page div[data-slot="tabs-list"][class*="w-fit"] {
+  width: 100% !important;
+  max-width: 64rem !important;
+}
+
+/* NUCLEAR FIX 12: Force exact visual connection styling */
+html body div.vault-page .vault-detail-header-card-optimized::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+}
+
+html body div.vault-page .tabs-container-compact::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+}
+
+/* ========================================= */
+/* NUCLEAR CSS OVERRIDE SOLUTION - LEVEL 2  */
+/* ========================================= */
+
+/* NUCLEAR FIX 13: Ultimate width alignment with maximum specificity */
+html body main div.vault-page-container-isolated div.container.mx-auto,
+html body main div.vault-page div.container.mx-auto,
+html body div.vault-page-container-isolated div.container.mx-auto,
+html body div.vault-page div.container.mx-auto[style*="max-width"] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 14: Header card perfect width enforcement */
+html body main div.vault-page div.vault-detail-header-card-optimized,
+html body div.vault-page div.vault-detail-header-card-optimized,
+html body main div.vault-page-container-isolated div.vault-detail-header-card-optimized,
+html body div.vault-page-container-isolated div.vault-detail-header-card-optimized {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 0 !important;
+}
+
+/* NUCLEAR FIX 15: Tabs container absolute zero margin */
+html body main div.vault-page div[data-radix-tabs-list],
+html body div.vault-page div[data-radix-tabs-list],
+html body main div.vault-page .tabs-container-compact,
+html body div.vault-page .tabs-container-compact,
+html body main div.vault-page-container-isolated div[data-radix-tabs-list],
+html body div.vault-page-container-isolated div[data-radix-tabs-list],
+html body main div.vault-page-container-isolated .tabs-container-compact,
+html body div.vault-page-container-isolated .tabs-container-compact {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin: 0 auto 0.5rem auto !important;
+  margin-top: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 16: TabsContent sections perfect alignment */
+html body main div.vault-page div[data-radix-tabs-content],
+html body div.vault-page div[data-radix-tabs-content],
+html body main div.vault-page-container-isolated div[data-radix-tabs-content],
+html body div.vault-page-container-isolated div[data-radix-tabs-content] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 17: Override any inline styles with atomic CSS */
+.vault-page [style*="maxWidth"] {
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="max-width"] {
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="marginBottom"] {
+  margin-bottom: 0 !important;
+}
+
+.vault-page [style*="margin-bottom"] {
+  margin-bottom: 0 !important;
+}
+
+/* NUCLEAR FIX 18: Data attribute targeting for Radix UI components */
+html body div.vault-page [data-slot="tabs"],
+html body div.vault-page [data-slot="tabs-list"],
+html body div.vault-page [data-slot="tabs-content"] {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* NUCLEAR FIX 19: Force seamless visual connection with negative margin */
+html body div.vault-page .tabs-container-compact {
+  margin-top: -2px !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* NUCLEAR FIX 20: CSS Custom Properties for ultimate fallback */
+:root {
+  --vault-max-width: 64rem;
+  --vault-zero-margin: 0;
+  --vault-negative-margin: -2px;
+}
+
+/* NUCLEAR FIX 21: Apply custom properties with maximum specificity */
+html body main div.vault-page-container-isolated,
+html body main div.vault-page,
+html body div.vault-page-container-isolated,
+html body div.vault-page {
+  --max-width: var(--vault-max-width) !important;
+  --margin-bottom: var(--vault-zero-margin) !important;
+  --margin-top: var(--vault-negative-margin) !important;
+}
+
+/* NUCLEAR FIX 22: Universal selector for any missed elements */
+.vault-page * {
+  max-width: inherit;
+}
+
+/* Ensure tabs match header and content width */
+.vault-page .vault-tabs-clean {
+  width: 100% !important;
+  max-width: calc(64rem - 2rem) !important; /* Match header card exactly */
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.vault-page .container,
+.vault-page .max-w-5xl,
+.vault-page [class*="max-w"] {
+  max-width: 64rem !important;
+}
+
+/* NUCLEAR FIX 23: Grid and flexbox layout fixes */
+.vault-page .grid,
+.vault-page .flex {
+  max-width: 64rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* NUCLEAR FIX 24: Responsive breakpoints override */
+@media (min-width: 1024px) {
+  html body div.vault-page .container.mx-auto.max-w-5xl,
+  html body div.vault-page [style*="maxWidth"],
+  html body div.vault-page .vault-detail-header-card-optimized,
+  html body div.vault-page .tabs-container-compact,
+  html body div.vault-page div[data-radix-tabs-content] {
+    max-width: 64rem !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  html body div.vault-page .container.mx-auto,
+  html body div.vault-page [style*="maxWidth"],
+  html body div.vault-page .vault-detail-header-card-optimized,
+  html body div.vault-page .tabs-container-compact,
+  html body div.vault-page div[data-radix-tabs-content] {
+    max-width: min(64rem, 100vw - 2rem) !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* ================================================================
+   FINAL NUCLEAR CSS FIXES V5 - ADDRESSING SCREENSHOT ISSUES
+   Target: Navigation width, Tab width 100% of header, Zero gap
+   ================================================================ */
+
+
+/* === TAB WIDTH FIX - Force tabs to match header width exactly === */
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact,
+.vault-page [role="tablist"],
+html body div.vault-page [data-slot="tabs-list"],
+html body div.vault-page .tabs-container-compact {
+  width: 100% !important;
+  max-width: 64rem !important;
+  min-width: 100% !important;
+  flex: none !important;
+  flex-basis: 100% !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  margin: 0 auto !important;
+  /* Override Radix UI's w-fit class */
+  width: 100% !important;
+}
+
+/* Force grid layout for tabs */
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: clamp(0.25rem, 0.75vw, 0.375rem) !important;
+}
+
+/* === GAP FIX - Eliminate space between header and tabs === */
+.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: -4px !important;
+  position: relative !important;
+  z-index: 5 !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  margin-top: -4px !important;
+  margin-bottom: 1rem !important;
+  position: relative !important;
+  z-index: 10 !important;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+}
+
+/* Remove any gaps from parent tabs container */
+.vault-page [data-slot="tabs"] {
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* === RADIX UI OVERRIDES - Force our styles over component defaults === */
+.vault-page [data-radix-tabs-list] {
+  width: 100% !important;
+  max-width: 64rem !important;
+  margin: 0 auto !important;
+}
+
+/* Override the w-fit class specifically */
+.vault-page .w-fit[data-slot="tabs-list"] {
+  width: 100% !important;
+}
+
+/* === CONTENT WIDTH CONSISTENCY === */
+.vault-page [data-slot="tabs-content"],
+.vault-page [data-slot="tabs-content"] > div {
+  max-width: 64rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* ================================================================
+   EMERGENCY OVERRIDES - If the above doesn't work
+   ================================================================ */
+
+/* Use !important with inline style override */
+.vault-page [style*="width"] [data-slot="tabs-list"] {
+  width: 100% !important;
+  max-width: 64rem !important;
+}
+
+.vault-page [style*="margin"] .vault-detail-header-card-optimized {
+  margin-bottom: -4px !important;
+}
+
+.vault-page [style*="margin"] [data-slot="tabs-list"] {
+  margin-top: -4px !important;
+}
+
+/* Force container width alignment */
+.vault-page .container.mx-auto.max-w-5xl > * {
+  max-width: inherit !important;
+  width: 100% !important;
+}
+
+/* ================================================================
+   ABSOLUTE FINAL OVERRIDE - CSS Custom Properties
+   ================================================================ */
+.vault-page {
+  --tabs-width: 100%;
+  --tabs-max-width: 64rem;
+  --header-margin-bottom: -4px;
+  --tabs-margin-top: -4px;
+}
+
+.vault-page .vault-detail-header-card-optimized {
+  margin-bottom: var(--header-margin-bottom) !important;
+}
+
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  width: var(--tabs-width) !important;
+  max-width: var(--tabs-max-width) !important;
+  margin-top: var(--tabs-margin-top) !important;
+}
+
+/* ================================================================
+   FINAL POSITIONING ADJUSTMENTS
+   ================================================================ */
+.vault-page .vault-detail-header-card-optimized {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.vault-page [data-slot="tabs-list"],
+.vault-page .tabs-container-compact {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+
+/* Clean header width constraint */
+.vault-detail-header-card-optimized {
+  max-width: calc(64rem - 2rem);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* MODAL WIDTH PROTECTION - Ensure modals are never constrained */
+/* ULTIMATE MODAL OVERRIDE - Maximum specificity for all scenarios */
+html body div.deposit-modal-container.deposit-modal-container.deposit-modal-container {
+  max-width: none !important;
+  width: 100vw !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 999999 !important;
+}
+
+html body div.deposit-modal-content.deposit-modal-content.deposit-modal-content {
+  width: 920px !important;
+  max-width: 920px !important;
+  min-width: 320px !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  flex-basis: 920px !important;
+}
+
+/* Override any global container constraints when modal is active */
+body:has(.deposit-modal-container) *:not(.deposit-modal-content):not(.deposit-modal-content *) {
+  max-width: none !important;
+}
+
+/* Reset Tailwind container class when modal is open */
+body:has(.deposit-modal-container) .container,
+body:has(.deposit-modal-container) [class*="max-w-"],
+body:has(.deposit-modal-container) [class*="container"] {
+  max-width: none !important;
+}
+
+.deposit-modal-container,
+[class*="modal-container"],
+[data-testid="modal-backdrop"] {
+  max-width: none !important;
+  width: 100vw !important;
+}
+
+.deposit-modal-content,
+[class*="modal-content"] {
+  max-width: inherit !important;
+  width: auto !important;
+}
+
+/* Prevent vault page constraints from affecting modals */
+.vault-page .deposit-modal-container,
+.vault-page .deposit-modal-content {
+  max-width: none !important;
+}
+
+
+/* Force consistent width across all vault sections */
+.vault-page .grid {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* Ensure tab buttons fill their containers */
+.vault-page .tab-trigger-clean {
+  width: 100% !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Wallet Modal CSS Override Fixes */
+.wallet-modal-override {
+  /* Use explicit RGBA colors instead of problematic CSS variables */
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.wallet-modal-override [data-radix-dialog-content] {
+  background-color: rgba(30, 41, 59, 0.98) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Enhanced text contrast and visibility */
+.wallet-modal-override h1,
+.wallet-modal-override h2,
+.wallet-modal-override h3,
+.wallet-modal-override .text-xl {
+  color: rgba(248, 250, 252, 0.95) !important;
+  font-weight: 600 !important;
+}
+
+.wallet-modal-override .text-sm,
+.wallet-modal-override .text-xs,
+.wallet-modal-override span {
+  color: rgba(203, 213, 225, 0.9) !important;
+}
+
+.wallet-modal-override .text-muted-foreground {
+  color: rgba(148, 163, 184, 0.8) !important;
+}
+
+/* Card styling fixes with better contrast */
+.wallet-modal-override .bg-card,
+.wallet-modal-override [class*="card"] {
+  background-color: rgba(51, 65, 85, 0.8) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+.wallet-modal-override .hover\:bg-secondary\/50:hover {
+  background-color: rgba(71, 85, 105, 0.6) !important;
+}
+
+/* Button styling improvements */
+.wallet-modal-override button {
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  background-color: rgba(51, 65, 85, 0.9) !important;
+  color: rgba(248, 250, 252, 0.95) !important;
+}
+
+.wallet-modal-override button:hover {
+  background-color: rgba(71, 85, 105, 0.9) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+}
+
+/* Status indicators with better visibility */
+.wallet-modal-override .bg-green-500 {
+  background-color: rgb(34, 197, 94) !important;
+}
+
+.wallet-modal-override .bg-yellow-500 {
+  background-color: rgb(234, 179, 8) !important;
+}
+
+.wallet-modal-override .text-green-600 {
+  color: rgb(34, 197, 94) !important;
+}
+
+/* Error styling */
+.wallet-modal-override .border-destructive\/50 {
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+.wallet-modal-override .bg-destructive\/10 {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+.wallet-modal-override .text-destructive {
+  color: rgb(239, 68, 68) !important;
+}
+
+/* ========================================
+   DOCUMENTATION SPECIFIC STYLES
+   ======================================== */
+
+/* Documentation layout wrapper */
+.docs-layout {
+  /* Reset any landing page specific styles that might interfere */
+  background: none;
+  background-image: none;
+}
+
+/* Nextra theme overrides for documentation */
+.nextra-nav-container {
+  background: rgba(8, 10, 23, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+
+/* Documentation content area styling */
+.docs-layout .nx-container {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Typography improvements for documentation */
+.docs-layout h1 {
+  color: hsl(var(--primary));
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+}
+
+.docs-layout h2 {
+  color: hsl(var(--foreground));
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid hsl(var(--border));
+  padding-bottom: 0.5rem;
+}
+
+.docs-layout h3 {
+  color: hsl(var(--foreground));
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.docs-layout h4,
+.docs-layout h5,
+.docs-layout h6 {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Documentation paragraph styling */
+.docs-layout p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Code styling improvements */
+.docs-layout code {
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--primary)) !important;
+  padding: 0.2rem 0.4rem !important;
+  border-radius: 6px !important;
+  font-size: 0.875rem !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+
+.docs-layout pre {
+  background: linear-gradient(135deg, 
+    hsl(var(--card)) 0%, 
+    hsl(var(--muted)) 100%) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  margin: 1.5rem 0 !important;
+  overflow-x: auto !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.docs-layout pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 0.875rem !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* List styling */
+.docs-layout ul,
+.docs-layout ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.docs-layout li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Link styling in docs */
+.docs-layout a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.3);
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
+}
+
+.docs-layout a:hover {
+  color: hsl(var(--primary-glow));
+  text-decoration-color: hsl(var(--primary));
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.4);
+}
+
+/* Blockquote styling */
+.docs-layout blockquote {
+  border-left: 4px solid hsl(var(--primary));
+  background: hsl(var(--muted) / 0.5);
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+
+.docs-layout blockquote p {
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+/* Table styling for documentation */
+.docs-layout table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: hsl(var(--card));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.docs-layout th,
+.docs-layout td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.docs-layout th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.docs-layout td {
+  color: hsl(var(--muted-foreground));
+}
+
+.docs-layout tr:last-child td {
+  border-bottom: none;
+}
+
+/* Sidebar styling improvements */
+.nextra-sidebar {
+  background: rgba(8, 10, 23, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-right: 1px solid hsl(var(--border)) !important;
+}
+
+.nextra-sidebar a {
+  color: hsl(var(--muted-foreground)) !important;
+  transition: all 0.2s ease !important;
+}
+
+.nextra-sidebar a:hover {
+  color: hsl(var(--primary)) !important;
+  background: hsl(var(--muted) / 0.5) !important;
+}
+
+.nextra-sidebar a.active {
+  color: hsl(var(--primary)) !important;
+  background: hsl(var(--primary) / 0.1) !important;
+  border-right: 2px solid hsl(var(--primary)) !important;
+}
+
+/* TOC (Table of Contents) styling */
+.nextra-toc {
+  background: rgba(8, 10, 23, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-left: 1px solid hsl(var(--border)) !important;
+}
+
+.nextra-toc a {
+  color: hsl(var(--muted-foreground)) !important;
+  transition: all 0.2s ease !important;
+}
+
+.nextra-toc a:hover,
+.nextra-toc a.active {
+  color: hsl(var(--primary)) !important;
+}
+
+/* Search styling */
+.nextra-search input {
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.nextra-search input:focus {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2) !important;
+}
+
+/* Custom callout/alert boxes for documentation */
+.docs-layout .callout {
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  border-left: 4px solid;
+}
+
+.docs-layout .callout.info {
+  background: hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary));
+  color: hsl(var(--foreground));
+}
+
+.docs-layout .callout.warning {
+  background: hsl(45 100% 70% / 0.1);
+  border-color: hsl(45 100% 70%);
+  color: hsl(var(--foreground));
+}
+
+.docs-layout .callout.error {
+  background: hsl(var(--destructive) / 0.1);
+  border-color: hsl(var(--destructive));
+  color: hsl(var(--foreground));
+}
+
+.docs-layout .callout.success {
+  background: hsl(142 76% 36% / 0.1);
+  border-color: hsl(142 76% 36%);
+  color: hsl(var(--foreground));
+}
+
+/* Additional responsive design and layout improvements for documentation */
+.docs-container {
+  min-height: 100vh;
+  background: hsl(var(--background));
+}
+
+.docs-content {
+  max-width: 100%;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .docs-content {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-content {
+    padding: 2.5rem 3rem;
+  }
+}
+
+/* Enhanced table wrapper for better mobile responsiveness */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom classes for MDX components */
+.docs-h1 {
+  color: hsl(var(--primary)) !important;
+  font-size: 2.5rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 1.5rem !important;
+  text-shadow: 0 0 20px hsl(var(--primary) / 0.3) !important;
+}
+
+.docs-h2 {
+  color: hsl(var(--foreground)) !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  border-bottom: 2px solid hsl(var(--border)) !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.docs-h3 {
+  color: hsl(var(--foreground)) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.docs-link {
+  color: hsl(var(--primary)) !important;
+  text-decoration: underline !important;
+  text-decoration-color: hsl(var(--primary) / 0.3) !important;
+  text-underline-offset: 3px !important;
+  transition: all 0.2s ease !important;
+}
+
+.docs-link:hover {
+  color: hsl(var(--primary-glow)) !important;
+  text-decoration-color: hsl(var(--primary)) !important;
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.4) !important;
+}
+
+.docs-blockquote {
+  border-left: 4px solid hsl(var(--primary)) !important;
+  background: hsl(var(--muted) / 0.5) !important;
+  margin: 1.5rem 0 !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 0 8px 8px 0 !important;
+  font-style: italic !important;
+}
+
+/* Mobile-first responsive improvements */
+@media (max-width: 640px) {
+  .docs-h1 {
+    font-size: 1.875rem !important;
+  }
+  
+  .docs-h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .docs-h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  .docs-content {
+    padding: 1rem 0.75rem;
+  }
+  
+  .callout {
+    padding: 0.75rem 1rem !important;
+    margin: 1rem 0 !important;
+  }
+  
+  .nextra-sidebar {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Dark mode specific overrides for documentation */
+.dark .docs-layout {
+  background: hsl(var(--background));
+}
+
+/* Ensure proper contrast for code blocks in dark mode */
+.dark .docs-layout pre {
+  background: linear-gradient(135deg, 
+    hsl(var(--card)) 0%, 
+    hsl(var(--muted) / 0.8) 100%) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+
+.dark .docs-layout code {
+  background: hsl(var(--muted) / 0.6) !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+}
+
+/* Smooth transitions for theme switching */
+.docs-layout * {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Focus states for better accessibility */
+.docs-layout a:focus,
+.docs-layout button:focus,
+.nextra-search input:focus {
+  outline: 2px solid hsl(var(--primary)) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+/* Print styles for documentation */
+@media print {
+  .nextra-sidebar,
+  .nextra-toc,
+  .nextra-nav-container {
+    display: none !important;
+  }
+  
+  .docs-content {
+    max-width: 100% !important;
+    padding: 1rem !important;
+  }
+  
+  .docs-layout a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+  
+  .docs-layout a::after {
+    content: " (" attr(href) ")" !important;
+    font-size: 0.8em !important;
+  }
+}
+
+/* Documentation Sidebar Styles - Enhanced Responsive Strategy */
+@layer components {
+  .docs-sidebar {
+    /* Ensure proper scrolling with touch optimization */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+    /* Optimize for touch scrolling on mobile/tablet */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+  
+  .docs-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .docs-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .docs-sidebar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+  
+  .docs-sidebar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--border) / 0.8);
+  }
+  
+  /* Active navigation item styles */
+  .docs-nav-active {
+    position: relative;
+  }
+  
+  .docs-nav-active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background: linear-gradient(to bottom, hsl(var(--primary)), hsl(var(--primary) / 0.5));
+    border-radius: 2px;
+  }
+  
+  /* Enhanced Responsive Strategy */
+  /* Mobile (≤640px): Enhanced touch interaction */
+  @media (max-width: 640px) {
+    .docs-sidebar {
+      box-shadow: 2px 0 25px rgba(0, 0, 0, 0.2);
+      /* Larger touch targets for mobile */
+    }
+    
+    .docs-nav-active::before {
+      left: -4px;
+      width: 4px;
+      height: 20px;
+    }
+  }
+  
+  /* Tablet Portrait (641px-768px): Optimized for touch */
+  @media (min-width: 641px) and (max-width: 768px) {
+    .docs-sidebar {
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .docs-nav-active::before {
+      left: -6px;
+      width: 3px;
+      height: 18px;
+    }
+  }
+  
+  /* Tablet Landscape (769px-1023px): iPad landscape optimization */
+  @media (min-width: 769px) and (max-width: 1023px) {
+    .docs-sidebar {
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.12);
+      /* Slightly wider for better iPad landscape experience */
+    }
+    
+    .docs-nav-active::before {
+      left: -8px;
+      width: 3px;
+      height: 16px;
+    }
+  }
+  
+  /* General mobile/tablet styles (all <1024px) */
+  @media (max-width: 1023px) {
+    .docs-sidebar {
+      /* Better backdrop blur for mobile/tablet */
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  }
+  
+  /* Enhanced focus styles for accessibility across all devices */
+  .docs-sidebar a:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
+  }
+  
+  .docs-sidebar button:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
+  }
+  
+  /* Enhanced touch interaction styles */
+  .docs-sidebar a {
+    transition: all 0.2s ease-in-out;
+    /* Improve touch interaction */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .docs-sidebar button {
+    transition: all 0.2s ease-in-out;
+    /* Improve touch interaction */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Touch-specific active states */
+  @media (hover: none) and (pointer: coarse) {
+    .docs-sidebar a:active {
+      background-color: hsl(var(--muted) / 0.8);
+      transform: scale(0.98);
+    }
+    
+    .docs-sidebar button:active {
+      background-color: hsl(var(--muted) / 0.6);
+      transform: scale(0.95);
+    }
+  }
+  
+  /* Tablet-specific enhancements for iPad */
+  @media (min-width: 768px) and (max-width: 1023px) and (hover: none) {
+    .docs-sidebar a {
+      padding: 0.875rem 0.75rem; /* Larger touch targets */
+      min-height: 44px; /* iOS recommended touch target */
+    }
+    
+    .docs-sidebar button {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+}
+
+/* Additional responsive utilities for documentation */
+@layer utilities {
+  /* Touch-optimized scrolling for all mobile/tablet devices */
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Enhanced backdrop blur for better mobile overlay */
+  .mobile-backdrop {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  /* Responsive text scaling for better mobile readability */
+  .responsive-text {
+    font-size: clamp(0.875rem, 0.8rem + 0.5vw, 1rem);
+  }
+}

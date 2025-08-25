@@ -2,5 +2,54 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+script = "script"
+test = "test"
+cache_path = "cache"
+
+# Compiler settings
+solc_version = "0.8.20"
+auto_detect_solc = false
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+
+# Gas settings optimized for SEI devnet deployment
+gas_limit = 30000000
+gas_price = 100000000  # 0.1 gwei, devnet pricing
+
+# Contract size limit
+bytecode_hash = "none"
+cbor_metadata = true
+
+# SEI Network Configuration
+[rpc_endpoints]
+sei_devnet = "https://evm-rpc-arctic-1.sei-apis.com"
+sei_testnet = "https://evm-rpc-testnet.sei-apis.com"
+sei_mainnet = "https://evm-rpc.sei-apis.com"
+
+# Contract verification settings for SEI networks
+[etherscan]
+sei_devnet = { key = "dummy", url = "https://seitrace.com/arctic-1/api" }
+sei_testnet = { key = "dummy", url = "https://seitrace.com/atlantic-2/api" }
+sei_mainnet = { key = "dummy", url = "https://seitrace.com/pacific-1/api" }
+
+# Test configuration
+[fuzz]
+runs = 1000
+max_test_rejects = 65536
+seed = '0x3e8'
+dictionary_weight = 40
+include_storage = true
+include_push_bytes = true
+
+# Invariant configuration
+[invariant]
+runs = 256
+depth = 15
+fail_on_revert = false
+call_override = false
+dictionary_weight = 80
+include_storage = true
+include_push_bytes = true
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

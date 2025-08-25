@@ -41,8 +41,8 @@ contract AIOracle is Ownable, ReentrancyGuard {
     error RequestExpired();
     error RequestAlreadyExecuted();
 
-    // SEI Chain validation (devnet)
-    uint256 public constant SEI_CHAIN_ID = 713715;
+    // SEI Chain validation (testnet)
+    uint256 public constant SEI_CHAIN_ID = 1328;
 
     // AI model management
     mapping(string => AIModel) public aiModels;
@@ -74,7 +74,7 @@ contract AIOracle is Ownable, ReentrancyGuard {
     }
 
         constructor(address initialOwner) Ownable(initialOwner) {
-        require(block.chainid == 713715, "Invalid chain");
+        require(block.chainid == SEI_CHAIN_ID, "Invalid chain");
     }
 
     /**

@@ -16,8 +16,8 @@ import "./interfaces/IStrategyVault.sol";
 contract EnhancedStrategyVault is IStrategyVault, ERC20, Ownable, ReentrancyGuard {
     using ECDSA for bytes32;
 
-    // SEI Network Chain ID
-    uint256 public constant SEI_CHAIN_ID = 713715;
+    // SEI Network Chain ID (testnet)
+    uint256 public constant SEI_CHAIN_ID = 1328;
     
     // Vault configuration
     VaultInfo public vaultInfo;

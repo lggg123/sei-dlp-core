@@ -46,6 +46,14 @@ interface ISEIVault {
     function rebalance(AIRebalanceParams calldata params) external;
     function getVaultInfo() external view returns (VaultInfo memory);
     function getCurrentPosition() external view returns (Position memory);
+    function getCustomerStats(address customer) external view returns (
+        uint256 shares,
+        uint256 shareValue,
+        uint256 totalDeposited,
+        uint256 totalWithdrawn,
+        uint256 depositTime,
+        uint256 lockTimeRemaining
+    );
     
     // SEI-specific functions
     function getSEIChainId() external pure returns (uint256);

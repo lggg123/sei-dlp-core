@@ -1,0 +1,292 @@
+# Getting Started
+
+Get up and running with Yield Delta in minutes. This guide will walk you through installation, configuration, and deploying your first AI-powered vault.
+
+## 📋 Prerequisites
+
+Before starting, ensure you have:
+
+- **Node.js** 18+ installed
+- **Bun** package manager ([Install Bun](https://bun.sh))
+- **Git** for version control
+- **SEI Wallet** (Compass or Fin) for blockchain interaction
+
+## 🚀 Quick Installation
+
+### 1. Clone the Repository
+
+```bash
+# Clone with submodules for complete setup
+git clone --recurse-submodules https://github.com/your-org/sei-dlp-core.git
+cd sei-dlp-core
+```
+
+### 2. Install Dependencies
+
+```bash
+# Install all dependencies using bun
+bun install
+
+# Install AI engine dependencies
+cd ai-engine
+pip install -r requirements.txt
+cd ..
+
+# Install Liqui (ElizaOS) dependencies  
+cd liqui
+bun install
+cd ..
+```
+
+### 3. Environment Configuration
+
+```bash
+# Copy environment template
+cp .env.example .env.local
+
+# Edit with your configuration
+nano .env.local
+```
+
+Required environment variables:
+
+```bash
+# Core Configuration
+NEXT_PUBLIC_SEI_CHAIN_ID=1328
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_VAULT_ADDRESS=0xYourVaultAddress
+
+# Demo Mode (optional)
+NEXT_PUBLIC_DEMO_MODE=true
+
+# AI Engine
+OPENAI_API_KEY=sk-your-openai-key
+AI_ENGINE_URL=http://localhost:8000
+
+# ElizaOS Integration
+ELIZAOS_WS_URL=ws://localhost:8000/ws
+```
+
+### 4. Start Development
+
+```bash
+# Start all services
+bun dev
+
+# Or start individual services:
+bun dev:frontend    # Next.js frontend on :3000
+bun dev:ai          # AI engine on :8000  
+bun dev:liqui       # ElizaOS agent on :8001
+```
+
+## 🔧 Development Setup
+
+### Project Structure
+
+```
+sei-dlp-core/
+├── src/                 # Frontend application
+│   ├── app/            # Next.js App Router
+│   ├── components/     # React components
+│   ├── hooks/          # Custom React hooks
+│   └── lib/            # Utility functions
+├── contracts/          # Smart contracts (Solidity)
+├── ai-engine/          # Python AI/ML engine
+├── liqui/              # ElizaOS agent
+└── docs/               # Documentation
+```
+
+### Database Setup
+
+Yield Delta uses SQLite for development and PostgreSQL for production:
+
+```bash
+# SQLite (automatic for development)
+# Database file: ./data/yield-delta.db
+
+# PostgreSQL (production)
+DATABASE_URL=postgresql://user:pass@localhost:5432/yielddelta
+```
+
+### Smart Contract Setup
+
+Deploy contracts to SEI devnet:
+
+```bash
+cd contracts
+
+# Install Foundry dependencies
+forge install
+
+# Deploy to SEI devnet
+forge script script/Deploy.s.sol \
+  --rpc-url https://evm-rpc-arctic-1.sei-apis.com \
+  --private-key $PRIVATE_KEY \
+  --broadcast
+
+# Verify contract
+forge verify-contract $CONTRACT_ADDRESS \
+  --chain-id 713715 \
+  --etherscan-api-key $SEISCAN_API_KEY
+```
+
+## 🏗️ Architecture Overview
+
+### Frontend (Next.js)
+- **Framework**: Next.js 14 with App Router
+- **Styling**: Tailwind CSS + Radix UI
+- **State**: Zustand + TanStack Query
+- **Web3**: Wagmi + Viem
+- **Animation**: Framer Motion + GSAP + Three.js
+
+### Backend Services
+- **API**: Next.js API routes (serverless)
+- **AI Engine**: Python FastAPI with ONNX Runtime
+- **Agent**: ElizaOS for AI chat functionality
+- **Database**: SQLite (dev) / PostgreSQL (prod)
+
+### Smart Contracts  
+- **Standard**: ERC-4626 vault standard
+- **Language**: Solidity with Foundry
+- **Network**: SEI EVM (Chain ID: 713715/1328)
+- **Features**: Gas optimization, MEV protection
+
+## 🎯 Your First Vault
+
+### 1. Enable Demo Mode
+
+For safe testing, start with demo mode:
+
+```bash
+# Add to .env.local
+NEXT_PUBLIC_DEMO_MODE=true
+
+# Restart development server
+bun dev
+```
+
+### 2. Access the Application
+
+Navigate to `http://localhost:3000` and you'll see:
+
+- **Landing Page**: Overview of platform features
+- **Vault Showcase**: Available investment strategies  
+- **Navigation**: Access to vaults, portfolio, market data
+
+### 3. Create Your First Position
+
+1. **Visit Vaults Page** (`/vaults`)
+2. **Select a Strategy** (e.g., "SEI-USDC Concentrated Liquidity")
+3. **Click "Deposit"** to open the deposit modal
+4. **Enter Amount** (try 5 SEI in demo mode)
+5. **Confirm Transaction** and watch the simulation
+
+### 4. Explore AI Features
+
+1. **Portfolio Rebalancing** (`/portfolio/rebalance`)
+   - View AI-generated recommendations
+   - Select actions to execute
+   - Watch real-time execution
+
+2. **Liqui Chat** (AI assistant button)
+   - Ask questions about strategy
+   - Get personalized recommendations
+   - Learn about DeFi concepts
+
+3. **Market Analytics** (`/market`)
+   - Real-time price data
+   - Liquidity metrics
+   - Trading opportunities
+
+## 🔍 Testing Your Setup
+
+### Health Check
+
+Verify all services are running:
+
+```bash
+# Frontend health
+curl http://localhost:3000/api/health
+
+# AI engine health  
+curl http://localhost:8000/health
+
+# Check API documentation
+curl http://localhost:3000/api/docs
+```
+
+### Demo Mode Verification
+
+1. Look for "DEMO MODE" badges in the UI
+2. Try a deposit - should complete in ~2 seconds
+3. Check browser console for demo logs
+4. Verify no real blockchain transactions
+
+### Production Readiness
+
+```bash
+# Build production version
+bun run build
+
+# Start production server
+bun start
+
+# Run tests
+bun test
+```
+
+## 🚨 Common Issues
+
+### Port Conflicts
+```bash
+# Kill processes on common ports
+lsof -ti:3000 | xargs kill -9  # Frontend
+lsof -ti:8000 | xargs kill -9  # AI Engine  
+lsof -ti:8001 | xargs kill -9  # ElizaOS
+```
+
+### Environment Variables
+```bash
+# Verify environment loading
+bun run env-check
+
+# Debug environment in browser
+console.log(process.env)
+```
+
+### Dependency Issues
+```bash
+# Clear cache and reinstall
+rm -rf node_modules bun.lockb
+bun install
+
+# Update dependencies
+bun update
+```
+
+### Wallet Connection
+- Ensure Compass/Fin wallet is installed
+- Switch to SEI network (Chain ID: 1328)
+- Check wallet has SEI for gas fees
+- Try refreshing the page
+
+## 📚 Next Steps
+
+### Explore Features
+- [Core Features](/docs/features) - Deep dive into platform capabilities
+- [API Reference](/docs/api) - Integrate with SEI DLP APIs
+- [Smart Contracts](/docs/smart-contracts) - Deploy your own vaults
+
+### Development
+- [Contributing](/docs/contributing) - Help improve the platform
+- [Deployment](/docs/deployment) - Deploy to production
+- [AI Engine](/docs/ai-engine) - Customize AI models
+
+### Community  
+- [Discord](https://discord.gg/sei) - Join the community
+- [GitHub](https://github.com/your-org/sei-dlp-core) - View source code
+- [Twitter](https://twitter.com/sei_dlp) - Follow updates
+
+---
+
+*Ready to optimize your yields with Yield Delta? Let's go! 🚀*
